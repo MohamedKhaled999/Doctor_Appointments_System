@@ -6,4 +6,31 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="DTOs\About\AboutViewModel.cs" />
+    <Compile Remove="DTOs\Account\ChangePasswordViewModel.cs" />
+    <Compile Remove="DTOs\Account\DoctorRegisterViewModel.cs" />
+    <Compile Remove="DTOs\Account\ForgetPasswordVM.cs" />
+    <Compile Remove="DTOs\Account\LoginViewModel.cs" />
+    <Compile Remove="DTOs\Account\RegisterViewModel.cs" />
+    <Compile Remove="DTOs\Account\ResetPasswordVM.cs" />
+    <Compile Remove="DTOs\Appointment\AppointmentViewModel.cs" />
+    <Compile Remove="DTOs\DoctorReservation\CalendarReservationVM.cs" />
+    <Compile Remove="DTOs\DoctorReservation\DoctorReservationViewModel.cs" />
+    <Compile Remove="DTOs\DoctorReservation\NewResVM.cs" />
+    <Compile Remove="DTOs\DoctorReservation\ScheduleViewModel.cs" />
+    <Compile Remove="DTOs\Doctor\ChangeImageVM.cs" />
+    <Compile Remove="DTOs\Doctor\DoctorEditViewModel.cs" />
+    <Compile Remove="DTOs\Doctor\doctorProfileVM.cs" />
+    <Compile Remove="DTOs\Doctor\SpecialtyVM.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Authentication\NewFile1.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+  </ItemGroup>
+
 </Project>
