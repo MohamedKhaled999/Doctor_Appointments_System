@@ -1,3 +1,4 @@
+using Persistence.UnitOfWork;
 
 namespace DoctorAppointmentsSystem.Web
 {
@@ -12,6 +13,11 @@ namespace DoctorAppointmentsSystem.Web
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            builder.Services.Scan(selector => selector
+                            .FromAssemblyOf<UnitOfWork>()
+                            .AddClasses()
+                            .AsImplementedInterfaces());
 
             var app = builder.Build();
 
