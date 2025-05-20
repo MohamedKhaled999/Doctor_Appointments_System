@@ -1,12 +1,12 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-
-
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AppUser>(options)
+    public class AppDbContext(DbContextOptions<AppDbContext> options) :
+        IdentityDbContext<AppUser, IdentityRole<int>, int>(options)
     {
         public DbSet<Order> Orders { get; set; }
         public DbSet<Patient> Patients { get; set; }
@@ -21,17 +21,15 @@ namespace Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssemblyReference).Assembly);
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Ignore<Person>();
+
             modelBuilder.Entity<Doctor>()
                 .HasOne(d => d.Specialty)
                 .WithMany(s => s.Doctors)
                 .HasForeignKey(d => d.SpecialtyID);
-
-            modelBuilder.Entity<DoctorReservation>()
-                .HasOne(dr => dr.Doctor)
-                .WithMany(d => d.DoctorReservations)
-                .HasForeignKey(dr => dr.DoctorID);
 
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.DoctorReservation)

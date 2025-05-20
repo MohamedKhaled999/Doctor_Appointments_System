@@ -1,35 +1,25 @@
 ﻿using Domain.Contracts;
 using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
-        private Dictionary<Type, object> _repositories= new Dictionary<Type, object>();
-
-        public UnitOfWork(AppDbContext context) 
+        private readonly ConcurrentDictionary<Type, object> _repositories;
+        public UnitOfWork(AppDbContext context)
         {
             _context = context;
+            _repositories = new ConcurrentDictionary<Type, object>();
         }
         public IGenericRepository<TEntity, TKey> GetRepository<TEntity, TKey>() where TEntity : EntityBase<TKey>
         {
-            if (_repositories.ContainsKey(typeof(TEntity)))
-                return (IGenericRepository<TEntity,TKey>)_repositories[typeof(TEntity)];
-            // this means each call needs to identify the TEntity and TKey ?????????????????? 
-            var repository = new GenericRepository<TEntity,TKey>(_context);
-            _repositories.Add(typeof(TEntity), repository);
-            return repository;
+            var key = typeof(IGenericRepository<TEntity, TKey>);
+            var valueFactory = new Lazy<object>(new GenericRepository<TEntity, TKey>(_context));
+            return (IGenericRepository<TEntity, TKey>)_repositories.GetOrAdd(key, _ => valueFactory);
         }
-
         public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
+            => await _context.SaveChangesAsync();
     }
 }
