@@ -5,7 +5,7 @@ namespace Persistence
 {
     internal static class SpecificationFactory
     {
-        public static IQueryable<T> BuildQuery<T>(IQueryable<T> query, SpecificationsBase<T> specification) where T : class
+        internal static IQueryable<T> BuildQuery<T>(IQueryable<T> query, SpecificationsBase<T> specification) where T : class
         {
             query = query.AsNoTracking();
 
