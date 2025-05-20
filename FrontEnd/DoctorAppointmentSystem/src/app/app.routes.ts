@@ -1,9 +1,11 @@
+import { Routes } from '@angular/router';
 import { TestSwiperComponent } from './components/shared/test-swiper/test-swiper.component';
 import { RegisterComponent } from './components/pages/account/register/register.component';
 import { LoginComponent } from './components/pages/account/login/login.component';
 import { NeedToConfirmComponent } from './components/pages/account/need-to-confirm/need-to-confirm.component';
-import { Routes } from '@angular/router';
+import { HomeComponent } from './components/pages/home/home.component';
 import { ForgetPasswordComponent } from './components/pages/account/forget-password/forget-password.component';
+
 export const routes: Routes = [
   {
     path: 'test',
@@ -29,5 +31,10 @@ export const routes: Routes = [
     path: 'need-to-confirm',
     component: NeedToConfirmComponent, 
     title: 'Need to Confirm - Doctor Appointments'
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
+    title: 'Home - Doctor Appointments'
   }
 ];
