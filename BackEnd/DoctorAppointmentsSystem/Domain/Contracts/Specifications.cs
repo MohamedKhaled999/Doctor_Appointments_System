@@ -4,6 +4,7 @@ namespace Domain.Contracts
 {
     public abstract class Specifications<T> where T : class
     {
+        public Specifications() { }
         public Specifications(Expression<Func<T, bool>> criteria)
             => Criteria = criteria;
         public Expression<Func<T, bool>>? Criteria { get; }
