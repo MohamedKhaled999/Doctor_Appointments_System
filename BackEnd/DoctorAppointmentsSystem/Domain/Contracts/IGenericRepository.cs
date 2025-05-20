@@ -10,5 +10,6 @@ namespace Domain.Contracts
         public void Update(TEntity entity);
         public void Delete(TEntity entity);
         public Task<List<TEntity>> GetAllAsync(SpecificationsBase<TEntity> specifications);
+        public int GetCount(SpecificationsBase<TEntity> specifications);
     }
 }
