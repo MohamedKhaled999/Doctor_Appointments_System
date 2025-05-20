@@ -1,1 +1,188 @@
-<p>register works!</p>
+<div class="min-vh-100 position-relative d-flex flex-column justify-content-center align-items-center"
+    style="padding-top: 70px">
+    <div class="register-div rounded-4 shadow-sm d-flex justify-content-center gap-4">
+        <div
+            class="register-welcome px-5 py-3 text-white text-center rounded-4 d-none d-md-flex flex-column justify-content-center align-items-center">
+            <h3>Create Your Account</h3>
+            <p class="py-2">Join us today! Create your account in just a few steps</p>
+            <a routerLink="/login" class="login-register-button text-white rounded-5 px-4 py-3">Already have an
+                account? Login Here</a>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form px-5 py-4 d-flex">
+            
+            <div *ngIf="currentStep === 1" id="register-step-1"
+                class="d-flex form-container py-1 w-100 flex-column justify-content-around gap-3">
+                <div>
+                    <h4>Account Information</h4>
+                    <div *ngIf="validationErrors.length" class="validation-summary text-danger">
+                        <div *ngFor="let error of validationErrors">{{error}}</div>
+                    </div>
+                </div>
+
+                <div class="register-input-group d-flex flex-column justify-content-between gap-4">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="firstName" class="my-1 SP-primaryText ">First Name</label>
+                            <span class="text-danger"> *</span>
+                            <input formControlName="firstName" id="firstName" class="login-form-input rounded-1" />
+                            <div *ngIf="registerForm.get('firstName')?.errors && registerForm.get('firstName')?.touched"
+                                class="text-danger">
+                                <div *ngIf="registerForm.get('firstName')?.hasError('required')">First name is required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="lastName" class="my-1 SP-primaryText">Last Name</label>
+                            <span class="text-danger"> *</span>
+                            <input formControlName="lastName" id="lastName" class="login-form-input rounded-1" />
+                            <div *ngIf="registerForm.get('lastName')?.errors && registerForm.get('lastName')?.touched"
+                                class="text-danger">
+                                <div *ngIf="registerForm.get('lastName')?.hasError('required')">Last name is required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="password" class="form-label SP-primaryText">Password</label>
+                            <span class="text-danger"> *</span>
+                            <div class="input-group">
+                                <input formControlName="password" id="password" class="login-pass form-control"
+                                    [type]="showPassword ? 'text' : 'password'">
+                                <button type="button" class="btn SP-toggle-password"
+                                    (click)="togglePasswordVisibility('password')">
+                                    <i class="fa-solid" [class.fa-eye]="!showPassword"
+                                        [class.fa-eye-slash]="showPassword"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="registerForm.get('password')?.errors && registerForm.get('password')?.touched"
+                                class="text-danger">
+                                <div *ngIf="registerForm.get('password')?.hasError('required')">Password is required
+                                </div>
+                                <div *ngIf="registerForm.get('password')?.hasError('minlength')">Password must be at
+                                    least 8 characters</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="confirmPassword" class="form-label SP-primaryText">Confirm Password</label>
+                            <span class="text-danger"> *</span>
+                            <div class="input-group">
+                                <input formControlName="confirmPassword" id="confirmPassword"
+                                    class="login-pass form-control" [type]="showConfirmPassword ? 'text' : 'password'">
+                                <button type="button" class="btn SP-toggle-password"
+                                    (click)="togglePasswordVisibility('confirmPassword')">
+                                    <i class="fa-solid" [class.fa-eye]="!showConfirmPassword"
+                                        [class.fa-eye-slash]="showConfirmPassword"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched"
+                                class="text-danger">
+                                <div *ngIf="registerForm.get('confirmPassword')?.hasError('required')">Please confirm
+                                    your password</div>
+                                <div *ngIf="registerForm.get('confirmPassword')?.hasError('mismatch')">Passwords don't
+                                    match</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" (click)="nextStep()" class="btn login-submit w-25 align-self-end" [disabled]="!registerForm.get('firstName')?.valid || 
+                             !registerForm.get('lastName')?.valid || 
+                             !registerForm.get('password')?.valid || 
+                             registerForm.hasError('mismatch')">
+                    Next
+                </button>
+            </div>
+
+            <div *ngIf="currentStep === 2" id="register-step-2"
+                class="d-flex form-container py-1 w-100 flex-column justify-content-around gap-3">
+                <div>
+                    <h4>Contact & Personal Details</h4>
+                    <div *ngIf="validationErrors.length" class="validation-summary text-danger">
+                        <div *ngFor="let error of validationErrors">{{error}}</div>
+                    </div>
+                </div>
+
+                <div class="register-input-group d-flex flex-column justify-content-between gap-4">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="email" class="my-1">Email</label>
+                            <span class="text-danger"> *</span>
+                            <input formControlName="email" id="email" class="login-form-input rounded-1" />
+                            <div *ngIf="registerForm.get('email')?.errors && registerForm.get('email')?.touched" class="text-danger">
+                                <div *ngIf="registerForm.get('email')?.hasError('required')">Email is required</div>
+                                <div *ngIf="registerForm.get('email')?.hasError('pattern')">Invalid email format (must end with .com)</div>
+                              </div>
+                              
+                            
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="phoneNumber" class="my-1">Phone Number</label>
+                            <span class="text-danger"> *</span>
+                            <input formControlName="phoneNumber" id="phoneNumber" class="login-form-input rounded-1" />
+                        
+                            <div *ngIf="registerForm.get('phoneNumber')?.errors && registerForm.get('phoneNumber')?.touched"
+                                class="text-danger">
+                     
+                                <div *ngIf="registerForm.get('phoneNumber')?.hasError('required')">Phone number is required</div>
+                        
+                         
+                                <div *ngIf="registerForm.get('phoneNumber')?.hasError('pattern')">Invalid phone number format</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="governorate" class="my-1">Governorate</label>
+                            <span class="text-danger"> *</span>
+                            <select formControlName="governorate" id="governorate" class="form-select">
+                                <option value="">Select Governorate</option>
+                                <option *ngFor="let gov of governorates" [value]="gov">{{gov}}</option>
+                            </select>
+                            <div *ngIf="registerForm.get('governorate')?.errors && registerForm.get('governorate')?.touched"
+                                class="text-danger">
+                                <div *ngIf="registerForm.get('governorate')?.hasError('required')">Governorate is
+                                    required</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="birthDate" class="my-1">Birth Date</label>
+                            <span class="text-danger"> *</span>
+                            <input formControlName="birthDate" id="birthDate" class="login-form-input rounded-1" type="date" />
+                        
+                            <div *ngIf="registerForm.get('birthDate')?.errors && registerForm.get('birthDate')?.touched" class="text-danger">
+                                <div *ngIf="registerForm.get('birthDate')?.hasError('required')">
+                                    Birth date is required
+                                </div>
+                                <div *ngIf="registerForm.get('birthDate')?.hasError('validDate')">
+                                    {{ registerForm.get('birthDate')?.errors?.['validDate'] }}
+                                </div>
+                            </div>
+                        </div>
+                          
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <button type="button" (click)="prevStep()" class="btn login-submit w-25">Back</button>
+                    <button type="submit" class="btn register-submit" [disabled]="registerForm.invalid || isLoading" appRecaptcha 
+
+                  
+                        [siteKey]="siteKey"
+                        (resolved)="handleRecaptchaResponse($event)">
+                        <span *ngIf="!isLoading">Register</span>
+                        <span *ngIf="isLoading">Registering...</span>   </button>
+                </div>
+            </div>
+        </form>
+
+        <p class="login-register-sm d-block d-md-none text-center">
+            Already have an account?
+            <a routerLink="/login" > Login Here</a>
+        </p>
+    </div>
+    </div>
