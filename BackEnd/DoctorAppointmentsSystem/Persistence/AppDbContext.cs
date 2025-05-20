@@ -1,7 +1,6 @@
-﻿using DAL.Models;
+﻿using Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using vezeetaApplicationAPI.Models;
 
 namespace Persistence
 {

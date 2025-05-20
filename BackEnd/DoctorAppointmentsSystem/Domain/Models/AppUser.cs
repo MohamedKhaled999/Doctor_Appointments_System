@@ -2,7 +2,7 @@
 
 namespace Domain.Models
 {
-    public class AppUser : IdentityUser<int>
+    public class AppUser : IdentityUser
     {
         public virtual Person? Person { get; set; }
     }
