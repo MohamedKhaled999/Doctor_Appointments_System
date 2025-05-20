@@ -1,5 +1,6 @@
 ﻿using Domain.Contracts;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +29,29 @@ namespace Persistence.Repositories
                 throw new ArgumentNullException(nameof(entity));
             _context.Set<TEntity>().Remove(entity);
         }
-
         public virtual async Task<List<TEntity>> GetAll()
         {
-            var entities = _context.Set<TEntity>().ToList();
+            var entities = await _context.Set<TEntity>().ToListAsync();
+            return entities;
+        }
+
+        public virtual async Task<List<TEntity>> GetAll(SpecificationsBase<TEntity> specifications)
+        {
+            //var query = _context.Set<TEntity>().AsQueryable();
+            //if (specifications.Criteria != null)
+            //    query = query.Where(specifications.Criteria);
+            //if (specifications.IncludeExpressions != null)
+            //    foreach (var include in specifications.IncludeExpressions)
+            //        query = query.Include(include);
+            //if (specifications.OrderBy != null)
+            //    query = query.OrderBy(specifications.OrderBy);
+            //if (specifications.OrderByDescending != null)
+            //    query = query.OrderByDescending(specifications.OrderByDescending);
+            //if (specifications.IsPaginated)
+            //    query = query.Skip(specifications.Skip).Take(specifications.Take);
+            //var entities = query.ToList();
+            var query = SpecificationFactory.BuildQuery(_context.Set<TEntity>(), specifications);
+            var entities = query.ToList();
             return await Task.FromResult(entities);
 
         }

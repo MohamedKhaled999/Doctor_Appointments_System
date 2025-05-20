@@ -3,7 +3,7 @@ using Domain.Models;
 
 namespace Services.Specifications
 {
-    internal class OrderSpecifications : Specifications<Order>
+    internal class OrderSpecifications : SpecificationsBase<Order>
     {
         public OrderSpecifications(Guid Id) : base(o => o.Id == Id)
         {

@@ -2,9 +2,9 @@
 
 namespace Domain.Contracts
 {
-    public abstract class Specifications<T> where T : class
+    public abstract class SpecificationsBase<T> where T : class
     {
-        public Specifications(Expression<Func<T, bool>> criteria)
+        public SpecificationsBase(Expression<Func<T, bool>> criteria)
             => Criteria = criteria;
         public Expression<Func<T, bool>>? Criteria { get; }
         public List<Expression<Func<T, object>>> IncludeExpressions { get; } = new();
