@@ -38,7 +38,7 @@ namespace Persistence.Repositories
             return await query.ToListAsync();
         }
 
-        public virtual async Task<TEntity?> GetByID(TKey id)
+        public virtual async Task<TEntity?> GetByIdAsync(TKey id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }
@@ -47,7 +47,7 @@ namespace Persistence.Repositories
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-            _context.Set<TEntity>().Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }

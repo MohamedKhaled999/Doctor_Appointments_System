@@ -1,13 +1,13 @@
-﻿using System.Linq.Expressions;
+﻿using Shared.DTOs.Patient;
 
 namespace Services.Abstraction
 {
     public interface IPatientService
     {
-        Task AddPatient(Patient patientVM);
-        Task UpdatePatient(Patient patientVM);
-        Task<Patient> GetPatientInfo(int patientID);
-        Task<List<Patient>> GetAllPatients();
-        Task<List<Patient>?> GetPatientCondition(Expression<Func<Patient, bool>> condition);
+        Task<List<PatientDTO>?> GetAll();
+        Task<PatientDTO?> GetById(int id);
+        Task Add(PatientDTO patientDto);
+        Task Update(PatientDTO patientDto);
+        Task Delete(int id);
     }
 }
