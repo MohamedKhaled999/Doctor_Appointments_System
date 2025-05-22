@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../core/environments/environment'
 import { Observable } from 'rxjs';
 import { LoginResponse } from '../../core/interfaces/login-response.mode';
+import { ForgetPasswordVM } from '../models/forget-password.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private readonly apiUrl = `${environment.apiUrl}`;
+  private readonly apiUrl = `${environment.apiUrl}/account`;
 
   constructor(private http: HttpClient) { }
 
@@ -27,4 +28,8 @@ export class AccountService {
   requestPasswordReset(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/forgot-password`, { email });
   }
+  forgotPassword(forgetPasswordData: ForgetPasswordVM): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forget-password`, forgetPasswordData);
+  }
+
 }
