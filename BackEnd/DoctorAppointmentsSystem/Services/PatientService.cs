@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Models;
+using Domain.Specifications;
 using FluentValidation;
 using Services.Abstraction;
 using Services.Validators;
@@ -20,15 +21,16 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task<List<PatientDTO>?> GetAll()
+        public async Task<List<PatientDTO>?> GetAllAsync(int pageIndex = 1, int pageSize = 20)
         {
-            var patients = await _unitOfWork.GetRepository<Patient, int>().GetAllAsync();
+            var specs = new PatientPaginationSpecifications(pageIndex, pageSize);
+            var patients = await _unitOfWork.GetRepository<Patient, int>().GetAllAsync(specs);
             if (patients == null)
                 return null;
             return _mapper.Map<List<PatientDTO>>(patients);
         }
 
-        public async Task<PatientDTO?> GetById(int id)
+        public async Task<PatientDTO?> GetByIdAsync(int id)
         {
             var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
             if (patient == null)
@@ -36,7 +38,10 @@ namespace Services
             return _mapper.Map<PatientDTO>(patient);
         }
 
-        public async Task Add(PatientDTO patientDto)
+        public int GetCount()
+            => _unitOfWork.GetRepository<Patient, int>().GetCount();
+
+        public async Task AddAsync(PatientDTO patientDto)
         {
             var patient = _mapper.Map<Patient>(patientDto);
             var result = _validator.Validate(patient);
@@ -54,7 +59,7 @@ namespace Services
             }
         }
 
-        public async Task Update(PatientDTO patientDto)
+        public async Task UpdateAsync(PatientDTO patientDto)
         {
             var newPatient = _mapper.Map<Patient>(patientDto);
             var result = _validator.Validate(newPatient);
@@ -75,12 +80,13 @@ namespace Services
             }
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
             if (patient == null)
                 throw new ArgumentNullException($"Patient with ID {id} doesn't exist");
             _unitOfWork.GetRepository<Patient, int>().Delete(patient);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

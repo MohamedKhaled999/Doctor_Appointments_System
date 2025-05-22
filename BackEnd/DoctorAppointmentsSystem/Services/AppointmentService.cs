@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Models;
-using Domain.Specifications;
+using Domain.Specifications.Appointment;
 using Services.Abstraction;
 using Shared.DTOs.Appointment;
 
@@ -14,15 +14,19 @@ namespace Services
 
         public AppointmentService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
-        public async Task<List<AppointmentDTO>?> GetByPatient(int patientId)
+        public async Task<List<AppointmentDTO>?> GetByPatientAsync(int patientId, int pageIndex = 1, int pageSize = 20)
         {
-            var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(new AppointmentPatientSpecifications(a => a.PatientId == patientId));
+            var specs = new AppointmentPatientSpecifications(a => a.PatientId == patientId, pageIndex, pageSize);
+            var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(specs);
             if (appointments == null)
                 return null;
             return appointments.Select(_mapper.Map<AppointmentDTO>).ToList();
         }
 
-        public async Task Add(int patientId, int doctorReservationId)
+        public int GetCount()
+            => _unitOfWork.GetRepository<Appointment, int>().GetCount();
+
+        public async Task AddAsync(int patientId, int doctorReservationId)
         {
             var isOrderPaid = true; // Check Payment Status Before Adding Appointment
             if (isOrderPaid)
@@ -40,13 +44,14 @@ namespace Services
             }
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             // ============ Delete Order Before Deleting Appointment ============
             var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(id);
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {id} doesn't exist");
             _unitOfWork.GetRepository<Appointment, int>().Delete(appointment);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

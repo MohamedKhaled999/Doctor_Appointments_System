@@ -1,7 +1,7 @@
 ﻿using Domain.Contracts;
 using Domain.Models;
 
-namespace Domain.Specifications
+namespace Domain.Specifications.Home
 {
     public class HomeDoctorSpecifications : SpecificationsBase<Doctor>
     {

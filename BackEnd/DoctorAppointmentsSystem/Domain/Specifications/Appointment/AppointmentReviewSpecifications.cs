@@ -2,7 +2,7 @@
 using Domain.Models;
 using System.Linq.Expressions;
 
-namespace Domain.Specifications
+namespace Domain.Specifications.Appointment
 {
     public class AppointmentReviewSpecifications : SpecificationsBase<Review>
     {

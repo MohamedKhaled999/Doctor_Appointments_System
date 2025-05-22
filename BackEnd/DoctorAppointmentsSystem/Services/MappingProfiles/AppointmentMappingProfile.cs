@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Models;
-using Domain.Specifications;
+using Domain.Specifications.Appointment;
 using Shared.DTOs.Appointment;
 
 namespace Services.MappingProfiles

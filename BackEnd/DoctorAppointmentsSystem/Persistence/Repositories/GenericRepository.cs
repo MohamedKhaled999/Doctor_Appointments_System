@@ -29,6 +29,9 @@ namespace Persistence.Repositories
             return entities;
         }
 
+        public virtual int GetCount()
+            => _context.Set<TEntity>().Count();
+
         public virtual int GetCount(SpecificationsBase<TEntity> specifications)
             => SpecificationFactory.BuildQuery(_context.Set<TEntity>(), specifications).Count();
 
