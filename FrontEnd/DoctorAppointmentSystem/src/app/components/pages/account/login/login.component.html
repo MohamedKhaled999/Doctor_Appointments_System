@@ -38,7 +38,7 @@
             />
             <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger mt-1">
               <div *ngIf="loginForm.get('email')?.hasError('required')">Email is required</div>
-              <div *ngIf="loginForm.get('email')?.hasError('pattern')">Email must match the pattern: testtest.com</div>
+              <div *ngIf="loginForm.get('email')?.hasError('pattern')">Email must match the pattern: test&#64;test.com</div>
             </div>
           </div>
   
