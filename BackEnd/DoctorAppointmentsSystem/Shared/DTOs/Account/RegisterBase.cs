@@ -29,7 +29,7 @@ namespace Shared.DTOs.Account
         public string PhoneNumber { get; set; }
         public Governorate Governorate { get; set; }
         [Display(Name = "Birth Date")]
-        [ValidDate]
+        //[ValidDate]
         public DateOnly BirthDate { get; set; } = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
     }
 }

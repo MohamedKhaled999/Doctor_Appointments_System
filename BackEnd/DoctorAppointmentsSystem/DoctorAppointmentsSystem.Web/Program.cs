@@ -68,7 +68,7 @@ namespace DoctorAppointmentsSystem.Web
             #endregion
 
             #region Persentation
-            builder.Services.AddControllers().AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
+            builder.Services.AddControllers().AddApplicationPart(typeof(Persistence.AssemblyReference).Assembly);
             #endregion
 
 

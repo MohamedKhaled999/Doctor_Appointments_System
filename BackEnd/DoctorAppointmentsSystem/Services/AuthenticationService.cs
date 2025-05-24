@@ -21,8 +21,8 @@ namespace Services
         , IUnitOfWork unitOfWork,
         IOptions<JWTOptions> options
         , IConfiguration configuration,
-        Abstraction.IEmailService _emailService
-        ) : Abstraction.IAuthenticationService
+        IEmailService _emailService
+        ) : Abstraction.IAuthenticationService 
     {
         public async Task<bool> CheckEmailExist(string email)
         {
@@ -174,7 +174,7 @@ namespace Services
             {
                 To = registerDto.Email,
                 Subject = "Confirm Your Email",
-                Link = $"https://cima-zeta.vercel.app/confirm-success?email={registerDto.Email}&token={codeEncoded}",
+                Link = $"{frontendUrl}/confirm-success?email={registerDto.Email}&token={codeEncoded}",
                 Template = MailTemplates.ConfirmEmailTemplate
             }, $"{registerDto.FirstName} {registerDto.LastName}");
         }

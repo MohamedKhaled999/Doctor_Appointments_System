@@ -1,4 +1,6 @@
-﻿namespace Services.Abstraction
+﻿using Shared.Authentication;
+
+namespace Services.Abstraction
 {
     public interface IAuthenticationService
     {

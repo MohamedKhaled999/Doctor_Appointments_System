@@ -1,6 +1,7 @@
 ﻿using Shared.DTOs.Email;
 
-namespace Infrastructure.Services.EmailService
+namespace Services.Abstraction
+
 {
     public interface IEmailService
     {

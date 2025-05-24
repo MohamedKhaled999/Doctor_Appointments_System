@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Services
 {
-    public class EmailService : IEmailService
+    public class EmailService : Services.Abstraction.IEmailService
     {
 
 

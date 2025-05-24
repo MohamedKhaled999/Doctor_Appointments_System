@@ -22,14 +22,14 @@ namespace Services
         }
         public async Task<List<SpecialtyDTO>> GetAllSpecialties()
         {
-            var specialties = await _unitOfWork.GetRepository<Specialty, int>().GetAll();
+            var specialties = await  _unitOfWork.GetRepository<Specialty, int>().GetAllAsync();
             var specialtyDTOs = _mapper.Map<List<SpecialtyDTO>>(specialties);
             return specialtyDTOs;
 
         }
         public async Task<SpecialtyDTO> GetSpecialtyById(int id)
         {
-            var specialty = await _unitOfWork.GetRepository<Specialty, int>().GetById(id);
+            var specialty = await _unitOfWork.GetRepository<Specialty, int>().GetByIdAsync(id);
             if (specialty == null)
             {
                 throw new Exception("Specialty not found");
