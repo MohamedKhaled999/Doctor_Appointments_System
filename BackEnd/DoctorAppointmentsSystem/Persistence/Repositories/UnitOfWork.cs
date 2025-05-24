@@ -16,7 +16,7 @@ namespace Persistence.Repositories
         public IGenericRepository<TEntity, TKey> GetRepository<TEntity, TKey>() where TEntity : EntityBase<TKey>
         {
             var key = typeof(IGenericRepository<TEntity, TKey>);
-            var valueFactory = new Lazy<object>(new GenericRepository<TEntity, TKey>(_context));
+            var valueFactory = (new GenericRepository<TEntity, TKey>(_context));
             return (IGenericRepository<TEntity, TKey>)_repositories.GetOrAdd(key, _ => valueFactory);
         }
         public async Task<int> SaveChangesAsync()

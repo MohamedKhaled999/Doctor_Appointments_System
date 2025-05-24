@@ -5,9 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) :
-        IdentityDbContext<AppUser, IdentityRole<int>, int>(options)
+    public class AppDbContext :
+        IdentityDbContext<AppUser, IdentityRole<int>, int>
     {
+
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+
         public DbSet<Order> Orders { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }

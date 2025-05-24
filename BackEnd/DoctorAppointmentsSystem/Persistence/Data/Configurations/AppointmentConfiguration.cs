@@ -12,7 +12,7 @@ namespace Persistence.Data.Configurations
                 .HasOne(a => a.DoctorReservation)
                 .WithMany(dr => dr.Appointments)
                 .HasForeignKey(a => a.DoctorReservationID)
-                .OnDelete(deleteBehavior: DeleteBehavior.SetNull);
+                .OnDelete(deleteBehavior: DeleteBehavior.Cascade);
 
             builder
                 .HasOne(a => a.Patient)
