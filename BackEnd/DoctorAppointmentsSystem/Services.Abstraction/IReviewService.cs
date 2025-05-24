@@ -1,16 +1,16 @@
-﻿using System.Linq.Expressions;
+﻿using Shared.DTOs.Doctor;
+using Shared.DTOs.Patient;
+using System.Linq.Expressions;
 
 namespace Services.Abstraction
 {
     public interface IReviewService
     {
-        void AddReview(Review review);
-        void DeleteReview(Review review);
-        void UpdateReview(Review review);
-        Task<ICollection<Review>> GetAllReviews();
-        Task<Review> GetReviewByID(int id);
-        Task<ICollection<Review>> GetDoctorReviews(int doctorId);
+        Task AddReview(AddReviewDTO review);
+        Task DeleteReview(int ReviewId);
+        Task UpdateReview(ReviewDTO review);
+        Task<ReviewDTO> GetReviewByID(int id);
+        Task<ICollection<ReviewDTO>> GetDoctorReviews(int doctorId, int pageIndex = 1, int pageSize = 5);
         Task<float> GetDoctorAverageRating(int docId);
-        public Task<List<Review>?> GetByCondition(Expression<Func<Review, bool>> conditionExpression);
     }
 }

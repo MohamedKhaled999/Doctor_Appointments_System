@@ -2,7 +2,7 @@
 
 namespace Domain.Contracts
 {
-    public abstract class SpecificationsBase<T> where T : class
+    public class SpecificationsBase<T> where T : class
     {
         public SpecificationsBase(Expression<Func<T, bool>> criteria)
             => Criteria = criteria;
@@ -26,7 +26,7 @@ namespace Domain.Contracts
             => OrderBy = expression;
         protected void SetOrderByDescending(Expression<Func<T, object>> expression)
             => OrderBy = expression;
-        protected void ApplyPagination(int pageIndex, int pageSize)
+        public void ApplyPagination(int pageIndex, int pageSize)
         {
             IsPaginated = true;
             Take = pageSize;

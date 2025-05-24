@@ -1,0 +1,76 @@
+﻿using AutoMapper;
+using Domain.Contracts;
+using Domain.Models;
+using Services.Abstraction;
+using Shared.DTOs.Doctor;
+using Shared.DTOs.Patient;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Services
+{
+    public class ReviewService : IReviewService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public ReviewService(IUnitOfWork unitOfWork, IMapper mapper) {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+        public async Task AddReview(AddReviewDTO review)
+        {
+            var newReview = _mapper.Map<Domain.Models.Review>(review);
+            await _unitOfWork.GetRepository<Domain.Models.Review, int>().AddAsync(newReview);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task UpdateReview(ReviewDTO review)
+        {
+            var existingReview = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetByIdAsync(review.ID);
+            if (existingReview == null)
+                throw new Exception("Review not found");
+            var updatedReview = _mapper.Map(review , existingReview);
+            _unitOfWork.GetRepository<Domain.Models.Review, int>().Update(updatedReview);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task<ReviewDTO> GetReviewByID(int reviewId)
+        {
+            var review = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetByIdAsync(reviewId);
+            if (review == null)
+                return null;
+            return _mapper.Map<ReviewDTO>(review);
+        }
+        public async Task<ICollection<ReviewDTO>> GetDoctorReviews(int doctorId ,int pageIndex = 1 ,int pageSize = 5)
+        {
+            SpecificationsBase<Domain.Models.Review> specifications = new SpecificationsBase<Domain.Models.Review>(x => x.DoctorID == doctorId);
+            specifications.ApplyPagination(pageIndex,pageSize);
+            var reviews = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetAllAsync(specifications);
+            return _mapper.Map<ICollection<ReviewDTO>>(reviews);
+        }
+        public async Task<float> GetDoctorAverageRating(int docId)
+        {
+            SpecificationsBase<Domain.Models.Review> specifications = new SpecificationsBase<Domain.Models.Review>(x => x.DoctorID == docId);
+            var reviews = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetAllAsync(specifications);
+            if (reviews.Count == 0)
+                return 0;
+            float totalRating = 0;
+            foreach (var review in reviews)
+                totalRating += review.Rate;
+            return totalRating / reviews.Count;
+        }
+
+        public async Task DeleteReview(int ReviewId)
+        {
+            var review = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetByIdAsync(ReviewId);
+            if (review == null)
+                return;
+            _unitOfWork.GetRepository<Domain.Models.Review, int>().Delete(review);
+            await _unitOfWork.SaveChangesAsync();
+        }
+         
+
+
+    }
+}

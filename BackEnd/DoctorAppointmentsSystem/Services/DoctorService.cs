@@ -1,0 +1,102 @@
+﻿using AutoMapper;
+using Domain.Contracts;
+using Domain.Models;
+using Domain.Models.Enums;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Services.Abstraction;
+using Services.Validators;
+using Shared.DTOs.Account;
+using Shared.DTOs.Doctor;
+using Shared.DTOs.Search;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Services
+{
+    internal class DoctorService : IDoctorService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly DoctorValidator _validator; 
+        public DoctorService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _validator = new(_unitOfWork);
+        }
+        public async Task AddAsync(DoctorRegisterDTO doctorDTO)
+        {
+            var newDoc = _mapper.Map<Doctor>(doctorDTO);
+            if (_validator.Validate(newDoc).IsValid)
+            {
+                await _unitOfWork.GetRepository<Doctor, int>().AddAsync(newDoc);
+                await _unitOfWork.SaveChangesAsync();
+
+            }
+            else
+            {
+                var errors = new List<string>();
+                foreach (var error in _validator.Validate(newDoc).Errors)
+                    errors.Add(error.ErrorMessage);
+                throw new ValidationException(string.Join(", ", errors));
+            }
+        }
+        public async Task UpdateDoctor(DoctorEditDTO doctorDTO)
+        {
+            var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(doctorDTO.Id);
+            if (doctor == null)
+                throw new Exception("Doctor not found");
+            var updatedDoctor = _mapper.Map(doctorDTO,doctor);
+            if (_validator.Validate(updatedDoctor).IsValid)
+            {
+                _unitOfWork.GetRepository<Doctor, int>().Update(updatedDoctor);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                var errors = new List<string>();
+                foreach (var error in _validator.Validate(updatedDoctor).Errors)
+                    errors.Add(error.ErrorMessage);
+                throw new ValidationException(string.Join(", ", errors));
+            }
+        }
+
+        public async Task<DoctorProfileDTO> DoctorProfile(int doctorId)
+        {
+            var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(doctorId);
+            if (doctor == null)
+                return null;
+            var doctorDTO =  _mapper.Map<DoctorProfileDTO>(doctor);
+
+            return doctorDTO;
+        }
+
+        public async Task<List<DoctorSearchDTO>> SearchDoctor(FilterSearchDTO filter)
+        {
+            filter.Name = filter.Name?.Trim().ToLower() ?? "";
+
+            Expression<Func<Doctor, bool>> condition = doc =>
+                    (filter.Name == "" || (doc.FirstName + " " + doc.LastName).ToLower().Trim().Contains(filter.Name)) &&
+                    (filter.Specialty == 0 || doc.SpecialtyID == filter.Specialty) &&
+                    (filter.Gender == Shared.Enums.Gender.All || doc.Gender == (Domain.Models.Enums.Gender)filter.Gender) &&
+                    (filter.Governorate == Shared.Enums.Governorate.All || doc.Governorate == (Domain.Models.Enums.Governorate)filter.Governorate) &&
+                    doc.Fees >= filter.MinPrice && doc.Fees <= filter.MaxPrice && doc.WaitingTime <= filter.WaitingTime;
+
+            SpecificationsBase<Doctor> spec = new SpecificationsBase<Doctor>(condition);
+            spec.ApplyPagination(filter.PageNum, filter.PageSize);
+            var doctorsTask = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(spec);
+            var doctors = _mapper.Map<ICollection<DoctorSearchDTO>>(doctorsTask);
+
+
+            return doctors.ToList();
+
+
+        }
+    }
+}

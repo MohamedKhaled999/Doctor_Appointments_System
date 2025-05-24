@@ -18,6 +18,6 @@ namespace Shared.DTOs.Search
         public Governorate Governorate { get; set; }
         public string Location { get; set; }
         public string Phone { get; set; }
-        public List<DoctorReservationDTO> Appointments { get; set; }
+        //public List<DoctorReservationDTO> Appointments { get; set; }
     }
 }

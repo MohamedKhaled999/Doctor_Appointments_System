@@ -18,10 +18,11 @@ namespace Shared.DTOs.Doctor
         public Governorate Governorate { get; set; }
         public string Location { get; set; }
         public string Phone { get; set; }
-        public List<RatingDTO> Ratings { get; set; }
-        public List<DoctorReservationDTO> Appointments { get; set; }
+        //public List<RatingDTO> Ratings { get; set; }
+        //public List<DoctorReservationDTO> Appointments { get; set; }
         public float Latitude { get; internal set; }
         public float Longitude { get; internal set; }
-        public ScheduleDTO Schedule { get; set; }
+        // who gets it
+        //public ScheduleDTO Schedule { get; set; }
     }
 }

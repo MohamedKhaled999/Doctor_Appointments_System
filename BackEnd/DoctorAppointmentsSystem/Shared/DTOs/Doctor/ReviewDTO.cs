@@ -1,6 +1,6 @@
 ﻿namespace Shared.DTOs.Doctor
 {
-    public class RatingDTO
+    public class ReviewDTO
     {
         public int ID { get; set; }
         public string PatientName { get; set; }
