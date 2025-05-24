@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { LoginResponse } from '../../core/interfaces/login-response.mode';
 import { ForgetPasswordVM } from '../models/forget-password.model';
 import { ResetPasswordVM } from '../models/reset-password.model';
+import { ChangePasswordVM } from '../models/change-password.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,7 @@ export class AccountService {
   resetPassword(resetData: ResetPasswordVM): Observable<any> {
     return this.http.post(`${this.apiUrl}/reset-password`, resetData);
   }
-
+  changePassword(changePasswordData: ChangePasswordVM): Observable<any> {
+    return this.http.post(`${this.apiUrl}/change-password`, changePasswordData);
+  }
 }
