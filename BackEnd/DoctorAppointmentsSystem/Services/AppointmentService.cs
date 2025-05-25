@@ -4,6 +4,7 @@ using Domain.Models;
 using Services.Abstraction;
 using Services.Specifications.Appointment;
 using Shared.DTOs.Appointment;
+using Shared.DTOs.Patient;
 
 namespace Services
 {
@@ -14,9 +15,25 @@ namespace Services
 
         public AppointmentService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
+        public async Task<int> GetTransactionId(int appointmentId)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(appointmentId);
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment with ID {appointmentId} doesn't exist");
+            return appointment.TransactionId;
+        }
+
+        public async Task<PatientDTO> GetPatientByAppointmentId(int id)
+        {
+            var appointment = (await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(new AppointmentPatientSpecifications(a => a.Id == id))).FirstOrDefault();
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment with ID {id} doesn't exist");
+            return _mapper.Map<PatientDTO>(appointment.Patient);
+        }
+
         public async Task<List<AppointmentDTO>?> GetByPatientAsync(int patientId, int pageIndex = 1, int pageSize = 20)
         {
-            var specs = new AppointmentPatientSpecifications(a => a.PatientId == patientId, pageIndex, pageSize);
+            var specs = new AppointmentPaginationSpecifications(a => a.PatientId == patientId, pageIndex, pageSize);
             var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(specs);
             if (appointments == null)
                 return null;

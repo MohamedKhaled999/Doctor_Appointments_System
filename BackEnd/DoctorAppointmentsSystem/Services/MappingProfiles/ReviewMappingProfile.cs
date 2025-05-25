@@ -4,7 +4,7 @@ using Shared.DTOs.Doctor;
 
 namespace Services.MappingProfiles
 {
-    public class ReviewMappingProfile : Profile
+    internal class ReviewMappingProfile : Profile
     {
         public ReviewMappingProfile()
         {

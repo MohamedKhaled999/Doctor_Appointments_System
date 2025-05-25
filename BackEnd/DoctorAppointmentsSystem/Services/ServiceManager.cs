@@ -33,8 +33,11 @@ namespace Services
 
         private readonly Lazy<IUploadService> _uploadService;
 
-        public ServiceManager(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IMapper mapper,
-            IOptions<JWTOptions> options, IConfiguration configuration)
+        public ServiceManager(IUnitOfWork unitOfWork,
+                              UserManager<AppUser> userManager,
+                              IMapper mapper,
+                              IOptions<JWTOptions> options,
+                              IConfiguration configuration)
         {
             _homeService = new Lazy<IHomeService>(() => new HomeService(unitOfWork, mapper));
 
@@ -46,8 +49,8 @@ namespace Services
             _doctorReservationService = new Lazy<IDoctorReservationService>(() => new DoctorReservationService(unitOfWork, mapper));
             _specialtyService = new Lazy<ISpecialtyService>(() => new SpecialtyService(unitOfWork, mapper));
 
-            _appointmentOrchestrator = new Lazy<IAppointmentOrchestrator>(() => new AppointmentOrchestrator(this));
-            _transactionService = new Lazy<ITransactionService>(() => new TransactionService(unitOfWork));
+            _appointmentOrchestrator = new Lazy<IAppointmentOrchestrator>(() => new AppointmentOrchestrator(this, configuration));
+            _transactionService = new Lazy<ITransactionService>(() => new TransactionService(unitOfWork, mapper));
 
             //_paymentService = new Lazy<IPaymentService>(() => new PaymentService());
 

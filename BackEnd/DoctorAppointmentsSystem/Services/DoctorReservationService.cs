@@ -3,6 +3,9 @@ using Domain.Contracts;
 using Domain.Models;
 using Domain.Models.Enums;
 using Services.Abstraction;
+using Services.Specifications.DoctorReservation;
+using Shared.DTOs.Appointment;
+using Shared.DTOs.Doctor;
 using Shared.DTOs.DoctorReservation;
 
 namespace Services
@@ -12,6 +15,21 @@ namespace Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+        public async Task<List<AppointmentDTO>?> GetAppointmentsByReservationId(int id)
+        {
+            var reservation = (await _unitOfWork.GetRepository<DoctorReservation, int>().GetAllAsync(new AppointmentReservationSpecifications(r => r.Id == id))).FirstOrDefault();
+            if (reservation == null)
+                throw new Exception("Reservation not found");
+            return _mapper.Map<List<AppointmentDTO>?>(reservation.Appointments);
+        }
+
+        public async Task<DoctorFeesDTO> GetDoctorByReservationId(int id)
+        {
+            var reservation = (await _unitOfWork.GetRepository<DoctorReservation, int>().GetAllAsync(new DoctorReservationSpecifications(r => r.Id == id))).FirstOrDefault();
+            if (reservation == null)
+                throw new Exception("Reservation not found");
+            return _mapper.Map<DoctorFeesDTO>(reservation.Doctor);
+        }
         public DoctorReservationService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -43,7 +61,6 @@ namespace Services
             await _unitOfWork.SaveChangesAsync();
 
         }
-
         public async Task DeleteDoctorReservation(int resId)
         {
             var reservation = await _unitOfWork.GetRepository<DoctorReservation, int>().GetByIdAsync(resId);
@@ -142,8 +159,5 @@ namespace Services
                 && x.StartTime.Month == res.StartTime.Month
                 && x.StartTime.Year == res.StartTime.Year)) > 0;
         }
-
-
     }
-
 }

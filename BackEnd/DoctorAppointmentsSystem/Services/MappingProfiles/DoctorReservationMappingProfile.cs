@@ -1,20 +1,14 @@
 ﻿using AutoMapper;
 using Domain.Models;
-using Shared.DTOs.Doctor;
 using Shared.DTOs.DoctorReservation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.MappingProfiles
 {
-    public class DoctorReservationMappingProfile : Profile
+    internal class DoctorReservationMappingProfile : Profile
     {
         public DoctorReservationMappingProfile()
         {
-            
+
             CreateMap<DoctorReservation, DoctorReservationDTO>()
                 .ForMember(dest => dest.ResID, src => src.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Time, src => src.MapFrom(src => $"{src.StartTime.ToString("hh:mm tt")}|{src.EndTime.ToString("hh:mm tt")}"))

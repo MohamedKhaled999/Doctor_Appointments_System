@@ -3,7 +3,7 @@ using Shared.DTOs.Doctor;
 
 namespace Services.MappingProfiles
 {
-    public class SpecialtyMappingProfile : AutoMapper.Profile
+    internal class SpecialtyMappingProfile : AutoMapper.Profile
     {
         public SpecialtyMappingProfile()
         {

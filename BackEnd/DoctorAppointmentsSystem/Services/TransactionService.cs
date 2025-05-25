@@ -1,27 +1,60 @@
-﻿using Domain.Contracts;
+﻿using AutoMapper;
+using Domain.Contracts;
+using Domain.Models;
 using Services.Abstraction;
+using Shared.DTOs.Transaction;
 
 namespace Services
 {
     internal class TransactionService : ITransactionService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public TransactionService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
-
-        public Task AddAsync(int patientId, int doctorId, int amount)
+        public TransactionService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public Task DeleteAsync(int id)
+        public async Task<TransactionDTO?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var transaction = await _unitOfWork.GetRepository<Transaction, int>().GetByIdAsync(id);
+            if (transaction == null)
+                return null;
+            return _mapper.Map<TransactionDTO>(transaction);
         }
 
-        public Task UpdateAsync(int id, int amount)
+        public async Task AddAsync(int patientId, int doctorId, int amount)
         {
-            throw new NotImplementedException();
+            var transaction = new Transaction()
+            {
+                PatientId = patientId,
+                DoctorId = doctorId,
+                Amount = amount,
+                TimeStamp = DateTime.Now
+            };
+            await _unitOfWork.GetRepository<Transaction, int>().AddAsync(transaction);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(int id, int amount)
+        {
+            var transaction = _mapper.Map<Transaction>(await GetByIdAsync(id));
+            if (transaction == null)
+                throw new ArgumentNullException($"Transaction with ID {id} doesn't exist");
+            transaction.Amount = amount;
+            _unitOfWork.GetRepository<Transaction, int>().Update(transaction);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var transaction = await _unitOfWork.GetRepository<Transaction, int>().GetByIdAsync(id);
+            if (transaction == null)
+                throw new ArgumentNullException($"Transaction with ID {id} doesn't exist");
+            _unitOfWork.GetRepository<Transaction, int>().Delete(transaction);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

@@ -11,6 +11,8 @@ namespace Services.MappingProfiles
     {
         public DoctorMappingProfile()
         {
+            CreateMap<Doctor, DoctorFeesDTO>();
+
             CreateMap<Doctor, HomeDoctorDTO>()
                 .ForMember(dest => dest.ID, src => src.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, src => src.MapFrom(src => src.FirstName + " " + src.LastName))
