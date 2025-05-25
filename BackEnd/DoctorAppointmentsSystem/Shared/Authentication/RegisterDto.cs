@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Shared.Authentication
@@ -30,6 +32,9 @@ namespace Shared.Authentication
         public string PhoneNumber { get; set; }
         public Governorate Governorate { get; set; }
         public DateOnly BirthDate { get; set; } = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
+
+        [JsonIgnore]
+        public int? AppUserID { get; set; } 
 
 
 

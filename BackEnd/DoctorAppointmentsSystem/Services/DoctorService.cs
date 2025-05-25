@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.Abstraction;
 using Services.Validators;
+using Shared.Authentication;
 using Shared.DTOs.Account;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Search;
@@ -19,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    internal class DoctorService : IDoctorService
+    public class DoctorService : IDoctorService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -30,10 +31,10 @@ namespace Services
             _mapper = mapper;
             _validator = new(_unitOfWork);
         }
-        public async Task AddAsync(DoctorRegisterDTO doctorDTO)
+        public async Task AddAsync(DoctorRegisterDto doctorDTO)
         {
             var newDoc = _mapper.Map<Doctor>(doctorDTO);
-            if (_validator.Validate(newDoc).IsValid)
+            if ((await _validator.ValidateAsync(newDoc)).IsValid)
             {
                 await _unitOfWork.GetRepository<Doctor, int>().AddAsync(newDoc);
                 await _unitOfWork.SaveChangesAsync();
@@ -42,9 +43,9 @@ namespace Services
             else
             {
                 var errors = new List<string>();
-                foreach (var error in _validator.Validate(newDoc).Errors)
+                foreach (var error in (await _validator.ValidateAsync(newDoc)).Errors)
                     errors.Add(error.ErrorMessage);
-                throw new ValidationException(string.Join(", ", errors));
+                throw new Domain.Exceptions.ValidationException(errors);
             }
         }
         public async Task UpdateDoctor(DoctorEditDTO doctorDTO)

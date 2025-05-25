@@ -49,6 +49,7 @@ namespace DoctorAppointmentsSystem.Web.Middlewares
             {
                 NotFoundException => (int)HttpStatusCode.NotFound,
                 UnAuthorizedException => (int)HttpStatusCode.Unauthorized,
+                SingleValidationException => (int)HttpStatusCode.BadRequest,
                 ValidationException validationException => HandleValidationException(response, validationException),
 
                 _ => (int)HttpStatusCode.InternalServerError

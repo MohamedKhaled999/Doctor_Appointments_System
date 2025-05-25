@@ -1,4 +1,5 @@
 ﻿using Shared.Authentication;
+using Shared.DTOs.Account;
 
 namespace Services.Abstraction
 {
@@ -8,8 +9,9 @@ namespace Services.Abstraction
         public Task<UserResultDto> RegisterAsync(RegisterDto registerDto);
         public Task<UserResultDto> GetUserByEmail(string email);
         public Task<bool> CheckEmailExist(string email);
-        public Task<bool> ChangePasswordAsync(string email, string oldPassword, string newPassword);
-        public Task<string> ForgetPasswordAsync(string email, string firstName, string lastName);
-        public Task<bool> ResetPasswordAsync(string email, string token, string newPassword);
+        public Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto);
+        public Task<string> ForgetPasswordAsync(ForgotPasswordDto  forgetPasswordDto);
+        public Task<bool> ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
+        public Task<bool> ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto);
     }
 }

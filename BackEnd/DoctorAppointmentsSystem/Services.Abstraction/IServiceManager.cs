@@ -9,7 +9,7 @@ namespace Services.Abstraction
     public interface IServiceManager
     {
         IPatientService PatientService { get; }
-        //IDoctorService DoctorService { get; }
+        IDoctorService DoctorService { get; }
         IAuthenticationService  AuthenticationService { get; }
         IEmailService EmailService { get; }
         //IAppointmentService AppointmentService { get; }

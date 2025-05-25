@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Models;
+using Shared.Authentication;
 using Shared.DTOs.Patient;
 
 namespace Services.MappingProfiles
@@ -16,6 +17,14 @@ namespace Services.MappingProfiles
 
             CreateMap<Patient, PatientDTO>()
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+
+
+            // map RegisterDto to Patient
+            CreateMap<RegisterDto, Patient>()
+             .ForMember(dest => dest.BirthDate, src => 
+             src.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0,0))))
+
+                .ReverseMap();
         }
     }
 }

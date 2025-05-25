@@ -32,11 +32,46 @@ namespace Presentation.Controllers
             return Ok(result);
         }
         [HttpPost("doctor-register")]
-        public async Task<IActionResult> DoctorRegister([FromBody] DoctorRegisterDto doctorRegisterDto)
+        public async Task<IActionResult> DoctorRegister([FromForm] DoctorRegisterDto doctorRegisterDto)
         {
+
             // Implement doctor registration logic here
-            return Ok();
+         var result =    await serviceManager.AuthenticationService.RegisterAsync(doctorRegisterDto);
+
+            return Ok(result);
         }
+
+        [HttpPost("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto confirmEmailDto)
+        {
+            var result = await serviceManager.AuthenticationService.ConfirmEmailAsync(confirmEmailDto);
+            return Ok(result);
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] Shared.Authentication.ForgotPasswordDto forgotPasswordDto)
+        {
+            var result = await serviceManager.AuthenticationService.ForgetPasswordAsync(forgotPasswordDto);
+            return Ok(result);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] Shared.Authentication.ResetPasswordDto resetPasswordDto)
+        {
+            var result = await serviceManager.AuthenticationService.ResetPasswordAsync(resetPasswordDto);
+            return Ok(result);
+        }
+
+        //change password
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            var result = await serviceManager.AuthenticationService.ChangePasswordAsync(changePasswordDto);
+            return Ok(result);
+        }
+
+
 
 
     }

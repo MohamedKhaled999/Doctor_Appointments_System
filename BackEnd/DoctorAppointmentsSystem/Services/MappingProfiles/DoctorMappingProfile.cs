@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Models;
+using Shared.Authentication;
 using Shared.DTOs.Account;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Home;
@@ -18,12 +19,21 @@ namespace Services.MappingProfiles
                 .ForMember(dest => dest.Image, src => src.MapFrom(src => src.ImageURL))
                 .ForMember(dest => dest.Rating, src => src.MapFrom(src => src.OverallRating));
 
-            CreateMap<DoctorRegisterDTO, Doctor>()
+            CreateMap<DoctorRegisterDto, Doctor>()
                 .ForMember(dest => dest.Id, src => src.Ignore())
                 .ForMember(dest => dest.SpecialtyID, src => src.MapFrom(src => src.SpecialtyID))
-                .ForMember(dest => dest.ImageURL, src => src.MapFrom(src => src.Image))
+                //.ForMember(dest => dest.ImageURL, src => src.MapFrom(src => src.Image)) // Assuming ImageURL is a string, you might want to handle the image upload separately
+                // the diff. props
                 .ForMember(dest => dest.OverallRating, src => src.Ignore())
-                .ForMember(dest => dest.Location, src => src.MapFrom(src => src.Address));
+                .ForMember(dest => dest.Location, src => src.MapFrom(src => src.Address))
+                .ForMember(dest => dest.WaitingTime, src => src.MapFrom(src => src.WaitingTime))
+                .ForMember(dest => dest.DefaultStartTime, src => src.MapFrom(src => new DateTime(DateOnly.FromDateTime(DateTime.Now), new TimeOnly(9, 0))))
+                .ForMember(dest => dest.DefaultEndTime, src => src.MapFrom(src => new DateTime(DateOnly.FromDateTime(DateTime.Now), new TimeOnly(17, 0))))
+                .ForMember(dest => dest.DefaultMaxReservations, src => src.MapFrom(src => 10))
+                .ForMember(dest => dest.BirthDate, src =>
+             src.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))))
+
+            ;
 
             CreateMap<DoctorEditDTO, Doctor>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(src => src.Id))

@@ -1,4 +1,5 @@
-﻿using Domain.Contracts;
+﻿using AutoMapper;
+using Domain.Contracts;
 using Domain.Exceptions;
 using Domain.Models;
 using Domain.Models.Enums;
@@ -17,10 +18,13 @@ using System.Security.Claims;
 using System.Text;
 namespace Services
 {
-    public class AuthenticationService(UserManager<AppUser> userManager
-        , IUnitOfWork unitOfWork,
+    public class AuthenticationService(
+        UserManager<AppUser> userManager,
+        IPatientService patientService,
+        IDoctorService doctorService,
         IOptions<JWTOptions> options
         , IConfiguration configuration,
+        IMapper mapper,
         IEmailService _emailService
         ) : Abstraction.IAuthenticationService 
     {
@@ -77,21 +81,8 @@ namespace Services
         {
             var user = new AppUser
             {
-
                 Email = registerDto.Email,
                 UserName = $"{registerDto.FirstName}{registerDto.LastName}{registerDto.Email}",
-                Person = new Patient
-                {
-                    FirstName = registerDto.FirstName,
-                    LastName = registerDto.LastName,
-                    BirthDate = registerDto.BirthDate.ToDateTime(new TimeOnly()),
-                    Governorate = (Governorate)registerDto.Governorate,
-                    Email = registerDto.Email,
-                    PhoneNumber = registerDto.PhoneNumber
-                }
-
-
-
             };
 
             var result = await userManager.CreateAsync(user, registerDto.Password);
@@ -101,12 +92,20 @@ namespace Services
                 throw new ValidationException(errors);
             }
 
-            var patient = (Patient)user.Person;
+            
 
-            patient.AppUserID = user.Id;
-            unitOfWork.GetRepository<Patient, int>().AddAsync(patient);
-
-            await userManager.AddToRoleAsync(user, "PATIENT");
+          
+            registerDto.AppUserID = user.Id;
+            if(registerDto is  DoctorRegisterDto doctor)
+            {
+                await doctorService.AddAsync(doctor);
+                //await userManager.AddToRoleAsync(user, "DOCTOR");
+            }
+            else
+            {
+                await patientService.AddAsync(registerDto);
+                //await userManager.AddToRoleAsync(user, "PATIENT");
+            }
             await SendEmailConfirmationAsync(registerDto, user);
 
             return new UserResultDto(
@@ -115,54 +114,6 @@ namespace Services
                 );
         }
 
-        /// <summary>
-        /// Register Doctor
-        /// </summary>
-        /// <param name="registerDto"></param>
-        /// <returns></returns>
-        /// <exception cref="ValidationException"></exception>
-        public async Task<UserResultDto> RegisterDoctorAsync(RegisterDto registerDto)
-        {
-            var user = new AppUser
-            {
-
-                Email = registerDto.Email,
-                UserName = $"{registerDto.FirstName}{registerDto.LastName}{registerDto.Email}",
-                Person = new Doctor
-                {
-                    FirstName = registerDto.FirstName,
-                    LastName = registerDto.LastName,
-                    BirthDate = registerDto.BirthDate.ToDateTime(new TimeOnly()),
-                    Governorate = (Governorate)registerDto.Governorate,
-                    Email = registerDto.Email,
-                    PhoneNumber = registerDto.PhoneNumber,
-
-                }
-
-
-
-            };
-
-            var result = await userManager.CreateAsync(user, registerDto.Password);
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                throw new ValidationException(errors);
-            }
-
-            var patient = (Patient)user.Person;
-
-            patient.AppUserID = user.Id;
-            unitOfWork.GetRepository<Patient, int>().AddAsync(patient);
-
-            await userManager.AddToRoleAsync(user, "PATIENT");
-            await SendEmailConfirmationAsync(registerDto, user);
-
-            return new UserResultDto(
-                    user.Email,
-                   Token: await CreateTokenAsync(user)
-            );
-        }
 
         private async Task SendEmailConfirmationAsync(RegisterDto registerDto, AppUser user)
         {
@@ -206,46 +157,66 @@ namespace Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<bool> ChangePasswordAsync(string email, string oldPassword, string newPassword)
+        public async Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
         {
-            var user = await userManager.FindByEmailAsync(email) ?? throw new Exception("User Not Found!");
-            var result = await userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            var user = await userManager.FindByEmailAsync(changePasswordDto.Email) ?? throw new Exception("User Not Found!");
+            var result = await userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
             if (!result.Succeeded)
-                throw new Exception("Failed to Change Password!");
+                throw new UnAuthorizedException("Failed to Change Password!");
             return result.Succeeded;
         }
 
-        public async Task<string> ForgetPasswordAsync(string email, string firstName, string lastName)
+        public async Task<string> ForgetPasswordAsync(  ForgotPasswordDto forgetPasswordDTO)
         {
-            var user = await userManager.FindByEmailAsync(email) ?? throw new Exception("User Not Found!");
+            var user = await userManager.FindByEmailAsync(forgetPasswordDTO.Email) ?? throw new NotFoundException("User Not Found!");
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
             byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
             var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
+            var frontendUrl = configuration["FrontEnd:Url"];
 
-            //_emailService.SendEmail(new EmailDTO
-            //{
-            //    To = email,
-            //    Subject = "Reset Password",
-            //    Link = $"https://cima-zeta.vercel.app/reset-password?email={email}&token={codeEncoded}",
-            //    Template = MailTemplates.ForgotPasswordTemplate
-            //}, $"{firstName} {lastName}");
+
+            _emailService.SendEmail(new EmailDTO
+            {
+                To = forgetPasswordDTO.Email,
+                Subject = "Reset Password",
+                Link = $"{frontendUrl}/reset-password?email={forgetPasswordDTO.Email}&token={codeEncoded}",
+                Template = MailTemplates.ForgotPasswordTemplate
+            }, $"{forgetPasswordDTO.FirstName} {forgetPasswordDTO.LastName}");
 
             if (token == null)
-                throw new Exception("Failed to Generate Reset Password Token!");
+                throw new UnAuthorizedException("Failed to Generate Reset Password Token!");
             return token;
         }
 
-        public async Task<bool> ResetPasswordAsync(string email, string token, string newPassword)
+        public async Task<bool> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
         {
-            var user = await userManager.FindByEmailAsync(email) ?? throw new Exception("User Not Found!");
-            var codeDecodedBytes = WebEncoders.Base64UrlDecode(token);
+            var user = await userManager.FindByEmailAsync(resetPasswordDto.Email) ?? throw new NotFoundException("User Not Found!");
+            var codeDecodedBytes = WebEncoders.Base64UrlDecode(resetPasswordDto.Token);
             var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
 
-            var result = await userManager.ResetPasswordAsync(user, codeDecoded, newPassword);
+            var result = await userManager.ResetPasswordAsync(user, codeDecoded, resetPasswordDto.NewPassword);
             if (!result.Succeeded)
-                throw new Exception("Failed to Reset Password!");
+                throw new UnAuthorizedException("Failed to Reset Password!");
 
             return result.Succeeded;
+        }
+
+        public async Task<bool> ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto)
+        {
+           
+                var user = await userManager.FindByEmailAsync(confirmEmailDto.Email);
+                if (user is null)
+                {
+                    throw new UnAuthorizedException($"Email Doesn't Exist !!\n {confirmEmailDto.Email}");
+                }
+                var codeDecodedBytes = WebEncoders.Base64UrlDecode(confirmEmailDto.Token);
+                var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
+                var result = await userManager.ConfirmEmailAsync(user, codeDecoded);
+                if (result.Succeeded)
+                    return true;
+                throw new ValidationException(result.Errors.Select(e => e.Description).ToList());
+            
+           
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Shared.DTOs.Patient;
+﻿using Shared.Authentication;
+using Shared.DTOs.Patient;
 
 namespace Services.Abstraction
 {
@@ -8,6 +9,7 @@ namespace Services.Abstraction
         Task<PatientDTO?> GetByIdAsync(int id);
         int GetCount();
         Task AddAsync(PatientDTO patientDto);
+        Task AddAsync(RegisterDto registerDto);
         Task UpdateAsync(PatientDTO patientDto);
         Task DeleteAsync(int id);
     }

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models;
 using Domain.Specifications;
 using FluentValidation;
 using Services.Abstraction;
 using Services.Validators;
+using Shared.Authentication;
 using Shared.DTOs.Patient;
 
 namespace Services
@@ -52,10 +54,27 @@ namespace Services
             }
             else
             {
-                var errors = new List<string>();
-                foreach (var error in result.Errors)
-                    errors.Add(error.ErrorMessage);
-                throw new ValidationException(string.Join(", ", errors));
+                var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
+
+                throw new Domain.Exceptions.ValidationException(errors);
+            }
+        }
+
+
+        public async Task AddAsync(RegisterDto patientDto)
+        {
+            var patient = _mapper.Map<Patient>(patientDto);
+            var result = _validator.Validate(patient);
+            if (result.IsValid)
+            {
+                await _unitOfWork.GetRepository<Patient, int>().AddAsync(patient);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                var errors = result.Errors.Select(e => e.ErrorMessage).ToList();    
+               
+                throw new Domain.Exceptions.ValidationException(errors);
             }
         }
 
@@ -73,10 +92,8 @@ namespace Services
             }
             else
             {
-                var errors = new List<string>();
-                foreach (var error in result.Errors)
-                    errors.Add(error.ErrorMessage);
-                throw new ValidationException(string.Join(", ", errors));
+                var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
+                throw new Domain.Exceptions.ValidationException(errors);
             }
         }
 

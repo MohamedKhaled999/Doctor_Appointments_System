@@ -13,6 +13,7 @@ namespace Services
     {
         
         private readonly Lazy<IPatientService> _patientService;
+        private readonly Lazy<IDoctorService> _doctorService;
 
         private readonly Lazy<IAuthenticationService> _authenticationService;
         private readonly Lazy<IEmailService>  _emailService;
@@ -23,8 +24,16 @@ namespace Services
             IOptions<JWTOptions> options, IConfiguration configuration)
         {
             _patientService = new Lazy<IPatientService>(() => new PatientService(unitOfWork,mapper));
+            _doctorService = new Lazy<IDoctorService>(() => new DoctorService(unitOfWork, mapper));
             _emailService = new Lazy<IEmailService>(() => new EmailService(configuration));
-            _authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(userManager,unitOfWork, options,configuration ,_emailService.Value));
+
+            _authenticationService = new Lazy<IAuthenticationService>(() => 
+            new AuthenticationService(userManager,
+            _patientService.Value,
+            _doctorService.Value, 
+            options, configuration,
+            mapper, _emailService.Value
+            ));
 
         }
         public IPatientService PatientService => _patientService.Value;
@@ -32,5 +41,7 @@ namespace Services
         public IAuthenticationService AuthenticationService => _authenticationService.Value;
 
         public IEmailService EmailService => _emailService.Value;
+
+        public IDoctorService DoctorService => _doctorService.Value;
     }
 }

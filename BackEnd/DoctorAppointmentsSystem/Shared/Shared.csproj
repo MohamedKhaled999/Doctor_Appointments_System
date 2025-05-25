@@ -8,12 +8,6 @@
 
   <ItemGroup>
     <Compile Remove="DTOs\About\AboutViewModel.cs" />
-    <Compile Remove="DTOs\Account\ChangePasswordViewModel.cs" />
-    <Compile Remove="DTOs\Account\DoctorRegisterViewModel.cs" />
-    <Compile Remove="DTOs\Account\ForgetPasswordVM.cs" />
-    <Compile Remove="DTOs\Account\LoginViewModel.cs" />
-    <Compile Remove="DTOs\Account\RegisterViewModel.cs" />
-    <Compile Remove="DTOs\Account\ResetPasswordVM.cs" />
     <Compile Remove="DTOs\Appointment\AppointmentViewModel.cs" />
     <Compile Remove="DTOs\DoctorReservation\CalendarReservationVM.cs" />
     <Compile Remove="DTOs\DoctorReservation\DoctorReservationViewModel.cs" />
