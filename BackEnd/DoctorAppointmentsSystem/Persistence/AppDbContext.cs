@@ -8,18 +8,7 @@ namespace Persistence
     public class AppDbContext :
         IdentityDbContext<AppUser, IdentityRole<int>, int>
     {
-
-
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
-
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Doctor> Doctors { get; set; }
-        public DbSet<Specialty> Specialties { get; set; }
-        public DbSet<DoctorReservation> DoctorReservations { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Review> Reviews { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //    => optionsBuilder.UseSqlServer("Server = .; Database = MVCProjTest2; Integrated Security = True; Encrypt = False");

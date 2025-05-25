@@ -28,25 +28,16 @@ namespace Services
 
         public async Task AddAsync(int patientId, int doctorReservationId)
         {
-            var isOrderPaid = true; // Check Payment Status Before Adding Appointment
-            if (isOrderPaid)
+            var appointment = new Appointment()
             {
-                var appointment = new Appointment()
-                {
-                    PatientId = patientId,
-                    DoctorReservationID = doctorReservationId
-                };
-                await _unitOfWork.GetRepository<Appointment, int>().AddAsync(appointment);
-            }
-            else
-            {
-                // Delete Order Here
-            }
+                PatientId = patientId,
+                DoctorReservationID = doctorReservationId
+            };
+            await _unitOfWork.GetRepository<Appointment, int>().AddAsync(appointment);
         }
 
         public async Task DeleteAsync(int id)
         {
-            // ============ Delete Order Before Deleting Appointment ============
             var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(id);
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {id} doesn't exist");

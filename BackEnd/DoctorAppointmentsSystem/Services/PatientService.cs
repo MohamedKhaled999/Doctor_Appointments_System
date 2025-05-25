@@ -41,24 +41,6 @@ namespace Services
         public int GetCount()
             => _unitOfWork.GetRepository<Patient, int>().GetCount();
 
-        public async Task AddAsync(PatientDTO patientDto)
-        {
-            var patient = _mapper.Map<Patient>(patientDto);
-            var result = _validator.Validate(patient);
-            if (result.IsValid)
-            {
-                await _unitOfWork.GetRepository<Patient, int>().AddAsync(patient);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            else
-            {
-                var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
-
-                throw new Domain.Exceptions.ValidationException(errors);
-            }
-        }
-
-
         public async Task AddAsync(RegisterDto patientDto)
         {
             var patient = _mapper.Map<Patient>(patientDto);

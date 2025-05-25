@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Services.Abstraction;
+using Services.Abstraction.Orchestrators;
+using Services.Orchestrators;
 using Shared.Authentication;
 
 namespace Services
@@ -21,8 +23,8 @@ namespace Services
         private readonly Lazy<IDoctorReservationService> _doctorReservationService;
         private readonly Lazy<ISpecialtyService> _specialtyService;
 
-        private readonly Lazy<IOrderService> _orderService;
-        private readonly Lazy<ICancellationService> _cancellationService;
+        private readonly Lazy<IAppointmentOrchestrator> _appointmentOrchestrator;
+        private readonly Lazy<ITransactionService> _transactionService;
 
         private readonly Lazy<IPaymentService> _paymentService;
 
@@ -44,8 +46,8 @@ namespace Services
             _doctorReservationService = new Lazy<IDoctorReservationService>(() => new DoctorReservationService(unitOfWork, mapper));
             _specialtyService = new Lazy<ISpecialtyService>(() => new SpecialtyService(unitOfWork, mapper));
 
-            //_orderService = new Lazy<IOrderService>(() => new OrderService());
-            //_cancellationService = new Lazy<ICancellationService>(() => new CancellationService());
+            _appointmentOrchestrator = new Lazy<IAppointmentOrchestrator>(() => new AppointmentOrchestrator(this));
+            _transactionService = new Lazy<ITransactionService>(() => new TransactionService(unitOfWork));
 
             //_paymentService = new Lazy<IPaymentService>(() => new PaymentService());
 
@@ -77,9 +79,9 @@ namespace Services
 
         public ISpecialtyService SpecialtyService => _specialtyService.Value;
 
-        public IOrderService OrderService => _orderService.Value;
+        public ITransactionService TransactionService => _transactionService.Value;
 
-        public ICancellationService CancellationService => _cancellationService.Value;
+        public IAppointmentOrchestrator AppointmentOrchestrator => _appointmentOrchestrator.Value;
 
         public IPaymentService PaymentService => _paymentService.Value;
 

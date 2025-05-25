@@ -1,7 +1,6 @@
 ﻿using Shared.Authentication;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Search;
-using System.Linq.Expressions;
 
 namespace Services.Abstraction
 {
@@ -10,7 +9,7 @@ namespace Services.Abstraction
         public Task AddAsync(DoctorRegisterDto doctorDTO);
         public Task UpdateDoctor(DoctorEditDTO doctorDTO);
         public Task<DoctorProfileDTO> DoctorProfile(int doctorId);
-        public Task<List<DoctorSearchDTO>> SearchDoctor(FilterSearchDTO filter); 
+        public Task<List<DoctorSearchDTO>> SearchDoctor(FilterSearchDTO filter);
         //Task<Doctor?> GetDoctorInfo(int doctorID);
         //Task<List<Doctor>> GetDoctorsOrderedByRating();
         //Task<List<Doctor>> GetAllDoctors();

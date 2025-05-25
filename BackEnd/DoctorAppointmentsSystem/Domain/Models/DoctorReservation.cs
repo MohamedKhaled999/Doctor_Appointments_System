@@ -1,5 +1,4 @@
-﻿using Domain.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
@@ -12,7 +11,6 @@ namespace Domain.Models
         public DateTime EndTime { get; set; }
         public int MaxReservation { get; set; }
         public virtual Doctor Doctor { get; set; }
-        public virtual ICollection<Order>? Orders { get; set; }
         public virtual ICollection<Appointment>? Appointments { get; set; }
     }
 }

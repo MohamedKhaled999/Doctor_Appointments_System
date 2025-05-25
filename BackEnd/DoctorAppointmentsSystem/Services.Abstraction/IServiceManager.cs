@@ -1,4 +1,6 @@
-﻿namespace Services.Abstraction
+﻿using Services.Abstraction.Orchestrators;
+
+namespace Services.Abstraction
 {
     public interface IServiceManager
     {
@@ -9,8 +11,8 @@
         IDoctorService DoctorService { get; }
         IDoctorReservationService DoctorReservationService { get; }
         ISpecialtyService SpecialtyService { get; }
-        IOrderService OrderService { get; }
-        ICancellationService CancellationService { get; }
+        ITransactionService TransactionService { get; }
+        IAppointmentOrchestrator AppointmentOrchestrator { get; }
         IPaymentService PaymentService { get; }
         IAuthenticationService AuthenticationService { get; }
         IEmailService EmailService { get; }

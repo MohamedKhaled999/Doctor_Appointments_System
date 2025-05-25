@@ -29,7 +29,6 @@ namespace Services
             {
                 await _unitOfWork.GetRepository<Doctor, int>().AddAsync(newDoc);
                 await _unitOfWork.SaveChangesAsync();
-
             }
             else
             {
@@ -58,7 +57,6 @@ namespace Services
                 throw new ValidationException(string.Join(", ", errors));
             }
         }
-
         public async Task<DoctorProfileDTO> DoctorProfile(int doctorId)
         {
             var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(doctorId);

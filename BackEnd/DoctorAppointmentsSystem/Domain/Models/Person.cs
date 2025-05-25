@@ -5,7 +5,6 @@ namespace Domain.Models
 {
     public abstract class Person : EntityBase<int>
     {
-        public int? AppUserID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -13,5 +12,7 @@ namespace Domain.Models
         public DateTime BirthDate { get; set; }
         public Governorate Governorate { get; set; }
         public string PhoneNumber { get; set; }
+        public int? AppUserID { get; set; }
+        public virtual ICollection<Transaction>? Transactions { get; set; }
     }
 }

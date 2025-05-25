@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Shared.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
-    public class AuthenticationController(IServiceManager serviceManager):ApiController
+    public class AuthenticationController(IServiceManager serviceManager) : ApiController
     {
 
         [HttpPost("register")]
@@ -18,7 +13,7 @@ namespace Presentation.Controllers
             // Implement registration logic here
 
             // You can use the serviceManager to access the authentication service
-           var  result =  await serviceManager.AuthenticationService.RegisterAsync(registerDto);
+            var result = await serviceManager.AuthenticationService.RegisterAsync(registerDto);
 
             return Ok(result);
         }
@@ -26,7 +21,7 @@ namespace Presentation.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             // Implement login logic here
-            
+
             var result = await serviceManager.AuthenticationService.LoginAsync(loginDto);
 
             return Ok(result);
@@ -36,7 +31,7 @@ namespace Presentation.Controllers
         {
 
             // Implement doctor registration logic here
-         var result =    await serviceManager.AuthenticationService.RegisterAsync(doctorRegisterDto);
+            var result = await serviceManager.AuthenticationService.RegisterAsync(doctorRegisterDto);
 
             return Ok(result);
         }
@@ -49,14 +44,14 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] Shared.Authentication.ForgotPasswordDto forgotPasswordDto)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
         {
             var result = await serviceManager.AuthenticationService.ForgetPasswordAsync(forgotPasswordDto);
             return Ok(result);
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] Shared.Authentication.ResetPasswordDto resetPasswordDto)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
         {
             var result = await serviceManager.AuthenticationService.ResetPasswordAsync(resetPasswordDto);
             return Ok(result);
@@ -70,9 +65,5 @@ namespace Presentation.Controllers
             var result = await serviceManager.AuthenticationService.ChangePasswordAsync(changePasswordDto);
             return Ok(result);
         }
-
-
-
-
     }
 }
