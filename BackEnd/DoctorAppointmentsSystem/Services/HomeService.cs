@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Models;
-using Domain.Specifications.Home;
 using Services.Abstraction;
+using Services.Specifications.Home;
 using Shared.DTOs.Home;
 
 namespace Services
 {
-    public class HomeService : IHomeService
+    internal class HomeService : IHomeService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

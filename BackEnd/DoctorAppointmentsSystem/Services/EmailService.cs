@@ -1,17 +1,11 @@
-﻿using Services.Abstraction;
+﻿using Microsoft.Extensions.Configuration;
 using Shared.DTOs.Email;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using System.Net.Mail;
 
 namespace Services
 {
-    public class EmailService : Services.Abstraction.IEmailService
+    internal class EmailService : Services.Abstraction.IEmailService
     {
 
 

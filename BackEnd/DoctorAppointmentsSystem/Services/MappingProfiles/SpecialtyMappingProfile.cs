@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Models;
+using Shared.DTOs.Doctor;
 
 namespace Services.MappingProfiles
 {
@@ -10,7 +7,7 @@ namespace Services.MappingProfiles
     {
         public SpecialtyMappingProfile()
         {
-            CreateMap<Domain.Models.Specialty, Shared.DTOs.Doctor.SpecialtyDTO>()
+            CreateMap<Specialty, SpecialtyDTO>()
                 .ForMember(dest => dest.ID, src => src.MapFrom(src => src.Id))
                 .ReverseMap();
         }

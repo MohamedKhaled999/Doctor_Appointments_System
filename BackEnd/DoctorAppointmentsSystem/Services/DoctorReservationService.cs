@@ -4,15 +4,10 @@ using Domain.Models;
 using Domain.Models.Enums;
 using Services.Abstraction;
 using Shared.DTOs.DoctorReservation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
-    public class DoctorReservationService : IDoctorReservationService
+    internal class DoctorReservationService : IDoctorReservationService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -27,7 +22,7 @@ namespace Services
             DoctorReservation newReservation = _mapper.Map<DoctorReservation>(res);
             if (!IsInCalender(newReservation).Result)
             {
-                await _unitOfWork.GetRepository<DoctorReservation,int>().AddAsync(newReservation);
+                await _unitOfWork.GetRepository<DoctorReservation, int>().AddAsync(newReservation);
             }
             else
             {
@@ -46,7 +41,7 @@ namespace Services
             var updatedReservation = _mapper.Map<DoctorReservation>(res);
             _unitOfWork.GetRepository<DoctorReservation, int>().Update(updatedReservation);
             await _unitOfWork.SaveChangesAsync();
-            
+
         }
 
         public async Task DeleteDoctorReservation(int resId)
@@ -63,7 +58,7 @@ namespace Services
             if (reservation == null)
                 throw new Exception("Reservation not found");
             var reservationDTO = _mapper.Map<DoctorReservationDTO>(reservation);
-            reservationDTO.IsAvailable = reservation.MaxReservation >  _unitOfWork.GetRepository<Appointment, int>()
+            reservationDTO.IsAvailable = reservation.MaxReservation > _unitOfWork.GetRepository<Appointment, int>()
                 .GetCount(new SpecificationsBase<Appointment>(x => x.DoctorReservationID == id));
             return reservationDTO;
         }
@@ -122,7 +117,7 @@ namespace Services
 
             }
             _unitOfWork.SaveChangesAsync().Wait();
-            
+
         }
         public static DateTime GetCorrespondingNextDay(DateTime date, WorkingDays day)
         {
@@ -148,7 +143,7 @@ namespace Services
                 && x.StartTime.Year == res.StartTime.Year)) > 0;
         }
 
-        
+
     }
-    
+
 }

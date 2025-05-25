@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
-using Domain.Exceptions;
 using Domain.Models;
-using Domain.Specifications;
-using FluentValidation;
 using Services.Abstraction;
+using Services.Specifications;
 using Services.Validators;
 using Shared.Authentication;
 using Shared.DTOs.Patient;
 
 namespace Services
 {
-    public class PatientService : IPatientService
+    internal class PatientService : IPatientService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -72,8 +70,8 @@ namespace Services
             }
             else
             {
-                var errors = result.Errors.Select(e => e.ErrorMessage).ToList();    
-               
+                var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
+
                 throw new Domain.Exceptions.ValidationException(errors);
             }
         }

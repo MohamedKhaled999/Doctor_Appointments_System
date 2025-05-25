@@ -21,8 +21,8 @@ namespace Services.MappingProfiles
 
             // map RegisterDto to Patient
             CreateMap<RegisterDto, Patient>()
-             .ForMember(dest => dest.BirthDate, src => 
-             src.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0,0))))
+             .ForMember(dest => dest.BirthDate, src =>
+             src.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))))
 
                 .ReverseMap();
         }

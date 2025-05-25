@@ -11,37 +11,82 @@ namespace Services
 {
     public class ServiceManager : IServiceManager
     {
-        
+        private readonly Lazy<IHomeService> _homeService;
+
         private readonly Lazy<IPatientService> _patientService;
+        private readonly Lazy<IAppointmentService> _appointmentService;
+        private readonly Lazy<IReviewService> _reviewService;
+
         private readonly Lazy<IDoctorService> _doctorService;
+        private readonly Lazy<IDoctorReservationService> _doctorReservationService;
+        private readonly Lazy<ISpecialtyService> _specialtyService;
+
+        private readonly Lazy<IOrderService> _orderService;
+        private readonly Lazy<ICancellationService> _cancellationService;
+
+        private readonly Lazy<IPaymentService> _paymentService;
 
         private readonly Lazy<IAuthenticationService> _authenticationService;
-        private readonly Lazy<IEmailService>  _emailService;
+        private readonly Lazy<IEmailService> _emailService;
 
-
+        private readonly Lazy<IUploadService> _uploadService;
 
         public ServiceManager(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IMapper mapper,
             IOptions<JWTOptions> options, IConfiguration configuration)
         {
-            _patientService = new Lazy<IPatientService>(() => new PatientService(unitOfWork,mapper));
-            _doctorService = new Lazy<IDoctorService>(() => new DoctorService(unitOfWork, mapper));
-            _emailService = new Lazy<IEmailService>(() => new EmailService(configuration));
+            _homeService = new Lazy<IHomeService>(() => new HomeService(unitOfWork, mapper));
 
-            _authenticationService = new Lazy<IAuthenticationService>(() => 
+            _patientService = new Lazy<IPatientService>(() => new PatientService(unitOfWork, mapper));
+            _appointmentService = new Lazy<IAppointmentService>(() => new AppointmentService(unitOfWork));
+            _reviewService = new Lazy<IReviewService>(() => new ReviewService(unitOfWork, mapper));
+
+            _doctorService = new Lazy<IDoctorService>(() => new DoctorService(unitOfWork, mapper));
+            _doctorReservationService = new Lazy<IDoctorReservationService>(() => new DoctorReservationService(unitOfWork, mapper));
+            _specialtyService = new Lazy<ISpecialtyService>(() => new SpecialtyService(unitOfWork, mapper));
+
+            //_orderService = new Lazy<IOrderService>(() => new OrderService());
+            //_cancellationService = new Lazy<ICancellationService>(() => new CancellationService());
+
+            //_paymentService = new Lazy<IPaymentService>(() => new PaymentService());
+
+            _emailService = new Lazy<IEmailService>(() => new EmailService(configuration));
+            //_uploadService = new Lazy<IUploadService>(() => new UploadService());
+
+            _authenticationService = new Lazy<IAuthenticationService>(() =>
             new AuthenticationService(userManager,
-            _patientService.Value,
-            _doctorService.Value, 
-            options, configuration,
-            mapper, _emailService.Value
-            ));
+                                      _patientService.Value,
+                                      _doctorService.Value,
+                                      options,
+                                      configuration,
+                                      mapper,
+                                      _emailService.Value));
 
         }
+
+        public IHomeService HomeService => _homeService.Value;
+
         public IPatientService PatientService => _patientService.Value;
+
+        public IAppointmentService AppointmentService => _appointmentService.Value;
+
+        public IReviewService ReviewService => _reviewService.Value;
+
+        public IDoctorService DoctorService => _doctorService.Value;
+
+        public IDoctorReservationService DoctorReservationService => _doctorReservationService.Value;
+
+        public ISpecialtyService SpecialtyService => _specialtyService.Value;
+
+        public IOrderService OrderService => _orderService.Value;
+
+        public ICancellationService CancellationService => _cancellationService.Value;
+
+        public IPaymentService PaymentService => _paymentService.Value;
 
         public IAuthenticationService AuthenticationService => _authenticationService.Value;
 
         public IEmailService EmailService => _emailService.Value;
 
-        public IDoctorService DoctorService => _doctorService.Value;
+        public IUploadService UploadService => _uploadService.Value;
     }
 }

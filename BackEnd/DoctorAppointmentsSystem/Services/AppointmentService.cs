@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Models;
-using Domain.Specifications.Appointment;
 using Services.Abstraction;
+using Services.Specifications.Appointment;
 using Shared.DTOs.Appointment;
 
 namespace Services
 {
-    public class AppointmentService : IAppointmentService
+    internal class AppointmentService : IAppointmentService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Services.Abstraction
+﻿namespace Services.Abstraction
 {
     public interface IServiceManager
     {
+        IHomeService HomeService { get; }
         IPatientService PatientService { get; }
+        IAppointmentService AppointmentService { get; }
+        IReviewService ReviewService { get; }
         IDoctorService DoctorService { get; }
-        IAuthenticationService  AuthenticationService { get; }
+        IDoctorReservationService DoctorReservationService { get; }
+        ISpecialtyService SpecialtyService { get; }
+        IOrderService OrderService { get; }
+        ICancellationService CancellationService { get; }
+        IPaymentService PaymentService { get; }
+        IAuthenticationService AuthenticationService { get; }
         IEmailService EmailService { get; }
-        //IAppointmentService AppointmentService { get; }
-        //IFileService FileService { get; }
-        //INotificationService NotificationService { get; }
-
+        IUploadService UploadService { get; }
     }
 }

@@ -3,26 +3,21 @@ using Domain.Contracts;
 using Domain.Models;
 using Services.Abstraction;
 using Shared.DTOs.Doctor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
-    public class SpecialtyService : ISpecialtyService
+    internal class SpecialtyService : ISpecialtyService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public SpecialtyService(IUnitOfWork unitOfWork,IMapper mapper) 
+        public SpecialtyService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         public async Task<List<SpecialtyDTO>> GetAllSpecialties()
         {
-            var specialties = await  _unitOfWork.GetRepository<Specialty, int>().GetAllAsync();
+            var specialties = await _unitOfWork.GetRepository<Specialty, int>().GetAllAsync();
             var specialtyDTOs = _mapper.Map<List<SpecialtyDTO>>(specialties);
             return specialtyDTOs;
 
@@ -64,7 +59,7 @@ namespace Services
             _unitOfWork.GetRepository<Specialty, int>().Delete(specialty);
             await _unitOfWork.SaveChangesAsync();
         }
-        
+
     }
-    
+
 }

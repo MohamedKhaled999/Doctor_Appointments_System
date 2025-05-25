@@ -1,29 +1,21 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Models;
-using Domain.Models.Enums;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.Abstraction;
 using Services.Validators;
 using Shared.Authentication;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Search;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
-    public class DoctorService : IDoctorService
+    internal class DoctorService : IDoctorService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly DoctorValidator _validator; 
+        private readonly DoctorValidator _validator;
         public DoctorService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -52,7 +44,7 @@ namespace Services
             var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(doctorDTO.Id);
             if (doctor == null)
                 throw new Exception("Doctor not found");
-            var updatedDoctor = _mapper.Map(doctorDTO,doctor);
+            var updatedDoctor = _mapper.Map(doctorDTO, doctor);
             if (_validator.Validate(updatedDoctor).IsValid)
             {
                 _unitOfWork.GetRepository<Doctor, int>().Update(updatedDoctor);
@@ -72,7 +64,7 @@ namespace Services
             var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(doctorId);
             if (doctor == null)
                 return null;
-            var doctorDTO =  _mapper.Map<DoctorProfileDTO>(doctor);
+            var doctorDTO = _mapper.Map<DoctorProfileDTO>(doctor);
 
             return doctorDTO;
         }

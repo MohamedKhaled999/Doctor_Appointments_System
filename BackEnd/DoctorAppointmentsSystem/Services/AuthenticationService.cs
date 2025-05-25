@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using Domain.Contracts;
 using Domain.Exceptions;
 using Domain.Models;
-using Domain.Models.Enums;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
@@ -15,9 +12,10 @@ using Shared.DTOs.Email;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+
 namespace Services
 {
-    public class AuthenticationService(
+    internal class AuthenticationService(
         UserManager<AppUser> userManager,
         IPatientService patientService,
         IDoctorService doctorService,
@@ -25,7 +23,7 @@ namespace Services
         , IConfiguration configuration,
         IMapper mapper,
         IEmailService _emailService
-        ) : Abstraction.IAuthenticationService 
+        ) : Abstraction.IAuthenticationService
     {
         public async Task<bool> CheckEmailExist(string email)
         {
@@ -91,11 +89,11 @@ namespace Services
                 throw new ValidationException(errors);
             }
 
-            
 
-          
+
+
             registerDto.AppUserID = user.Id;
-            if(registerDto is  DoctorRegisterDto doctor)
+            if (registerDto is DoctorRegisterDto doctor)
             {
                 await doctorService.AddAsync(doctor);
                 //await userManager.AddToRoleAsync(user, "DOCTOR");
@@ -165,7 +163,7 @@ namespace Services
             return result.Succeeded;
         }
 
-        public async Task<string> ForgetPasswordAsync(  ForgotPasswordDto forgetPasswordDTO)
+        public async Task<string> ForgetPasswordAsync(ForgotPasswordDto forgetPasswordDTO)
         {
             var user = await userManager.FindByEmailAsync(forgetPasswordDTO.Email) ?? throw new NotFoundException("User Not Found!");
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -202,20 +200,20 @@ namespace Services
 
         public async Task<bool> ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto)
         {
-           
-                var user = await userManager.FindByEmailAsync(confirmEmailDto.Email);
-                if (user is null)
-                {
-                    throw new UnAuthorizedException($"Email Doesn't Exist !!\n {confirmEmailDto.Email}");
-                }
-                var codeDecodedBytes = WebEncoders.Base64UrlDecode(confirmEmailDto.Token);
-                var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
-                var result = await userManager.ConfirmEmailAsync(user, codeDecoded);
-                if (result.Succeeded)
-                    return true;
-                throw new ValidationException(result.Errors.Select(e => e.Description).ToList());
-            
-           
+
+            var user = await userManager.FindByEmailAsync(confirmEmailDto.Email);
+            if (user is null)
+            {
+                throw new UnAuthorizedException($"Email Doesn't Exist !!\n {confirmEmailDto.Email}");
+            }
+            var codeDecodedBytes = WebEncoders.Base64UrlDecode(confirmEmailDto.Token);
+            var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
+            var result = await userManager.ConfirmEmailAsync(user, codeDecoded);
+            if (result.Succeeded)
+                return true;
+            throw new ValidationException(result.Errors.Select(e => e.Description).ToList());
+
+
         }
     }
 }

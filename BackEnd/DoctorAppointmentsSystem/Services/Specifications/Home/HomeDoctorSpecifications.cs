@@ -1,9 +1,9 @@
 ﻿using Domain.Contracts;
 using Domain.Models;
 
-namespace Domain.Specifications.Home
+namespace Services.Specifications.Home
 {
-    public class HomeDoctorSpecifications : SpecificationsBase<Doctor>
+    internal class HomeDoctorSpecifications : SpecificationsBase<Doctor>
     {
         public HomeDoctorSpecifications() : base(null)
         {

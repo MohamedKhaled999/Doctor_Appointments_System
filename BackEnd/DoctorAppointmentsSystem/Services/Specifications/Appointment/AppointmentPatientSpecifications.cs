@@ -1,11 +1,11 @@
 ﻿using Domain.Contracts;
 using System.Linq.Expressions;
 
-namespace Domain.Specifications.Appointment
+namespace Services.Specifications.Appointment
 {
-    public class AppointmentPatientSpecifications : SpecificationsBase<Models.Appointment>
+    internal class AppointmentPatientSpecifications : SpecificationsBase<Domain.Models.Appointment>
     {
-        public AppointmentPatientSpecifications(Expression<Func<Models.Appointment, bool>> criteria,
+        public AppointmentPatientSpecifications(Expression<Func<Domain.Models.Appointment, bool>> criteria,
                                                 int pageIndex = 1,
                                                 int pageSize = 20) : base(criteria)
         {

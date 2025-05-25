@@ -2,9 +2,9 @@
 using Domain.Models;
 using System.Linq.Expressions;
 
-namespace Domain.Specifications.Home
+namespace Services.Specifications.Home
 {
-    public class HomeSpecialtySpecifications : SpecificationsBase<Doctor>
+    internal class HomeSpecialtySpecifications : SpecificationsBase<Doctor>
     {
         public HomeSpecialtySpecifications(Expression<Func<Doctor, bool>> criteria) : base(criteria)
         {

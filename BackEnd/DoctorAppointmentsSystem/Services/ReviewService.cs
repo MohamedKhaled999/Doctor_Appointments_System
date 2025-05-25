@@ -1,22 +1,17 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
-using Domain.Models;
 using Services.Abstraction;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Patient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
-    public class ReviewService : IReviewService
+    internal class ReviewService : IReviewService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public ReviewService(IUnitOfWork unitOfWork, IMapper mapper) {
+        public ReviewService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -31,7 +26,7 @@ namespace Services
             var existingReview = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetByIdAsync(review.ID);
             if (existingReview == null)
                 throw new Exception("Review not found");
-            var updatedReview = _mapper.Map(review , existingReview);
+            var updatedReview = _mapper.Map(review, existingReview);
             _unitOfWork.GetRepository<Domain.Models.Review, int>().Update(updatedReview);
             await _unitOfWork.SaveChangesAsync();
         }
@@ -42,10 +37,10 @@ namespace Services
                 return null;
             return _mapper.Map<ReviewDTO>(review);
         }
-        public async Task<ICollection<ReviewDTO>> GetDoctorReviews(int doctorId ,int pageIndex = 1 ,int pageSize = 5)
+        public async Task<ICollection<ReviewDTO>> GetDoctorReviews(int doctorId, int pageIndex = 1, int pageSize = 5)
         {
             SpecificationsBase<Domain.Models.Review> specifications = new SpecificationsBase<Domain.Models.Review>(x => x.DoctorID == doctorId);
-            specifications.ApplyPagination(pageIndex,pageSize);
+            specifications.ApplyPagination(pageIndex, pageSize);
             var reviews = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetAllAsync(specifications);
             return _mapper.Map<ICollection<ReviewDTO>>(reviews);
         }
@@ -69,7 +64,7 @@ namespace Services
             _unitOfWork.GetRepository<Domain.Models.Review, int>().Delete(review);
             await _unitOfWork.SaveChangesAsync();
         }
-         
+
 
 
     }
