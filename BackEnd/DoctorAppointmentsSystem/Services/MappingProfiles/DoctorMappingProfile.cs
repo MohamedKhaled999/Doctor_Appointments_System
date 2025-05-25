@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Models;
 using Shared.Authentication;
-using Shared.DTOs.Account;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Home;
 using Shared.DTOs.Search;

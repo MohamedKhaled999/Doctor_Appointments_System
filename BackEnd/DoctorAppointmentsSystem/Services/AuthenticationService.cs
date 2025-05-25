@@ -11,7 +11,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Services.Abstraction;
 using Shared.Authentication;
-using Shared.DTOs.Account;
 using Shared.DTOs.Email;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

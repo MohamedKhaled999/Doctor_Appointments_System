@@ -1,5 +1,4 @@
 ﻿using Shared.Authentication;
-using Shared.DTOs.Account;
 
 namespace Services.Abstraction
 {

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.Abstraction;
 using Services.Validators;
 using Shared.Authentication;
-using Shared.DTOs.Account;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Search;
 using System;
