@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Domain.Exceptions;
 using Domain.Models;
+using Infrastructure.Services.EmailService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Services.Abstraction;
+using Services.Abstraction.Orchestrators;
 using Shared.Authentication;
 using Shared.DTOs.Email;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,6 +21,7 @@ namespace Services
         UserManager<AppUser> userManager,
         IPatientService patientService,
         IDoctorService doctorService,
+        IDoctorOrchestrator doctorOrchestrator,
         IOptions<JWTOptions> options
         , IConfiguration configuration,
         IMapper mapper,
@@ -95,7 +98,7 @@ namespace Services
             registerDto.AppUserID = user.Id;
             if (registerDto is DoctorRegisterDto doctor)
             {
-                await doctorService.AddAsync(doctor);
+                await doctorOrchestrator.RegisterDoctor(doctor);
                 //await userManager.AddToRoleAsync(user, "DOCTOR");
             }
             else

@@ -22,6 +22,7 @@ namespace Shared.Authentication
         public IFormFile Image { get; set; }
         [DataType(DataType.MultilineText)]
         [StringLength(500, ErrorMessage = "About Doctor must be less than 500 characters")]
+        public string? ImageURL { get; set; }
         public string About { get; set; }
         [MaxLength(200)]
         public string Address { get; set; }
