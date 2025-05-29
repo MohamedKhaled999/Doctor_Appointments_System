@@ -45,6 +45,7 @@ export class AccountService {
   getSpecialties(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/specialties`);
   }
+
   register(registerData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, registerData).pipe(
       tap(() => {

@@ -8,6 +8,7 @@ import { ForgetPasswordComponent } from './components/pages/account/forget-passw
 import { ResetPasswordComponent } from './components/pages/account/reset-password/reset-password.component';
 import { ChangePasswordComponent } from './components/pages/account/change-password/change-password.component';
 import { DoctorRegisterComponent } from './components/pages/account/doctor-register/doctor-register.component';
+import { ConfirmEmailComponent } from './components/pages/account/confirm-email/confirm-email.component';
 
 export const routes: Routes = [
   {
@@ -52,5 +53,9 @@ export const routes: Routes = [
   { 
     path: 'doctor-register', 
     component: DoctorRegisterComponent 
+  },
+  { 
+    path: 'Confirm-Email', 
+    component: ConfirmEmailComponent
   }
 ];
