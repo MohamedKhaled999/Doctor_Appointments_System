@@ -51,7 +51,7 @@ namespace Services.Orchestrators
                 To = patient.Email,
                 Template = MailTemplates.CancelAppointmentTemplate,
                 Subject = "Appointment Canceled",
-                Link = _configuration["BaseUrl"]
+                Link = _configuration["FrontEnd:Url"]
             };
             _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}");
         }
