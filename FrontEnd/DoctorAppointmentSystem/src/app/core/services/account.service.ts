@@ -6,14 +6,16 @@ import { LoginResponse } from '../../core/interfaces/login-response.mode';
 import { ForgetPasswordVM } from '../models/forget-password.model';
 import { ResetPasswordVM } from '../models/reset-password.model';
 import { ChangePasswordVM } from '../models/change-password.model';
-
+import { tap } from 'rxjs/operators'; 
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
   private readonly apiUrl = `${environment.apiUrl}/account`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient ,private router: Router) {}
+
 
   login(email: string, password: string, rememberMe: boolean): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { 
@@ -23,9 +25,6 @@ export class AccountService {
     });
   }
 
-  register(registerData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, registerData);
-  }
 
   requestPasswordReset(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/forgot-password`, { email });
@@ -46,4 +45,12 @@ export class AccountService {
   getSpecialties(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/specialties`);
   }
+  register(registerData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, registerData).pipe(
+      tap(() => {
+        this.router.navigate(['/need-to-confirm']);
+      })
+    );
+  }
 }
+
