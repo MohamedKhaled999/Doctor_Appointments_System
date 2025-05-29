@@ -1,18 +1,13 @@
 ﻿using Domain.Contracts;
 using Domain.Models;
 using FluentValidation;
-using Services.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Validators
 {
-    public class DoctorValidator :  AbstractValidator<Doctor>
+    public class DoctorValidator : AbstractValidator<Doctor>
     {
-        public DoctorValidator(IUnitOfWork unitOfWork) {
+        public DoctorValidator(IUnitOfWork unitOfWork)
+        {
             #region Person Validation
             RuleFor(p => p.FirstName)
                 .NotEmpty()
@@ -43,7 +38,7 @@ namespace Services.Validators
             #endregion
 
             RuleFor(d => d.SpecialtyID)
-                .MustAsync(async (id, cancellation) =>  await unitOfWork.GetRepository<Specialty,int>().GetByIdAsync(id) != null )
+                .MustAsync(async (id, cancellation) => await unitOfWork.GetRepository<Specialty, int>().GetByIdAsync(id) != null)
                 .WithMessage("Specialty does not exist");
 
             RuleFor(d => d.Fees)
@@ -92,7 +87,6 @@ namespace Services.Validators
 
             RuleFor(d => d.Lng)
                 .InclusiveBetween(-180, 180).WithMessage("Longitude must be between -180 and 180");
-
         }
     }
 }
