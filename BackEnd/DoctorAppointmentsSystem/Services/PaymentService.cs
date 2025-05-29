@@ -18,7 +18,6 @@ namespace Services
         {
             _configuration = configuration;
             _userManager = userManager;
-            _intentService = new PaymentIntentService();
             _sessionService = new SessionService();
         }
 
@@ -70,7 +69,6 @@ namespace Services
 
 
             Session session = await _sessionService.CreateAsync(options);
-
             return session.Url;
         }
 
@@ -83,7 +81,9 @@ namespace Services
 
             var sessionService = new SessionService();
             var session = sessionService.Get(refundDto.PaymentId);
+
             var paymentIntentService = new PaymentIntentService();
+            //var paymentIntent = paymentIntentService.Get(refundDto.PaymentId);
             var paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
 
 
@@ -101,12 +101,12 @@ namespace Services
 
             var options = new RefundCreateOptions
             {
-                PaymentIntent = refundDto.PaymentId,
+                PaymentIntent = paymentIntent.Id,
                 Amount = refundAmount, // Convert to cents
 
                 Metadata = new Dictionary<string, string>
                 {
-                    { "paymentId", refundDto.PaymentId }, // Assuming you want to store the payment ID in metadata
+                    { "Id", refundDto.PaymentId }, // Assuming you want to store the payment ID in metadata
                     { "percent", refundDto.Percent.ToString() },
                     { "isPartial", refundDto.IsPartial.ToString() },
 
@@ -117,6 +117,53 @@ namespace Services
 
 
             return refund.Id;  // Return the refund ID or any other relevant information
+
+        }
+
+
+
+        public async Task UpdatePaymentAsync(string JsonRequest, string StripeHeader)
+        {
+            string email = string.Empty;
+            string emailFromSession = string.Empty;
+            var endPointSecret = _configuration.GetSection("StripeSetting")["EndPointSecret"];
+
+            var stripeEvent = EventUtility.ConstructEvent(JsonRequest,
+
+                StripeHeader, endPointSecret);
+
+
+            if (stripeEvent.Data.Object is Session session)
+            {
+                emailFromSession = session.CustomerEmail;
+            }
+
+            // Handle the event
+            if (stripeEvent.Type == EventTypes.CheckoutSessionAsyncPaymentFailed)
+            {
+                //await UpdateUserSubscriptionAsync(emailFromSession, false);
+            }
+            else if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
+            {
+                //await UpdateUserSubscriptionAsync(emailFromSession, true);
+
+            }
+            else if (stripeEvent.Type == EventTypes.CheckoutSessionExpired)
+            {
+                //await UpdateUserSubscriptionAsync(emailFromSession, false);
+
+            }
+            else if (stripeEvent.Type == EventTypes.ChargeRefunded)
+            {
+                //await UpdateUserSubscriptionAsync(emailFromSession, false);
+
+            }
+            else
+            {
+                Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+            }
+
+
 
         }
     }

@@ -6,5 +6,6 @@ namespace Services.Abstraction
     {
         public Task<string> CreatePaymentSession(PaymentDto paymentDto);
         public Task<string> Refund(RefundDto refundDto);
+        Task UpdatePaymentAsync(string JsonRequest, string StripeHeader);
     }
 }
