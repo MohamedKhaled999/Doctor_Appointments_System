@@ -7,6 +7,7 @@ import { HomeComponent } from './components/pages/home/home.component';
 import { ForgetPasswordComponent } from './components/pages/account/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './components/pages/account/reset-password/reset-password.component';
 import { ChangePasswordComponent } from './components/pages/account/change-password/change-password.component';
+import { DoctorRegisterComponent } from './components/pages/account/doctor-register/doctor-register.component';
 
 export const routes: Routes = [
   {
@@ -47,5 +48,9 @@ export const routes: Routes = [
     path: 'change-password',
     component: ChangePasswordComponent
   
+  },
+  { 
+    path: 'doctor-register', 
+    component: DoctorRegisterComponent 
   }
 ];

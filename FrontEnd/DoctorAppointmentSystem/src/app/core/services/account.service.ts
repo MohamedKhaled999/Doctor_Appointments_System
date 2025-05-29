@@ -39,4 +39,11 @@ export class AccountService {
   changePassword(changePasswordData: ChangePasswordVM): Observable<any> {
     return this.http.post(`${this.apiUrl}/change-password`, changePasswordData);
   }
+  registerDoctor(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/doctor-register`, formData);
+  }
+  
+  getSpecialties(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/specialties`);
+  }
 }
