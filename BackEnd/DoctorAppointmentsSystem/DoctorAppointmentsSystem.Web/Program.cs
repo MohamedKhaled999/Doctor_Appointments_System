@@ -30,6 +30,8 @@ namespace DoctorAppointmentsSystem.Web
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCors(op => op.AddPolicy("allow", op => op.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
 
             //For Validation
             builder.Services.Configure<ApiBehaviorOptions>(op =>
@@ -120,6 +122,9 @@ namespace DoctorAppointmentsSystem.Web
 
             app.UseHttpsRedirection();
 
+            app.UseCors("allow");
+
+            app.MapStaticAssets();
             app.UseAuthentication();
             app.UseAuthorization();
 

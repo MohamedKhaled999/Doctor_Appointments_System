@@ -29,7 +29,7 @@ namespace Services.Orchestrators
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
             // Pay Here
-            await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees);
+            //await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees);
             await _appointmentService.AddAsync(patientId, doctorReservationId);
         }
 

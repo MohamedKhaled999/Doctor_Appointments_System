@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models;
 using Services.Abstraction;
 using Services.Specifications;
@@ -30,8 +31,10 @@ namespace Services
             return _mapper.Map<List<PatientDTO>>(patients);
         }
 
-        public async Task<PatientDTO?> GetByIdAsync(int id)
+        public async Task<PatientDTO?> GetByIdAsync(int id, int oldId)
         {
+            if (id != oldId)
+                throw new UnAuthorizedException("Access Denied");
             var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
             if (patient == null)
                 return null;
@@ -54,12 +57,14 @@ namespace Services
             {
                 var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
 
-                throw new Domain.Exceptions.ValidationException(errors);
+                throw new ValidationException(errors);
             }
         }
 
-        public async Task UpdateAsync(PatientDTO patientDto)
+        public async Task UpdateAsync(PatientDTO patientDto, int oldId)
         {
+            if (patientDto.Id != oldId)
+                throw new UnAuthorizedException("Access Denied");
             var newPatient = _mapper.Map<Patient>(patientDto);
             var result = _validator.Validate(newPatient);
             if (result.IsValid)
@@ -73,12 +78,14 @@ namespace Services
             else
             {
                 var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
-                throw new Domain.Exceptions.ValidationException(errors);
+                throw new ValidationException(errors);
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, int oldId)
         {
+            if (id != oldId)
+                throw new UnAuthorizedException("Access Denied");
             var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
             if (patient == null)
                 throw new ArgumentNullException($"Patient with ID {id} doesn't exist");

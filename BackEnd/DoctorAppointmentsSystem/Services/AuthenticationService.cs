@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Exceptions;
 using Domain.Models;
-using Infrastructure.Services.EmailService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +19,6 @@ namespace Services
     internal class AuthenticationService(
         UserManager<AppUser> userManager,
         IPatientService patientService,
-        IDoctorService doctorService,
         IDoctorOrchestrator doctorOrchestrator,
         IOptions<JWTOptions> options
         , IConfiguration configuration,
@@ -99,12 +97,12 @@ namespace Services
             if (registerDto is DoctorRegisterDto doctor)
             {
                 await doctorOrchestrator.RegisterDoctor(doctor);
-                //await userManager.AddToRoleAsync(user, "DOCTOR");
+                await userManager.AddToRoleAsync(user, "doctor");
             }
             else
             {
                 await patientService.AddAsync(registerDto);
-                //await userManager.AddToRoleAsync(user, "PATIENT");
+                await userManager.AddToRoleAsync(user, "patient");
             }
             await SendEmailConfirmationAsync(registerDto, user);
 
