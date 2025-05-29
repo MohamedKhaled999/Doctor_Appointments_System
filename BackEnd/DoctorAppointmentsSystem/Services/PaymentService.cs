@@ -1,211 +1,123 @@
-﻿//using Microsoft.AspNetCore.Identity;
-//using Microsoft.Extensions.Configuration;
-//using Services.Abstraction;
-//using Stripe;
-//using Stripe.Checkout;
+﻿using Domain.Exceptions;
+using Domain.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Services.Abstraction;
+using Shared.Payment;
+using Stripe;
+using Stripe.Checkout;
 
-//namespace BLL.Service
-//{
-//    public class PaymentService : IPaymentService
-//    {
-//        private IConfiguration _configuration { get; }
-//        public UserManager<AppUser> _userManager { get; }
-//        private PaymentIntentService _intentService { get; }
-//        private SessionService _sessionService { get; }
-//        public PaymentService(IConfiguration configuration, UserManager<AppUser> userManager)
-//        {
-//            _configuration = configuration;
-//            _userManager = userManager;
-//            _intentService = new PaymentIntentService();
-//            _sessionService = new SessionService();
-//        }
-
-//        public async Task<PaymentResultDto> CreateOrUpdatePaymentAsync(string email, SubscriptionType type)
-//        {
-
-//            var currentUser = await _userManager.FindByEmailAsync(email);
-//            currentUser.SubscriptionType = type;
-//            await _userManager.UpdateAsync(currentUser);
-
-//            var secretKey = _configuration.GetSection("StripeSetting")["Secretkey"];
-
-//            StripeConfiguration.ApiKey = secretKey;
-
-//            PaymentIntentCreateOptions options = new PaymentIntentCreateOptions()
-//            {
-
-//                Amount = ((int)currentUser.SubscriptionType) * 133 * 100,
-//                Currency = "usd",
-//                PaymentMethodTypes = new() { "card" },
-//                Metadata = new Dictionary<string, string>
-//                            {
-//                                { "email", email }
-//                            }
-
-//            };
+namespace Services
+{
+    public class PaymentService : IPaymentService
+    {
+        private IConfiguration _configuration { get; }
+        public UserManager<AppUser> _userManager { get; }
+        private SessionService _sessionService { get; }
+        public PaymentService(IConfiguration configuration, UserManager<AppUser> userManager)
+        {
+            _configuration = configuration;
+            _userManager = userManager;
+            _intentService = new PaymentIntentService();
+            _sessionService = new SessionService();
+        }
 
 
-//            var paymentIntent = await _intentService.CreateAsync(options);
+        public async Task<string> CreatePaymentSession(PaymentDto paymentDto)
+        {
+            var currentUser = await _userManager.FindByEmailAsync(paymentDto.Email) ?? throw new UnauthorizedAccessException("User Not-Found !!");
 
-//            return new PaymentResultDto(paymentIntent.Id, paymentIntent.ClientSecret);
+            //await _userManager.UpdateAsync(currentUser);
 
-//        }
-
-//        public async Task UpdatePaymentStatusAsync(string JsonRequest, string StripeHeader)
-//        {
-//            string email = string.Empty;
-//            string emailFromSession = string.Empty;
-//            var endPointSecret = _configuration.GetSection("StripeSetting")["EndPointSecret"];
-
-//            var stripeEvent = EventUtility.ConstructEvent(JsonRequest,
-
-//                StripeHeader, endPointSecret);
-
-//            //if (stripeEvent.Data.Object is PaymentIntent paymentIntent)
-//            //{
-//            //    email = paymentIntent.Metadata["email"];
-//            //}
-//            if (stripeEvent.Data.Object is Session session)
-//            {
-//                emailFromSession = session.CustomerEmail;
-//            }
-
-//            // Handle the event
-//            if (stripeEvent.Type == EventTypes.CheckoutSessionAsyncPaymentFailed)
-//            {
-//                await UpdateUserSubscriptionAsync(emailFromSession, false);
-//            }
-//            //else if (stripeEvent.Type == EventTypes.CheckoutSessionAsyncPaymentSucceeded)
-//            //{
-//            //    UpdateUserSubscriptionAsync(emaiFromSession, true);
-//            //}
-//            else if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
-//            {
-//                await UpdateUserSubscriptionAsync(emailFromSession, true);
-
-//            }
-//            else if (stripeEvent.Type == EventTypes.CheckoutSessionExpired)
-//            {
-//                await UpdateUserSubscriptionAsync(emailFromSession, false);
-
-//            }
-//            else if (stripeEvent.Type == EventTypes.PaymentIntentCanceled)
-//            {
-//                await UpdateUserSubscriptionAsync(email, false);
-
-//            }
-//            else if (stripeEvent.Type == EventTypes.PaymentIntentPaymentFailed)
-//            {
-//                await UpdateUserSubscriptionAsync(email, false);
-
-//            }
-//            else if (stripeEvent.Type == EventTypes.PaymentIntentSucceeded)
-//            {
-//                await UpdateUserSubscriptionAsync(email, true);
-
-//            }
-
-//            // ... handle other event types
-//            else
-//            {
-//                Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
-//            }
-
-//            //return Ok();
+            var secretKey = _configuration.GetSection("StripeSetting")["SecretKey"];
+            var domain = _configuration["FrontEnd:Url"];
+            var amount = paymentDto.AmountOfMoney * 100;
 
 
-//        }
+            StripeConfiguration.ApiKey = secretKey;
 
-//        private async Task UpdateUserSubscriptionAsync(string email, bool isSuccess)
-//        {
-//            var currentUser = await _userManager.FindByEmailAsync(email) ?? throw new Exception("User Not-Found !!");
-//            if (isSuccess)
-//            {
-//                currentUser.IsSubscriptionValid = true;
-//                currentUser.LastPaymentTime = DateTime.UtcNow;
-//            }
-//            else
-//            {
-//                currentUser.IsSubscriptionValid = false;
-//                currentUser.SubscriptionType = SubscriptionType.None;
-//            }
-//            await _userManager.UpdateAsync(currentUser);
-//        }
+            var options = new SessionCreateOptions()
+            {
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount =(long) amount, // The amount in the smallest currency unit (cents)
+                            Currency = "usd",    // Adjust to the correct currency
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = paymentDto.Name, // Use the name from the PaymentDto
+                                Description= paymentDto.Description // Use the description from the PaymentDto
+                            }
+                        },
+                        Quantity = 1,
 
-//        public async Task<string> CreatePaymentSession(string email, SubscriptionType type, string domain)
-//        {
-//            var currentUser = await _userManager.FindByEmailAsync(email) ?? throw new Exception("User Not-Found !!");
-//            currentUser.SubscriptionType = type;
-//            await _userManager.UpdateAsync(currentUser);
+                    }
+                },
 
-//            var secretKey = _configuration.GetSection("StripeSetting")["Secretkey"];
+                Mode = "payment",
+                SuccessUrl = $"{domain}/payment-success",
+                CancelUrl = $"{domain}/payment-cancel",
+                CustomerEmail = paymentDto.Email,
+                Metadata = new Dictionary<string, string>
+                            {
+                                { "email", paymentDto.Email }
+                            }
+            };
 
-//            StripeConfiguration.ApiKey = secretKey;
 
-//            // Calculate the amount based on the subscription type
-//            var amount = ((int)type) * 133 * 100; // Assuming SubscriptionType is an enum or a comparable type
+            Session session = await _sessionService.CreateAsync(options);
 
-//            var options = new SessionCreateOptions()
-//            {
-//                PaymentMethodTypes = new List<string> { "card" },
-//                LineItems = new List<SessionLineItemOptions>
-//        {
-//            new SessionLineItemOptions
-//            {
-//                PriceData = new SessionLineItemPriceDataOptions
-//                {
-//                    UnitAmount = amount, // The amount in the smallest currency unit (cents)
-//                    Currency = "usd",    // Adjust to the correct currency
-//                    ProductData = new SessionLineItemPriceDataProductDataOptions
-//                    {
-//                        Name = "Subscription"
-//                        ,Description= type.ToString()
-//                    }
-//                },
-//                Quantity = 1,
-//            }
-//        },
-//                Mode = "payment",
-//                //SuccessUrl = $"{domain}/success?session_id={{CHECKOUT_SESSION_ID}}",
-//                SuccessUrl = $"{domain}/payment-success",
-//                CancelUrl = $"{domain}/cancel",
-//                CustomerEmail = email,
-//                Metadata = new Dictionary<string, string>
-//                            {
-//                                { "email", email }
-//                            }
-//            };
+            return session.Url;
+        }
 
-//            //var service = new SessionService();
-//            Session session = await _sessionService.CreateAsync(options);
 
-//            return session.Url;
-//        }
 
-//        public async Task<bool> IsSubscribed(string email)
-//        {
-//            var currentUser = await _userManager.FindByEmailAsync(email) ?? throw new Exception("User Not-Found !!");
+        public async Task<string> Refund(RefundDto refundDto)
+        {
+            var secretKey = _configuration.GetSection("StripeSetting")["SecretKey"];
+            StripeConfiguration.ApiKey = secretKey;
 
-//            var isExpired = (DateTime.UtcNow - currentUser.LastPaymentTime) > TimeSpan.FromDays(30);
-//            if (isExpired)
-//            {
-//                await UpdateUserSubscriptionAsync(email, false);
-//            }
+            var sessionService = new SessionService();
+            var session = sessionService.Get(refundDto.PaymentId);
+            var paymentIntentService = new PaymentIntentService();
+            var paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
 
-//            return currentUser.IsSubscriptionValid;
-//        }
 
-//        public async Task<SubscriptionType> GetSubscriptionPlan(string email)
-//        {
-//            var currentUser = await _userManager.FindByEmailAsync(email) ?? throw new Exception("User Not-Found !!");
+            if (paymentIntent == null)
+            {
+                throw new NotFoundException("Payment  not found.");
+            }
+            if (paymentIntent.Status != "succeeded")
+            {
+                throw new SingleValidationException("Payment is not completed.");
+            }
 
-//            if (!currentUser.IsSubscriptionValid)
-//            {
-//                await UpdateUserSubscriptionAsync(email, false);
-//            }
+            long totalAmount = paymentIntent.AmountReceived; // in cents
+            long refundAmount = (long)(totalAmount * (refundDto.Percent));
 
-//            return currentUser.SubscriptionType;
-//        }
+            var options = new RefundCreateOptions
+            {
+                PaymentIntent = refundDto.PaymentId,
+                Amount = refundAmount, // Convert to cents
 
-//    }
-//}
+                Metadata = new Dictionary<string, string>
+                {
+                    { "paymentId", refundDto.PaymentId }, // Assuming you want to store the payment ID in metadata
+                    { "percent", refundDto.Percent.ToString() },
+                    { "isPartial", refundDto.IsPartial.ToString() },
+
+                }
+            };
+            var service = new RefundService();
+            Refund refund = await service.CreateAsync(options);
+
+
+            return refund.Id;  // Return the refund ID or any other relevant information
+
+        }
+    }
+}
