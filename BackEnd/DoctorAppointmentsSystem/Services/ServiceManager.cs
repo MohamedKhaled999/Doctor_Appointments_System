@@ -24,6 +24,7 @@ namespace Services
         private readonly Lazy<ISpecialtyService> _specialtyService;
 
         private readonly Lazy<IAppointmentOrchestrator> _appointmentOrchestrator;
+        private readonly Lazy<IDoctorOrchestrator> _doctorOrchestrator;
         private readonly Lazy<ITransactionService> _transactionService;
 
         private readonly Lazy<IPaymentService> _paymentService;
@@ -50,6 +51,7 @@ namespace Services
             _specialtyService = new Lazy<ISpecialtyService>(() => new SpecialtyService(unitOfWork, mapper));
 
             _appointmentOrchestrator = new Lazy<IAppointmentOrchestrator>(() => new AppointmentOrchestrator(this, configuration));
+            _doctorOrchestrator = new Lazy<IDoctorOrchestrator>(() => new DoctorOrchestrator(this));
             _transactionService = new Lazy<ITransactionService>(() => new TransactionService(unitOfWork, mapper));
 
             //_paymentService = new Lazy<IPaymentService>(() => new PaymentService());
@@ -60,7 +62,7 @@ namespace Services
             _authenticationService = new Lazy<IAuthenticationService>(() =>
             new AuthenticationService(userManager,
                                       _patientService.Value,
-                                      _doctorService.Value,
+                                      _doctorOrchestrator.Value,
                                       options,
                                       configuration,
                                       mapper,
@@ -85,6 +87,8 @@ namespace Services
         public ITransactionService TransactionService => _transactionService.Value;
 
         public IAppointmentOrchestrator AppointmentOrchestrator => _appointmentOrchestrator.Value;
+
+        public IDoctorOrchestrator DoctorOrchestrator => _doctorOrchestrator.Value;
 
         public IPaymentService PaymentService => _paymentService.Value;
 
