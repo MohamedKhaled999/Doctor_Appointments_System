@@ -18,5 +18,7 @@ namespace Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssemblyReference).Assembly);
             base.OnModelCreating(modelBuilder);
         }
+        public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Specialty> Specialties { get; set; }
     }
 }

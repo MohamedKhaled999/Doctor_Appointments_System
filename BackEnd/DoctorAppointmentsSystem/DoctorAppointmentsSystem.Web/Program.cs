@@ -19,7 +19,7 @@ namespace DoctorAppointmentsSystem.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -53,11 +53,13 @@ namespace DoctorAppointmentsSystem.Web
             #endregion
 
 
-            #region DbContext
+            #region DbContext & DbInitializer
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
             #endregion
 
             #region IUnitOfWork
@@ -106,8 +108,9 @@ namespace DoctorAppointmentsSystem.Web
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
 
-
             var app = builder.Build();
+
+            await InitializeDbAsync(app);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -131,6 +134,15 @@ namespace DoctorAppointmentsSystem.Web
             app.MapControllers();
 
             app.Run();
+
+            async Task InitializeDbAsync(WebApplication app)
+            {
+                var scope = app.Services.CreateScope();
+                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                await dbInitializer.InitializeAsync();
+
+            }
+
         }
     }
 }

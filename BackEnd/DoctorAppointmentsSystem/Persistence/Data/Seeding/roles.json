@@ -1,11 +1,5 @@
 [
-  {
-    "name": "patient"
-  },
-  {
-    "name": "doctor"
-  },
-  {
-    "name": "admin"
-  }
+  "patient",
+  "doctor",
+  "admin"
 ]

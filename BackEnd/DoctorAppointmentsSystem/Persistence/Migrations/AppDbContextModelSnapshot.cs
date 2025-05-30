@@ -106,13 +106,18 @@ namespace Persistence.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DoctorReservationID");
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments");
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("Appointment");
                 });
 
             modelBuilder.Entity("Domain.Models.DoctorReservation", b =>
@@ -139,38 +144,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("DoctorID");
 
-                    b.ToTable("DoctorReservations");
-                });
-
-            modelBuilder.Entity("Domain.Models.Order", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<string>("CaptureId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("DoctorReservationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorReservationId");
-
-                    b.HasIndex("PatientId", "DoctorReservationId")
-                        .IsUnique()
-                        .HasFilter("[DoctorReservationId] IS NOT NULL");
-
-                    b.ToTable("Orders");
+                    b.ToTable("DoctorReservation");
                 });
 
             modelBuilder.Entity("Domain.Models.Person", b =>
@@ -249,7 +223,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("PatientID");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Domain.Models.Specialty", b =>
@@ -271,7 +245,39 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Specialties");
+                });
+
+            modelBuilder.Entity("Domain.Models.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -466,7 +472,7 @@ namespace Persistence.Migrations
                 {
                     b.HasBaseType("Domain.Models.Person");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patient");
                 });
 
             modelBuilder.Entity("Domain.Models.Appointment", b =>
@@ -483,9 +489,17 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Domain.Models.Transaction", "Transaction")
+                        .WithMany()
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("DoctorReservation");
 
                     b.Navigation("Patient");
+
+                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("Domain.Models.DoctorReservation", b =>
@@ -497,24 +511,6 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Doctor");
-                });
-
-            modelBuilder.Entity("Domain.Models.Order", b =>
-                {
-                    b.HasOne("Domain.Models.DoctorReservation", "DoctorReservation")
-                        .WithMany("Orders")
-                        .HasForeignKey("DoctorReservationId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Domain.Models.Patient", "Patient")
-                        .WithMany("Orders")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("DoctorReservation");
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Domain.Models.Person", b =>
@@ -536,6 +532,24 @@ namespace Persistence.Migrations
                         .WithMany("Reviews")
                         .HasForeignKey("PatientID")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("Domain.Models.Transaction", b =>
+                {
+                    b.HasOne("Domain.Models.Doctor", "Doctor")
+                        .WithMany("Transactions")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.Patient", "Patient")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Doctor");
 
@@ -612,8 +626,6 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Models.DoctorReservation", b =>
                 {
                     b.Navigation("Appointments");
-
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Domain.Models.Specialty", b =>
@@ -626,15 +638,17 @@ namespace Persistence.Migrations
                     b.Navigation("DoctorReservations");
 
                     b.Navigation("Reviews");
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("Domain.Models.Patient", b =>
                 {
                     b.Navigation("Appointments");
 
-                    b.Navigation("Orders");
-
                     b.Navigation("Reviews");
+
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }
