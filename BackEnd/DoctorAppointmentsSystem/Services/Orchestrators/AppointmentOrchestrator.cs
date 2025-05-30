@@ -35,6 +35,7 @@ namespace Services.Orchestrators
             var patient = await _patientService.GetByIdAsync(patientId, patientId);
             var paymentDto = new PaymentDto()
             {
+                DoctorReservationId = doctorReservationId,
                 AmountOfMoney = doctor.Fees,
                 Description = $"Appointment with Dr.{doctor.FirstName} {doctor.LastName}",
                 Email = patient.Email
@@ -43,10 +44,10 @@ namespace Services.Orchestrators
             return paymentUrl;
         }
 
-        public async Task SaveAppointmentAsync(int patientId, int doctorReservationId)
+        public async Task SaveAppointmentAsync(int patientId, int doctorReservationId, string paymentId)
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
-            await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees);
+            await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees, paymentId);
             await _appointmentService.AddAsync(patientId, doctorReservationId);
         }
 
@@ -62,9 +63,14 @@ namespace Services.Orchestrators
                 throw new UnAuthorizedException("Access Denied");
 
             var transactionId = await _appointmentService.GetTransactionId(id);
-            await _transactionService.DeleteAsync(transactionId);
 
-            // Refund Here
+            var refundDto = new RefundDto()
+            {
+                PaymentId = await _transactionService.GetPaymentId(transactionId)
+            };
+            await _paymentService.Refund(refundDto);
+
+            await _transactionService.DeleteAsync(transactionId);
 
             await _appointmentService.DeleteAsync(id);
 

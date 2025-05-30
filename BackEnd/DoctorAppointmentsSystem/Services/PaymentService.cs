@@ -11,13 +11,16 @@ namespace Services
 {
     public class PaymentService : IPaymentService
     {
+        private readonly IServiceManager _serviceManager;
+
         private IConfiguration _configuration { get; }
         public UserManager<AppUser> _userManager { get; }
         private SessionService _sessionService { get; }
-        public PaymentService(IConfiguration configuration, UserManager<AppUser> userManager)
+        public PaymentService(IConfiguration configuration, UserManager<AppUser> userManager, IServiceManager serviceManager)
         {
             _configuration = configuration;
             _userManager = userManager;
+            _serviceManager = serviceManager;
             _sessionService = new SessionService();
         }
 
@@ -63,7 +66,9 @@ namespace Services
                 CustomerEmail = paymentDto.Email,
                 Metadata = new Dictionary<string, string>
                             {
-                                { "email", paymentDto.Email }
+                                { "email", paymentDto.Email },
+                                { "patientId", paymentDto.PatientId.ToString() },
+                                { "doctorReservationId", paymentDto.DoctorReservationId.ToString() }
                             }
             };
 
@@ -79,12 +84,12 @@ namespace Services
             var secretKey = _configuration.GetSection("StripeSetting")["SecretKey"];
             StripeConfiguration.ApiKey = secretKey;
 
-            var sessionService = new SessionService();
-            var session = sessionService.Get(refundDto.PaymentId);
+            //var sessionService = new SessionService();
+            //var session = sessionService.Get(refundDto.PaymentId);
 
             var paymentIntentService = new PaymentIntentService();
-            //var paymentIntent = paymentIntentService.Get(refundDto.PaymentId);
-            var paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
+            var paymentIntent = paymentIntentService.Get(refundDto.PaymentId);
+            //var paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
 
 
             if (paymentIntent == null)
@@ -124,8 +129,11 @@ namespace Services
 
         public async Task UpdatePaymentAsync(string JsonRequest, string StripeHeader)
         {
+            string paymentId = string.Empty;
             string email = string.Empty;
             string emailFromSession = string.Empty;
+            int patientId = default;
+            int doctorReservationId = default;
             var endPointSecret = _configuration.GetSection("StripeSetting")["EndPointSecret"];
 
             var stripeEvent = EventUtility.ConstructEvent(JsonRequest,
@@ -135,6 +143,9 @@ namespace Services
             if (stripeEvent.Data.Object is Session session)
             {
                 emailFromSession = session.CustomerEmail;
+                patientId = int.Parse(session.Metadata["patientId"]);
+                doctorReservationId = int.Parse(session.Metadata["doctorReservationId"]);
+                paymentId = session.PaymentIntentId;
             }
 
             // Handle the event
@@ -143,15 +154,13 @@ namespace Services
             }
             else if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
             {
-                // Update Transaction Status Here
+                await _serviceManager.AppointmentOrchestrator.SaveAppointmentAsync(patientId, doctorReservationId, paymentId);
             }
             else if (stripeEvent.Type == EventTypes.CheckoutSessionExpired)
             {
             }
             else if (stripeEvent.Type == EventTypes.ChargeRefunded)
             {
-                // Full Refund => Delete Transaction
-                // Partial Refund => Update Transaction Amount
             }
             else
             {
