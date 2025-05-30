@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Services.Abstraction;
 using Services.Abstraction.Orchestrators;
+using Shared.DTOs.Appointment;
 using Shared.DTOs.DoctorReservation;
 using Shared.DTOs.Email;
 using Shared.Payment;
@@ -11,6 +12,7 @@ namespace Services.Orchestrators
     internal class AppointmentOrchestrator : IAppointmentOrchestrator
     {
         private readonly IPatientService _patientService;
+        private readonly IDoctorService _doctorService;
         private readonly IAppointmentService _appointmentService;
         private readonly IDoctorReservationService _doctorReservationService;
         private readonly ITransactionService _transactionService;
@@ -29,12 +31,25 @@ namespace Services.Orchestrators
             _configuration = configuration;
         }
 
-        public async Task<string> CreatePaymentSessionAsync(int patientId, int doctorReservationId)
+        public async Task<List<DoctorReservationDTO>> GetDoctorReservationByAppUserIdAsync(int appUserId)
+        {
+            var doctor = await _doctorService.GetByAppUserIdAsync(appUserId);
+            return await _doctorReservationService.GetReservationsByDocID(doctor.ID);
+        }
+
+        public async Task<List<AppointmentDTO>?> GetAppointmentsByAppUserIdAsync(int appUserId, int pageIndex, int pageSize)
+        {
+            var patient = await _patientService.GetByAppUserIdAsync(appUserId);
+            return await _appointmentService.GetByPatientAsync(patient.Id, pageIndex, pageSize);
+        }
+
+        public async Task<string> CreatePaymentSessionAsync(int patientAppUserId, int doctorReservationId)
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
-            var patient = await _patientService.GetByIdAsync(patientId, patientId);
+            var patient = await _patientService.GetByAppUserIdAsync(patientAppUserId);
             var paymentDto = new PaymentDto()
             {
+                PatientId = patient.Id,
                 DoctorReservationId = doctorReservationId,
                 AmountOfMoney = doctor.Fees,
                 Description = $"Appointment with Dr.{doctor.FirstName} {doctor.LastName}",
@@ -56,10 +71,10 @@ namespace Services.Orchestrators
             await _doctorReservationService.AddDoctorReservation(reservation);
         }
 
-        public async Task CancelAppointmentAsync(int id, int currentPatientId = -1)
+        public async Task CancelAppointmentAsync(int id, int currentPatientAppUserId = -1)
         {
             var patient = await _appointmentService.GetPatientByAppointmentId(id);
-            if (currentPatientId != -1 && patient.Id != currentPatientId)
+            if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
                 throw new UnAuthorizedException("Access Denied");
 
             var transactionId = await _appointmentService.GetTransactionId(id);
@@ -84,10 +99,10 @@ namespace Services.Orchestrators
             _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}");
         }
 
-        public async Task CancelReservationAsync(int id, int currentDoctorId)
+        public async Task CancelReservationAsync(int id, int currentDoctorAppUserId)
         {
-            var doctor = _doctorReservationService.GetDoctorByReservationId(id);
-            if (doctor.Id != currentDoctorId)
+            var doctor = await _doctorReservationService.GetDoctorByReservationId(id);
+            if (doctor.AppUserId != currentDoctorAppUserId)
                 throw new UnAuthorizedException("Access Denied");
 
             var appointments = await _doctorReservationService.GetAppointmentsByReservationId(id);

@@ -7,6 +7,7 @@ namespace Services.Abstraction
     {
         Task<List<PatientDTO>?> GetAllAsync(int pageIndex, int pageSize);
         Task<PatientDTO?> GetByIdAsync(int id, int currentID);
+        Task<PatientDTO?> GetByAppUserIdAsync(int appUserId);
         int GetCount();
         Task AddAsync(RegisterDto registerDto);
         Task UpdateAsync(PatientDTO patientDto, int currentID);

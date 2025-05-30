@@ -66,7 +66,14 @@ namespace Services
 
             return doctorDTO;
         }
-
+        public async Task<DoctorProfileDTO?> GetByAppUserIdAsync(int appUserId)
+        {
+            var specs = new SpecificationsBase<Doctor>(d => d.AppUserID == appUserId);
+            var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specs);
+            if (doctor == null)
+                return null;
+            return _mapper.Map<DoctorProfileDTO>(doctor);
+        }
         public async Task<List<DoctorSearchDTO>> SearchDoctor(FilterSearchDTO filter)
         {
             filter.Name = filter.Name?.Trim().ToLower() ?? "";

@@ -23,12 +23,12 @@ namespace Services
             return appointment.TransactionId;
         }
 
-        public async Task<PatientDTO> GetPatientByAppointmentId(int id)
+        public async Task<PatientAppUserDTO> GetPatientByAppointmentId(int id)
         {
             var appointment = (await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(new AppointmentPatientSpecifications(a => a.Id == id))).FirstOrDefault();
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {id} doesn't exist");
-            return _mapper.Map<PatientDTO>(appointment.Patient);
+            return _mapper.Map<PatientAppUserDTO>(appointment.Patient);
         }
 
         public async Task<List<AppointmentDTO>?> GetByPatientAsync(int patientId, int pageIndex = 1, int pageSize = 20)

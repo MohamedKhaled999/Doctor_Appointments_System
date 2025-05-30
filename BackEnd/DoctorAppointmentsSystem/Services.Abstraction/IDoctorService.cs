@@ -9,6 +9,7 @@ namespace Services.Abstraction
         public Task AddAsync(DoctorRegisterDto doctorDTO);
         public Task UpdateDoctor(DoctorEditDTO doctorDTO);
         public Task<DoctorProfileDTO> DoctorProfile(int doctorId);
+        public Task<DoctorProfileDTO?> GetByAppUserIdAsync(int appUserId);
         public Task<List<DoctorSearchDTO>> SearchDoctor(FilterSearchDTO filter);
         //Task<Doctor?> GetDoctorInfo(int doctorID);
         //Task<List<Doctor>> GetDoctorsOrderedByRating();

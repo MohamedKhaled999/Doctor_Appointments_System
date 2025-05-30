@@ -41,6 +41,15 @@ namespace Services
             return _mapper.Map<PatientDTO>(patient);
         }
 
+        public async Task<PatientDTO?> GetByAppUserIdAsync(int appUserId)
+        {
+            var specs = new SpecificationsBase<Patient>(p => p.AppUserID == appUserId);
+            var patient = await _unitOfWork.GetRepository<Patient, int>().GetAllAsync(specs);
+            if (patient == null)
+                return null;
+            return _mapper.Map<PatientDTO>(patient);
+        }
+
         public int GetCount()
             => _unitOfWork.GetRepository<Patient, int>().GetCount();
 

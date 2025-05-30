@@ -98,6 +98,6 @@ namespace Services
 
         public IEmailService EmailService => _emailService.Value;
 
-        public IUploadService UploadService => null;
+        public IUploadService UploadService => _uploadService.Value;
     }
 }

@@ -18,6 +18,9 @@ namespace Services.MappingProfiles
             CreateMap<Patient, PatientDTO>()
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
+            CreateMap<Patient, PatientAppUserDTO>()
+                .ForMember(dest => dest.BirthDate, src => src.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+
 
             // map RegisterDto to Patient
             CreateMap<RegisterDto, Patient>()
