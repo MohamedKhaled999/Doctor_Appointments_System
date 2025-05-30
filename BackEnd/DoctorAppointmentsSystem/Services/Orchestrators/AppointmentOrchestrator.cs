@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Domain.Exceptions;
+using Microsoft.Extensions.Configuration;
 using Services.Abstraction;
 using Services.Abstraction.Orchestrators;
 using Shared.DTOs.DoctorReservation;
@@ -28,8 +29,8 @@ namespace Services.Orchestrators
         public async Task AddAppointmentAsync(int patientId, int doctorReservationId)
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
-            // Pay Here
-            //await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees);
+            // Pay and Add Transaction Here
+            // await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees);
             await _appointmentService.AddAsync(patientId, doctorReservationId);
         }
 
@@ -38,14 +39,17 @@ namespace Services.Orchestrators
             await _doctorReservationService.AddDoctorReservation(reservation);
         }
 
-        public async Task CancelAppointmentAsync(int id)
+        public async Task CancelAppointmentAsync(int id, int currentPatientId = -1)
         {
+            var patient = await _appointmentService.GetPatientByAppointmentId(id);
+            if (currentPatientId != -1 && patient.Id != currentPatientId)
+                throw new UnAuthorizedException("Access Denied");
+
             var transactionId = await _appointmentService.GetTransactionId(id);
             await _transactionService.DeleteAsync(transactionId);
 
             await _appointmentService.DeleteAsync(id);
 
-            var patient = await _appointmentService.GetPatientByAppointmentId(id);
             var email = new EmailDTO()
             {
                 To = patient.Email,
@@ -56,8 +60,12 @@ namespace Services.Orchestrators
             _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}");
         }
 
-        public async Task CancelReservationAsync(int id)
+        public async Task CancelReservationAsync(int id, int currentDoctorId)
         {
+            var doctor = _doctorReservationService.GetDoctorByReservationId(id);
+            if (doctor.Id != currentDoctorId)
+                throw new UnAuthorizedException("Access Denied");
+
             var appointments = await _doctorReservationService.GetAppointmentsByReservationId(id);
 
             if (appointments.Any())

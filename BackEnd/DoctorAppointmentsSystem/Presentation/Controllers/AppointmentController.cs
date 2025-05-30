@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
+    [Authorize(Roles = "patient")]
     [Route("patient/appointments")]
     public class AppointmentController : ApiController
     {
@@ -22,7 +24,7 @@ namespace Presentation.Controllers
         [HttpDelete]
         public async Task<IActionResult> CancelAppointment(int id)
         {
-            await _serviceManager.AppointmentOrchestrator.CancelAppointmentAsync(id);
+            await _serviceManager.AppointmentOrchestrator.CancelAppointmentAsync(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return NoContent();
         }
     }

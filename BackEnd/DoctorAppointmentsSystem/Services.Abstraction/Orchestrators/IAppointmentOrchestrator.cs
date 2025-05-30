@@ -6,7 +6,7 @@ namespace Services.Abstraction.Orchestrators
     {
         Task AddAppointmentAsync(int patientId, int doctorReservationId);
         Task AddDoctorReservationAsync(NewResDTO reservation);
-        Task CancelAppointmentAsync(int id);
-        Task CancelReservationAsync(int id);
+        Task CancelAppointmentAsync(int id, int currentPatientId);
+        Task CancelReservationAsync(int id, int currentDoctorId);
     }
 }

@@ -6,10 +6,10 @@ namespace Services.Abstraction
     public interface IPatientService
     {
         Task<List<PatientDTO>?> GetAllAsync(int pageIndex, int pageSize);
-        Task<PatientDTO?> GetByIdAsync(int id, int oldId);
+        Task<PatientDTO?> GetByIdAsync(int id, int currentID);
         int GetCount();
         Task AddAsync(RegisterDto registerDto);
-        Task UpdateAsync(PatientDTO patientDto, int oldId);
-        Task DeleteAsync(int id, int oldId);
+        Task UpdateAsync(PatientDTO patientDto, int currentID);
+        Task DeleteAsync(int id, int currentID);
     }
 }
