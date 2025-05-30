@@ -25,14 +25,20 @@ namespace Services
             return _mapper.Map<TransactionDTO>(transaction);
         }
 
-        public async Task AddAsync(int patientId, int doctorId, int amount)
+        public async Task<string> GetPaymentId(int transactionId)
+        {
+            return (await GetByIdAsync(transactionId)).PaymentId;
+        }
+
+        public async Task AddAsync(int patientId, int doctorId, int amount, string paymentId)
         {
             var transaction = new Transaction()
             {
                 PatientId = patientId,
                 DoctorId = doctorId,
                 Amount = amount,
-                TimeStamp = DateTime.Now
+                TimeStamp = DateTime.Now,
+                PaymentId = paymentId
             };
             await _unitOfWork.GetRepository<Transaction, int>().AddAsync(transaction);
             await _unitOfWork.SaveChangesAsync();
