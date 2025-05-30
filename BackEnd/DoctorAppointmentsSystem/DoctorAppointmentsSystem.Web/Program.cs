@@ -1,4 +1,3 @@
-
 using DoctorAppointmentsSystem.Web.Factories;
 using DoctorAppointmentsSystem.Web.Middlewares;
 using Domain.Contracts;

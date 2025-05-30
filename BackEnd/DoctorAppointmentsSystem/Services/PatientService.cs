@@ -31,9 +31,9 @@ namespace Services
             return _mapper.Map<List<PatientDTO>>(patients);
         }
 
-        public async Task<PatientDTO?> GetByIdAsync(int id, int oldId)
+        public async Task<PatientDTO?> GetByIdAsync(int id, int currentID)
         {
-            if (id != oldId)
+            if (id != currentID)
                 throw new UnAuthorizedException("Access Denied");
             var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
             if (patient == null)
@@ -61,9 +61,9 @@ namespace Services
             }
         }
 
-        public async Task UpdateAsync(PatientDTO patientDto, int oldId)
+        public async Task UpdateAsync(PatientDTO patientDto, int currentID)
         {
-            if (patientDto.Id != oldId)
+            if (patientDto.Id != currentID)
                 throw new UnAuthorizedException("Access Denied");
             var newPatient = _mapper.Map<Patient>(patientDto);
             var result = _validator.Validate(newPatient);
@@ -82,9 +82,9 @@ namespace Services
             }
         }
 
-        public async Task DeleteAsync(int id, int oldId)
+        public async Task DeleteAsync(int id, int currentID)
         {
-            if (id != oldId)
+            if (id != currentID)
                 throw new UnAuthorizedException("Access Denied");
             var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
             if (patient == null)

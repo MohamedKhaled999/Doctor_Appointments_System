@@ -97,7 +97,7 @@ namespace Services
             }
 
             long totalAmount = paymentIntent.AmountReceived; // in cents
-            long refundAmount = (long)(totalAmount * (refundDto.Percent));
+            long refundAmount = (long)(totalAmount * refundDto.Percent);
 
             var options = new RefundCreateOptions
             {
@@ -129,7 +129,6 @@ namespace Services
             var endPointSecret = _configuration.GetSection("StripeSetting")["EndPointSecret"];
 
             var stripeEvent = EventUtility.ConstructEvent(JsonRequest,
-
                 StripeHeader, endPointSecret);
 
 
@@ -141,30 +140,23 @@ namespace Services
             // Handle the event
             if (stripeEvent.Type == EventTypes.CheckoutSessionAsyncPaymentFailed)
             {
-                //await UpdateUserSubscriptionAsync(emailFromSession, false);
             }
             else if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
             {
-                //await UpdateUserSubscriptionAsync(emailFromSession, true);
-
+                // Update Transaction Status Here
             }
             else if (stripeEvent.Type == EventTypes.CheckoutSessionExpired)
             {
-                //await UpdateUserSubscriptionAsync(emailFromSession, false);
-
             }
             else if (stripeEvent.Type == EventTypes.ChargeRefunded)
             {
-                //await UpdateUserSubscriptionAsync(emailFromSession, false);
-
+                // Full Refund => Delete Transaction
+                // Partial Refund => Update Transaction Amount
             }
             else
             {
                 Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
             }
-
-
-
         }
     }
 }

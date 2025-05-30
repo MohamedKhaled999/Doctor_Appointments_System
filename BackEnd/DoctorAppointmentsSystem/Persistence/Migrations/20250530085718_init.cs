@@ -55,7 +55,25 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Specialties",
+                name: "Patient",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [PersonSequence]"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Governorate = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppUserID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patient", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Specialty",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -65,7 +83,7 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Specialties", x => x.Id);
+                    table.PrimaryKey("PK_Specialty", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -175,6 +193,7 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+<<<<<<<< HEAD:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530085718_init.cs
                 name: "Patient",
                 columns: table => new
                 {
@@ -202,6 +221,12 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [PersonSequence]"),
+========
+                name: "Doctor",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [PersonSequence]"),
+>>>>>>>> 8781a5e9a09668dec6bde8b8d2d6363dee20ce90:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530111743_init.cs
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -226,16 +251,11 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Doctors", x => x.Id);
+                    table.PrimaryKey("PK_Doctor", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Doctors_AspNetUsers_AppUserID",
-                        column: x => x.AppUserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Doctors_Specialties_SpecialtyID",
+                        name: "FK_Doctor_Specialty_SpecialtyID",
                         column: x => x.SpecialtyID,
-                        principalTable: "Specialties",
+                        principalTable: "Specialty",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -255,9 +275,13 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_DoctorReservation", x => x.Id);
                     table.ForeignKey(
+<<<<<<<< HEAD:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530085718_init.cs
                         name: "FK_DoctorReservation_Doctors_DoctorID",
+========
+                        name: "FK_DoctorReservation_Doctor_DoctorID",
+>>>>>>>> 8781a5e9a09668dec6bde8b8d2d6363dee20ce90:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530111743_init.cs
                         column: x => x.DoctorID,
-                        principalTable: "Doctors",
+                        principalTable: "Doctor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -278,9 +302,13 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Review", x => x.Id);
                     table.ForeignKey(
+<<<<<<<< HEAD:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530085718_init.cs
                         name: "FK_Review_Doctors_DoctorID",
+========
+                        name: "FK_Review_Doctor_DoctorID",
+>>>>>>>> 8781a5e9a09668dec6bde8b8d2d6363dee20ce90:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530111743_init.cs
                         column: x => x.DoctorID,
-                        principalTable: "Doctors",
+                        principalTable: "Doctor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -305,9 +333,15 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Transaction", x => x.Id);
                     table.ForeignKey(
+<<<<<<<< HEAD:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530085718_init.cs
                         name: "FK_Transaction_Doctors_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "Doctors",
+========
+                        name: "FK_Transaction_Doctor_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctor",
+>>>>>>>> 8781a5e9a09668dec6bde8b8d2d6363dee20ce90:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530111743_init.cs
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -346,8 +380,12 @@ namespace Persistence.Migrations
                         name: "FK_Appointment_Transaction_TransactionId",
                         column: x => x.TransactionId,
                         principalTable: "Transaction",
+<<<<<<<< HEAD:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530085718_init.cs
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+========
+                        principalColumn: "Id");
+>>>>>>>> 8781a5e9a09668dec6bde8b8d2d6363dee20ce90:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530111743_init.cs
                 });
 
             migrationBuilder.CreateIndex(
@@ -363,7 +401,12 @@ namespace Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Appointment_TransactionId",
                 table: "Appointment",
+<<<<<<<< HEAD:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530085718_init.cs
                 column: "TransactionId");
+========
+                column: "TransactionId",
+                unique: true);
+>>>>>>>> 8781a5e9a09668dec6bde8b8d2d6363dee20ce90:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530111743_init.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -405,6 +448,7 @@ namespace Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+<<<<<<<< HEAD:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530085718_init.cs
                 name: "IX_DoctorReservation_DoctorID",
                 table: "DoctorReservation",
                 column: "DoctorID");
@@ -434,13 +478,35 @@ namespace Persistence.Migrations
                 column: "DoctorID");
 
             migrationBuilder.CreateIndex(
+========
+                name: "IX_Doctor_SpecialtyID",
+                table: "Doctor",
+                column: "SpecialtyID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorReservation_DoctorID",
+                table: "DoctorReservation",
+                column: "DoctorID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Review_DoctorID",
+                table: "Review",
+                column: "DoctorID");
+
+            migrationBuilder.CreateIndex(
+>>>>>>>> 8781a5e9a09668dec6bde8b8d2d6363dee20ce90:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530111743_init.cs
                 name: "IX_Review_PatientID",
                 table: "Review",
                 column: "PatientID");
 
             migrationBuilder.CreateIndex(
+<<<<<<<< HEAD:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530085718_init.cs
                 name: "IX_Specialties_Name",
                 table: "Specialties",
+========
+                name: "IX_Specialty_Name",
+                table: "Specialty",
+>>>>>>>> 8781a5e9a09668dec6bde8b8d2d6363dee20ce90:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530111743_init.cs
                 column: "Name",
                 unique: true);
 
@@ -489,13 +555,23 @@ namespace Persistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+<<<<<<<< HEAD:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530085718_init.cs
                 name: "Doctors");
+
+            migrationBuilder.DropTable(
+                name: "Patient");
+========
+                name: "AspNetUsers");
+>>>>>>>> 8781a5e9a09668dec6bde8b8d2d6363dee20ce90:BackEnd/DoctorAppointmentsSystem/Persistence/Migrations/20250530111743_init.cs
+
+            migrationBuilder.DropTable(
+                name: "Doctor");
 
             migrationBuilder.DropTable(
                 name: "Patient");
 
             migrationBuilder.DropTable(
-                name: "Specialties");
+                name: "Specialty");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

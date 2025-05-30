@@ -4,9 +4,10 @@ namespace Services.Abstraction.Orchestrators
 {
     public interface IAppointmentOrchestrator
     {
-        Task AddAppointmentAsync(int patientId, int doctorReservationId);
+        Task<string> CreatePaymentSessionAsync(int patientId, int doctorReservationId);
+        Task SaveAppointmentAsync(int patientId, int doctorReservationId);
         Task AddDoctorReservationAsync(NewResDTO reservation);
-        Task CancelAppointmentAsync(int id);
-        Task CancelReservationAsync(int id);
+        Task CancelAppointmentAsync(int id, int currentPatientId);
+        Task CancelReservationAsync(int id, int currentDoctorId);
     }
 }

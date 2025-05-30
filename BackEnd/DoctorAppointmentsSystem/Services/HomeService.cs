@@ -20,18 +20,22 @@ namespace Services
 
         public async Task<HomeDTO> GetHomeData()
         {
-            var doctorsPerSpecialty = new Dictionary<int, int?>();
+            var specialtiesDTO = new List<HomeSpecialtyDTO>();
             var specialties = await _unitOfWork.GetRepository<Specialty, int>().GetAllAsync();
             var doctors = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(new HomeDoctorSpecifications());
 
             foreach (var specialty in specialties)
-                doctorsPerSpecialty[specialty.Id] = _unitOfWork.GetRepository<Doctor, int>().GetCount(new HomeSpecialtySpecifications(d => d.SpecialtyID == specialty.Id));
+                specialtiesDTO.Add(
+                    new HomeSpecialtyDTO()
+                    {
+                        Name = specialty.Name,
+                        NumberOfDoctors = _unitOfWork.GetRepository<Doctor, int>().GetCount(new HomeSpecialtySpecifications(d => d.SpecialtyID == specialty.Id))
+                    });
 
             return new HomeDTO()
             {
-                Specialties = specialties.Select(s => s.Name).ToList(),
-                Doctors = doctors.Select(_mapper.Map<HomeDoctorDTO>).ToList(),
-                DoctorsPerSpecialtyCount = doctorsPerSpecialty
+                Specialties = specialtiesDTO,
+                Doctors = doctors.Select(_mapper.Map<HomeDoctorDTO>).ToList()
             };
         }
     }
