@@ -1,0 +1,83 @@
+<!-- <p>doctor-filters works!</p> -->
+<div class="sticky-lg-top pt-2">
+    <h2>Filters</h2>
+    <!-- <form asp-action="Search" asp-controller="Doctor" method="get"> -->
+    <form (ngSubmit)="onFilter()" #filterForm="ngForm">
+        <!-- <input type="hidden" name="pageNum" class="SP-pageNum" /> -->
+
+         <!-- why is the page number ??????????????????????????????????????   -->
+        <!-- <input type="hidden" name="pageNum" class="SP-pageNum" [(ngModel)]="filters.pageNum" />  -->
+
+        <div class="input-group mb-3">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <!-- <input type="text" name="Name" value="@ViewBag.Name" class="form-control SP-docSearch" placeholder="Name"> -->
+            <input type="text" name="Name" [(ngModel)]="filters.doctorName" class="form-control SP-docSearch" placeholder="Name">
+        </div>
+
+        <div class="input-group mb-3">
+            <label class="input-group-text"><i class="fa-solid fa-user-doctor"></i></label>
+            <!-- <select asp-items="@ViewBag.Specialites" class="form-select SP-select SP-specialitySelect" name="Speciality"></select> -->
+            <select class="form-select SP-select SP-specialitySelect" name="Speciality" [(ngModel)]="filters.speciality">
+                <option *ngFor="let s of SpecialitiesList" [value]="s">{{ s }}</option>
+            </select>
+        </div>
+
+        <div class="input-group mb-3">
+            <label class="input-group-text"><i class="fa-solid fa-location-dot"></i></label>
+            <!--
+            <select asp-items="@Html.GetEnumSelectList<Governorate>()" class="form-select SP-select SP-govSelect" name="governorate">
+                foreach (var gov in Enum.GetValues(typeof(Governorate)))
+                {
+                    <option value="@((int)gov)" selected="@(ViewBag.governorate != null && (int)ViewBag.governorate == (int)gov)">
+                        @gov
+                    </option>
+                }
+            </select>
+            -->
+            <select class="form-select SP-select SP-govSelect" name="governorate" [(ngModel)]="filters.governorate">
+                <option *ngFor="let gov of GovernoratesList" [value]="gov">{{ gov }}</option>
+            </select>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-around SP-genderRadios">
+            <label for="gender" class="col-12 form-label-input">Gender</label>
+            <div class="me-1">
+                <input type="radio" name="gender" [value]="Gender.All" class="form-check-input" id="All"
+                [(ngModel)]="filters.gender">
+                <label for="All">All</label>
+            </div>
+            <div class="me-1">
+                <input type="radio" name="gender" [value]="Gender.Male" class="form-check-input" id="Male"
+                [(ngModel)]="filters.gender">
+                <label for="Male">Male</label>
+            </div>
+            <div class="me-1">
+                <input type="radio" name="gender" [value]="Gender.Female" class="form-check-input" id="Female"
+                [(ngModel)]="filters.gender">
+                <label for="Female">Female</label>
+            </div>
+        </div>
+
+        <div class="my-2">
+            <label class="my-2">Max Waiting Minutes</label>
+            <div class="SP-Slider SP-waitSlider mx-2 mb-5"></div>
+            <!-- <input type="hidden" class="minWait" value="@ViewBag.waitingTime" name="WaitingTime"> -->
+            <input type="hidden" class="minWait" [(ngModel)]="filters.waitingTime" name="WaitingTime">
+        </div>
+        <div class="">
+            <label class="my-2">Price</label>
+            <div class="SP-Slider SP-priceSlider mx-2 my-5"></div>
+            <!--
+            <input type="hidden" class="minPrice" value="@ViewBag.minPrice" name="minPrice">
+            <input type="hidden" class="maxPrice" value="@ViewBag.maxPrice" name="maxPrice">
+            -->
+            <input type="hidden" class="minPrice" [(ngModel)]="filters.minPrice" name="minPrice">
+            <input type="hidden" class="maxPrice" [(ngModel)]="filters.maxPrice" name="maxPrice">
+        </div>
+        <div class="d-flex flex-wrap justify-content-center gap-1">
+            <button class="btn SP-filterBTN mb-2 col-12" type="submit">Filter</button>
+            <!-- <input type="submit" class="d-none" /> -->
+            <input type="reset" class="btn SP-resetBTN mb-2 col-12" (click)="onReset()">
+        </div>
+    </form>
+</div>

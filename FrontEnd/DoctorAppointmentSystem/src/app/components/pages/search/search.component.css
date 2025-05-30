@@ -1,0 +1,22 @@
+.SP-filters>div {
+    position: sticky;
+    
+}
+
+.SP-filters, .SP-doctorsList {
+    padding: 1rem;
+    background: var(--accent-color);
+}
+
+.SP-filterBTN, .SP-resetBTN {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+}
+
+    .SP-filterBTN:hover, .SP-resetBTN:hover {
+        background-color: var(--secondary-color);
+    }
+
+.SP-filters i {
+    color: var(--primary-color);
+}
