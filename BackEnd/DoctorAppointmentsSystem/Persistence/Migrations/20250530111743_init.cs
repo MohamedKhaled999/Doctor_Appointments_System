@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitApi : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,7 +56,25 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Specialties",
+                name: "Patient",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [PersonSequence]"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Governorate = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppUserID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patient", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Specialty",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -66,7 +84,7 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Specialties", x => x.Id);
+                    table.PrimaryKey("PK_Specialty", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,40 +194,17 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Patients",
+                name: "Doctor",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [PersonSequence]"),
-                    AppUserID = table.Column<int>(type: "int", nullable: true),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Governorate = table.Column<int>(type: "int", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Patients", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Patients_AspNetUsers_AppUserID",
-                        column: x => x.AppUserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Doctors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [PersonSequence]"),
-                    AppUserID = table.Column<int>(type: "int", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Governorate = table.Column<int>(type: "int", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppUserID = table.Column<int>(type: "int", nullable: true),
                     SpecialtyID = table.Column<int>(type: "int", nullable: false),
                     Fees = table.Column<int>(type: "int", nullable: false),
                     WaitingTime = table.Column<int>(type: "int", nullable: false),
@@ -227,22 +222,17 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Doctors", x => x.Id);
+                    table.PrimaryKey("PK_Doctor", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Doctors_AspNetUsers_AppUserID",
-                        column: x => x.AppUserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Doctors_Specialties_SpecialtyID",
+                        name: "FK_Doctor_Specialty_SpecialtyID",
                         column: x => x.SpecialtyID,
-                        principalTable: "Specialties",
+                        principalTable: "Specialty",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DoctorReservations",
+                name: "DoctorReservation",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -254,17 +244,17 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DoctorReservations", x => x.Id);
+                    table.PrimaryKey("PK_DoctorReservation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DoctorReservations_Doctors_DoctorID",
+                        name: "FK_DoctorReservation_Doctor_DoctorID",
                         column: x => x.DoctorID,
-                        principalTable: "Doctors",
+                        principalTable: "Doctor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
+                name: "Review",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -277,81 +267,94 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.PrimaryKey("PK_Review", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_Doctors_DoctorID",
+                        name: "FK_Review_Doctor_DoctorID",
                         column: x => x.DoctorID,
-                        principalTable: "Doctors",
+                        principalTable: "Doctor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reviews_Patients_PatientID",
+                        name: "FK_Review_Patient_PatientID",
                         column: x => x.PatientID,
-                        principalTable: "Patients",
+                        principalTable: "Patient",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Appointments",
+                name: "Transaction",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Amount = table.Column<double>(type: "float", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PatientId = table.Column<int>(type: "int", nullable: true),
+                    DoctorId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transaction", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Transaction_Doctor_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctor",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transaction_Patient_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patient",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Appointment",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DoctorReservationID = table.Column<int>(type: "int", nullable: false),
-                    PatientId = table.Column<int>(type: "int", nullable: false)
+                    PatientId = table.Column<int>(type: "int", nullable: false),
+                    TransactionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.PrimaryKey("PK_Appointment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Appointments_DoctorReservations_DoctorReservationID",
+                        name: "FK_Appointment_DoctorReservation_DoctorReservationID",
                         column: x => x.DoctorReservationID,
-                        principalTable: "DoctorReservations",
+                        principalTable: "DoctorReservation",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Appointments_Patients_PatientId",
+                        name: "FK_Appointment_Patient_PatientId",
                         column: x => x.PatientId,
-                        principalTable: "Patients",
+                        principalTable: "Patient",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CaptureId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
-                    Amount = table.Column<double>(type: "float", nullable: false),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    DoctorReservationId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_DoctorReservations_DoctorReservationId",
-                        column: x => x.DoctorReservationId,
-                        principalTable: "DoctorReservations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Orders_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
+                        name: "FK_Appointment_Transaction_TransactionId",
+                        column: x => x.TransactionId,
+                        principalTable: "Transaction",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_DoctorReservationID",
-                table: "Appointments",
+                name: "IX_Appointment_DoctorReservationID",
+                table: "Appointment",
                 column: "DoctorReservationID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_PatientId",
-                table: "Appointments",
+                name: "IX_Appointment_PatientId",
+                table: "Appointment",
                 column: "PatientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointment_TransactionId",
+                table: "Appointment",
+                column: "TransactionId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -393,57 +396,47 @@ namespace Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DoctorReservations_DoctorID",
-                table: "DoctorReservations",
-                column: "DoctorID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Doctors_AppUserID",
-                table: "Doctors",
-                column: "AppUserID",
-                unique: true,
-                filter: "[AppUserID] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Doctors_SpecialtyID",
-                table: "Doctors",
+                name: "IX_Doctor_SpecialtyID",
+                table: "Doctor",
                 column: "SpecialtyID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_DoctorReservationId",
-                table: "Orders",
-                column: "DoctorReservationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_PatientId_DoctorReservationId",
-                table: "Orders",
-                columns: new[] { "PatientId", "DoctorReservationId" },
-                unique: true,
-                filter: "[DoctorReservationId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Patients_AppUserID",
-                table: "Patients",
-                column: "AppUserID",
-                unique: true,
-                filter: "[AppUserID] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reviews_DoctorID",
-                table: "Reviews",
+                name: "IX_DoctorReservation_DoctorID",
+                table: "DoctorReservation",
                 column: "DoctorID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_PatientID",
-                table: "Reviews",
+                name: "IX_Review_DoctorID",
+                table: "Review",
+                column: "DoctorID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Review_PatientID",
+                table: "Review",
                 column: "PatientID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Specialty_Name",
+                table: "Specialty",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_DoctorId",
+                table: "Transaction",
+                column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_PatientId",
+                table: "Transaction",
+                column: "PatientId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Appointments");
+                name: "Appointment");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -461,28 +454,28 @@ namespace Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Review");
 
             migrationBuilder.DropTable(
-                name: "Reviews");
+                name: "DoctorReservation");
+
+            migrationBuilder.DropTable(
+                name: "Transaction");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "DoctorReservations");
-
-            migrationBuilder.DropTable(
-                name: "Patients");
-
-            migrationBuilder.DropTable(
-                name: "Doctors");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Specialties");
+                name: "Doctor");
+
+            migrationBuilder.DropTable(
+                name: "Patient");
+
+            migrationBuilder.DropTable(
+                name: "Specialty");
 
             migrationBuilder.DropSequence(
                 name: "PersonSequence");

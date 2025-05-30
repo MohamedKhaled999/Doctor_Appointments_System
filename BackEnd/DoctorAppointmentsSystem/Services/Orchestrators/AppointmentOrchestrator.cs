@@ -4,11 +4,13 @@ using Services.Abstraction;
 using Services.Abstraction.Orchestrators;
 using Shared.DTOs.DoctorReservation;
 using Shared.DTOs.Email;
+using Shared.Payment;
 
 namespace Services.Orchestrators
 {
     internal class AppointmentOrchestrator : IAppointmentOrchestrator
     {
+        private readonly IPatientService _patientService;
         private readonly IAppointmentService _appointmentService;
         private readonly IDoctorReservationService _doctorReservationService;
         private readonly ITransactionService _transactionService;
@@ -18,6 +20,7 @@ namespace Services.Orchestrators
 
         public AppointmentOrchestrator(IServiceManager serviceManager, IConfiguration configuration)
         {
+            _patientService = serviceManager.PatientService;
             _appointmentService = serviceManager.AppointmentService;
             _doctorReservationService = serviceManager.DoctorReservationService;
             _transactionService = serviceManager.TransactionService;
@@ -26,11 +29,24 @@ namespace Services.Orchestrators
             _configuration = configuration;
         }
 
-        public async Task AddAppointmentAsync(int patientId, int doctorReservationId)
+        public async Task<string> CreatePaymentSessionAsync(int patientId, int doctorReservationId)
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
-            // Pay and Add Transaction Here
-            // await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees);
+            var patient = await _patientService.GetByIdAsync(patientId, patientId);
+            var paymentDto = new PaymentDto()
+            {
+                AmountOfMoney = doctor.Fees,
+                Description = $"Appointment with Dr.{doctor.FirstName} {doctor.LastName}",
+                Email = patient.Email
+            };
+            var paymentUrl = await _paymentService.CreatePaymentSession(paymentDto);
+            return paymentUrl;
+        }
+
+        public async Task SaveAppointmentAsync(int patientId, int doctorReservationId)
+        {
+            var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
+            await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees);
             await _appointmentService.AddAsync(patientId, doctorReservationId);
         }
 
@@ -47,6 +63,8 @@ namespace Services.Orchestrators
 
             var transactionId = await _appointmentService.GetTransactionId(id);
             await _transactionService.DeleteAsync(transactionId);
+
+            // Refund Here
 
             await _appointmentService.DeleteAsync(id);
 

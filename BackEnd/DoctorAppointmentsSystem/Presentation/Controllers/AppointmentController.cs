@@ -17,8 +17,8 @@ namespace Presentation.Controllers
         public async Task<IActionResult> NewAppointment(int doctorReservationId)
         {
             var patientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            await _serviceManager.AppointmentOrchestrator.AddAppointmentAsync(patientId, doctorReservationId);
-            return Created();
+            var paymentUrl = await _serviceManager.AppointmentOrchestrator.CreatePaymentSessionAsync(patientId, doctorReservationId);
+            return Ok(new { paymentUrl });
         }
 
         [HttpDelete]
