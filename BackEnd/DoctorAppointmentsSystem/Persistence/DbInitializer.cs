@@ -1,4 +1,5 @@
 ﻿using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,7 @@ namespace Persistence
 
                 if (!(await _context.Specialties.AnyAsync()))
                 {
-                    var specialtiesData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\Seeding\specialties.json");
+                    var specialtiesData = await File.ReadAllTextAsync(@"..\Persistence\Data\Seeding\specialties.json");
                     var specialties = JsonSerializer.Deserialize<List<Specialty>>(specialtiesData);
                     if (specialties is not null && specialties.Any())
                     {
@@ -42,38 +43,48 @@ namespace Persistence
 
 
 
-                if (!(await _context.Doctors.AnyAsync()))
-                {
-                    var DoctorsData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\Seeding\doctors.json");
-                    var doctors = JsonSerializer.Deserialize<List<Doctor>>(DoctorsData);
-                    if (doctors is not null && doctors.Any())
-                    {
-                        await _context.AddRangeAsync(doctors);
-                        await _context.SaveChangesAsync();
-                    }
 
-                }
 
                 if (!(await _context.Doctors.AnyAsync()))
                 {
-                    var DoctorsData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\Seeding\doctors.json");
+                    var DoctorsData = await File.ReadAllTextAsync(@"..\Persistence\Data\Seeding\doctors.json");
                     var doctors = JsonSerializer.Deserialize<List<Doctor>>(DoctorsData);
                     if (doctors is not null && doctors.Any())
                     {
                         foreach (var doctor in doctors)
                         {
-                            var appUser = new AppUser()
+                            var appUser = new Domain.Models.AppUser()
                             {
                                 Email = doctor.Email,
-                                UserName = $"{doctor.FirstName},{doctor.LastName},{doctor.Email}",
-                                PhoneNumber = doctor.PhoneNumber
+                                UserName = $"{doctor.FirstName}DocNet{doctor.LastName}DocNet{doctor.Email}",
+                                PhoneNumber = doctor.PhoneNumber,
+
                             };
+
                             var result = await _userManager.CreateAsync(appUser, "P@ssw0rd");
+                            if (!result.Succeeded)
+                            {
+                                throw new ValidationException(result.Errors.Select(e => e.Description));
+                            }
+
+                            //doctor.AppUserID = (await _userManager.FindByEmailAsync(appUser.Email))?.Id;
                             doctor.AppUserID = appUser.Id;
-                            await _userManager.AddToRoleAsync(appUser, "doctor");
+
+
+                            var result1 = await _userManager.AddToRoleAsync(appUser, "doctor");
+
+                            if (!result1.Succeeded)
+                            {
+                                throw new ValidationException(result.Errors.Select(e => e.Description));
+                            }
+
+
+
                         }
 
+
                         await _context.AddRangeAsync(doctors);
+
                         await _context.SaveChangesAsync();
                     }
 
@@ -94,7 +105,7 @@ namespace Persistence
         {
             if (!_roleManager.Roles.Any())
             {
-                var rolesData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\Seeding\roles.json");
+                var rolesData = await File.ReadAllTextAsync(@"..\Persistence\Data\Seeding\roles.json");
                 var roles = JsonSerializer.Deserialize<List<string>>(rolesData);
 
                 if (roles is not null && roles.Any())
