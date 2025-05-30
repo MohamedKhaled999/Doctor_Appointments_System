@@ -25,7 +25,7 @@ namespace Domain.Contracts
         protected void SetOrderBy(Expression<Func<T, object>> expression)
             => OrderBy = expression;
         protected void SetOrderByDescending(Expression<Func<T, object>> expression)
-            => OrderBy = expression;
+            => OrderByDescending = expression;
         public void ApplyPagination(int pageIndex, int pageSize)
         {
             IsPaginated = true;

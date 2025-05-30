@@ -30,7 +30,7 @@ namespace Persistence
                     await _context.Database.MigrateAsync();
                 await InitializeIdentityAsync();
 
-                if (!(await _context.Specialties.AnyAsync()))
+                if (!await _context.Specialties.AnyAsync())
                 {
                     var specialtiesData = await File.ReadAllTextAsync(@"..\Persistence\Data\Seeding\specialties.json");
                     var specialties = JsonSerializer.Deserialize<List<Specialty>>(specialtiesData);
@@ -45,7 +45,7 @@ namespace Persistence
 
 
 
-                if (!(await _context.Doctors.AnyAsync()))
+                if (!await _context.Doctors.AnyAsync())
                 {
                     var DoctorsData = await File.ReadAllTextAsync(@"..\Persistence\Data\Seeding\doctors.json");
                     var doctors = JsonSerializer.Deserialize<List<Doctor>>(DoctorsData);

@@ -135,6 +135,7 @@ namespace Services
             {
                 //new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             };
 
             var Roles = await userManager.GetRolesAsync(user);

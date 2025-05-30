@@ -184,6 +184,10 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AppUserID")
+                        .IsUnique()
+                        .HasFilter("[AppUserID] IS NOT NULL");
+
                     b.ToTable((string)null);
 
                     b.UseTpcMappingStrategy();
@@ -514,6 +518,13 @@ namespace Persistence.Migrations
                     b.Navigation("Doctor");
                 });
 
+            modelBuilder.Entity("Domain.Models.Person", b =>
+                {
+                    b.HasOne("Domain.Models.AppUser", null)
+                        .WithOne("Person")
+                        .HasForeignKey("Domain.Models.Person", "AppUserID");
+                });
+
             modelBuilder.Entity("Domain.Models.Review", b =>
                 {
                     b.HasOne("Domain.Models.Doctor", "Doctor")
@@ -610,6 +621,12 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Specialty");
+                });
+
+            modelBuilder.Entity("Domain.Models.AppUser", b =>
+                {
+                    b.Navigation("Person")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Models.DoctorReservation", b =>

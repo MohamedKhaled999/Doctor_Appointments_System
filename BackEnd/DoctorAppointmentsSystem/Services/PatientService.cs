@@ -33,11 +33,11 @@ namespace Services
 
         public async Task<PatientDTO?> GetByIdAsync(int id, int currentID)
         {
-            if (id != currentID)
-                throw new UnAuthorizedException("Access Denied");
             var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
             if (patient == null)
                 return null;
+            if (patient.AppUserID != currentID)
+                throw new UnAuthorizedException("Access Denied");
             return _mapper.Map<PatientDTO>(patient);
         }
 
@@ -63,13 +63,13 @@ namespace Services
 
         public async Task UpdateAsync(PatientDTO patientDto, int currentID)
         {
-            if (patientDto.Id != currentID)
-                throw new UnAuthorizedException("Access Denied");
             var newPatient = _mapper.Map<Patient>(patientDto);
             var result = _validator.Validate(newPatient);
             if (result.IsValid)
             {
                 var oldPatient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(patientDto.Id);
+                if (oldPatient.AppUserID != currentID)
+                    throw new UnAuthorizedException("Access Denied");
                 if (oldPatient == null)
                     throw new ArgumentNullException($"Patient with ID {patientDto.Id} doesn't exist");
                 _unitOfWork.GetRepository<Patient, int>().Update(_mapper.Map(patientDto, oldPatient));
@@ -84,11 +84,11 @@ namespace Services
 
         public async Task DeleteAsync(int id, int currentID)
         {
-            if (id != currentID)
-                throw new UnAuthorizedException("Access Denied");
             var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
             if (patient == null)
                 throw new ArgumentNullException($"Patient with ID {id} doesn't exist");
+            if (patient.AppUserID != currentID)
+                throw new UnAuthorizedException("Access Denied");
             _unitOfWork.GetRepository<Patient, int>().Delete(patient);
             await _unitOfWork.SaveChangesAsync();
         }

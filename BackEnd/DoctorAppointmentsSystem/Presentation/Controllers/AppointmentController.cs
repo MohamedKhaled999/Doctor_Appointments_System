@@ -6,7 +6,7 @@ using System.Security.Claims;
 namespace Presentation.Controllers
 {
     [Authorize(Roles = "patient")]
-    [Route("patient/appointments")]
+    [Route("api/patient/appointments")]
     public class AppointmentController : ApiController
     {
         private readonly IServiceManager _serviceManager;
@@ -18,7 +18,7 @@ namespace Presentation.Controllers
         {
             var patientId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var paymentUrl = await _serviceManager.AppointmentOrchestrator.CreatePaymentSessionAsync(patientId, doctorReservationId);
-            return Ok(new { paymentUrl });
+            return Ok(paymentUrl);
         }
 
         [HttpDelete]

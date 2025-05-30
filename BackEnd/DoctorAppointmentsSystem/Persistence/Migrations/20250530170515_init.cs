@@ -56,24 +56,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Patient",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [PersonSequence]"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Governorate = table.Column<int>(type: "int", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppUserID = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Patient", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Specialties",
                 columns: table => new
                 {
@@ -194,6 +176,29 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Patient",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [PersonSequence]"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Governorate = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppUserID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patient", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Patient_AspNetUsers_AppUserID",
+                        column: x => x.AppUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Doctors",
                 columns: table => new
                 {
@@ -223,6 +228,11 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Doctors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Doctors_AspNetUsers_AppUserID",
+                        column: x => x.AppUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Doctors_Specialties_SpecialtyID",
                         column: x => x.SpecialtyID,
@@ -402,9 +412,23 @@ namespace Persistence.Migrations
                 column: "DoctorID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Doctors_AppUserID",
+                table: "Doctors",
+                column: "AppUserID",
+                unique: true,
+                filter: "[AppUserID] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Doctors_SpecialtyID",
                 table: "Doctors",
                 column: "SpecialtyID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Patient_AppUserID",
+                table: "Patient",
+                column: "AppUserID",
+                unique: true,
+                filter: "[AppUserID] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Review_DoctorID",
@@ -467,9 +491,6 @@ namespace Persistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Doctors");
 
             migrationBuilder.DropTable(
@@ -477,6 +498,9 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Specialties");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropSequence(
                 name: "PersonSequence");
