@@ -55,7 +55,7 @@ namespace Services
             _doctorOrchestrator = new Lazy<IDoctorOrchestrator>(() => new DoctorOrchestrator(this));
             _transactionService = new Lazy<ITransactionService>(() => new TransactionService(unitOfWork, mapper));
 
-            _paymentService = new Lazy<IPaymentService>(() => new PaymentService(configuration, userManager));
+            _paymentService = new Lazy<IPaymentService>(() => new PaymentService(configuration, userManager, this));
 
             _emailService = new Lazy<IEmailService>(() => new EmailService(configuration));
 
