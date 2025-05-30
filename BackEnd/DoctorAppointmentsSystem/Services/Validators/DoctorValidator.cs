@@ -50,16 +50,16 @@ namespace Services.Validators
             RuleFor(d => d.OverallRating)
                 .InclusiveBetween(0, 5).WithMessage("Rating must be between 0 and 5");
 
-            RuleFor(d => d.ImageURL)
-                .NotEmpty().When(d => string.IsNullOrEmpty(d.ImageURL))
-                .WithMessage("Image URL is required when no image file is provided")
-                .MaximumLength(500).WithMessage("Image URL cannot exceed 500 characters");
+            //RuleFor(d => d.ImageURL)
+            //    .NotEmpty().When(d => string.IsNullOrEmpty(d.ImageURL))
+            //    .WithMessage("Image URL is required when no image file is provided")
+            //    .MaximumLength(500).WithMessage("Image URL cannot exceed 500 characters");
 
             RuleFor(d => d.About)
                 .MaximumLength(500).WithMessage("About section cannot exceed 500 characters");
 
-            RuleFor(d => d.WorkingDays)
-                .IsInEnum().WithMessage("Invalid working days value");
+            //RuleFor(d => d.WorkingDays)
+            //    .IsInEnum().WithMessage("Invalid working days value");
 
             RuleFor(d => d.DefaultStartTime)
                 .LessThan(d => d.DefaultEndTime)
