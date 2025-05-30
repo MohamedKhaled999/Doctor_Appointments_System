@@ -1,1 +1,89 @@
-<p>doctor-card works!</p>
+<!-- <p>doctor-card works!</p> -->
+<!-- <div class="col-12 col-lg-2 text-center"> -->
+    
+<div class="col-12 col-lg-2 text-center">
+    <!-- <img src="~/uploads/images/@doc.Image" class="rounded-circle img-thumbnail" height="100" width="100" alt=""> -->
+    <img [src]="'/uploads/images/' + doctor.profilePictureUrl" class="rounded-circle img-thumbnail" height="100" width="100" alt="">
+</div>
+<!-- <div class="col-12 col-lg-3 text-center text-lg-start"> -->
+<div class="col-12 col-lg-3 text-center text-lg-start">
+    <!-- <p class="mb-1 fw-bold">Dr. @doc.Name</p> -->
+    <p class="mb-1 fw-bold">Dr. {{ doctor.name }}</p>
+    <!-- <p class="mb-1 fw-bold">@doc.Title</p> -->
+    <p class="mb-1 fw-bold">{{ doctor.title }}</p>
+    <!-- <p class="mb-1">@doc.Qualifications</p> -->
+    <p class="mb-1">{{ doctor.qualifications }}</p>
+    <!-- <p class="mb-1 fw-bold SP-fees">@doc.Fees E£</p> -->
+    <p class="mb-1 fw-bold SP-fees">{{ doctor.fees }} E£</p>
+</div>
+<!-- <div class="col-12 col-lg-7 flex-wrap justify-content-center gap-2 SP-bookCards"> -->
+<div class="col-12 col-lg-7 flex-wrap justify-content-center gap-2 SP-bookCards">
+    <!--
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <partial name="_ReservationCardsPartial", model="doc.Appointments"></partial>
+        </div>
+        <div class="swiper-scrollbar position-static mt-2"></div>
+    </div>
+    -->
+
+    <!-- This is a placeholder for the appointment cards, whyyyyyyyyy???????????????? -->
+    <!-- <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <ng-container *ngFor="let appointment of doctor.appointments">
+                <app-reservation-card [appointment]="appointment"></app-reservation-card>
+            </ng-container>
+        </div>
+        <div class="swiper-scrollbar position-static mt-2"></div>
+    </div> -->
+    
+</div>
+
+<!-- <div class="col-12"> -->
+<div class="col-12">
+    <!-- <p class="mb-1 text-center text-lg-start">Speciality:</p> -->
+    <p class="mb-1 text-center text-lg-start">Speciality:</p>
+    <!--
+    <div class="SP-badge-scroll d-flex flex-wrap gap-1">
+        <span class="badge rounded-pill SP-badge">@doc.Speciality</span>
+    </div>
+    -->
+    <div class="SP-badge-scroll d-flex flex-wrap gap-1">
+        <span class="badge rounded-pill SP-badge" *ngFor="let speciality of doctor.specializations">{{ speciality }}</span>
+    </div>
+</div>
+<!-- <div class="w-100"></div> -->
+<div class="w-100"></div>
+<!-- <div class="d-flex flex-wrap col-12 align-items-center"> -->
+<div class="d-flex flex-wrap col-12 align-items-center">
+    <!-- <div class="flex-grow-1 col-12 col-lg-8 d-flex justify-content-around mt-3"> -->
+    <div class="flex-grow-1 col-12 col-lg-8 d-flex justify-content-around mt-3">
+        <!-- <div><i class="fa-solid fa-star SP-icon"></i><span class="ms-2">@doc.Rating</span></div> -->
+        <div><i class="fa-solid fa-star SP-icon"></i><span class="ms-2">{{ doctor.rating }}</span></div>
+        <!-- <div><i class="fa-solid fa-stopwatch SP-icon"></i><span class="ms-2">@doc.WaitingTime+ Minutes</span></div> -->
+        <div><i class="fa-solid fa-stopwatch SP-icon"></i><span class="ms-2">{{ doctor.waitingTime }} Minutes</span></div>
+        <!-- <div><i class="fa-solid fa-location-dot SP-icon"></i><span class="ms-2">@doc.Governorate : @doc.Location</span></div> -->
+        <div><i class="fa-solid fa-location-dot SP-icon"></i><span class="ms-2">{{ doctor.governorate }} : {{ doctor.location }}</span></div>
+    </div>
+    <!-- <div class="col-12 col-lg-4 d-flex mt-3 gap-1"> -->
+    <div class="col-12 col-lg-4 d-flex mt-3 gap-1">
+        <!--
+        <a href="tel:@doc.Phone" class="btn col-6 SP-callBTN">
+            <i class="fa-solid fa-phone-volume me-2"></i>
+            @doc.Phone
+        </a>
+        -->
+        <a [href]="'tel:' + doctor.phone" class="btn col-6 SP-callBTN">
+            <i class="fa-solid fa-phone-volume me-2"></i>
+            {{ doctor.phone }}
+        </a>
+        <!--
+        <a asp-action="Profile" asp-controller="Doctor" asp-route-id="@doc.ID" class="btn col-6 SP-callBTN">
+            View Doctor
+        </a>
+        -->
+        <a [routerLink]="['/doctor/profile', doctor.id]" class="btn col-6 SP-callBTN">
+            View Doctor
+        </a>
+    </div>
+</div>
