@@ -62,6 +62,7 @@ namespace Persistence
                                 Email = doctor.Email,
                                 UserName = $"{doctor.FirstName}DocNet{doctor.LastName}DocNet{doctor.Email}",
                                 PhoneNumber = doctor.PhoneNumber,
+                                EmailConfirmed = true,
 
                             };
 
@@ -132,6 +133,7 @@ namespace Persistence
                     Email = "admin@gmail.com",
                     UserName = "DocNetAdmin",
                     PhoneNumber = "1234567890",
+                    EmailConfirmed = true,
                 };
                 await _userManager.CreateAsync(admin, "P@ssw0rd");
                 await _userManager.AddToRoleAsync(admin, "admin");
