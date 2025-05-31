@@ -38,7 +38,7 @@ namespace Services
                 throw new Domain.Exceptions.ValidationException(errors);
             }
         }
-        public async Task UpdateDoctor(DoctorEditDTO doctorDTO , int userId)
+        public async Task UpdateDoctor(DoctorEditDTO doctorDTO, int userId)
         {
             var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(doctorDTO.Id);
             if (doctor == null)
@@ -59,20 +59,18 @@ namespace Services
                 throw new ValidationException(string.Join(", ", errors));
             }
         }
-        public async Task<DoctorProfileDTO> DoctorProfile(int doctorId,int userId)
+        public async Task<DoctorProfileDTO> DoctorProfile(int doctorId)
         {
             var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(doctorId);
             if (doctor == null)
                 return null;
-            if (doctor.AppUserID != userId)
-                throw new Domain.Exceptions.UnAuthorizedException("Access Denied");
             var doctorDTO = _mapper.Map<DoctorProfileDTO>(doctor);
             return doctorDTO;
         }
         public async Task<DoctorProfileDTO?> GetByAppUserIdAsync(int appUserId)
         {
             var specs = new SpecificationsBase<Doctor>(d => d.AppUserID == appUserId);
-            var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specs);
+            var doctor = (await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specs)).FirstOrDefault();
             if (doctor == null)
                 return null;
             return _mapper.Map<DoctorProfileDTO>(doctor);

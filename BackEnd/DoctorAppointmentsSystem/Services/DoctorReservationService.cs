@@ -38,7 +38,7 @@ namespace Services
         public async Task AddDoctorReservation(NewResDTO res)
         {
             DoctorReservation newReservation = _mapper.Map<DoctorReservation>(res);
-            if (!IsInCalender(newReservation).Result)
+            if (!IsInCalendar(newReservation).Result)
             {
                 await _unitOfWork.GetRepository<DoctorReservation, int>().AddAsync(newReservation);
             }
@@ -46,7 +46,6 @@ namespace Services
             {
                 Console.WriteLine("Reservation Already Exist");
                 _unitOfWork.GetRepository<DoctorReservation, int>().Update(newReservation);
-
             }
             await _unitOfWork.SaveChangesAsync();
 
@@ -123,7 +122,7 @@ namespace Services
                 EndTime = end,
                 MaxReservation = MaxRes
             };
-            if (!IsInCalender(newReservation).Result)
+            if (!IsInCalendar(newReservation).Result)
             {
                 _unitOfWork.GetRepository<DoctorReservation, int>().AddAsync(newReservation).Wait();
             }
@@ -150,7 +149,7 @@ namespace Services
             }
             return date.AddDays(daysToAdd);
         }
-        private async Task<bool> IsInCalender(DoctorReservation res)
+        private async Task<bool> IsInCalendar(DoctorReservation res)
         {
             // check this later for intersection between two reservations 
             return _unitOfWork.GetRepository<DoctorReservation, int>()

@@ -17,9 +17,8 @@ namespace Services.MappingProfiles
 
             CreateMap<NewResDTO, DoctorReservation>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(src => src.ResID))
-                .ForMember(dest => dest.StartTime, src => src.MapFrom(src => src.StartTime))
-                .ForMember(dest => dest.EndTime, src => src.MapFrom(src => src.EndTime))
-                .ForMember(dest => dest.DoctorID, src => src.MapFrom(src => src.DoctorID))
+                .ForMember(dest => dest.StartTime, src => src.MapFrom(src => src.Date.Date.Add(src.EndTime)))
+                .ForMember(dest => dest.EndTime, src => src.MapFrom(src => src.Date.Date.Add(src.EndTime)))
                 .ForMember(dest => dest.MaxReservation, src => src.MapFrom(src => src.MaxRes));
         }
     }

@@ -17,7 +17,7 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> GetReservations()
         {
-            var reservations = _serviceManager.AppointmentOrchestrator.GetDoctorReservationByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            var reservations = await _serviceManager.AppointmentOrchestrator.GetDoctorReservationsByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Ok(reservations);
         }
 

@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
-using Shared.Authentication;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Search;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
@@ -19,7 +14,7 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDoctorProfile(int id)
         {
-            var doctorProfile = await _serviceManager.DoctorService.DoctorProfile(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            var doctorProfile = await _serviceManager.DoctorService.DoctorProfile(id);
             return Ok(doctorProfile);
         }
         //[HttpPost("Register")]
@@ -29,9 +24,10 @@ namespace Presentation.Controllers
         //    return Created();
         //}
         [HttpPut]
+        [Authorize(Roles = "doctor")]
         public async Task<IActionResult> UpdateDoctor(DoctorEditDTO doctorDTO)
         {
-            await _serviceManager.DoctorService.UpdateDoctor(doctorDTO , int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            await _serviceManager.DoctorService.UpdateDoctor(doctorDTO, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Ok(new { success = true });
         }
         [HttpGet("search")]

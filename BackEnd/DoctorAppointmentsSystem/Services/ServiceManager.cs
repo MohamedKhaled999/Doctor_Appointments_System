@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -34,11 +35,14 @@ namespace Services
 
         private readonly Lazy<IUploadService> _uploadService;
 
+        private readonly IWebHostEnvironment _environment;
+
         public ServiceManager(IUnitOfWork unitOfWork,
                               UserManager<AppUser> userManager,
                               IMapper mapper,
                               IOptions<JWTOptions> options,
-                              IConfiguration configuration)
+                              IConfiguration configuration,
+                              IWebHostEnvironment environment)
 
         {
             _homeService = new Lazy<IHomeService>(() => new HomeService(unitOfWork, mapper));
@@ -59,7 +63,8 @@ namespace Services
 
             _emailService = new Lazy<IEmailService>(() => new EmailService(configuration));
 
-            //_uploadService = new Lazy<IUploadService>(() => new UploadService());
+            _environment = environment;
+            _uploadService = new Lazy<IUploadService>(() => new UploadService(_environment));
 
             _authenticationService = new Lazy<IAuthenticationService>(() =>
             new AuthenticationService(userManager,
@@ -69,7 +74,6 @@ namespace Services
                                       configuration,
                                       mapper,
                                       _emailService.Value));
-
         }
 
         public IHomeService HomeService => _homeService.Value;
@@ -98,6 +102,6 @@ namespace Services
 
         public IEmailService EmailService => _emailService.Value;
 
-        public IUploadService UploadService => null;
+        public IUploadService UploadService => _uploadService.Value;
     }
 }
