@@ -43,6 +43,8 @@ namespace Services.MappingProfiles
             CreateMap<Doctor, DoctorProfileDTO>()
                 .ForMember(dest => dest.Speciality, src => src.MapFrom(src => src.Specialty.Name))
                 .ForMember(dest => dest.Image, src => src.MapFrom(src => src.ImageURL))
+                .ForMember(dest => dest.Name, src => src.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+                .ForMember(dest => dest.Phone, src => src.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Rating, src => src.MapFrom(src => src.OverallRating))
                 .ForMember(dest => dest.Latitude, src => src.MapFrom(src => src.Lat))
                 .ForMember(dest => dest.Longitude, src => src.MapFrom(src => src.Lng));

@@ -4,7 +4,7 @@ namespace Shared.DTOs.Search
 {
     public class FilterSearchDTO
     {
-        public int PageNum { get; set; } = 0;
+        public int PageNum { get; set; } = 1;
         public int PageSize { get; set; } = 10;
         public string Name { get; set; } = string.Empty;
         public int Specialty { get; set; } = 0;

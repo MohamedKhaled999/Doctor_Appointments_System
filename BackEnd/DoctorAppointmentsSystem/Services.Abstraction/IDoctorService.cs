@@ -7,8 +7,8 @@ namespace Services.Abstraction
     public interface IDoctorService
     {
         public Task AddAsync(DoctorRegisterDto doctorDTO);
-        public Task UpdateDoctor(DoctorEditDTO doctorDTO);
-        public Task<DoctorProfileDTO> DoctorProfile(int doctorId);
+        public Task UpdateDoctor(DoctorEditDTO doctorDTO, int userId);
+        public Task<DoctorProfileDTO> DoctorProfile(int doctorId, int userId);
         public Task<DoctorProfileDTO?> GetByAppUserIdAsync(int appUserId);
         public Task<List<DoctorSearchDTO>> SearchDoctor(FilterSearchDTO filter);
         //Task<Doctor?> GetDoctorInfo(int doctorID);

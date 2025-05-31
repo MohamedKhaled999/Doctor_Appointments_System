@@ -13,6 +13,7 @@ namespace Services.Abstraction
         ISpecialtyService SpecialtyService { get; }
         ITransactionService TransactionService { get; }
         IAppointmentOrchestrator AppointmentOrchestrator { get; }
+        IDoctorOrchestrator DoctorOrchestrator { get; }
         IPaymentService PaymentService { get; }
         IAuthenticationService AuthenticationService { get; }
         IEmailService EmailService { get; }
