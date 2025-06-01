@@ -19,6 +19,7 @@ namespace Services.Orchestrators
         private readonly ITransactionService _transactionService;
         private readonly IPaymentService _paymentService;
         private readonly IEmailService _emailService;
+        private readonly IUploadService _uploadService;
         private readonly IConfiguration _configuration;
 
         public AppointmentOrchestrator(IServiceManager serviceManager, IConfiguration configuration)
@@ -30,6 +31,7 @@ namespace Services.Orchestrators
             _transactionService = serviceManager.TransactionService;
             _paymentService = serviceManager.PaymentService;
             _emailService = serviceManager.EmailService;
+            _uploadService = serviceManager.UploadService;
             _configuration = configuration;
         }
 
@@ -45,9 +47,26 @@ namespace Services.Orchestrators
             return await _appointmentService.GetByPatientAsync(patient.Id, pageIndex, pageSize);
         }
 
-        public async Task<string[]?> GetAppointmentDocuments(int appointmentId)
+        public async Task<string[]?> GetAppointmentDocuments(int appointmentId, int currentPatientAppUserId)
         {
-            throw new NotImplementedException();
+            var patient = await _appointmentService.GetPatientByAppointmentId(appointmentId);
+            if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
+                throw new UnAuthorizedException("Access Denied");
+
+            var appointment = await _appointmentService.GetByIdAsync(appointmentId);
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
+
+            if (appointment.DocumentUrls == null)
+                return null;
+
+            return appointment.DocumentUrls.Split("||");
+        }
+
+        public async Task<int> GetAppointmentCountByPatient(int appUserId)
+        {
+            var patient = await _patientService.GetByAppUserIdAsync(appUserId);
+            return _appointmentService.GetCount(patient.Id);
         }
 
         public async Task<string> CreatePaymentSessionAsync(int patientAppUserId, int doctorReservationId)
@@ -69,12 +88,31 @@ namespace Services.Orchestrators
             return paymentUrl;
         }
 
-        public async Task AddAppointmentDocuments(int appointmentId, params IFormFile[] docs)
+        public async Task AddAppointmentDocuments(int appointmentId, IFormFile document, int currentPatientAppUserId)
         {
+            var patient = await _appointmentService.GetPatientByAppointmentId(appointmentId);
+            if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
+                throw new UnAuthorizedException("Access Denied");
+
             var appointment = await _appointmentService.GetByIdAsync(appointmentId);
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
 
+            var documentUrl = await _uploadService.UploadFile(document, "documents");
+            await _appointmentService.AddAppointmentDocument(appointmentId, documentUrl);
+        }
+
+        public async Task DeleteAppointmentDocument(int appointmentId, string documentUrl, int currentPatientAppUserId)
+        {
+            var patient = await _appointmentService.GetPatientByAppointmentId(appointmentId);
+            if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
+                throw new UnAuthorizedException("Access Denied");
+
+            var appointment = await _appointmentService.GetByIdAsync(appointmentId);
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
+
+            await _appointmentService.DeleteAppointmentDocument(appointmentId, documentUrl);
         }
 
         public async Task SaveAppointmentAsync(int patientId, int doctorReservationId, string paymentId)
@@ -98,6 +136,7 @@ namespace Services.Orchestrators
             var patient = await _appointmentService.GetPatientByAppointmentId(id);
             if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
                 throw new UnAuthorizedException("Access Denied");
+
             var appointmentDate = (await _appointmentService.GetByIdAsync(id)).StartTime.Date;
 
             var transactionId = await _appointmentService.GetTransactionId(id);

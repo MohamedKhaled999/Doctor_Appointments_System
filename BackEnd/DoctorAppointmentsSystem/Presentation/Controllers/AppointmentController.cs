@@ -21,10 +21,17 @@ namespace Presentation.Controllers
             return Ok(appointments);
         }
 
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var count = await _serviceManager.AppointmentOrchestrator.GetAppointmentCountByPatient(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return Ok(new { count });
+        }
+
         [HttpGet("docs")]
         public async Task<IActionResult> GetDocuments(int appointmentId)
         {
-            var docs = await _serviceManager.AppointmentOrchestrator.GetAppointmentDocuments(appointmentId);
+            var docs = await _serviceManager.AppointmentOrchestrator.GetAppointmentDocuments(appointmentId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Ok(docs);
         }
 
@@ -37,9 +44,9 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("docs")]
-        public async Task<IActionResult> AddDocuments(int appointmentId, params IFormFile[] docs)
+        public async Task<IActionResult> AddDocument(int appointmentId, IFormFile document)
         {
-            await _serviceManager.AppointmentOrchestrator.AddAppointmentDocuments(appointmentId, docs);
+            await _serviceManager.AppointmentOrchestrator.AddAppointmentDocuments(appointmentId, document, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Created();
         }
 
@@ -47,6 +54,13 @@ namespace Presentation.Controllers
         public async Task<IActionResult> CancelAppointment(int id)
         {
             await _serviceManager.AppointmentOrchestrator.CancelAppointmentAsync(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return NoContent();
+        }
+
+        [HttpDelete("docs")]
+        public async Task<IActionResult> DeleteDocument(int appointmentId, string documentUrl)
+        {
+            await _serviceManager.AppointmentOrchestrator.DeleteAppointmentDocument(appointmentId, documentUrl, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return NoContent();
         }
     }

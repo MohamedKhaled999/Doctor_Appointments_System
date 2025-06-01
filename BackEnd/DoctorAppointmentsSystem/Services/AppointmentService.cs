@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models;
 using Services.Abstraction;
 using Services.Specifications.Appointment;
@@ -27,6 +28,30 @@ namespace Services
             return _mapper.Map<AppointmentDTO?>(appointment);
         }
 
+        public async Task AddAppointmentDocument(int appointmentId, string documentUrl)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(appointmentId);
+            if (appointment.DocumentUrls == null)
+                appointment.DocumentUrls = documentUrl;
+            else if (appointment.DocumentUrls.Split("||").Length == 3)
+                throw new ValidationException(["Maximum Number of Documents Exceeded"]);
+            else
+                appointment.DocumentUrls += "||" + documentUrl;
+            _unitOfWork.GetRepository<Appointment, int>().Update(appointment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteAppointmentDocument(int appointmentId, string documentUrl)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(appointmentId);
+            if (appointment.DocumentUrls == null || !appointment.DocumentUrls.Split("||").Contains(documentUrl))
+                throw new ValidationException(["Document isn't available"]);
+            else
+                appointment.DocumentUrls = string.Join("||", appointment.DocumentUrls.Split("||").Where(d => d != documentUrl));
+            _unitOfWork.GetRepository<Appointment, int>().Update(appointment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public async Task<int> GetTransactionId(int appointmentId)
         {
             var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(appointmentId);
@@ -52,8 +77,12 @@ namespace Services
             return appointments.Select(_mapper.Map<AppointmentDTO>).ToList();
         }
 
-        public int GetCount()
-            => _unitOfWork.GetRepository<Appointment, int>().GetCount();
+        public int GetCount(int patientId)
+        {
+            var specs = new SpecificationsBase<Appointment>(a => a.PatientId == patientId);
+            return _unitOfWork.GetRepository<Appointment, int>().GetCount(specs);
+        }
+
 
         public async Task AddAsync(int patientId, int doctorReservationId, int transactionId)
         {
