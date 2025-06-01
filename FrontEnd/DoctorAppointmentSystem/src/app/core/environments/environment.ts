@@ -1,0 +1,7 @@
+export const environment = {
+    production: false,
+    recaptcha: {
+      siteKey: '6Ldg8RgrAAAAABIgMEqosV5bv6VTACK6MUVbk1yx'
+    },
+    apiUrl: 'http://doc-net2.runasp.net/api/' 
+  };
