@@ -1,5 +1,5 @@
 export enum Governorate {
-    Cairo = 'Cairo',
-    Alexandria = 'Alexandria',
-
-  }
+ 
+  Cairo = 0,
+  Alexandria = 1
+}
