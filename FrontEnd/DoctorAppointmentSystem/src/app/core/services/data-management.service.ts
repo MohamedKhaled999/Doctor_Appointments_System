@@ -14,6 +14,9 @@ export class DataManagementService {
 
   // you can save what you want in here in  signal
 
-  constructor() { }
+  // save spcialties
+  public Specialties = signal<string[]>([]);
+
+
  
 }
