@@ -15,10 +15,9 @@ namespace Services.Orchestrators
         }
         async Task IDoctorOrchestrator.RegisterDoctor(DoctorRegisterDto dto)
         {
-            //var ImgUrl = await uploadService.UploadFile(dto.Image);
-            //dto.ImageURL = ImgUrl;
+            var ImgUrl = await uploadService.UploadFile(dto.Image);
+            dto.ImageURL = ImgUrl;
             await doctorService.AddAsync(dto);
-
         }
     }
 }

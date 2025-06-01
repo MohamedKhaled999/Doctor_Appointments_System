@@ -1,6 +1,7 @@
 ﻿using Domain.Contracts;
 using Domain.Exceptions;
 using Domain.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -12,14 +13,17 @@ namespace Persistence
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly IWebHostEnvironment _environment;
+
         public DbInitializer(AppDbContext context,
-               UserManager<AppUser> userManager
-            , RoleManager<IdentityRole<int>> roleManager)
+                             UserManager<AppUser> userManager,
+                             RoleManager<IdentityRole<int>> roleManager,
+                             IWebHostEnvironment environment)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
-
+            _environment = environment;
         }
         public async Task InitializeAsync()
         {
@@ -32,7 +36,7 @@ namespace Persistence
 
                 if (!await _context.Specialties.AnyAsync())
                 {
-                    var specialtiesData = await File.ReadAllTextAsync(@"..\Persistence\Data\Seeding\specialties.json");
+                    var specialtiesData = await File.ReadAllTextAsync(Path.Combine(_environment.WebRootPath, "Seeding", "specialties.json"));
                     var specialties = JsonSerializer.Deserialize<List<Specialty>>(specialtiesData);
                     if (specialties is not null && specialties.Any())
                     {
@@ -47,7 +51,7 @@ namespace Persistence
 
                 if (!await _context.Doctors.AnyAsync())
                 {
-                    var DoctorsData = await File.ReadAllTextAsync(@"..\Persistence\Data\Seeding\doctors.json");
+                    var DoctorsData = await File.ReadAllTextAsync(Path.Combine(_environment.WebRootPath, "Seeding", "doctors.json"));
                     var doctors = JsonSerializer.Deserialize<List<Doctor>>(DoctorsData);
                     if (doctors is not null && doctors.Any())
                     {
@@ -58,6 +62,7 @@ namespace Persistence
                                 Email = doctor.Email,
                                 UserName = $"{doctor.FirstName}DocNet{doctor.LastName}DocNet{doctor.Email}",
                                 PhoneNumber = doctor.PhoneNumber,
+                                EmailConfirmed = true,
 
                             };
 
@@ -105,7 +110,7 @@ namespace Persistence
         {
             if (!_roleManager.Roles.Any())
             {
-                var rolesData = await File.ReadAllTextAsync(@"..\Persistence\Data\Seeding\roles.json");
+                var rolesData = await File.ReadAllTextAsync(Path.Combine(_environment.WebRootPath, "Seeding", "roles.json"));
                 var roles = JsonSerializer.Deserialize<List<string>>(rolesData);
 
                 if (roles is not null && roles.Any())
@@ -128,6 +133,7 @@ namespace Persistence
                     Email = "admin@gmail.com",
                     UserName = "DocNetAdmin",
                     PhoneNumber = "1234567890",
+                    EmailConfirmed = true,
                 };
                 await _userManager.CreateAsync(admin, "P@ssw0rd");
                 await _userManager.AddToRoleAsync(admin, "admin");

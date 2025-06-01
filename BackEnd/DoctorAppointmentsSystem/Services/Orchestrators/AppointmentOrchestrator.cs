@@ -23,6 +23,7 @@ namespace Services.Orchestrators
         public AppointmentOrchestrator(IServiceManager serviceManager, IConfiguration configuration)
         {
             _patientService = serviceManager.PatientService;
+            _doctorService = serviceManager.DoctorService;
             _appointmentService = serviceManager.AppointmentService;
             _doctorReservationService = serviceManager.DoctorReservationService;
             _transactionService = serviceManager.TransactionService;
@@ -31,7 +32,7 @@ namespace Services.Orchestrators
             _configuration = configuration;
         }
 
-        public async Task<List<DoctorReservationDTO>> GetDoctorReservationByAppUserIdAsync(int appUserId)
+        public async Task<List<DoctorReservationDTO>> GetDoctorReservationsByAppUserIdAsync(int appUserId)
         {
             var doctor = await _doctorService.GetByAppUserIdAsync(appUserId);
             return await _doctorReservationService.GetReservationsByDocID(doctor.ID);

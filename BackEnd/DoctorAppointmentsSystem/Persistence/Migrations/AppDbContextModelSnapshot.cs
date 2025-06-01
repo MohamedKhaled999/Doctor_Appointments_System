@@ -118,7 +118,7 @@ namespace Persistence.Migrations
                     b.HasIndex("TransactionId")
                         .IsUnique();
 
-                    b.ToTable("Appointment");
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("Domain.Models.DoctorReservation", b =>
@@ -145,7 +145,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("DoctorID");
 
-                    b.ToTable("DoctorReservation");
+                    b.ToTable("DoctorReservations");
                 });
 
             modelBuilder.Entity("Domain.Models.Person", b =>
@@ -224,7 +224,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("PatientID");
 
-                    b.ToTable("Review");
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Domain.Models.Specialty", b =>
@@ -282,7 +282,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Transaction");
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -477,7 +477,7 @@ namespace Persistence.Migrations
                 {
                     b.HasBaseType("Domain.Models.Person");
 
-                    b.ToTable("Patient");
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("Domain.Models.Appointment", b =>

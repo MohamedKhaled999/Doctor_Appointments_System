@@ -56,9 +56,6 @@ namespace Services.MappingProfiles
                 .ForMember(dest => dest.Image, src => src.MapFrom(src => src.ImageURL))
                 .ForMember(dest => dest.Rating, src => src.MapFrom(src => src.OverallRating))
                 .ForMember(dest => dest.Phone, src => src.MapFrom(src => src.PhoneNumber));
-
-
-
         }
     }
 }

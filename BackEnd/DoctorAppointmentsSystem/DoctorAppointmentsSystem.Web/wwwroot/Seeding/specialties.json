@@ -1,0 +1,46 @@
+[
+  {
+    "Name": "Cardiology",
+    "ImageURL": "images/specialties/cardiology.jpg"
+  },
+  {
+    "Name": "Angioplasty",
+    "ImageURL": "images/specialties/angioplasty.jpg"
+  },
+  {
+    "Name": "Dermatology",
+    "ImageURL": "images/specialties/dermatology.jpg"
+  },
+  {
+    "Name": "Pediatrics",
+    "ImageURL": "images/specialties/pediatrics.jpg"
+  },
+  {
+    "Name": "Neurology",
+    "ImageURL": "images/specialties/neurology.jpg"
+  },
+  {
+    "Name": "Orthopedics",
+    "ImageURL": "images/specialties/orthopedics.jpg"
+  },
+  {
+    "Name": "Ophthalmology",
+    "ImageURL": "images/specialties/ophthalmology.jpg"
+  },
+  {
+    "Name": "Gastroenterology",
+    "ImageURL": "images/specialties/gastroenterology.jpg"
+  },
+  {
+    "Name": "Endocrinology",
+    "ImageURL": "images/specialties/endocrinology.jpg"
+  },
+  {
+    "Name": "Urology",
+    "ImageURL": "images/specialties/urology.jpg"
+  },
+  {
+    "Name": "Dentistry",
+    "ImageURL": "images/specialties/dentistry.jpg"
+  }
+]

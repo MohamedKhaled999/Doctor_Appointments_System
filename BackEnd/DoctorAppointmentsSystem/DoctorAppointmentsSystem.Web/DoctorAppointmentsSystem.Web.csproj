@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\doctors.json" />
+    <Content Remove="wwwroot\roles.json" />
+    <Content Remove="wwwroot\specialties.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5">
       <PrivateAssets>all</PrivateAssets>
@@ -25,6 +31,18 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\specialties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Seeding\doctors.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\Seeding\roles.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\Seeding\specialties.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

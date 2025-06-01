@@ -41,7 +41,12 @@ namespace Services
         public async Task<UserResultDto> GetUserByEmail(string email)
         {
             var user = await userManager.FindByEmailAsync(email) ?? throw new UnAuthorizedException($"Email ({email}) Not Found!");
-            return new UserResultDto(user.Email, await CreateTokenAsync(user));
+            var namesArr = user.UserName.Split("DocNet");
+
+            return new UserResultDto(Email: user.Email,
+                                     DisplayName: $"{namesArr[0]} {namesArr[1]}",
+                                     Role: (await userManager.GetRolesAsync(user)).FirstOrDefault(),
+                                     Token: await CreateTokenAsync(user));
         }
 
         /// <summary>
@@ -60,11 +65,12 @@ namespace Services
 
             var Result = await userManager.CheckPasswordAsync(user, loginDto.Password);
             if (Result == false) throw new UnAuthorizedException("Invalid Password !!");
-
+            var namesArr = user.UserName.Split("DocNet");
             return new UserResultDto
             (
                 Email: user.Email,
-                //DisplayName: $"{user.FirstName} {user.LastName}",
+                DisplayName: $"{namesArr[0]} {namesArr[1]}",
+                Role: (await userManager.GetRolesAsync(user)).FirstOrDefault(),
                 Token: await CreateTokenAsync(user)
             );
         }
@@ -80,7 +86,7 @@ namespace Services
             var user = new AppUser
             {
                 Email = registerDto.Email,
-                UserName = $"{registerDto.FirstName}{registerDto.LastName}{registerDto.Email}",
+                UserName = $"{registerDto.FirstName}DocNet{registerDto.LastName}DocNet{registerDto.Email}",
             };
 
             var result = await userManager.CreateAsync(user, registerDto.Password);
@@ -105,10 +111,13 @@ namespace Services
                 await userManager.AddToRoleAsync(user, "patient");
             }
             await SendEmailConfirmationAsync(registerDto, user);
+            var namesArr = user.UserName.Split("DocNet");
 
             return new UserResultDto(
-                    user.Email,
-                   Token: await CreateTokenAsync(user)
+                 Email: user.Email,
+                DisplayName: $"{namesArr[0]} {namesArr[1]}",
+                Role: (await userManager.GetRolesAsync(user)).FirstOrDefault(),
+                Token: await CreateTokenAsync(user)
                 );
         }
 
