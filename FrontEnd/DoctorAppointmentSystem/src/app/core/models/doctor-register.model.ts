@@ -11,7 +11,6 @@ export interface DoctorRegisterVM {
     lat: number;
     lng: number;
     password: string;
-    confirmPassword: string;
     specialtyID: number;
     fees: number;
     waitingTime: number;
