@@ -44,7 +44,7 @@ namespace Services
         public async Task<PatientDTO?> GetByAppUserIdAsync(int appUserId)
         {
             var specs = new SpecificationsBase<Patient>(p => p.AppUserID == appUserId);
-            var patient = await _unitOfWork.GetRepository<Patient, int>().GetAllAsync(specs);
+            var patient = (await _unitOfWork.GetRepository<Patient, int>().GetAllAsync(specs)).FirstOrDefault();
             if (patient == null)
                 return null;
             return _mapper.Map<PatientDTO>(patient);

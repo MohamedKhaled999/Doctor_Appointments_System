@@ -13,7 +13,19 @@ namespace Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AppointmentService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+        public AppointmentService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<AppointmentDTO?> GetByIdAsync(int id)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(id);
+            if (appointment == null)
+                return null;
+            return _mapper.Map<AppointmentDTO?>(appointment);
+        }
 
         public async Task<int> GetTransactionId(int appointmentId)
         {
@@ -43,14 +55,16 @@ namespace Services
         public int GetCount()
             => _unitOfWork.GetRepository<Appointment, int>().GetCount();
 
-        public async Task AddAsync(int patientId, int doctorReservationId)
+        public async Task AddAsync(int patientId, int doctorReservationId, int transactionId)
         {
             var appointment = new Appointment()
             {
                 PatientId = patientId,
-                DoctorReservationID = doctorReservationId
+                DoctorReservationID = doctorReservationId,
+                TransactionId = transactionId
             };
             await _unitOfWork.GetRepository<Appointment, int>().AddAsync(appointment);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)

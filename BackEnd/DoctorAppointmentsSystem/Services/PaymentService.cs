@@ -139,7 +139,6 @@ namespace Services
             var stripeEvent = EventUtility.ConstructEvent(JsonRequest,
                 StripeHeader, endPointSecret);
 
-
             if (stripeEvent.Data.Object is Session session)
             {
                 emailFromSession = session.CustomerEmail;

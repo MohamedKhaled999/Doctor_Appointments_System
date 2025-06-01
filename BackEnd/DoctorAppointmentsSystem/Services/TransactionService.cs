@@ -30,6 +30,15 @@ namespace Services
             return (await GetByIdAsync(transactionId)).PaymentId;
         }
 
+        public async Task<int?> GetByPaymentId(string paymentId)
+        {
+            var specs = new SpecificationsBase<Transaction>(t => t.PaymentId == paymentId);
+            var transaction = (await _unitOfWork.GetRepository<Transaction, int>().GetAllAsync(specs)).FirstOrDefault();
+            if (transaction == null)
+                return null;
+            return transaction.Id;
+        }
+
         public async Task AddAsync(int patientId, int doctorId, int amount, string paymentId)
         {
             var transaction = new Transaction()

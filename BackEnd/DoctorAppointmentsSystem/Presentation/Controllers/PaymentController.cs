@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Services.Abstraction;
 
 namespace Presentation.Controllers
 {
-    public class PaymentController(IServiceManager serviceManager) : ApiController
+    public class PaymentController(IServiceManager serviceManager, ILogger logger) : ApiController
     {
         //[HttpPost("payment-session")]
         //[Authorize(Roles = "patient")]

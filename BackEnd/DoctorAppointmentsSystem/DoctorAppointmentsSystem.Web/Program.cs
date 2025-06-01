@@ -51,7 +51,6 @@ namespace DoctorAppointmentsSystem.Web
             .AddEntityFrameworkStores<AppDbContext>();
             #endregion
 
-
             #region DbContext & DbInitializer
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
@@ -73,7 +72,6 @@ namespace DoctorAppointmentsSystem.Web
             #region Persentation
             builder.Services.AddControllers().AddApplicationPart(typeof(Persistence.AssemblyReference).Assembly);
             #endregion
-
 
             #region Authentication
             builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("JwtOptions"));
@@ -103,9 +101,15 @@ namespace DoctorAppointmentsSystem.Web
                 });
             #endregion
 
+            #region Logging
+            builder.Services.AddSingleton(typeof(ILogger), sp =>
+            {
+                var environment = sp.GetRequiredService<IWebHostEnvironment>();
+                return new Middlewares.Logger(LogLevel.Information, environment);
+            });
+            #endregion
 
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
-
 
             var app = builder.Build();
 
@@ -121,7 +125,6 @@ namespace DoctorAppointmentsSystem.Web
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-
             app.UseHttpsRedirection();
 
             app.UseCors("allow");
@@ -134,14 +137,12 @@ namespace DoctorAppointmentsSystem.Web
 
             app.Run();
 
-            async Task InitializeDbAsync(WebApplication app)
-            {
-                var scope = app.Services.CreateScope();
-                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-                await dbInitializer.InitializeAsync();
-
-            }
-
+        }
+        private static async Task InitializeDbAsync(WebApplication app)
+        {
+            var scope = app.Services.CreateScope();
+            var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+            await dbInitializer.InitializeAsync();
         }
     }
 }

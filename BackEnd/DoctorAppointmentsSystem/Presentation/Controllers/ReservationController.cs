@@ -6,7 +6,6 @@ using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
-    [Authorize(Roles = "doctor")]
     [Route("api/doctor/reservations")]
     public class ReservationController : ApiController
     {
@@ -15,20 +14,26 @@ namespace Presentation.Controllers
         public ReservationController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
         [HttpGet]
-        public async Task<IActionResult> GetReservations()
+        public async Task<IActionResult> GetReservations(int doctorId = 0)
         {
-            var reservations = await _serviceManager.AppointmentOrchestrator.GetDoctorReservationsByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            List<DoctorReservationDTO>? reservations;
+            if (doctorId == 0)
+                reservations = await _serviceManager.AppointmentOrchestrator.GetDoctorReservationsByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            else
+                reservations = await _serviceManager.DoctorReservationService.GetReservationsByDocID(doctorId);
             return Ok(reservations);
         }
 
         [HttpPost]
+        [Authorize(Roles = "doctor")]
         public async Task<IActionResult> NewReservation(NewResDTO reservation)
         {
-            await _serviceManager.AppointmentOrchestrator.AddDoctorReservationAsync(reservation);
+            await _serviceManager.AppointmentOrchestrator.AddDoctorReservationAsync(reservation, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Created();
         }
 
         [HttpDelete]
+        [Authorize(Roles = "doctor")]
         public async Task<IActionResult> CancelReservation(int id)
         {
             await _serviceManager.AppointmentOrchestrator.CancelReservationAsync(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));

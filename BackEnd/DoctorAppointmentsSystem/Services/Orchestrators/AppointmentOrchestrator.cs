@@ -48,12 +48,15 @@ namespace Services.Orchestrators
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
             var patient = await _patientService.GetByAppUserIdAsync(patientAppUserId);
+            if (doctor == null)
+                throw new ArgumentNullException($"Reservation with ID {doctorReservationId} doesn't exist");
+
             var paymentDto = new PaymentDto()
             {
                 PatientId = patient.Id,
                 DoctorReservationId = doctorReservationId,
                 AmountOfMoney = doctor.Fees,
-                Description = $"Appointment with Dr.{doctor.FirstName} {doctor.LastName}",
+                Description = $"Appointment with Dr. {doctor.FirstName} {doctor.LastName}",
                 Email = patient.Email
             };
             var paymentUrl = await _paymentService.CreatePaymentSession(paymentDto);
@@ -64,11 +67,15 @@ namespace Services.Orchestrators
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
             await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees, paymentId);
-            await _appointmentService.AddAsync(patientId, doctorReservationId);
+            var transactionId = await _transactionService.GetByPaymentId(paymentId);
+            await _appointmentService.AddAsync(patientId, doctorReservationId, transactionId.Value);
         }
 
-        public async Task AddDoctorReservationAsync(NewResDTO reservation)
+        public async Task AddDoctorReservationAsync(NewResDTO reservation, int appUserId)
         {
+            var doctor = await _doctorService.GetByAppUserIdAsync(appUserId);
+            if (doctor.ID != reservation.DoctorID)
+                throw new UnAuthorizedException("Access Denied");
             await _doctorReservationService.AddDoctorReservation(reservation);
         }
 
@@ -77,6 +84,7 @@ namespace Services.Orchestrators
             var patient = await _appointmentService.GetPatientByAppointmentId(id);
             if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
                 throw new UnAuthorizedException("Access Denied");
+            var appointmentDate = (await _appointmentService.GetByIdAsync(id)).StartTime.Date;
 
             var transactionId = await _appointmentService.GetTransactionId(id);
 
@@ -86,18 +94,18 @@ namespace Services.Orchestrators
             };
             await _paymentService.Refund(refundDto);
 
-            await _transactionService.DeleteAsync(transactionId);
-
             await _appointmentService.DeleteAsync(id);
+
+            await _transactionService.DeleteAsync(transactionId);
 
             var email = new EmailDTO()
             {
                 To = patient.Email,
                 Template = MailTemplates.CancelAppointmentTemplate,
                 Subject = "Appointment Canceled",
-                Link = _configuration["FrontEnd:Url"]
+                Link = _configuration["FrontEnd:Url"],
             };
-            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}");
+            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointmentDate);
         }
 
         public async Task CancelReservationAsync(int id, int currentDoctorAppUserId)

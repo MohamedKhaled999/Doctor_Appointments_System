@@ -45,7 +45,14 @@ namespace Services
             else
             {
                 Console.WriteLine("Reservation Already Exist");
-                _unitOfWork.GetRepository<DoctorReservation, int>().Update(newReservation);
+                var oldReservation = (await _unitOfWork.GetRepository<DoctorReservation, int>().GetAllAsync(new SpecificationsBase<DoctorReservation>(x => x.DoctorID == newReservation.DoctorID
+                && x.StartTime.Day == newReservation.StartTime.Day
+                && x.StartTime.Month == newReservation.StartTime.Month
+                && x.StartTime.Year == newReservation.StartTime.Year))).FirstOrDefault();
+                oldReservation.StartTime = newReservation.StartTime;
+                oldReservation.EndTime = newReservation.EndTime;
+                oldReservation.MaxReservation = newReservation.MaxReservation;
+                _unitOfWork.GetRepository<DoctorReservation, int>().Update(oldReservation);
             }
             await _unitOfWork.SaveChangesAsync();
 

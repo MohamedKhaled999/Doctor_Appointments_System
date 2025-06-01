@@ -1,7 +1,5 @@
 ﻿using Domain.Exceptions;
-using Microsoft.AspNetCore.Http;
 using Shared.ErrorModels;
-using System;
 using System.Net;
 
 namespace DoctorAppointmentsSystem.Web.Middlewares
@@ -10,9 +8,9 @@ namespace DoctorAppointmentsSystem.Web.Middlewares
     internal class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        private readonly ILogger _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger logger)
         {
             _next = next;
             _logger = logger;

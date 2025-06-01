@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Services.Abstraction;
 using Services.Abstraction.Orchestrators;
@@ -14,6 +15,8 @@ namespace Services
 {
     public class ServiceManager : IServiceManager
     {
+        private readonly ILogger _logger;
+
         private readonly Lazy<IHomeService> _homeService;
 
         private readonly Lazy<IPatientService> _patientService;
@@ -42,13 +45,16 @@ namespace Services
                               IMapper mapper,
                               IOptions<JWTOptions> options,
                               IConfiguration configuration,
-                              IWebHostEnvironment environment)
+                              IWebHostEnvironment environment,
+                              ILogger logger)
 
         {
+            _logger = logger;
+
             _homeService = new Lazy<IHomeService>(() => new HomeService(unitOfWork, mapper));
 
             _patientService = new Lazy<IPatientService>(() => new PatientService(unitOfWork, mapper));
-            _appointmentService = new Lazy<IAppointmentService>(() => new AppointmentService(unitOfWork));
+            _appointmentService = new Lazy<IAppointmentService>(() => new AppointmentService(unitOfWork, mapper));
             _reviewService = new Lazy<IReviewService>(() => new ReviewService(unitOfWork, mapper));
 
             _doctorService = new Lazy<IDoctorService>(() => new DoctorService(unitOfWork, mapper));

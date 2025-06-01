@@ -9,6 +9,7 @@ namespace Services.Specifications.Appointment
                                                 int pageIndex = 1,
                                                 int pageSize = 20) : base(criteria)
         {
+            AddInclude(a => a.DoctorReservation.Doctor);
             ApplyPagination(pageIndex, pageSize);
         }
     }
