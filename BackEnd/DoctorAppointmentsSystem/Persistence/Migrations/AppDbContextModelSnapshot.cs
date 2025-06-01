@@ -103,6 +103,9 @@ namespace Persistence.Migrations
                     b.Property<int>("DoctorReservationID")
                         .HasColumnType("int");
 
+                    b.PrimitiveCollection<string>("DocumentUrls")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 

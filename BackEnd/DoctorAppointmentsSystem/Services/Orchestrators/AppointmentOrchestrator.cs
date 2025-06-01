@@ -1,4 +1,5 @@
 ﻿using Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Services.Abstraction;
 using Services.Abstraction.Orchestrators;
@@ -44,6 +45,11 @@ namespace Services.Orchestrators
             return await _appointmentService.GetByPatientAsync(patient.Id, pageIndex, pageSize);
         }
 
+        public async Task<string[]?> GetAppointmentDocuments(int appointmentId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<string> CreatePaymentSessionAsync(int patientAppUserId, int doctorReservationId)
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
@@ -61,6 +67,14 @@ namespace Services.Orchestrators
             };
             var paymentUrl = await _paymentService.CreatePaymentSession(paymentDto);
             return paymentUrl;
+        }
+
+        public async Task AddAppointmentDocuments(int appointmentId, params IFormFile[] docs)
+        {
+            var appointment = await _appointmentService.GetByIdAsync(appointmentId);
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
+
         }
 
         public async Task SaveAppointmentAsync(int patientId, int doctorReservationId, string paymentId)

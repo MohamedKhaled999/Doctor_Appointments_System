@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using System.Security.Claims;
@@ -20,12 +21,26 @@ namespace Presentation.Controllers
             return Ok(appointments);
         }
 
+        [HttpGet("docs")]
+        public async Task<IActionResult> GetDocuments(int appointmentId)
+        {
+            var docs = await _serviceManager.AppointmentOrchestrator.GetAppointmentDocuments(appointmentId);
+            return Ok(docs);
+        }
+
         [HttpPost]
         public async Task<IActionResult> NewAppointment(int doctorReservationId)
         {
             var patientAppUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var paymentUrl = await _serviceManager.AppointmentOrchestrator.CreatePaymentSessionAsync(patientAppUserId, doctorReservationId);
             return Ok(new { paymentUrl });
+        }
+
+        [HttpPost("docs")]
+        public async Task<IActionResult> AddDocuments(int appointmentId, params IFormFile[] docs)
+        {
+            await _serviceManager.AppointmentOrchestrator.AddAppointmentDocuments(appointmentId, docs);
+            return Created();
         }
 
         [HttpDelete]

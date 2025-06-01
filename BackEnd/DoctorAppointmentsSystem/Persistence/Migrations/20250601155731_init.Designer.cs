@@ -12,7 +12,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250601075442_init")]
+    [Migration("20250601155731_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -105,6 +105,9 @@ namespace Persistence.Migrations
 
                     b.Property<int>("DoctorReservationID")
                         .HasColumnType("int");
+
+                    b.PrimitiveCollection<string>("DocumentUrls")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");

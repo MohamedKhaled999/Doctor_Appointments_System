@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Domain.Exceptions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Services.Abstraction;
 using System.Text.RegularExpressions;
@@ -7,9 +8,12 @@ namespace Services
 {
     public class UploadService : IUploadService
     {
-        private const int FileMaxSize = 2_097_152;//2Mbs;
+        private const int ImageMaxSize = 2_097_152; // 2 MBs;
+        private const int DocumentMaxSize = 10_485_760; // 10 MBs;
         private readonly Regex ImageRegex = new Regex(@"^.*\.(jpg|jpeg|png|gif|bmp|webp|svg)$", RegexOptions.IgnoreCase);
+        private readonly Regex DocumentRegex = new Regex(@"^.*\.(pdf)$", RegexOptions.IgnoreCase);
         private readonly string rootFolderPath;
+
         public UploadService(IWebHostEnvironment environment)
         {
             rootFolderPath = $@"{environment.WebRootPath}\uploads";
@@ -17,18 +21,19 @@ namespace Services
 
         public async Task<string> UploadFile(IFormFile file, string folderName = "images", string oldFilename = null)
         {
+            if (file == null)
+                throw new ArgumentNullException("File is Null");
 
-            if (
-                  file == null
-                || !ImageRegex.IsMatch(file.FileName)
-                || file.Length > FileMaxSize
-                )
-            {
-                throw new Exception("The File Is Not  Image , File Size Exceeded 2MBs OR File Is Null ");
-            }
+            if (!ImageRegex.IsMatch(file.FileName) && !DocumentRegex.IsMatch(file.FileName))
+                throw new ValidationException(["Only Images and Documents are allowed"]);
 
-            //get the current path (in bin folder )
-            string folderPath = Path.Combine(rootFolderPath, folderName);//wwwroot/uploads/folderName
+            if (ImageRegex.IsMatch(file.FileName) && file.Length > ImageMaxSize)
+                throw new ValidationException(["Image Exceeds Max Size (2 MBs)"]);
+
+            if (DocumentRegex.IsMatch(file.FileName) && file.Length > DocumentMaxSize)
+                throw new ValidationException(["Document Exceeds Max Size (10 MBs)"]);
+
+            string folderPath = Path.Combine(rootFolderPath, folderName);
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
@@ -49,7 +54,6 @@ namespace Services
             await file.CopyToAsync(fileStream);
 
             return fileName;
-
         }
 
         public bool Delete(string fileName)
