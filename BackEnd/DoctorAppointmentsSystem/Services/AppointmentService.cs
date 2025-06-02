@@ -41,6 +41,17 @@ namespace Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public async Task AddAppointmentPrescription(int appointmentId, string prescriptionUrl)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(appointmentId);
+            if (appointment.PrescriptionUrl == null)
+                appointment.PrescriptionUrl = prescriptionUrl;
+            else
+                throw new ValidationException(["Prescription Already Exists"]);
+            _unitOfWork.GetRepository<Appointment, int>().Update(appointment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public async Task DeleteAppointmentDocument(int appointmentId, string documentUrl)
         {
             var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(appointmentId);
@@ -48,6 +59,17 @@ namespace Services
                 throw new ValidationException(["Document isn't available"]);
             else
                 appointment.DocumentUrls = string.Join("||", appointment.DocumentUrls.Split("||").Where(d => d != documentUrl));
+            _unitOfWork.GetRepository<Appointment, int>().Update(appointment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteAppointmentPrescription(int appointmentId)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(appointmentId);
+            if (appointment.PrescriptionUrl == null)
+                throw new ValidationException(["Prescription isn't available"]);
+            else
+                appointment.PrescriptionUrl = null;
             _unitOfWork.GetRepository<Appointment, int>().Update(appointment);
             await _unitOfWork.SaveChangesAsync();
         }

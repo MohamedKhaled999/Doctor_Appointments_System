@@ -8,7 +8,9 @@ namespace Services.Abstraction
         Task<AppointmentDTO?> GetByIdAsync(int id);
         Task<int> GetTransactionId(int appointmentId);
         Task AddAppointmentDocument(int appointmentId, string documentUrl);
-        Task DeleteAppointmentDocument(int appointmentId, string documentUrl);
+        Task AddAppointmentPrescription(int appointmentId, string documentUrl);
+        Task DeleteAppointmentDocument(int appointmentId, string prescriptionUrl);
+        Task DeleteAppointmentPrescription(int appointmentId);
         Task<PatientAppUserDTO> GetPatientByAppointmentId(int id);
         Task<List<AppointmentDTO>?> GetByPatientAsync(int patientId, int pageIndex, int pageSize);
         public int GetCount(int patientId);

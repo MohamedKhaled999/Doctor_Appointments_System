@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Shared.DTOs.DoctorReservation;
@@ -32,11 +33,27 @@ namespace Presentation.Controllers
             return Created();
         }
 
+        [HttpPost]
+        [Authorize(Roles = "doctor")]
+        public async Task<IActionResult> AddPrescription(int reservationId, int appointmentId, IFormFile document)
+        {
+            await _serviceManager.AppointmentOrchestrator.AddAppointmentPrescription(reservationId, appointmentId, document, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return Created();
+        }
+
         [HttpDelete]
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> CancelReservation(int id)
         {
             await _serviceManager.AppointmentOrchestrator.CancelReservationAsync(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = "doctor")]
+        public async Task<IActionResult> DeletePrescription(int reservationId, int appointmentId)
+        {
+            await _serviceManager.AppointmentOrchestrator.DeleteAppointmentPrescription(reservationId, appointmentId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return NoContent();
         }
     }

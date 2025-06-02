@@ -329,7 +329,8 @@ namespace Persistence.Migrations
                     DoctorReservationID = table.Column<int>(type: "int", nullable: false),
                     PatientId = table.Column<int>(type: "int", nullable: false),
                     TransactionId = table.Column<int>(type: "int", nullable: false),
-                    DocumentUrls = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    DocumentUrls = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PrescriptionUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

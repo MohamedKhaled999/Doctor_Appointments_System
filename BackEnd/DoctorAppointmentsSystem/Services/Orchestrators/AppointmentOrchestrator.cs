@@ -71,10 +71,16 @@ namespace Services.Orchestrators
 
         public async Task<string> CreatePaymentSessionAsync(int patientAppUserId, int doctorReservationId)
         {
+            var reservation = await _doctorReservationService.GetDoctorReservationByID(doctorReservationId);
+            if (reservation == null)
+                throw new ArgumentNullException($"Reservation with ID {doctorReservationId} doesn't exist");
+            if (!reservation.IsAvailable)
+                throw new ValidationException(["Maximum Appointments Exceeded"]);
+            if (reservation.Day < DateTime.Now.Day)
+                throw new ValidationException(["Reservation date has already passed"]);
+
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
             var patient = await _patientService.GetByAppUserIdAsync(patientAppUserId);
-            if (doctor == null)
-                throw new ArgumentNullException($"Reservation with ID {doctorReservationId} doesn't exist");
 
             var paymentDto = new PaymentDto()
             {
@@ -95,11 +101,34 @@ namespace Services.Orchestrators
                 throw new UnAuthorizedException("Access Denied");
 
             var appointment = await _appointmentService.GetByIdAsync(appointmentId);
+            if (appointment.StartTime < DateTime.Now)
+                throw new ValidationException(["Appointment date has already passed"]);
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
 
-            var documentUrl = await _uploadService.UploadFile(document, "documents");
+            var documentUrl = await _uploadService.UploadFile(document);
             await _appointmentService.AddAppointmentDocument(appointmentId, documentUrl);
+        }
+
+        public async Task AddAppointmentPrescription(int reservationId, int appointmentId, IFormFile document, int currentDoctorAppUserId)
+        {
+            var reservation = await _doctorReservationService.GetDoctorReservationByID(reservationId);
+            if (reservation == null)
+                throw new ValidationException(["Reservation Not Found"]);
+            if (reservation.Day > DateTime.Now.Day)
+                throw new ValidationException(["Reservation date hasn't passed yet"]);
+            var doctor = await _doctorReservationService.GetDoctorByReservationId(reservationId);
+            if (doctor.AppUserId != currentDoctorAppUserId)
+                throw new UnAuthorizedException("Access Denied");
+
+            var appointment = await _appointmentService.GetByIdAsync(appointmentId);
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
+            if (appointment.DoctorReservationID != reservationId)
+                throw new ValidationException(["Appointment doesn't belong to this reservation"]);
+
+            var documentUrl = await _uploadService.UploadFile(document);
+            await _appointmentService.AddAppointmentPrescription(appointmentId, documentUrl);
         }
 
         public async Task DeleteAppointmentDocument(int appointmentId, string documentUrl, int currentPatientAppUserId)
@@ -109,10 +138,40 @@ namespace Services.Orchestrators
                 throw new UnAuthorizedException("Access Denied");
 
             var appointment = await _appointmentService.GetByIdAsync(appointmentId);
+            if (appointment.StartTime < DateTime.Now)
+                throw new ValidationException(["Appointment date has already passed"]);
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
 
+            if (!_uploadService.Delete(documentUrl))
+                throw new NotFoundException($"Document {documentUrl} doesn't exist");
+
             await _appointmentService.DeleteAppointmentDocument(appointmentId, documentUrl);
+        }
+
+        public async Task DeleteAppointmentPrescription(int appointmentId, int reservationId, int currentDoctorAppUserId)
+        {
+            var reservation = await _doctorReservationService.GetDoctorReservationByID(reservationId);
+            if (reservation == null)
+                throw new ValidationException(["Reservation Not Found"]);
+            if (reservation.Day > DateTime.Now.Day)
+                throw new ValidationException(["Reservation date hasn't passed yet"]);
+            var doctor = await _doctorReservationService.GetDoctorByReservationId(reservationId);
+            if (doctor.AppUserId != currentDoctorAppUserId)
+                throw new UnAuthorizedException("Access Denied");
+
+            var appointment = await _appointmentService.GetByIdAsync(appointmentId);
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
+            if (appointment.DoctorReservationID != reservationId)
+                throw new ValidationException(["Appointment doesn't belong to this reservation"]);
+
+            if (appointment.PrescriptionUrl == null)
+                throw new NotFoundException($"Prescription doesn't exist");
+
+            if (!_uploadService.Delete(appointment.PrescriptionUrl))
+                throw new ArgumentNullException("Failed To Delete Prescription");
+            await _appointmentService.DeleteAppointmentPrescription(appointmentId);
         }
 
         public async Task SaveAppointmentAsync(int patientId, int doctorReservationId, string paymentId)
@@ -120,7 +179,7 @@ namespace Services.Orchestrators
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
             await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees, paymentId);
             var transactionId = await _transactionService.GetByPaymentId(paymentId);
-            await _appointmentService.AddAsync(patientId, doctorReservationId, transactionId.Value);
+            await _appointmentService.AddAsync(patientId, doctorReservationId, transactionId);
         }
 
         public async Task AddDoctorReservationAsync(NewResDTO reservation, int appUserId)
@@ -137,7 +196,11 @@ namespace Services.Orchestrators
             if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
                 throw new UnAuthorizedException("Access Denied");
 
-            var appointmentDate = (await _appointmentService.GetByIdAsync(id)).StartTime.Date;
+            var appointment = await _appointmentService.GetByIdAsync(id);
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
+            if (appointment.StartTime.Date < DateTime.Now)
+                throw new ValidationException(["Appointment date has already passed"]);
 
             var transactionId = await _appointmentService.GetTransactionId(id);
 
@@ -158,11 +221,16 @@ namespace Services.Orchestrators
                 Subject = "Appointment Canceled",
                 Link = _configuration["FrontEnd:Url"],
             };
-            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointmentDate);
+            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime.Date);
         }
 
         public async Task CancelReservationAsync(int id, int currentDoctorAppUserId)
         {
+            var reservation = await _doctorReservationService.GetDoctorReservationByID(id);
+            if (reservation == null)
+                throw new ValidationException(["Reservation Not Found"]);
+            if (reservation.Day < DateTime.Now.Day)
+                throw new ValidationException(["Reservation date has already passed"]);
             var doctor = await _doctorReservationService.GetDoctorByReservationId(id);
             if (doctor.AppUserId != currentDoctorAppUserId)
                 throw new UnAuthorizedException("Access Denied");

@@ -19,7 +19,7 @@ namespace Services
             rootFolderPath = $@"{environment.WebRootPath}\uploads";
         }
 
-        public async Task<string> UploadFile(IFormFile file, string folderName = "images", string oldFilename = null)
+        public async Task<string> UploadFile(IFormFile file, string oldFilename = null)
         {
             if (file == null)
                 throw new ArgumentNullException("File is Null");
@@ -33,6 +33,12 @@ namespace Services
             if (DocumentRegex.IsMatch(file.FileName) && file.Length > DocumentMaxSize)
                 throw new ValidationException(["Document Exceeds Max Size (10 MBs)"]);
 
+
+            string folderName = string.Empty;
+            if (IsImage(file.FileName))
+                folderName = "images";
+            else
+                folderName = "documents";
             string folderPath = Path.Combine(rootFolderPath, folderName);
             if (!Directory.Exists(folderPath))
             {
@@ -42,7 +48,6 @@ namespace Services
             string fileName = string.Empty;
             if (oldFilename != null)
             {
-
                 File.Delete(Path.Combine(folderPath, oldFilename));
             }
 
@@ -58,14 +63,21 @@ namespace Services
 
         public bool Delete(string fileName)
         {
-            if (File.Exists(Path.Combine(rootFolderPath, "images", fileName)))
+            string folderName = string.Empty;
+            if (IsImage(fileName))
+                folderName = "images";
+            else
+                folderName = "documents";
 
+            if (File.Exists(Path.Combine(rootFolderPath, folderName, fileName)))
             {
-                File.Delete(Path.Combine(rootFolderPath, "images", fileName));
+                File.Delete(Path.Combine(rootFolderPath, folderName, fileName));
                 return true;
             }
-
             return false;
         }
+
+        private bool IsImage(string fileName)
+            => ImageRegex.IsMatch(fileName);
     }
 }
