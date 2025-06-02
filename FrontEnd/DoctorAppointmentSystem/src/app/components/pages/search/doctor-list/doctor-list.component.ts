@@ -13,8 +13,8 @@ export class DoctorListComponent {
   doctors: Doctor[] = [
     {
       id: 1,
-      name: 'Dr. John Doe',
-      profilePictureUrl: 'https://example.com/profile.jpg',
+      name: 'John Doe',
+      profilePictureUrl: 'maleDoc.jpg',
       title: 'Cardiologist',
       qualifications: ['MBBS', 'MD', 'FACC'],
       fees: 150,
@@ -23,12 +23,32 @@ export class DoctorListComponent {
       waitingTime: 30,
       governorate: 'California',
       location: 'Los Angeles',
-      phone: '123-456-7890'
+      phone: '123-456-7890',
+      reservations: [
+        {
+          ResID: 101,
+          Day: 2, // Monday (assuming 0 is Sunday)
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 102,
+          Day: 3,
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 103,
+          Day: 4, // Wednesday
+          Time: '09:00|10:00 AM',
+          IsAvailable: false
+        }
+      ]
     },
     {
       id: 2,
-      name: 'Dr. Jane Smith',
-      profilePictureUrl: 'https://example.com/profile2.jpg',
+      name: 'Jane Smith',
+      profilePictureUrl: 'femaleDoc.jpg',
       title: 'Dermatologist',
       qualifications: ['MBBS', 'MD', 'FAAD'],
       fees: 200,
@@ -37,7 +57,27 @@ export class DoctorListComponent {
       waitingTime: 25,
       governorate: 'California',
       location: 'San Francisco',
-      phone: '987-654-3210'
+      phone: '987-654-3210',
+      reservations: [
+        {
+          ResID: 201,
+          Day: 2, // Tuesday
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 202,
+          Day: 4, // Thursday
+          Time: '09:00|10:00 PM',
+          IsAvailable: true
+        },
+        {
+          ResID: 203,
+          Day: 5, // Friday
+          Time: '01:00|02:00 PM',
+          IsAvailable: false
+        }
+      ]
     }
   ];
 }

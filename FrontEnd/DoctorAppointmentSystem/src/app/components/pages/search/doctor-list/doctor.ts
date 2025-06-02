@@ -1,3 +1,5 @@
+import { reservation } from "../reservation-card/reservation";
+
 export interface Doctor {
     id:number;
     name: string;
@@ -11,5 +13,5 @@ export interface Doctor {
     governorate: string; // state or region
     location: string; // city or specific area
     phone: string;
-
+    reservations: reservation[];
 }

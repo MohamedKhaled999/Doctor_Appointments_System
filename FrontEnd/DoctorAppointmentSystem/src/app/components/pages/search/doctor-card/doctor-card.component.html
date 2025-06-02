@@ -3,7 +3,7 @@
     
 <div class="col-12 col-lg-2 text-center">
     <!-- <img src="~/uploads/images/@doc.Image" class="rounded-circle img-thumbnail" height="100" width="100" alt=""> -->
-    <img [src]="'/uploads/images/' + doctor.profilePictureUrl" class="rounded-circle img-thumbnail" height="100" width="100" alt="">
+    <img [src]="'images/' + doctor.profilePictureUrl" class="rounded-circle img-thumbnail" height="100" width="100" alt="">
 </div>
 <!-- <div class="col-12 col-lg-3 text-center text-lg-start"> -->
 <div class="col-12 col-lg-3 text-center text-lg-start">
@@ -27,15 +27,44 @@
     </div>
     -->
 
-    <!-- This is a placeholder for the appointment cards, whyyyyyyyyy???????????????? -->
-    <!-- <div class="swiper mySwiper">
+    <div class="swiper mySwiper">
         <div class="swiper-wrapper">
-            <ng-container *ngFor="let appointment of doctor.appointments">
-                <app-reservation-card [appointment]="appointment"></app-reservation-card>
-            </ng-container>
+            <!-- <div *ngFor="let appointment of doctor.reservations">
+                <app-reservation-card [reservation]="appointment"></app-reservation-card>
+            </div> -->
+            @if(doctor.reservations.length == 0)
+            {
+                <div class="card d-flex text-center swiper-slide w-100">
+                    <div class="card-header SP-bookHeader p-1">
+                        No Appointments
+                    </div>
+                    <div class="card-body SP-primaryText flex-column justify-content-center p-2">
+                        <p class="mb-1">No Available</p>
+                        <p class="mb-1">Appointments</p>
+                    </div>
+                    <!-- @if (!User.IsInRole("doctor"))                    for later
+                    {
+                        <a id="" class="card-footer btn disabled SP-bookBTN p-1">Book</a>
+                    }
+                    @else
+                    {
+                        <a class="card-footer btn disabled SP-bookBTN p-1">Doctors can't book in this release</a>
+                    } -->
+                </div>
+            }
+            @else {
+                <!-- toggle the "special" class on/off with a property -->
+                <div class= "card d-flex text-center swiper-slide" [ngClass]="doctor.reservations.length == 2 ? ' w-50' : doctor.reservations.length == 1 ? 'w-100' : ''">
+                    This div is special
+                    <app-reservation-card *ngFor="let reservation of doctor.reservations" [app]="reservation"></app-reservation-card>
+                    <!-- <div *ngFor="let appointment of doctor.reservations">
+                        <app-reservation-card [app]="appointment"></app-reservation-card>
+                    </div> -->
+                </div>
+            }
         </div>
         <div class="swiper-scrollbar position-static mt-2"></div>
-    </div> -->
+    </div>
     
 </div>
 
