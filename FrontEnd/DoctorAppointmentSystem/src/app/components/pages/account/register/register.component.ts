@@ -144,8 +144,19 @@ export class RegisterComponent implements OnInit {
 
     this.isLoading = true;
     this.validationErrors = [];
-
+    // const registerData = {
     const formValue = this.registerForm.value;
+    // const registerData = {
+    //   firstName: formValue.firstName,
+    //   lastName: formValue.lastName,
+    //   email: formValue.email,
+    //   password: formValue.password,
+
+    //   phoneNumber: formValue.phoneNumber,
+    //   governorate: formValue.governorate,
+    //   birthDate: formValue.birthDate,
+
+    // };
     const registerData = {
       firstName: formValue.firstName,
       lastName: formValue.lastName,
@@ -157,10 +168,22 @@ export class RegisterComponent implements OnInit {
       birthDate: formValue.birthDate,
       recaptchaToken: formValue.recaptcha,
     };
+    /*
+      firstName: string;
+    lastName: string;
+    email: string;
+    governorate: Governorate; // Assuming governorate is represented as a number (e.g., an ID)
+    password: string;
+    phoneNumber?: string; // Optional field for phone number
+    address?: string; // Optional field for address
+    dateOfBirth?: Date; 
+    */
 
     this.accountService.register(registerData).subscribe({
       next: () => {
+        console.log('Registration successful');
         this.router.navigate(['/NeedToConfirm']);
+        console.log('Registration successful');
       },
       error: (error:any) => {
         this.isLoading = false;

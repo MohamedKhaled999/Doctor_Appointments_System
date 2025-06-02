@@ -8,23 +8,20 @@ import { ResetPasswordVM } from '../models/reset-password.model';
 import { ChangePassword } from '../interfaces/change-password';
 import { tap } from 'rxjs/operators'; 
 import { Router } from '@angular/router';
+import { Login } from '../interfaces/login';
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private readonly apiUrl = `${environment.apiUrl}/Authentication`;
+  private readonly apiUrl = `${environment.apiUrl}/authentication`;
 
   constructor(private http: HttpClient ,private router: Router) {}
 
 
-  login(email: string, password: string, rememberMe: boolean): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { 
-      email, 
-      password,
-      rememberMe 
-    });
+  login(email: string, password: string): Observable<LoginResponse> {
+    const body: Login = { email, password };
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, body);
   }
-
 
   requestPasswordReset(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/forgot-password`, { email });

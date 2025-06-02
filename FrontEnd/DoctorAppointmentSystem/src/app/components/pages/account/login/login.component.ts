@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AccountService } from '../../../../core/services/account.service';
 import { SocialauthService } from '../../../../core/services/socialauth.service';
 import { ExternalProvider } from '../../../../core/models/external-provider.model';
 import { LoginResponse } from '../../../../core/interfaces/login-response.mode';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+
 const customEmailPattern = /^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.com$/;
+
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule ,RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
-  styleUrl:'./login.component.css'
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -30,13 +31,11 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [
-        Validators.required,
-        Validators.pattern(customEmailPattern) 
-      ]],
+      email: ['', [Validators.required, Validators.pattern(customEmailPattern)]],
       password: ['', Validators.required],
       rememberMe: [false]
     });
+
     this.loadExternalProviders();
   }
 
@@ -47,7 +46,7 @@ export class LoginComponent {
   private loadExternalProviders(): void {
     this.socialAuthService.getExternalProviders().subscribe({
       next: (providers) => this.externalProviders = providers,
-      error: (err) => this.handleError('Failed to load login options')
+      error: () => this.handleError('Failed to load login options')
     });
   }
 
@@ -57,24 +56,24 @@ export class LoginComponent {
     this.isLoading = true;
     const { email, password, rememberMe } = this.loginForm.value;
 
-    this.accountService.login(email, password, rememberMe).subscribe({
+    this.accountService.login(email, password).subscribe({
       next: (response) => {
-        this.storeAuthData(response);
+        this.storeAuthData(response, rememberMe);
         this.router.navigate(['/home']);
       },
       error: (error) => this.handleLoginError(error)
     });
   }
 
-  private storeAuthData(response: LoginResponse): void {
-    const storage = this.loginForm.value.rememberMe ? localStorage : sessionStorage;
-    storage.setItem('authToken', response.token);
+  private storeAuthData(response: LoginResponse, remember: boolean): void {
+    const storage = remember ? localStorage : sessionStorage;
+    storage.setItem('userToken', response.token);
   }
 
   private handleLoginError(error: any): void {
     this.isLoading = false;
     this.validationErrors = [error.error?.message || 'Login failed. Please try again.'];
-    
+
     if (error.status === 401 && error.error?.requiresConfirmation) {
       this.emailNotConfirmed = true;
     }
@@ -83,7 +82,7 @@ export class LoginComponent {
   async externalLogin(provider: string): Promise<void> {
     try {
       await this.socialAuthService.externalLogin(provider);
-    } catch (err) {
+    } catch {
       this.handleError('External login failed');
     }
   }
