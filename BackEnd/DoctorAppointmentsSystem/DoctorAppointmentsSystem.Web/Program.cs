@@ -90,7 +90,8 @@ namespace DoctorAppointmentsSystem.Web
                     op.TokenValidationParameters = new()
                     {
                         ValidateIssuer = true,
-                        ValidateAudience = true,
+                        // ValidateAudience = true, // Uncomment this line if you want to validate the audience
+                        ValidateAudience = false, // for development 
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = jwtOptions.Issuer,

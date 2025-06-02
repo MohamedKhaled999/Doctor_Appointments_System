@@ -1,8 +1,10 @@
 ﻿namespace Shared.Authentication
 {
-    public record UserResultDto(string Email,
+    public record UserResultDto(
+        string Email,
         string DisplayName,
         string Role,
-        string Token);
+        string Token
+        );
 
 }
