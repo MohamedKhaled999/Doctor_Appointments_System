@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Shared.DTOs.DoctorReservation;
@@ -29,6 +30,14 @@ namespace Presentation.Controllers
         public async Task<IActionResult> NewReservation(NewResDTO reservation)
         {
             await _serviceManager.AppointmentOrchestrator.AddDoctorReservationAsync(reservation, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return Created();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "doctor")]
+        public async Task<IActionResult> AddPrescription(int reservationId, int appointmentId, IFormFile document)
+        {
+            await _serviceManager.AppointmentOrchestrator.AddAppointmentPrescription(reservationId, appointmentId, document, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Created();
         }
 

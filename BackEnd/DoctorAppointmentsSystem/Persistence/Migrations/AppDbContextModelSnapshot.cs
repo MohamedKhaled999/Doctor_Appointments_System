@@ -104,11 +104,13 @@ namespace Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DocumentUrls")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
+
+                    b.Property<string>("PrescriptionUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TransactionId")
                         .HasColumnType("int");

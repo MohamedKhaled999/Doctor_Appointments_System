@@ -10,5 +10,7 @@
         public string Location { get; set; }
         public string Doctor { get; set; }
         public string DoctorImagePath { get; set; }
+        public int DoctorReservationID { get; set; }
+        public string? PrescriptionUrl { get; set; }
     }
 }

@@ -1,46 +1,46 @@
 [
   {
     "Name": "Cardiology",
-    "ImageURL": "images/specialties/cardiology.jpg"
+    "ImageURL": "cardiology.jpg"
   },
   {
     "Name": "Angioplasty",
-    "ImageURL": "images/specialties/angioplasty.jpg"
+    "ImageURL": "angioplasty.jpg"
   },
   {
     "Name": "Dermatology",
-    "ImageURL": "images/specialties/dermatology.jpg"
+    "ImageURL": "dermatology.jpg"
   },
   {
     "Name": "Pediatrics",
-    "ImageURL": "images/specialties/pediatrics.jpg"
+    "ImageURL": "pediatrics.jpg"
   },
   {
     "Name": "Neurology",
-    "ImageURL": "images/specialties/neurology.jpg"
+    "ImageURL": "neurology.jpg"
   },
   {
     "Name": "Orthopedics",
-    "ImageURL": "images/specialties/orthopedics.jpg"
+    "ImageURL": "orthopedics.jpg"
   },
   {
     "Name": "Ophthalmology",
-    "ImageURL": "images/specialties/ophthalmology.jpg"
+    "ImageURL": "ophthalmology.jpg"
   },
   {
     "Name": "Gastroenterology",
-    "ImageURL": "images/specialties/gastroenterology.jpg"
+    "ImageURL": "gastroenterology.jpg"
   },
   {
     "Name": "Endocrinology",
-    "ImageURL": "images/specialties/endocrinology.jpg"
+    "ImageURL": "endocrinology.jpg"
   },
   {
     "Name": "Urology",
-    "ImageURL": "images/specialties/urology.jpg"
+    "ImageURL": "urology.jpg"
   },
   {
     "Name": "Dentistry",
-    "ImageURL": "images/specialties/dentistry.jpg"
+    "ImageURL": "dentistry.jpg"
   }
 ]

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models;
 using Services.Abstraction;
 using Shared.DTOs.Transaction;
@@ -30,12 +31,12 @@ namespace Services
             return (await GetByIdAsync(transactionId)).PaymentId;
         }
 
-        public async Task<int?> GetByPaymentId(string paymentId)
+        public async Task<int> GetByPaymentId(string paymentId)
         {
             var specs = new SpecificationsBase<Transaction>(t => t.PaymentId == paymentId);
             var transaction = (await _unitOfWork.GetRepository<Transaction, int>().GetAllAsync(specs)).FirstOrDefault();
             if (transaction == null)
-                return null;
+                throw new ValidationException([$"Transaction with payment ID {paymentId} doesn't exist"]);
             return transaction.Id;
         }
 
