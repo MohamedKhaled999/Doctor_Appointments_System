@@ -153,7 +153,7 @@ export class RegisterComponent implements OnInit {
     //   password: formValue.password,
 
     //   phoneNumber: formValue.phoneNumber,
-    //   governorate: formValue.governorate,
+    //   governorate: formValue.        ,
     //   birthDate: formValue.birthDate,
 
     // };
