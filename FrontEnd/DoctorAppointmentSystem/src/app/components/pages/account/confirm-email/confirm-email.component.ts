@@ -34,8 +34,10 @@ export class ConfirmEmailComponent implements OnInit, OnDestroy {
       } else {
         console.error('No token provided for email confirmation');
       }
-    this.startCountdown();
+    });
+    this.startCountdown()
   }
+  
 
   ngOnDestroy(): void {
 
