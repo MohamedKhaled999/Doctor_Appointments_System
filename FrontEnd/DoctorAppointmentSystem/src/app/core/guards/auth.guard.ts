@@ -17,8 +17,8 @@ export const authGuard: CanActivateFn = (route, state) => {
             return true;
           }
  }else{
-  // If the platform is not a browser, we cannot access localStorage
-  // Redirect to the login page or handle accordingly
+            // If the user is not logged in, redirect to the login page
+            // and return false to prevent access to the requested route
   router.navigate(['/login']);
            return false;
  }

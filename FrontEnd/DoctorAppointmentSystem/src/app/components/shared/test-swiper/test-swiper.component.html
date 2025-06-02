@@ -1,4 +1,18 @@
-<p class="bg-info">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit quibusdam perferendis quaerat maxime accusamus explicabo est distinctio sapiente odio assumenda. Nam cum praesentium, dolores fugit iure natus numquam eaque enim?</p>
+
+<div class="d-flex gap-2 align-items-center justify-content-center bg-danger-subtle py-4">
+  <button class="btn btn-success" (click)="showSuccess()">Success</button>
+<button class="btn btn-danger" (click)="showError()">Error</button>
+<button class="btn btn-warning" (click)="showWarning()">Warning</button>
+<button class="btn btn-info" (click)="showInfo()">Info</button>
+<button class="btn btn-light" (click)="showToast()">Toast</button>
+<button class="btn btn-primary" (click)="showCustom()">Custom</button>
+</div>
+
+<p class="bg-info">
+  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit quibusdam
+  perferendis quaerat maxime accusamus explicabo est distinctio sapiente odio
+  assumenda. Nam cum praesentium, dolores fugit iure natus numquam eaque enim?
+</p>
 <swiper-container
   class="mySwiper"
   navigation="true"
@@ -6,7 +20,7 @@
   keyboard="true"
   mousewheel="true"
   css-mode="true"
-  style="height: 500px;"
+  style="height: 500px"
   class="bg-info"
 >
   <swiper-slide>Slide 1</swiper-slide>
@@ -18,5 +32,4 @@
   <swiper-slide>Slide 7</swiper-slide>
   <swiper-slide>Slide 8</swiper-slide>
   <swiper-slide>Slide 9</swiper-slide>
-
 </swiper-container>
