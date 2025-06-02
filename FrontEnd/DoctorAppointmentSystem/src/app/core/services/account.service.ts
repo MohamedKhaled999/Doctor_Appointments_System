@@ -9,6 +9,7 @@ import { ChangePassword } from '../interfaces/change-password';
 import { tap } from 'rxjs/operators'; 
 import { Router } from '@angular/router';
 import { Login } from '../interfaces/login';
+import { AuthResponse } from '../interfaces/auth-response';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,9 +19,9 @@ export class AccountService {
   constructor(private http: HttpClient ,private router: Router) {}
 
 
-  login(email: string, password: string): Observable<LoginResponse> {
+  login(email: string, password: string): Observable<AuthResponse> {
     const body: Login = { email, password };
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, body);
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body);
   }
 
   requestPasswordReset(email: string): Observable<any> {

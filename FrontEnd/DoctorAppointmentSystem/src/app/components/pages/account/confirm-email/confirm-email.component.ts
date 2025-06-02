@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-confirm-email',
@@ -11,13 +11,34 @@ export class ConfirmEmailComponent implements OnInit, OnDestroy {
   counter = this.duration;
   private countdownInterval: any;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,private activatedRoute: ActivatedRoute ) {}
 
   ngOnInit(): void {
+    this .activatedRoute.params.subscribe(params => {
+      const token = params['token'];
+      const email = params['email'];
+
+
+      if (token) {
+        // Here you would typically call a service to confirm the email with the token
+        console.log('Email confirmation token:', token);
+        // Simulate email confirmation success
+        // this.accountService.confirmEmail(token).subscribe({
+        //   next: () => {
+        //     console.log('Email confirmed successfully');
+        //   },
+        //   error: (error) => {
+        //     console.error('Email confirmation failed:', error);
+        //   }
+        // });
+      } else {
+        console.error('No token provided for email confirmation');
+      }
     this.startCountdown();
   }
 
   ngOnDestroy(): void {
+
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }

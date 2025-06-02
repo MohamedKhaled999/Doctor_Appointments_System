@@ -6,6 +6,7 @@ import { AccountService } from '../../../../core/services/account.service';
 import { SocialauthService } from '../../../../core/services/socialauth.service';
 import { ExternalProvider } from '../../../../core/models/external-provider.model';
 import { LoginResponse } from '../../../../core/interfaces/login-response.mode';
+import { log } from 'console';
 
 const customEmailPattern = /^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.com$/;
 
@@ -56,13 +57,18 @@ export class LoginComponent {
     this.isLoading = true;
     const { email, password, rememberMe } = this.loginForm.value;
 
+      console.log('Login attempt:', { email, password, rememberMe });
     this.accountService.login(email, password).subscribe({
       next: (response) => {
-        this.storeAuthData(response, rememberMe);
+        // this.storeAuthData(response, rememberMe);
+        console.log('Login successful:', response);
+        
         this.router.navigate(['/home']);
       },
-      error: (error) => this.handleLoginError(error)
-    });
+      error: (error) =>{
+          this.handleLoginError(error);
+          console.log('Login error:', error);
+      }    });
   }
 
   private storeAuthData(response: LoginResponse, remember: boolean): void {

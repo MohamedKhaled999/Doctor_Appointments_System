@@ -55,7 +55,8 @@ export const routes: Routes = [
     component: DoctorRegisterComponent 
   },
   { 
-    path: 'Confirm-Email', 
+    path: 'ConfirmEmail', 
     component: ConfirmEmailComponent
+
   }
 ];

@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { log } from 'console';
 
 
 @Component({
@@ -90,8 +91,8 @@ export class RegisterComponent implements OnInit {
           ]
         ],
         governorate: ['', Validators.required],
-        birthDate: ['', [Validators.required, ValidDate()]],
-        recaptcha: [null, Validators.required],
+        birthDate: ['', [Validators.required, ValidDate()]]
+        // recaptcha: [null, Validators.required],
       },
       { validators: this.passwordMatchValidator }
     );
@@ -140,6 +141,12 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log("onSubmit called");
+    
+    console.log("Register form submitted",this.registerForm.invalid);
+    
+    // Check if the form is valid before proceeding
+
     if (this.registerForm.invalid) return;
 
     this.isLoading = true;
@@ -166,7 +173,7 @@ export class RegisterComponent implements OnInit {
       phoneNumber: formValue.phoneNumber,
       governorate: formValue.governorate,
       birthDate: formValue.birthDate,
-      recaptchaToken: formValue.recaptcha,
+      // recaptchaToken: formValue.recaptcha,
     };
     /*
       firstName: string;
@@ -186,6 +193,8 @@ export class RegisterComponent implements OnInit {
         console.log('Registration successful');
       },
       error: (error:any) => {
+        console.log('Registration error:', error);
+        
         this.isLoading = false;
         if (Array.isArray(error)) {
           this.validationErrors = error;
