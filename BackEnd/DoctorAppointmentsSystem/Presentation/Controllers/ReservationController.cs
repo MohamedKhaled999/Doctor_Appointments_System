@@ -48,5 +48,13 @@ namespace Presentation.Controllers
             await _serviceManager.AppointmentOrchestrator.CancelReservationAsync(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return NoContent();
         }
+
+        [HttpDelete]
+        [Authorize(Roles = "doctor")]
+        public async Task<IActionResult> DeletePrescription(int reservationId, int appointmentId)
+        {
+            await _serviceManager.AppointmentOrchestrator.DeleteAppointmentPrescription(reservationId, appointmentId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return NoContent();
+        }
     }
 }
