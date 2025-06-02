@@ -6,7 +6,8 @@ import * as noUiSlider from 'nouislider';
 import wNumb from 'wnumb';
 import { NgModule } from '@angular/core';
 import { NouisliderModule } from 'ng2-nouislider';
-
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
 @Component({
   selector: 'app-doctor-filters',
   imports: [CommonModule, FormsModule, NouisliderModule],
@@ -32,8 +33,23 @@ export class DoctorFiltersComponent implements AfterViewInit {
     minPrice: undefined,
     maxPrice: undefined,
   };
+ sliderConfig:any = {};
+
+
+ public isBrowser: boolean;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: any) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
+
+ 
 
   ngAfterViewInit(): void {
+
+
+   
+  if(this.isBrowser){
+    
     // Wait Slider
     if (this.waitSlider && this.waitSlider.nativeElement) {
       noUiSlider.create(this.waitSlider.nativeElement, {
@@ -77,6 +93,10 @@ export class DoctorFiltersComponent implements AfterViewInit {
         this.filters.maxPrice = Number(values[1]);
       });
     }
+
+
+  }
+
   }
 
   onFilter(): void {
