@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { AccountService } from '../../../../core/services/account.service';
-import { ForgetPasswordVM } from '../../../../core/models/forget-password.model';
+import { ForgetPassword } from '../../../../core/interfaces/forget-password';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -29,8 +29,8 @@ export class ForgetPasswordComponent {
 
   onSubmit() {
     if (this.forgetPasswordForm.valid) {
-      const forgetPasswordData: ForgetPasswordVM = this.forgetPasswordForm.value;
-      
+      const forgetPasswordData: ForgetPassword = this.forgetPasswordForm.value;
+
       this.accountService.forgotPassword(forgetPasswordData).subscribe({
         next: () => {
           Swal.fire({
@@ -52,9 +52,8 @@ export class ForgetPasswordComponent {
             timer: 3000,
             timerProgressBar: true,
             icon: 'error',
-            title:  'The Email Doesnot Exist'
+            title: 'The Email Does Not Exist'
           });
-        
         }
       });
     }

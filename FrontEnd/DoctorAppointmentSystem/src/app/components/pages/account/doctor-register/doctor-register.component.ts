@@ -4,7 +4,7 @@ import { AccountService } from '../../../../core/services/account.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
-import { DoctorRegisterVM } from '../../../../core/models/doctor-register.model';
+import {  RegisterDoctor } from '../../../../core/interfaces/register-doctor';
 import { CommonModule } from '@angular/common';
 
 @Component({
