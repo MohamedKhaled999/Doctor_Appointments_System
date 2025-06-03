@@ -1,5 +1,5 @@
-:root {
 
+:root {
     --primary-color: #004085;
     --primary-color-rgb: 0, 64, 133;
     --secondary-color: #B3E5FC;
@@ -10,4 +10,7 @@
 
 body {
     font-family: "Montserrat", sans-serif;
+}
+html {
+    scrollbar-color: var(--primary-color) var(--accent-color);
 }
