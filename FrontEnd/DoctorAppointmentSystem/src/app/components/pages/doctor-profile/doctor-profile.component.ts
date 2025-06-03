@@ -7,6 +7,7 @@ import { Rating } from '../../../core/interfaces/rating.interface';
 import { Schedule } from '../../../core/interfaces/Schedule.interface';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import Aos from 'aos';
 
 @Component({
   selector: 'app-doctor-profile',
@@ -41,6 +42,10 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     this.initMap();
+    // Aos.init({
+    //   duration: 1000,
+    //   once: true
+    // });
   }
   setTab(arg0: string) {
     this.selectedTab = arg0 as 'details' | 'reviews' | 'calendar';
