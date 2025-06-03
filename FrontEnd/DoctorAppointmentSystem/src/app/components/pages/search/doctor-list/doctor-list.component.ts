@@ -96,6 +96,108 @@ export class DoctorListComponent {
           IsAvailable: false
         }
       ]
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      profilePictureUrl: 'femaleDoc.jpg',
+      title: 'Dermatologist',
+      qualifications: ['MBBS', 'MD', 'FAAD'],
+      fees: 200,
+      specializations: ['Dermatology'],
+      rating: 4.8,
+      waitingTime: 25,
+      governorate: 'California',
+      location: 'San Francisco',
+      phone: '987-654-3210',
+      reservations: [
+        {
+          ResID: 201,
+          Day: 2, // Tuesday
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 202,
+          Day: 4, // Thursday
+          Time: '09:00|10:00 PM',
+          IsAvailable: true
+        },
+        {
+          ResID: 203,
+          Day: 5, // Friday
+          Time: '01:00|02:00 PM',
+          IsAvailable: false
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      profilePictureUrl: 'femaleDoc.jpg',
+      title: 'Dermatologist',
+      qualifications: ['MBBS', 'MD', 'FAAD'],
+      fees: 200,
+      specializations: ['Dermatology'],
+      rating: 4.8,
+      waitingTime: 25,
+      governorate: 'California',
+      location: 'San Francisco',
+      phone: '987-654-3210',
+      reservations: [
+        {
+          ResID: 201,
+          Day: 2, // Tuesday
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 202,
+          Day: 4, // Thursday
+          Time: '09:00|10:00 PM',
+          IsAvailable: true
+        },
+        {
+          ResID: 203,
+          Day: 5, // Friday
+          Time: '01:00|02:00 PM',
+          IsAvailable: false
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      profilePictureUrl: 'femaleDoc.jpg',
+      title: 'Dermatologist',
+      qualifications: ['MBBS', 'MD', 'FAAD'],
+      fees: 200,
+      specializations: ['Dermatology'],
+      rating: 4.8,
+      waitingTime: 25,
+      governorate: 'California',
+      location: 'San Francisco',
+      phone: '987-654-3210',
+      reservations: [
+        {
+          ResID: 201,
+          Day: 2, // Tuesday
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 202,
+          Day: 4, // Thursday
+          Time: '09:00|10:00 PM',
+          IsAvailable: true
+        },
+        {
+          ResID: 203,
+          Day: 5, // Friday
+          Time: '01:00|02:00 PM',
+          IsAvailable: false
+        }
+      ]
     }
   ];
 }
