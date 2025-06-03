@@ -1,72 +1,72 @@
 <!-- <p>doctor-card works!</p> -->
 <!-- <div class="col-12 col-lg-2 text-center"> -->
     
-<div class="col-12 col-lg-2 text-center">
-    <!-- <img src="~/uploads/images/@doc.Image" class="rounded-circle img-thumbnail" height="100" width="100" alt=""> -->
-    <img [src]="'images/' + doctor.profilePictureUrl" class="rounded-circle img-thumbnail" height="100" width="100" alt="">
-</div>
-<div class="col-12 col-lg-3 text-center text-lg-start">
-    <p class="mb-1 fw-bold">Dr. {{ doctor.name }}</p>
-    <p class="mb-1 fw-bold">{{ doctor.title }}</p>
-    <p class="mb-1">{{ doctor.qualifications }}</p>
-    <p class="mb-1 fw-bold SP-fees">{{ doctor.fees }} E£</p>
-</div>
-<!-- <div class="col-12 col-lg-7 flex-wrap justify-content-center gap-2 SP-bookCards"> -->
-<div class="col-12 col-lg-7 flex-wrap justify-content-center gap-2 SP-bookCards">
-
-
-    <div class="swiper mySwiper">
-        <div class="swiper-wrapper">
-            <!-- <div *ngFor="let appointment of doctor.reservations">
-                <app-reservation-card [reservation]="appointment"></app-reservation-card>
-            </div> -->
-            @if(doctor.reservations.length == 0)
-            {
-                <div class="card d-flex text-center swiper-slide w-100">
-                    <div class="card-header SP-bookHeader p-1">
-                        No Appointments
-                    </div>
-                    <div class="card-body SP-primaryText flex-column justify-content-center p-2">
-                        <p class="mb-1">No Available</p>
-                        <p class="mb-1">Appointments</p>
-                    </div>
-                    <!-- @if (!User.IsInRole("doctor"))                    for later
-                    {
-                        <a id="" class="card-footer btn disabled SP-bookBTN p-1">Book</a>
-                    }
-                    @else
-                    {
-                        <a class="card-footer btn disabled SP-bookBTN p-1">Doctors can't book in this release</a>
-                    } -->
-                </div>
-            }
-            @else {
-                <!-- toggle the "special" class on/off with a property -->
-                <!-- <div class= "card d-flex text-center swiper-slide" [ngClass]="doctor.reservations.length == 2 ? ' w-50' : doctor.reservations.length == 1 ? 'w-100' : ''">
-                    <app-reservation-card *ngFor="let reservation of doctor.reservations" [app]="reservation"></app-reservation-card> -->
-                    <!-- <div *ngFor="let appointment of doctor.reservations">
-                        <app-reservation-card [app]="appointment"></app-reservation-card>
-                    </div> -->
-                <!-- </div> -->
-                
-                <swiper-container
-                    class=""
-                    navigation="false"
-                    pagination="false"
-                    scrollbar="true"
-                    slides-per-view="3"
-                    >
-                    @for (reservation of doctor.reservations; track $index) {
-                    <swiper-slide class="card d-flex text-center" [ngClass]="doctor.reservations.length == 2 ? ' w-50' : doctor.reservations.length == 1 ? 'w-100' : ''">
-                        <app-reservation-card [app]="reservation"></app-reservation-card>
-                    </swiper-slide>
-                    }
-                </swiper-container>
-            }
-        </div>
-        <div class="swiper-scrollbar position-static mt-2"></div>
+<div class="row">
+    <div class="col-12 col-lg-2 text-center">
+        <!-- <img src="~/uploads/images/@doc.Image" class="rounded-circle img-thumbnail" height="100" width="100" alt=""> -->
+        <img [src]="'images/' + doctor.profilePictureUrl" class="rounded-circle img-thumbnail" height="100" width="100" alt="">
     </div>
-    
+    <div class="col-12 col-lg-3 text-center text-lg-start">
+        <p class="mb-1 fw-bold">Dr. {{ doctor.name }}</p>
+        <p class="mb-1 fw-bold">{{ doctor.title }}</p>
+        <p class="mb-1">{{ doctor.qualifications }}</p>
+        <p class="mb-1 fw-bold SP-fees">{{ doctor.fees }} E£</p>
+    </div>
+    <!-- <div class="col-12 col-lg-7 flex-wrap justify-content-center gap-2 SP-bookCards"> -->
+    <div class="col-12 col-lg-7 flex-wrap justify-content-center gap-2 SP-bookCards">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <!-- <div *ngFor="let appointment of doctor.reservations">
+                    <app-reservation-card [reservation]="appointment"></app-reservation-card>
+                </div> -->
+                @if(doctor.reservations.length == 0)
+                {
+                    <div class="card d-flex text-center swiper-slide w-100">
+                        <div class="card-header SP-bookHeader p-1">
+                            No Appointments
+                        </div>
+                        <div class="card-body SP-primaryText flex-column justify-content-center p-2">
+                            <p class="mb-1">No Available</p>
+                            <p class="mb-1">Appointments</p>
+                        </div>
+                        <!-- @if (!User.IsInRole("doctor"))                    for later
+                        {
+                            <a id="" class="card-footer btn disabled SP-bookBTN p-1">Book</a>
+                        }
+                        @else
+                        {
+                            <a class="card-footer btn disabled SP-bookBTN p-1">Doctors can't book in this release</a>
+                        } -->
+                    </div>
+                }
+                @else {
+                    <!-- toggle the "special" class on/off with a property -->
+                    <!-- <div class= "card d-flex text-center swiper-slide" [ngClass]="doctor.reservations.length == 2 ? ' w-50' : doctor.reservations.length == 1 ? 'w-100' : ''">
+                        <app-reservation-card *ngFor="let reservation of doctor.reservations" [app]="reservation"></app-reservation-card> -->
+                        <!-- <div *ngFor="let appointment of doctor.reservations">
+                            <app-reservation-card [app]="appointment"></app-reservation-card>
+                        </div> -->
+                    <!-- </div> -->
+                    
+                    <swiper-container
+                        class=""
+                        navigation="false"
+                        pagination="false"
+                        scrollbar="true"
+                        slides-per-view="3"
+                        >
+                        @for (reservation of doctor.reservations; track $index) {
+                        <swiper-slide class="card d-flex text-center" [ngClass]="doctor.reservations.length == 2 ? ' w-50' : doctor.reservations.length == 1 ? 'w-100' : ''">
+                            <app-reservation-card [app]="reservation"></app-reservation-card>
+                        </swiper-slide>
+                        }
+                    </swiper-container>
+                }
+            </div>
+            <div class="swiper-scrollbar position-static mt-2"></div>
+        </div>
+        
+    </div>
 </div>
 
 <div class="col-12">
