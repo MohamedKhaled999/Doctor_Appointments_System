@@ -11,6 +11,10 @@ export const routes: Routes = [
   {
     path: 'patient-profile',
     loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
+  },
+  {
+    path: 'doctor-profile/:id',
+    loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
   }
 
 ];

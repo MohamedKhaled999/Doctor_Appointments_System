@@ -1,1 +1,441 @@
-<p>doctor-profile works!</p>
+<div class="container-fluid pt-5">
+  <div class="row">
+    <!-- Left Sidebar: Doctor Info -->
+    <div class="col-md-4">
+      <div class="sticky-top pt-5 text-center">
+        <form (submit)="false">
+          <div class="position-relative d-inline-block" (click)="uploadInput.click()">
+            <!-- <img
+              [src]="'/uploads/images/' + doctor.image"
+              alt="Doctor Image"
+              class="rounded-circle img-thumbnail doctor-photo"
+            /> -->
+            <input
+              #uploadInput
+              type="file"
+              class="d-none"
+              (change)="
+                uploadPhoto($event)
+              "
+            />
+            <div class="upload-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+          </div>
+        </form>
+
+        <h3 class="mt-2">Dr. {{ doctor?.name }}</h3>
+        <p class="fw-bold">{{ doctor?.title }}</p>
+        <p>{{ doctor?.qualifications }}</p>
+        <a [href]="'tel:' + doctor?.phone" class="btn btn-primary w-100 my-2">
+          <i class="fa-solid fa-phone-volume me-2"></i> {{ doctor?.phone }}
+        </a>
+
+        <ng-container>
+          <a [routerLink]="['/doctor/edit', doctor?.id]" class="btn btn-secondary w-100 my-1">
+            <i class="fa-solid fa-pen-to-square"></i> Edit Profile
+          </a>
+          <a class="btn btn-secondary w-100 my-1">
+            <i class="fa-solid fa-key"></i> Change Password
+          </a>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Right Content: Tabs -->
+    <div class="col-md-8">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="selectedTab === 'details'"
+            (click)="setTab('details')"
+            >Details</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="selectedTab === 'reviews'"
+            (click)="setTab('reviews')"
+            >Reviews</a
+          >
+        </li>
+        <li
+          class="nav-item"
+        >
+          <a
+            class="nav-link"
+            [class.active]="selectedTab === 'calendar'"
+            (click)="setTab('calendar')"
+            >Calendar</a
+          >
+        </li>
+      </ul>
+
+      <div class="tab-content mt-3">
+        <!-- DETAILS TAB -->
+        <div
+          class="tab-pane"
+          [class.active]="selectedTab === 'details'"
+          [class.show]="selectedTab === 'details'"
+        >
+          <!-- Upcoming Appointments Slider -->
+          <div class="my-3">
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                <div
+                  class="swiper-slide appointment-card"
+                  *ngFor="let slot of doctor?.reservations"
+                >
+                </div>
+              </div>
+              <div class="swiper-scrollbar"></div>
+            </div>
+          </div>
+
+          <h4>Speciality</h4>
+          <div class="d-flex flex-wrap gap-1 mb-3">
+            <span class="badge bg-secondary">{{ doctor?.specialty }}</span>
+          </div>
+
+          <h4>Waiting Time</h4>
+          <p class="ms-3">
+            <i class="fa-solid fa-stopwatch me-1"></i>
+            {{ doctor?.waitingTime }} Minutes
+          </p>
+
+          <h4>Location</h4>
+          <p class="ms-3">
+            <i class="fa-solid fa-location-dot me-1"></i>
+            {{ doctor?.governorate }} : {{ doctor?.location }}
+          </p>
+
+          <h4>Fees</h4>
+          <p class="fw-bold ms-3">
+            <i class="fa-solid fa-money-bills me-1"></i>
+            <span class="text-primary">{{ doctor?.fees }} E£</span>
+          </p>
+
+          <h4>Rating</h4>
+          <p class="ms-3">
+            <i class="fa-solid fa-star me-1"></i>
+            <span class="text-primary">{{ doctor?.rating }}</span>
+          </p>
+
+          <h4>Map</h4>
+          <div
+            #mapContainer
+            class="w-100"
+            style="height: 400px;"
+          ></div>
+        </div>
+
+        <!-- REVIEWS TAB -->
+        <div
+          class="tab-pane"
+          [class.active]="selectedTab === 'reviews'"
+          [class.show]="selectedTab === 'reviews'"
+        >
+          <h4>Patient Reviews</h4>
+          <ng-container *ngIf="reviews?.length === 0">
+            <h5 class="text-center text-primary py-3">No Review Exists</h5>
+          </ng-container>
+          <!-- <ng-container *ngFor="let review of pagedReviews">
+            <div class="border p-3 mb-2 rounded" data-aos="fade-left">
+              <h5>{{ review.patientName }}</h5>
+              <p>{{ review.review }}</p>
+              <p class="text-primary">
+                Rating:
+                <ng-container [ngSwitch]="review.rate">
+                  <i
+                    *ngSwitchCase="rate <= 1"
+                    class="fa-regular fa-face-frown me-2"
+                  ></i>
+                  <i
+                    *ngSwitchCase="review.rate <= 2.5"
+                    class="fa-regular fa-face-frown-open me-2"
+                  ></i>
+                  <i
+                    *ngSwitchCase="review.rate <= 3"
+                    class="fa-regular fa-face-meh me-2"
+                  ></i>
+                  <i
+                    *ngSwitchCase="review.rate < 4.5"
+                    class="fa-regular fa-face-smile me-2"
+                  ></i>
+                  <i
+                    *ngSwitchDefault
+                    class="fa-regular fa-face-smile-beam me-2"
+                  ></i>
+                </ng-container>
+                <ng-container>
+                  <i
+                    *ngFor="let star of [].constructor(Math.floor(review.rate))"
+                    class="fa-solid fa-star"
+                  ></i>
+                  <i
+                    *ngIf="review.rate % 1 !== 0"
+                    class="fa-solid fa-star-half-stroke"
+                  ></i>
+                  <i
+                    *ngFor="let star of [].constructor(5 - Math.ceil(review.rate))"
+                    class="fa-regular fa-star"
+                  ></i>
+                </ng-container>
+                <span>{{ review.rate }}</span>
+              </p>
+              <p class="fs-6 text-primary">{{ review.date | date:'mediumDate' }}</p>
+            </div>
+          </ng-container>
+
+          <!-- Pagination
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+              <li
+                class="page-item"
+                [class.disabled]="currentPage === 1"
+              >
+                <a
+                  class="page-link"
+                  (click)="setPage(currentPage - 1)"
+                  >&laquo;</a
+                >
+              </li>
+              <li
+                class="page-item"
+                *ngFor="
+                  let p of [].constructor(pageCount);
+                  let idx = index
+                "
+                [class.active]="idx + 1 === currentPage"
+              >
+                <a
+                  class="page-link"
+                  (click)="setPage(idx + 1)"
+                  >{{ idx + 1 }}</a
+                >
+              </li>
+              <li
+                class="page-item"
+                [class.disabled]="currentPage === pageCount"
+              >
+                <a
+                  class="page-link"
+                  (click)="setPage(currentPage + 1)"
+                  >&raquo;</a
+                >
+              </li>
+            </ul>
+          </nav> -->
+        </div>
+
+        <!-- CALENDAR TAB (Doctors Only) -->
+        <div
+          class="tab-pane"
+          [class.active]="selectedTab === 'calendar'"
+          [class.show]="selectedTab === 'calendar'"
+        >
+          <form (ngSubmit)="saveSchedule()">
+            <h3>Assign Default Schedule</h3>
+            <div class="d-flex flex-column gap-3">
+              <div class="row gx-2">
+                <div class="col-md-6 mb-3">
+                  <label for="startTime" class="form-label">From</label>
+                  <input
+                    id="startTime"
+                    type="time"
+                    class="form-control"
+                    [(ngModel)]="scheduleForm.startTime"
+                    name="startTime"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="endTime" class="form-label">To</label>
+                  <input
+                    id="endTime"
+                    type="time"
+                    class="form-control"
+                    [(ngModel)]="scheduleForm.endTime"
+                    name="endTime"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label">Days</label>
+                <div class="d-flex flex-wrap gap-2 p-2">
+                  <div
+                    class="form-check col-5 col-md-3"
+                    *ngFor="let day of weekDays; let i = index"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [checked]="scheduleForm.days[i]"
+                      (change)="toggleDay(i)"
+                      id="day{{ i }}"
+                    />
+                    <label class="form-check-label" [for]="'day' + i">
+                      {{ day }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="w-50">
+                  <div class="d-flex align-items-center">
+                    <label class="form-label me-2">Reservation Quota</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      min="1"
+                      max="50"
+                      [(ngModel)]="scheduleForm.reservationQuota"
+                      name="reservationQuota"
+                      required
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-primary w-25"
+                >
+                  Edit
+                </button>
+              </div>
+
+              <h5 class="text-center">Or Customize Your Calendar</h5>
+            </div>
+          </form>
+
+          <div id="calendarContainer" class="mt-3">
+            <!-- FullCalendar or any JS calendar goes here -->
+          </div>
+
+          <!-- Modal for reservation placement -->
+          <div
+            class="modal fade"
+            id="reservationModal"
+            tabindex="-1"
+            aria-labelledby="reservationModalLabel"
+            aria-hidden="true"
+          >
+            <div
+              class="modal-dialog modal-dialog-centered"
+            >
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1
+                    class="modal-title fs-5"
+                    id="reservationModalLabel"
+                  >
+                    Working Day Form
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <form (ngSubmit)="addReservation()" [formGroup]="reservationForm">
+                  <div class="modal-body">
+                    <input
+                      type="hidden"
+                      formControlName="id"
+                      name="id"
+                    />
+                    <div class="mb-3 d-none">
+                      <input
+                        type="hidden"
+                        name="date"
+                        formControlName="date"
+                        required
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label
+                        for="resStartTime"
+                        class="form-label"
+                        >Start Time</label
+                      >
+                      <input
+                        type="time"
+                        class="form-control"
+                        id="resStartTime"
+                        formControlName="startTime"
+                        name="startTime"
+                        required
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label
+                        for="resEndTime"
+                        class="form-label"
+                        >End Time</label
+                      >
+                      <input
+                        type="time"
+                        class="form-control"
+                        id="resEndTime"
+                        formControlName="endTime"
+                        name="endTime"
+                        required
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label
+                        for="maxRes"
+                        class="form-label"
+                        >Max Reservations</label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="maxRes"
+                        formControlName="maxAppointments"
+                        name="maxRes"
+                        min="1"
+                        max="50"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="submit"
+                      class="btn btn-primary w-100"
+                    >
+                      {{ reservationForm.controls['id'].value ? 'Update' : 'Add' }} Reservation
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary w-100"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </form>
+                <div
+                  class="modal-footer d-none"
+                  *ngIf="reservationForm.controls['id'].value"
+                >
+                  <button
+                    class="btn btn-danger w-100"
+                    (click)="onDeleteReservation()"
+                  >
+                    Delete Reservation
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Calendar Tab -->
+      </div>
+    </div>
+  </div>
+</div>
