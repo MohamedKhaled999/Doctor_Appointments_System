@@ -1,5 +1,5 @@
 <h1 *ngIf="doctors.length === 0" class="SP-primaryText text-center p-3">No Doctor Exists</h1>
 
-<div *ngFor="let doc of doctors" class="SP-docCard flex-wrap align-items-center p-3 mb-2 border rounded shadow-sm" data-aos="fade-left">
+<div *ngFor="let doc of doctors" class="SP-docCard flex-wrap align-items-center p-3 mb-2 border rounded shadow-sm " data-aos="fade-left">
     <app-doctor-card [doctor]="doc"></app-doctor-card> 
 </div>

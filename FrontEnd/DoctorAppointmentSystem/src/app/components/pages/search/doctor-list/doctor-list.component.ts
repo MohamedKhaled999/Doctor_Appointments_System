@@ -3,13 +3,36 @@ import { DoctorCardComponent } from "../doctor-card/doctor-card.component";
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { Doctor } from './doctor';
+import Aos from 'aos';
+
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
 @Component({
   selector: 'app-doctor-list',
   imports: [DoctorCardComponent, CommonModule],
   templateUrl: './doctor-list.component.html',
   styleUrl: './doctor-list.component.css'
 })
+
 export class DoctorListComponent {
+  public isBrowser: boolean;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: any) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
+
+  ngOnInit() {
+    if(this.isBrowser) {
+      // Load AOS only in the browser
+      Aos.init({
+        duration: 1000,
+        easing: 'ease-out-back',
+        offset: 75,
+        once: false
+      });
+    }
+  }
+
   doctors: Doctor[] = [
     {
       id: 1,
