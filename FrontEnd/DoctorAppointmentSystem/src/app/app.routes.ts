@@ -8,5 +8,9 @@ export const routes: Routes = [
     component: TestSwiperComponent,
     title: 'Test Swiper',
   },
+  {
+    path: 'patient-profile',
+    loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
+  }
 
 ];
