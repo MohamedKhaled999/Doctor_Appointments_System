@@ -1,39 +1,39 @@
-<div class="container-fluid pt-5">
+<div class="container-fluid pt-5" style="padding-top: 80px;">
   <div class="row">
     <!-- Left Sidebar: Doctor Info -->
     <div class="col-md-4">
-      <div class="sticky-top pt-5 text-center">
+      <div class="sticky-md-top pt-5 text-center" style="padding-top:89px">
         <form (submit)="false">
           <div class="position-relative d-inline-block" (click)="uploadInput.click()">
             <!-- <img
               [src]="'/uploads/images/' + doctor.image"
               alt="Doctor Image"
-              class="rounded-circle img-thumbnail doctor-photo"
+              class="rounded-circle img-thumbnail SP-photo"
             /> -->
             <input
               #uploadInput
               type="file"
-              class="d-none"
+              class="d-none SP-file"
               (change)="
                 uploadPhoto($event)
               "
             />
-            <div class="upload-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+            <div class="SP-upload"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
           </div>
         </form>
 
         <h3 class="mt-2">Dr. {{ doctor?.name }}</h3>
         <p class="fw-bold">{{ doctor?.title }}</p>
-        <p>{{ doctor?.qualifications }}</p>
-        <a [href]="'tel:' + doctor?.phone" class="btn btn-primary w-100 my-2">
+        <p class="mb-2">{{ doctor?.qualifications }}</p>
+        <a [href]="'tel:' + doctor?.phone" class="btn w-100 my-2 col-12 SP-callBTN">
           <i class="fa-solid fa-phone-volume me-2"></i> {{ doctor?.phone }}
         </a>
 
         <ng-container>
-          <a [routerLink]="['/doctor/edit', doctor?.id]" class="btn btn-secondary w-100 my-1">
+          <a [routerLink]="['/doctor/edit', doctor?.id]" class="btn col-12 SP-callBTN mt-3 w-100 my-1">
             <i class="fa-solid fa-pen-to-square"></i> Edit Profile
           </a>
-          <a class="btn btn-secondary w-100 my-1">
+          <a class="btn col-12 SP-callBTN mt-3 w-100 my-1">
             <i class="fa-solid fa-key"></i> Change Password
           </a>
         </ng-container>
@@ -45,7 +45,7 @@
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a
-            class="nav-link"
+            class="nav-link SP-primaryText"
             [class.active]="selectedTab === 'details'"
             (click)="setTab('details')"
             >Details</a
@@ -53,7 +53,7 @@
         </li>
         <li class="nav-item">
           <a
-            class="nav-link"
+            class="nav-link SP-primaryText"
             [class.active]="selectedTab === 'reviews'"
             (click)="setTab('reviews')"
             >Reviews</a
@@ -63,7 +63,7 @@
           class="nav-item"
         >
           <a
-            class="nav-link"
+            class="nav-link SP-primaryText"
             [class.active]="selectedTab === 'calendar'"
             (click)="setTab('calendar')"
             >Calendar</a
@@ -74,13 +74,13 @@
       <div class="tab-content mt-3">
         <!-- DETAILS TAB -->
         <div
-          class="tab-pane"
+          class="tab-pane fade"
           [class.active]="selectedTab === 'details'"
           [class.show]="selectedTab === 'details'"
         >
           <!-- Upcoming Appointments Slider -->
-          <div class="my-3">
-            <div class="swiper-container">
+          <div class="my-3 col-12 flex-wrap justify-content-center gap-2 SP-bookCards">
+            <div class="swiper-container swiper mySwiper">
               <div class="swiper-wrapper">
                 <div
                   class="swiper-slide appointment-card"
@@ -88,157 +88,159 @@
                 >
                 </div>
               </div>
-              <div class="swiper-scrollbar"></div>
+              <div class="swiper-scrollbar position-static mt-2"></div>
             </div>
           </div>
 
           <h4>Speciality</h4>
           <div class="d-flex flex-wrap gap-1 mb-3">
-            <span class="badge bg-secondary">{{ doctor?.specialty }}</span>
+            <span class="badge rounded-pill SP-badge">{{ doctor?.specialty }}</span>
           </div>
 
           <h4>Waiting Time</h4>
           <p class="ms-3">
-            <i class="fa-solid fa-stopwatch me-1"></i>
+            <i class="fa-solid fa-stopwatch SP-icon me-1"></i>
             {{ doctor?.waitingTime }} Minutes
           </p>
 
           <h4>Location</h4>
           <p class="ms-3">
-            <i class="fa-solid fa-location-dot me-1"></i>
+            <i class="fa-solid fa-location-dot SP-icon me-1"></i>
             {{ doctor?.governorate }} : {{ doctor?.location }}
           </p>
 
           <h4>Fees</h4>
           <p class="fw-bold ms-3">
-            <i class="fa-solid fa-money-bills me-1"></i>
+            <i class="fa-solid fa-money-bills SP-icon me-1"></i>
             <span class="text-primary">{{ doctor?.fees }} E£</span>
           </p>
 
           <h4>Rating</h4>
-          <p class="ms-3">
-            <i class="fa-solid fa-star me-1"></i>
+          <p class="ms-3 SP-primaryText">
+            <i class="fa-solid fa-star SP-icon me-1"></i>
             <span class="text-primary">{{ doctor?.rating }}</span>
           </p>
 
           <h4>Map</h4>
           <div
             #mapContainer
-            class="w-100"
+            class="w-100 col-12"
             style="height: 400px;"
           ></div>
         </div>
 
         <!-- REVIEWS TAB -->
         <div
-          class="tab-pane"
+          class="tab-pane fade"
           [class.active]="selectedTab === 'reviews'"
           [class.show]="selectedTab === 'reviews'"
         >
           <h4>Patient Reviews</h4>
-          <ng-container *ngIf="reviews?.length === 0">
-            <h5 class="text-center text-primary py-3">No Review Exists</h5>
-          </ng-container>
-          <!-- <ng-container *ngFor="let review of pagedReviews">
-            <div class="border p-3 mb-2 rounded" data-aos="fade-left">
-              <h5>{{ review.patientName }}</h5>
-              <p>{{ review.review }}</p>
-              <p class="text-primary">
-                Rating:
-                <ng-container [ngSwitch]="review.rate">
-                  <i
-                    *ngSwitchCase="rate <= 1"
-                    class="fa-regular fa-face-frown me-2"
-                  ></i>
-                  <i
-                    *ngSwitchCase="review.rate <= 2.5"
-                    class="fa-regular fa-face-frown-open me-2"
-                  ></i>
-                  <i
-                    *ngSwitchCase="review.rate <= 3"
-                    class="fa-regular fa-face-meh me-2"
-                  ></i>
-                  <i
-                    *ngSwitchCase="review.rate < 4.5"
-                    class="fa-regular fa-face-smile me-2"
-                  ></i>
-                  <i
-                    *ngSwitchDefault
-                    class="fa-regular fa-face-smile-beam me-2"
-                  ></i>
-                </ng-container>
-                <ng-container>
-                  <i
-                    *ngFor="let star of [].constructor(Math.floor(review.rate))"
-                    class="fa-solid fa-star"
-                  ></i>
-                  <i
-                    *ngIf="review.rate % 1 !== 0"
-                    class="fa-solid fa-star-half-stroke"
-                  ></i>
-                  <i
-                    *ngFor="let star of [].constructor(5 - Math.ceil(review.rate))"
-                    class="fa-regular fa-star"
-                  ></i>
-                </ng-container>
-                <span>{{ review.rate }}</span>
-              </p>
-              <p class="fs-6 text-primary">{{ review.date | date:'mediumDate' }}</p>
-            </div>
-          </ng-container>
+          <div class="reviewsContainer">
+            <ng-container *ngIf="reviews?.length === 0">
+              <h5 class="text-center text-primary py-3 p-3 SP-primaryText ">No Review Exists</h5>
+            </ng-container>
+            <!-- <ng-container *ngFor="let review of pagedReviews">
+              <div class="border p-3 mb-2 rounded" data-aos="fade-left">
+                <h5>{{ review.patientName }}</h5>
+                <p>{{ review.review }}</p>
+                <p class="text-primary">
+                  Rating:
+                  <ng-container [ngSwitch]="review.rate">
+                    <i
+                      *ngSwitchCase="rate <= 1"
+                      class="fa-regular fa-face-frown me-2"
+                    ></i>
+                    <i
+                      *ngSwitchCase="review.rate <= 2.5"
+                      class="fa-regular fa-face-frown-open me-2"
+                    ></i>
+                    <i
+                      *ngSwitchCase="review.rate <= 3"
+                      class="fa-regular fa-face-meh me-2"
+                    ></i>
+                    <i
+                      *ngSwitchCase="review.rate < 4.5"
+                      class="fa-regular fa-face-smile me-2"
+                    ></i>
+                    <i
+                      *ngSwitchDefault
+                      class="fa-regular fa-face-smile-beam me-2"
+                    ></i>
+                  </ng-container>
+                  <ng-container>
+                    <i
+                      *ngFor="let star of [].constructor(Math.floor(review.rate))"
+                      class="fa-solid fa-star"
+                    ></i>
+                    <i
+                      *ngIf="review.rate % 1 !== 0"
+                      class="fa-solid fa-star-half-stroke"
+                    ></i>
+                    <i
+                      *ngFor="let star of [].constructor(5 - Math.ceil(review.rate))"
+                      class="fa-regular fa-star"
+                    ></i>
+                  </ng-container>
+                  <span>{{ review.rate }}</span>
+                </p>
+                <p class="fs-6 text-primary">{{ review.date | date:'mediumDate' }}</p>
+              </div>
+            </ng-container>
 
-          <!-- Pagination
-          <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-              <li
-                class="page-item"
-                [class.disabled]="currentPage === 1"
-              >
-                <a
-                  class="page-link"
-                  (click)="setPage(currentPage - 1)"
-                  >&laquo;</a
+            <!-- Pagination
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center">
+                <li
+                  class="page-item"
+                  [class.disabled]="currentPage === 1"
                 >
-              </li>
-              <li
-                class="page-item"
-                *ngFor="
-                  let p of [].constructor(pageCount);
-                  let idx = index
-                "
-                [class.active]="idx + 1 === currentPage"
-              >
-                <a
-                  class="page-link"
-                  (click)="setPage(idx + 1)"
-                  >{{ idx + 1 }}</a
+                  <a
+                    class="page-link"
+                    (click)="setPage(currentPage - 1)"
+                    >&laquo;</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  *ngFor="
+                    let p of [].constructor(pageCount);
+                    let idx = index
+                  "
+                  [class.active]="idx + 1 === currentPage"
                 >
-              </li>
-              <li
-                class="page-item"
-                [class.disabled]="currentPage === pageCount"
-              >
-                <a
-                  class="page-link"
-                  (click)="setPage(currentPage + 1)"
-                  >&raquo;</a
+                  <a
+                    class="page-link"
+                    (click)="setPage(idx + 1)"
+                    >{{ idx + 1 }}</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  [class.disabled]="currentPage === pageCount"
                 >
-              </li>
-            </ul>
-          </nav> -->
+                  <a
+                    class="page-link"
+                    (click)="setPage(currentPage + 1)"
+                    >&raquo;</a
+                  >
+                </li>
+              </ul>
+            </nav> -->
+          </div>
         </div>
 
         <!-- CALENDAR TAB (Doctors Only) -->
         <div
-          class="tab-pane"
+          class="tab-pane fade"
           [class.active]="selectedTab === 'calendar'"
           [class.show]="selectedTab === 'calendar'"
         >
-          <form (ngSubmit)="saveSchedule()">
+          <form (ngSubmit)="saveSchedule()" style="color: var(--primary-color)">
             <h3>Assign Default Schedule</h3>
-            <div class="d-flex flex-column gap-3">
-              <div class="row gx-2">
-                <div class="col-md-6 mb-3">
+            <div class="d-flex flex-column gap-3 justify-content-between">
+              <div class="row gx-2 gap-2 gap-md-0">
+                <div class="col-md-6 col-sm-12 mb-3">
                   <label for="startTime" class="form-label">From</label>
                   <input
                     id="startTime"
@@ -249,7 +251,7 @@
                     required
                   />
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 col-sm-12 mb-3">
                   <label for="endTime" class="form-label">To</label>
                   <input
                     id="endTime"
@@ -264,15 +266,15 @@
 
               <div>
                 <label class="form-label">Days</label>
-                <div class="d-flex flex-wrap gap-2 p-2">
+                <div class="d-flex flex-wrap gap-2 p-2 justify-content-between">
                   <div
-                    class="form-check col-5 col-md-3"
+                    class="form-check col-5 col-md-3 doctor-register-days"
                     *ngFor="let day of weekDays; let i = index"
                   >
                     <input
                       class="form-check-input"
                       type="checkbox"
-                      [checked]="scheduleForm.days[i]"
+                      [(value)]="scheduleForm.days[i]"
                       (change)="toggleDay(i)"
                       id="day{{ i }}"
                     />
@@ -285,8 +287,8 @@
 
               <div class="d-flex align-items-center justify-content-between">
                 <div class="w-50">
-                  <div class="d-flex align-items-center">
-                    <label class="form-label me-2">Reservation Quota</label>
+                  <div class="d-flex align-items-center w-100">
+                    <label class="form-label text-center me-2">Reservation Quota</label>
                     <input
                       type="number"
                       class="form-control"
@@ -310,13 +312,13 @@
             </div>
           </form>
 
-          <div id="calendarContainer" class="mt-3">
+          <div id="SP-Calendar" #calendarContainer style="height: 600px;" class="mt-3">
             <!-- FullCalendar or any JS calendar goes here -->
           </div>
 
           <!-- Modal for reservation placement -->
           <div
-            class="modal fade"
+            class="modal fade SP-CalForm"
             id="reservationModal"
             tabindex="-1"
             aria-labelledby="reservationModalLabel"
@@ -406,13 +408,13 @@
                   <div class="modal-footer">
                     <button
                       type="submit"
-                      class="btn btn-primary w-100"
+                      class="btn SP-bookBTN col-12 SP-CalSubmit w-100"
                     >
                       {{ reservationForm.controls['id'].value ? 'Update' : 'Add' }} Reservation
                     </button>
                     <button
                       type="button"
-                      class="btn btn-secondary w-100"
+                      class="btn SP-bookBTN col-12 w-100"
                       data-bs-dismiss="modal"
                     >
                       Close
@@ -420,11 +422,11 @@
                   </div>
                 </form>
                 <div
-                  class="modal-footer d-none"
+                  class="modal-footer d-none SP-deleteBTN"
                   *ngIf="reservationForm.controls['id'].value"
                 >
                   <button
-                    class="btn btn-danger w-100"
+                    class="col-12 btn btn-danger w-100"
                     (click)="onDeleteReservation()"
                   >
                     Delete Reservation

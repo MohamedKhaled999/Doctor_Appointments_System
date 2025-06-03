@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, viewChild } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { DoctorService } from '../../../core/services/doctor.service';
@@ -7,7 +7,11 @@ import { Rating } from '../../../core/interfaces/rating.interface';
 import { Schedule } from '../../../core/interfaces/Schedule.interface';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import Aos from 'aos';
+import { Reservation } from '../../../core/interfaces/reservation.interface';
+import { CalendarReservation } from '../../../core/interfaces/calendarReservation.interface';
+
+declare var bootstrap: any;
+declare var calendarJS: any;
 
 @Component({
   selector: 'app-doctor-profile',
@@ -28,6 +32,29 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
   selectedTab: 'details' | 'reviews' | 'calendar' = 'details';
   reservationForm: FormGroup;
   @ViewChild('mapContainer', { static: false }) mapContainer: ElementRef | undefined;
+  @ViewChild('calendarContainer', { static: false }) calendarContainer: ElementRef | undefined;
+  @ViewChild('calDate', { static: false })
+  calDate!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('resID', { static: false })
+  resID!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('startTime', { static: false })
+  startTime!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('endTime', { static: false })
+  endTime!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('maxRes', { static: false })
+  maxRes!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('calFormBTN', { static: false })
+  calFormBTN!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('deleteBTNDiv', { static: false })
+  deleteBTNDiv!: ElementRef<HTMLDivElement>;
+  private calendarInstance: any;
+  private modalInstance: any;
   /**
    *
   */
@@ -42,10 +69,8 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     this.initMap();
-    // Aos.init({
-    //   duration: 1000,
-    //   once: true
-    // });
+    this.modalInstance = new bootstrap.Modal(document.getElementById('reservationModal') as HTMLElement);
+    // this.initCalendar(this.doctor!.reservations);
   }
   setTab(arg0: string) {
     this.selectedTab = arg0 as 'details' | 'reviews' | 'calendar';
@@ -141,14 +166,15 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
     this.scheduleForm.days[day] = this.scheduleForm.days[day] === '1' ? '0' : '1';
   }
   saveSchedule(): void {
-    this.doctorService.updateSchedule(this.doctor!.id, this.scheduleForm).subscribe(() => {
-      Swal.fire({
-        title: 'Success',
-        text: 'Schedule updated successfully',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    });
+    // this.doctorService.updateSchedule(this.doctor!.id, this.scheduleForm).subscribe(() => {
+    //   Swal.fire({
+    //     title: 'Success',
+    //     text: 'Schedule updated successfully',
+    //     icon: 'success',
+    //     confirmButtonText: 'OK'
+    //   });
+    // });
+    console.log('Schedule saved:', this.scheduleForm);
   }
   initMap(): void {
     import('leaflet').then(L => {
@@ -160,6 +186,89 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
       const marker = new L.Marker([latitude, longitude]).addTo(map);
       marker.bindPopup(`<b>${this.doctor!.name}</b><br>${this.doctor!.location}`).openPopup();
     });
+  }
+  initCalendar(reservations: Reservation[]): void {
+    const script = document.createElement('script');
+    script.src = '/calenderJS/dist/calendar.min.js';
+    document.body.appendChild(script);
+    script.onload = () => {
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth();
+      const nextMonthDate = new Date(currentYear, currentMonth + 1, 1);
+      this.calendarInstance = new calendarJS(
+        this.calendarContainer?.nativeElement,
+        {
+          initialDateTime: currentDate,
+          minimumYear: currentYear,
+          maximumYear: nextMonthDate.getFullYear(),
+          manualEditingEnabled: false,
+          views: {
+            fullMonth: {
+              enabled: true,
+              isPinUpViewEnabled: false,
+              showExtraTitleBarButtons: false,
+              showPreviousNextMonthNames: false
+            },
+            fullDay: { enabled: false },
+            fullWeek: { enabled: false },
+            fullYear: { enabled: false },
+            timeline: { enabled: false },
+            allEvents: { enabled: false }
+          },
+          fullScreenModeEnabled: false,
+          exportEventsEnabled: false,
+          importEventsEnabled: false,
+          configurationDialogEnabled: false,
+          jumpToDateEnabled: false,
+          dragAndDropForEventsEnabled: false,
+          sideMenu: {
+            showDays: false,
+            showEventTypes: false,
+            showGroups: false,
+            showWorkingDays: false,
+            showWeekendDays: false
+          },
+          events: {
+            onPreviousMonth: (displayDate: Date) => {
+              this.calendarInstance.setCurrentDisplayDate(
+                new Date(currentYear, currentMonth, 1)
+              );
+            },
+            onNextMonth: (displayDate: Date) => {
+              this.calendarInstance.setCurrentDisplayDate(
+                new Date(currentYear, currentMonth + 1, 1)
+              );
+            },
+            onEventClick: (event: CalendarReservation) => {
+              // this.reservationForm.controls['date'].setValue = event.from.toString();
+              // this.reservationForm.controls['id'].setValue = event.ResID;
+              // this.reservationForm.controls['startTime'].setValue = event.from
+              //   .toTimeString()
+              //   .slice(0, 5);
+
+              // if (event.isAllDay) {
+              //   this.calFormBTN.nativeElement.innerText = 'Add';
+              //   this.formValues.startTime = '09:00';
+              //   this.formValues.endTime = '17:00';
+              //   this.deleteBTNDiv.nativeElement.classList.add('d-none');
+              // } else {
+              //   this.calFormBTN.nativeElement.innerText = 'Update';
+              //   this.deleteBTNDiv.nativeElement.classList.remove('d-none');
+              //   this.formValues.startTime = event.from
+              //     .toTimeString()
+              //     .slice(0, 5);
+              //   this.formValues.endTime = event.to
+              //     .toTimeString()
+              //     .slice(0, 5);
+              // }
+              this.modalInstance.show();
+            }
+          }
+        }
+      );
+
+    }
   }
   uploadPhoto(event: any): void {
     this.doctorService.uploadPhoto(this.doctor!.id, event.target.files[0]).subscribe();
