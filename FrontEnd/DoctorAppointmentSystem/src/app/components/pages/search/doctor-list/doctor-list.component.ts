@@ -27,19 +27,37 @@ export class DoctorListComponent {
       reservations: [
         {
           ResID: 101,
-          Day: 2, // Monday (assuming 0 is Sunday)
+          Day: 5, // Monday (assuming 0 is Sunday)
           Time: '09:00|10:00 AM',
           IsAvailable: true
         },
         {
           ResID: 102,
-          Day: 3,
+          Day: 6,
           Time: '09:00|10:00 AM',
           IsAvailable: true
         },
         {
           ResID: 103,
-          Day: 4, // Wednesday
+          Day: 7, // Wednesday
+          Time: '09:00|10:00 AM',
+          IsAvailable: false
+        },
+                {
+          ResID: 104,
+          Day: 8, // Monday (assuming 0 is Sunday)
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 105,
+          Day: 9,
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 106,
+          Day: 10, // Wednesday
           Time: '09:00|10:00 AM',
           IsAvailable: false
         }
