@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Services.Abstraction;
+using Services.Abstraction.Notifications;
 using Services.Abstraction.Orchestrators;
 using Shared.DTOs.Appointment;
 using Shared.DTOs.DoctorReservation;
 using Shared.DTOs.Email;
+using Shared.Enums;
 using Shared.Payment;
 
 namespace Services.Orchestrators
@@ -20,6 +22,7 @@ namespace Services.Orchestrators
         private readonly IPaymentService _paymentService;
         private readonly IEmailService _emailService;
         private readonly IUploadService _uploadService;
+        private readonly INotificationService _notificationService;
         private readonly IConfiguration _configuration;
 
         public AppointmentOrchestrator(IServiceManager serviceManager, IConfiguration configuration)
@@ -32,6 +35,7 @@ namespace Services.Orchestrators
             _paymentService = serviceManager.PaymentService;
             _emailService = serviceManager.EmailService;
             _uploadService = serviceManager.UploadService;
+            _notificationService = serviceManager.NotificationService;
             _configuration = configuration;
         }
 
@@ -178,8 +182,39 @@ namespace Services.Orchestrators
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
             await _transactionService.AddAsync(patientId, doctor.Id, doctor.Fees, paymentId);
+
             var transactionId = await _transactionService.GetByPaymentId(paymentId);
             await _appointmentService.AddAsync(patientId, doctorReservationId, transactionId);
+
+            var appointment = await _appointmentService.GetLastAppointmentByPatientAsync(patientId);
+            var patient = await _appointmentService.GetPatientByAppointmentId(appointment.Id);
+            var patientNotification = new NotificationMessage()
+            {
+                EventType = NotificationEvents.Patient_AppointmentAdded,
+                Message = $"Appointment with Dr. {appointment.Doctor} on {appointment.StartTime} has been added."
+            };
+            await _notificationService.SendNotification(patient.AppUserId, patientNotification);
+
+            // ====================================
+            // ====== Schedule Reminder Here ======
+            // ====================================
+
+            var reservation = await _doctorReservationService.GetDoctorReservationByID(doctorReservationId);
+            if (!reservation.IsAvailable)
+            {
+                var today = DateTime.Now;
+                DateOnly reservationDate;
+                if (today.Day > reservation.Day)
+                    reservationDate = new DateOnly(today.Year, today.AddMonths(-1).Month, reservation.Day);
+                else
+                    reservationDate = new DateOnly(today.Year, today.Month, reservation.Day);
+                var doctorNotification = new NotificationMessage()
+                {
+                    EventType = NotificationEvents.Doctor_MaximumAppointmentsReached,
+                    Message = $"Reservation on {reservationDate} has reached maximum number of appointments."
+                };
+                await _notificationService.SendNotification(doctor.AppUserId, doctorNotification);
+            }
         }
 
         public async Task AddDoctorReservationAsync(NewResDTO reservation, int appUserId)
@@ -188,6 +223,20 @@ namespace Services.Orchestrators
             if (doctor.ID != reservation.DoctorID)
                 throw new UnAuthorizedException("Access Denied");
             await _doctorReservationService.AddDoctorReservation(reservation);
+
+            var newReservation = await _doctorReservationService.GetLastReservationByDoctor(reservation.DoctorID);
+            var today = DateTime.Now;
+            DateOnly reservationDate;
+            if (today.Day > newReservation.Day)
+                reservationDate = new DateOnly(today.Year, today.AddMonths(-1).Month, newReservation.Day);
+            else
+                reservationDate = new DateOnly(today.Year, today.Month, newReservation.Day);
+            var notification = new NotificationMessage()
+            {
+                EventType = NotificationEvents.Doctor_ReservationAdded,
+                Message = $"Reservation on {reservationDate} has been added."
+            };
+            await _notificationService.SendNotification(appUserId, notification);
         }
 
         public async Task CancelAppointmentAsync(int id, int currentPatientAppUserId = -1)
@@ -196,9 +245,9 @@ namespace Services.Orchestrators
             if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
                 throw new UnAuthorizedException("Access Denied");
 
-            var appointment = await _appointmentService.GetByIdAsync(id);
+            var appointment = await _appointmentService.GetWithDoctorAsync(id);
             if (appointment == null)
-                throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
+                throw new ArgumentNullException($"Appointment with ID {id} doesn't exist");
             if (appointment.StartTime.Date < DateTime.Now)
                 throw new ValidationException(["Appointment date has already passed"]);
 
@@ -222,6 +271,13 @@ namespace Services.Orchestrators
                 Link = _configuration["FrontEnd:Url"],
             };
             _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime.Date);
+
+            var notification = new NotificationMessage()
+            {
+                EventType = NotificationEvents.Patient_AppointmentCanceled,
+                Message = $"Appointment with Dr. {appointment.Doctor} on {appointment.StartTime} has been canceled."
+            };
+            await _notificationService.SendNotification(patient.AppUserId, notification);
         }
 
         public async Task CancelReservationAsync(int id, int currentDoctorAppUserId)
@@ -242,6 +298,19 @@ namespace Services.Orchestrators
                     await CancelAppointmentAsync(appointment.Id);
 
             await _doctorReservationService.DeleteDoctorReservation(id);
+
+            var today = DateTime.Now;
+            DateOnly reservationDate;
+            if (today.Day > reservation.Day)
+                reservationDate = new DateOnly(today.Year, today.AddMonths(-1).Month, reservation.Day);
+            else
+                reservationDate = new DateOnly(today.Year, today.Month, reservation.Day);
+            var notification = new NotificationMessage()
+            {
+                EventType = NotificationEvents.Doctor_ReservationCanceled,
+                Message = $"Reservation on {reservationDate} {((appointments.Count > 0) ? $"with {appointments.Count} associated appointment(s)" : "")} has been canceled."
+            };
+            await _notificationService.SendNotification(currentDoctorAppUserId, notification);
         }
     }
 }

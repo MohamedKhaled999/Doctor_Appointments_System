@@ -102,6 +102,13 @@ namespace Services
 
             return reservationDTOs;
         }
+        public async Task<DoctorReservationDTO?> GetLastReservationByDoctor(int doctorId)
+        {
+            var reservation = (await _unitOfWork.GetRepository<DoctorReservation, int>().GetAllAsync(new SpecificationsBase<DoctorReservation>(a => a.DoctorID == doctorId))).LastOrDefault();
+            if (reservation == null)
+                throw new ArgumentNullException($"Reservation doesn't exist");
+            return _mapper.Map<DoctorReservationDTO>(reservation);
+        }
         public async void GenerateCalendarReservation(int docId, int MaxRes)
         {
             var doc = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(docId);

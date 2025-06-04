@@ -1,4 +1,5 @@
-﻿using Services.Abstraction.Orchestrators;
+﻿using Services.Abstraction.Notifications;
+using Services.Abstraction.Orchestrators;
 
 namespace Services.Abstraction
 {
@@ -18,5 +19,7 @@ namespace Services.Abstraction
         IAuthenticationService AuthenticationService { get; }
         IEmailService EmailService { get; }
         IUploadService UploadService { get; }
+        IRedisRepo RedisRepo { get; }
+        INotificationService NotificationService { get; }
     }
 }

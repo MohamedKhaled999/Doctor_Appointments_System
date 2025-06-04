@@ -3,11 +3,14 @@ using Domain.Contracts;
 using Domain.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Services.Abstraction;
+using Services.Abstraction.Notifications;
 using Services.Abstraction.Orchestrators;
+using Services.Notifications;
 using Services.Orchestrators;
 using Shared.Authentication;
 
@@ -15,8 +18,6 @@ namespace Services
 {
     public class ServiceManager : IServiceManager
     {
-        private readonly ILogger _logger;
-
         private readonly Lazy<IHomeService> _homeService;
 
         private readonly Lazy<IPatientService> _patientService;
@@ -38,6 +39,9 @@ namespace Services
 
         private readonly Lazy<IUploadService> _uploadService;
 
+        private readonly Lazy<IRedisRepo> _redisRepo;
+        private readonly Lazy<INotificationService> _notificationService;
+
         private readonly IWebHostEnvironment _environment;
 
         public ServiceManager(IUnitOfWork unitOfWork,
@@ -46,11 +50,9 @@ namespace Services
                               IOptions<JWTOptions> options,
                               IConfiguration configuration,
                               IWebHostEnvironment environment,
-                              ILogger logger)
+                              IServiceProvider serviceProvider)
 
         {
-            _logger = logger;
-
             _homeService = new Lazy<IHomeService>(() => new HomeService(unitOfWork, mapper));
 
             _patientService = new Lazy<IPatientService>(() => new PatientService(unitOfWork, mapper));
@@ -72,6 +74,9 @@ namespace Services
             _environment = environment;
             _uploadService = new Lazy<IUploadService>(() => new UploadService(_environment));
 
+            _redisRepo = new Lazy<IRedisRepo>(() => new RedisRepo(configuration));
+            _notificationService = new Lazy<INotificationService>(() => new NotificationService(this, new NotificationSender(serviceProvider.GetRequiredService<IHubContext<NotificationHub>>())));
+
             _authenticationService = new Lazy<IAuthenticationService>(() =>
             new AuthenticationService(userManager,
                                       _patientService.Value,
@@ -81,7 +86,6 @@ namespace Services
                                       mapper,
                                       _emailService.Value));
         }
-
         public IHomeService HomeService => _homeService.Value;
 
         public IPatientService PatientService => _patientService.Value;
@@ -109,5 +113,9 @@ namespace Services
         public IEmailService EmailService => _emailService.Value;
 
         public IUploadService UploadService => _uploadService.Value;
+
+        public IRedisRepo RedisRepo => _redisRepo.Value;
+
+        public INotificationService NotificationService => _notificationService.Value;
     }
 }

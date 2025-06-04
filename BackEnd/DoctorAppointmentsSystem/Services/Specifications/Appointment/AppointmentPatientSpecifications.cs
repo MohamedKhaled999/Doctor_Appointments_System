@@ -3,10 +3,11 @@ using System.Linq.Expressions;
 
 namespace Services.Specifications.Appointment
 {
-    internal class AppointmentPatientSpecifications : SpecificationsBase<Domain.Models.Appointment>
+    internal class AppointmentPatientDoctorSpecifications : SpecificationsBase<Domain.Models.Appointment>
     {
-        public AppointmentPatientSpecifications(Expression<Func<Domain.Models.Appointment, bool>> criteria) : base(criteria)
+        public AppointmentPatientDoctorSpecifications(Expression<Func<Domain.Models.Appointment, bool>> criteria) : base(criteria)
         {
+            AddInclude(a => a.DoctorReservation.Doctor);
             AddInclude(a => a.Patient);
         }
     }

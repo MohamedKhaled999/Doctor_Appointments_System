@@ -6,6 +6,8 @@ namespace Services.Abstraction
     public interface IAppointmentService
     {
         Task<AppointmentDTO?> GetByIdAsync(int id);
+        Task<AppointmentDTO?> GetWithDoctorAsync(int id);
+        Task<AppointmentDTO?> GetLastAppointmentByPatientAsync(int patientId);
         Task<int> GetTransactionId(int appointmentId);
         Task AddAppointmentDocument(int appointmentId, string documentUrl);
         Task AddAppointmentPrescription(int appointmentId, string documentUrl);
