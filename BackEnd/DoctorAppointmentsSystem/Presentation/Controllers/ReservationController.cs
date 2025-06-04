@@ -29,11 +29,12 @@ namespace Presentation.Controllers
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> NewReservation(NewResDTO reservation)
         {
+            reservation.ResID = 0;
             await _serviceManager.AppointmentOrchestrator.AddDoctorReservationAsync(reservation, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Created();
         }
 
-        [HttpPost]
+        [HttpPost("prescription")]
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> AddPrescription(int reservationId, int appointmentId, IFormFile document)
         {
@@ -49,7 +50,7 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("prescription")]
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> DeletePrescription(int reservationId, int appointmentId)
         {

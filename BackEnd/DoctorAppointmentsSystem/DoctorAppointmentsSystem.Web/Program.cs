@@ -2,6 +2,7 @@ using DoctorAppointmentsSystem.Web.Factories;
 using DoctorAppointmentsSystem.Web.Middlewares;
 using Domain.Contracts;
 using Domain.Models;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using Persistence;
 using Persistence.Repositories;
 using Services;
 using Services.Abstraction;
+using Services.Notifications;
 using Shared.Authentication;
 using System.Text;
 
@@ -29,8 +31,10 @@ namespace DoctorAppointmentsSystem.Web
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddCors(op => op.AddPolicy("allow", op => op.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+            builder.Services.AddCors(op => op.AddPolicy("allow",
+                op => op.WithOrigins(builder.Configuration["FrontEnd:Url"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 
+            builder.Services.AddSignalR();
 
             //For Validation
             builder.Services.Configure<ApiBehaviorOptions>(op =>
@@ -85,7 +89,6 @@ namespace DoctorAppointmentsSystem.Web
                 }
                 ).AddJwtBearer(op =>
                 {
-
                     var jwtOptions = builder.Configuration.GetSection("JwtOptions").Get<JWTOptions>();
                     op.TokenValidationParameters = new()
                     {
@@ -97,7 +100,23 @@ namespace DoctorAppointmentsSystem.Web
                         ValidIssuer = jwtOptions.Issuer,
                         ValidAudience = jwtOptions.Audience,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
+                    };
+                    op.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
 
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                path.StartsWithSegments("/hub"))
+                            {
+                                // Read the token out of the query string
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
             #endregion
@@ -108,6 +127,11 @@ namespace DoctorAppointmentsSystem.Web
                 var environment = sp.GetRequiredService<IWebHostEnvironment>();
                 return new Middlewares.Logger(LogLevel.Information, environment);
             });
+            #endregion
+
+            #region Scheduling Jobs
+            builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddHangfireServer();
             #endregion
 
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
@@ -133,6 +157,8 @@ namespace DoctorAppointmentsSystem.Web
             app.MapStaticAssets();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapHub<NotificationHub>("/hub");
 
             app.MapControllers();
 

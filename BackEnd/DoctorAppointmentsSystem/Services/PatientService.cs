@@ -31,12 +31,12 @@ namespace Services
             return _mapper.Map<List<PatientDTO>>(patients);
         }
 
-        public async Task<PatientDTO?> GetByIdAsync(int id, int currentID)
+        public async Task<PatientDTO?> GetByIdAsync(int id, int currentID = -1)
         {
             var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
             if (patient == null)
                 return null;
-            if (patient.AppUserID != currentID)
+            if (currentID != -1 && patient.AppUserID != currentID)
                 throw new UnAuthorizedException("Access Denied");
             return _mapper.Map<PatientDTO>(patient);
         }
