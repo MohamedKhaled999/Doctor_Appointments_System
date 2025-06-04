@@ -1,4 +1,5 @@
 ﻿using Domain.Exceptions;
+using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Services.Abstraction;
@@ -195,9 +196,10 @@ namespace Services.Orchestrators
             };
             await _notificationService.SendNotification(patient.AppUserId, patientNotification);
 
-            // ====================================
-            // ====== Schedule Reminder Here ======
-            // ====================================
+            BackgroundJob.Schedule(
+                () => AppointmentReminderJob(patient.AppUserId, appointment.Doctor),
+                    appointment.StartTime.AddHours(-3) - DateTime.Now
+                );
 
             var reservation = await _doctorReservationService.GetDoctorReservationByID(doctorReservationId);
             if (!reservation.IsAvailable)
@@ -311,6 +313,16 @@ namespace Services.Orchestrators
                 Message = $"Reservation on {reservationDate} {((appointments.Count > 0) ? $"with {appointments.Count} associated appointment(s)" : "")} has been canceled."
             };
             await _notificationService.SendNotification(currentDoctorAppUserId, notification);
+        }
+
+        private void AppointmentReminderJob(int appUserId, string doctorName)
+        {
+            var patientReminder = new NotificationMessage()
+            {
+                EventType = NotificationEvents.Patient_AppointmentAdded,
+                Message = $"Reminder: you have an appointment with Dr. {doctorName} after 3 hours."
+            };
+            _notificationService.SendNotification(appUserId, patientReminder).Wait();
         }
     }
 }

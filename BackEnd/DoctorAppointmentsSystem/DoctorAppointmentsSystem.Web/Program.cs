@@ -2,6 +2,7 @@ using DoctorAppointmentsSystem.Web.Factories;
 using DoctorAppointmentsSystem.Web.Middlewares;
 using Domain.Contracts;
 using Domain.Models;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -126,6 +127,11 @@ namespace DoctorAppointmentsSystem.Web
                 var environment = sp.GetRequiredService<IWebHostEnvironment>();
                 return new Middlewares.Logger(LogLevel.Information, environment);
             });
+            #endregion
+
+            #region Scheduling Jobs
+            builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddHangfireServer();
             #endregion
 
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
