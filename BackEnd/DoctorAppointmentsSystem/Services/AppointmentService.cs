@@ -28,6 +28,22 @@ namespace Services
             return _mapper.Map<AppointmentDTO?>(appointment);
         }
 
+        public async Task<AppointmentDTO?> GetWithDoctorAsync(int id)
+        {
+            var appointment = (await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(new AppointmentDoctorSpecifications(a => a.Id == id))).FirstOrDefault();
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment with ID {id} doesn't exist");
+            return _mapper.Map<AppointmentDTO>(appointment);
+        }
+
+        public async Task<AppointmentDTO?> GetLastAppointmentByPatientAsync(int patientId)
+        {
+            var appointment = (await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(new SpecificationsBase<Appointment>(a => a.PatientId == patientId))).LastOrDefault();
+            if (appointment == null)
+                throw new ArgumentNullException($"Appointment doesn't exist");
+            return _mapper.Map<AppointmentDTO>(appointment);
+        }
+
         public async Task AddAppointmentDocument(int appointmentId, string documentUrl)
         {
             var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(appointmentId);
