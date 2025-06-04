@@ -1,0 +1,61 @@
+.appointments-view {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    }
+    
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #212529;
+    }
+    
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .table th, .table td {
+      padding: 0.75rem;
+      text-align: right;
+      border-bottom: 1px solid #dee2e6;
+    }
+    
+    .table th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+    }
+    
+    .status-badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+    }
+    
+    .status-badge.completed {
+      background-color: #d1e7dd;
+      color: #0f5132;
+    }
+    
+    .status-badge.scheduled {
+      background-color: #cfe2ff;
+      color: #084298;
+    }
+    
+    .status-badge.cancelled {
+      background-color: #f8d7da;
+      color: #842029;
+    }
+    
+    .status-badge.rescheduled {
+      background-color: #fff3cd;
+      color: #664d03;
+    }

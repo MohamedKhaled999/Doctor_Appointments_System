@@ -1,0 +1,16 @@
+<div class="dashboard-sidebar">
+      <div class="sidebar-header">
+        <h1>DocNet</h1>
+        <p>Dashboard</p>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <button
+          *ngFor="let item of menuItems"
+          (click)="onMenuClick(item.id)"
+          [class.active]="activeSection === item.id">
+          <span>{{ item.label }}</span>
+          <i class="{{ item.icon }}"></i>
+        </button>
+      </nav>
+    </div>

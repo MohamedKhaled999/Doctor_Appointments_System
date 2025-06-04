@@ -9,6 +9,8 @@ import { ResetPasswordComponent } from './components/pages/account/reset-passwor
 import { ChangePasswordComponent } from './components/pages/account/change-password/change-password.component';
 import { DoctorRegisterComponent } from './components/pages/account/doctor-register/doctor-register.component';
 import { ConfirmEmailComponent } from './components/pages/account/confirm-email/confirm-email.component';
+import { AdminDashboardComponent } from './components/pages/Dashboard/admin-dashboard/admin-dashboard.component';
+
 
 export const routes: Routes = [
   {
@@ -23,6 +25,11 @@ export const routes: Routes = [
   {
     path: 'doctor-profile/:id',
     loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
+  },
+  {
+    path: 'AdminDashboard',
+    component: AdminDashboardComponent,
+    title: 'AdminDashboard'
   },
   {
     path: 'register',
