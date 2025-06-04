@@ -6,11 +6,14 @@ export const headerInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (localStorage.getItem('userToken') ){
       console.log('Adding token to request headers',req);
-      
-      req= req.clone({
-      setHeaders:{token:localStorage.getItem('userToken')!}
-  })
+      // add bearer token to the request headers
+      req = req.clone({
+        setHeaders: {  Authorization: `Bearer ${localStorage.getItem('userToken')}`
+      }
+      });
+   
 }
   return next(req);
 
 };
+
