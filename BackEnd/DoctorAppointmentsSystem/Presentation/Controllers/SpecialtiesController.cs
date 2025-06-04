@@ -3,7 +3,7 @@ using Services.Abstraction;
 
 namespace Presentation.Controllers
 {
-    public class Specialties(IServiceManager serviceManager) : ApiController
+    public class SpecialtiesController(IServiceManager serviceManager) : ApiController
     {
         [HttpGet]
         public async Task<IActionResult> GetAllSpecialties()
