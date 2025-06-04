@@ -29,6 +29,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> NewReservation(NewResDTO reservation)
         {
+            reservation.ResID = 0;
             await _serviceManager.AppointmentOrchestrator.AddDoctorReservationAsync(reservation, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Created();
         }

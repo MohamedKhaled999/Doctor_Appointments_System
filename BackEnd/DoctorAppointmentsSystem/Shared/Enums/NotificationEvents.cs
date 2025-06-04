@@ -5,8 +5,8 @@
         Doctor_MaximumAppointmentsReached,
         Doctor_ReservationAdded,
         Doctor_ReservationCanceled,
-        Patient_AppointmentAdded,     // To be added
+        Patient_AppointmentAdded,     // To be checked
         Patient_AppointmentCanceled,
-        Patient_AppointmentReminder
+        Patient_AppointmentReminder   // To be added
     }
 }

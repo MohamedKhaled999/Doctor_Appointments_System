@@ -224,10 +224,17 @@ namespace Services.Orchestrators
                 throw new UnAuthorizedException("Access Denied");
             await _doctorReservationService.AddDoctorReservation(reservation);
 
+            var newReservation = await _doctorReservationService.GetLastReservationByDoctor(reservation.DoctorID);
+            var today = DateTime.Now;
+            DateOnly reservationDate;
+            if (today.Day > newReservation.Day)
+                reservationDate = new DateOnly(today.Year, today.AddMonths(-1).Month, newReservation.Day);
+            else
+                reservationDate = new DateOnly(today.Year, today.Month, newReservation.Day);
             var notification = new NotificationMessage()
             {
                 EventType = NotificationEvents.Doctor_ReservationAdded,
-                Message = $"Reservation on {reservation.StartTime} has been added."
+                Message = $"Reservation on {reservationDate} has been added."
             };
             await _notificationService.SendNotification(appUserId, notification);
         }

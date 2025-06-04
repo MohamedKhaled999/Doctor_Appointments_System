@@ -100,7 +100,7 @@ namespace Services
 
         public async Task<PatientAppUserDTO> GetPatientByAppointmentId(int id)
         {
-            var appointment = (await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(new AppointmentPatientSpecifications(a => a.Id == id))).FirstOrDefault();
+            var appointment = (await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(new AppointmentPatientDoctorSpecifications(a => a.Id == id))).FirstOrDefault();
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {id} doesn't exist");
             return _mapper.Map<PatientAppUserDTO>(appointment.Patient);
