@@ -33,7 +33,7 @@ namespace Presentation.Controllers
             return Created();
         }
 
-        [HttpPost]
+        [HttpPost("prescription")]
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> AddPrescription(int reservationId, int appointmentId, IFormFile document)
         {
@@ -49,7 +49,7 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("prescription")]
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> DeletePrescription(int reservationId, int appointmentId)
         {
