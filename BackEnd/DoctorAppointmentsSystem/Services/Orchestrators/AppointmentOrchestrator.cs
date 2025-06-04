@@ -319,7 +319,7 @@ namespace Services.Orchestrators
         {
             var patientReminder = new NotificationMessage()
             {
-                EventType = NotificationEvents.Patient_AppointmentAdded,
+                EventType = NotificationEvents.Patient_AppointmentReminder,
                 Message = $"Reminder: you have an appointment with Dr. {doctorName} after 3 hours."
             };
             _notificationService.SendNotification(appUserId, patientReminder).Wait();
