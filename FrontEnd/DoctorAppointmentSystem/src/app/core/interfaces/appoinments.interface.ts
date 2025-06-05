@@ -8,6 +8,7 @@ interface Appointment {
   doctor: string;
   doctorImagePath: string;
   isExist: boolean;
+  files?: string[];
 }
 
 export type { Appointment };

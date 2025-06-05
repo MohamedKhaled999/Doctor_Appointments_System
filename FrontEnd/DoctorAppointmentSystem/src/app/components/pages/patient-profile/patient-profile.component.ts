@@ -68,8 +68,8 @@ export class PatientProfileComponent implements OnInit {
       appointments: [
         {
           id: 1,
-          startTime: new Date('2025-10-01T10:00:00'),
-          endTime: new Date('2025-10-01T11:00:00'),
+          startTime: new Date('2025-06-01T10:00:00'),
+          endTime: new Date('2025-06-01T11:00:00'),
           doctor: 'Dr. Mohamed',
           specialty: 'Cardiology',
           governorate: 'Cairo',
