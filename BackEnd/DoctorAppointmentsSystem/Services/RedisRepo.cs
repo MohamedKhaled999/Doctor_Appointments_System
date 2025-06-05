@@ -7,9 +7,10 @@ namespace Services
     internal class RedisRepo : IRedisRepo
     {
         private readonly IDatabase _database;
+        private readonly IServer _server;
         public RedisRepo(IConfiguration configuration)
         {
-            var muxer = ConnectionMultiplexer.Connect(
+            var mux = ConnectionMultiplexer.Connect(
                 new ConfigurationOptions
                 {
                     EndPoints =
@@ -23,7 +24,8 @@ namespace Services
                     Password = configuration["NotificationSettings:Password"]
                 }
             );
-            _database = muxer.GetDatabase();
+            _server = mux.GetServer(mux.GetEndPoints()[0]);
+            _database = mux.GetDatabase();
         }
 
         public void SetItem(string key, string value)
@@ -31,5 +33,8 @@ namespace Services
 
         public string? GetItem(string key)
             => _database.StringGet(key);
+
+        public List<string>? GetKeys(string prefix)
+            => _server.Keys(pattern: $"{prefix}*").Select(k => (string)k).ToList();
     }
 }
