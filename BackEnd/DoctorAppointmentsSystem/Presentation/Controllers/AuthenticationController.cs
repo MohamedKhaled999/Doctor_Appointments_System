@@ -6,6 +6,13 @@ namespace Presentation.Controllers
 {
     public class AuthenticationController(IServiceManager serviceManager) : ApiController
     {
+        [HttpPost("external-login")]
+        public async Task<IActionResult> ExternalLogin([FromBody] ExternalLoginDTO model)
+        {
+
+            var result = await serviceManager.AuthenticationService.ExternalLogin(model);
+            return Ok(result);
+        }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)

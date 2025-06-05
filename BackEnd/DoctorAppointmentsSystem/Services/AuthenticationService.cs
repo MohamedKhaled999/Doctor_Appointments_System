@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Domain.Exceptions;
 using Domain.Models;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Services.Abstraction;
 using Services.Abstraction.Orchestrators;
@@ -13,6 +16,7 @@ using Shared.DTOs.Email;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace Services
 {
@@ -227,6 +231,140 @@ namespace Services
 
         }
 
+        public async Task<UserResultDto> ExternalLogin(ExternalLoginDTO externalLoginDTO)
+        {
+            var payload = await VerifyTokenAsync(externalLoginDTO.Token, externalLoginDTO.Provider);
+
+
+            // find user by email
+            var user = await userManager.FindByEmailAsync(payload.Email);
+            if (user == null) throw new UnAuthorizedException("Email Not Found!!");
+            var isConfirmed = await userManager.IsEmailConfirmedAsync(user);
+            if (!isConfirmed) throw new UnAuthorizedException("Email Not Confirmed");
+
+
+            return new UserResultDto
+            (
+                Email: payload.Email,
+                DisplayName: payload.Name,
+                Role: (await userManager.GetRolesAsync(user)).FirstOrDefault(),
+                Token: await CreateTokenAsync(user)
+            );
+        }
+
+        private async Task<TokenResultDataDto> VerifyTokenAsync(string token, string provider)
+        {
+            TokenResultDataDto resultDataDto;
+            provider = provider.ToLower();
+            try
+            {
+                switch (provider)
+                {
+                    case "google":
+                        resultDataDto = await VerifyGoogleToken(token);
+                        break;
+                    case "facebook":
+                        resultDataDto = await VerifyFacebookToken(token);
+                        break;
+                    case "microsoft":
+                        resultDataDto = await VerifyMicrosoftToken(token);
+                        break;
+                    default:
+                        throw new UnAuthorizedException("Unsupported provider");
+                }
+
+
+                return resultDataDto;
+
+            }
+            catch (Exception ex)
+            {
+                throw new UnAuthorizedException($"Invalid Token :{ex.Message}");
+            }
+
+        }
+        private async Task<TokenResultDataDto> VerifyGoogleToken(string idToken)
+        {
+            var googleCliendId = configuration["ExtrenalLogin:googleClientId"];
+
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new List<string>() { googleCliendId }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+            return new TokenResultDataDto()
+            {
+                Email = payload.Email,
+                Name = payload.Name,
+            };
+        }
+
+        public async Task<TokenResultDataDto> VerifyFacebookToken(string accessToken)
+        {
+            var url = $"https://graph.facebook.com/me?access_token={accessToken}&fields=id,name,email";
+            var client = new HttpClient();
+            var response = await client.GetStringAsync(url);
+            if (string.IsNullOrEmpty(response))
+            {
+                throw new UnAuthorizedException("Invalid Facebook Token");
+            }
+            // Parse the response to extract user information
+            // For simplicity, we assume the response is a JSON string containing user info
+
+            var userInfo = System.Text.Json.JsonSerializer.Deserialize<TokenResultDataDto>(response,
+                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                );
+
+            if (userInfo == null || string.IsNullOrEmpty(userInfo.Email))
+            {
+                throw new UnAuthorizedException("Invalid Facebook Token");
+            }
+
+            return userInfo;
+        }
+
+        private async Task<TokenResultDataDto> VerifyMicrosoftToken(string idToken)
+        {
+            var microsoftClientId = configuration["ExtrenalLogin:microsoftClientId"];
+
+            var configManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration",
+                new OpenIdConnectConfigurationRetriever());
+
+            var config = await configManager.GetConfigurationAsync(CancellationToken.None);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParams = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidIssuers = new[]
+                {
+            "https://login.microsoftonline.com/common/v2.0"
+            //$"https://login.microsoftonline.com/643b2f85-9f93-41b9-81d6-00ccadbf0bb7/v2.0" // optional if multi-tenant
+        },
+                ValidateAudience = true,
+                ValidAudience = microsoftClientId,
+                ValidateLifetime = true,
+                IssuerSigningKeys = config.SigningKeys
+            };
+
+            var principal = tokenHandler.ValidateToken(idToken, validationParams, out _);
+            var email = principal.FindFirst(ClaimTypes.Email)?.Value
+                     ?? principal.FindFirst("preferred_username")?.Value; // fallback
+            var name = principal.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new UnAuthorizedException("Invalid Microsoft Token: Email missing");
+            }
+
+            return new TokenResultDataDto
+            {
+                Email = email,
+                Name = name
+            };
+        }
 
 
     }
