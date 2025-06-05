@@ -27,7 +27,7 @@ export class AccountService {
   constructor(private http: HttpClient, private router: Router) { }
 
 
-  login(email: string, password: string): Observable<AuthResponse> {
+
   login(email: string, password: string): Observable<AuthResponse> {
     const body: Login = { email, password };
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body);
@@ -127,7 +127,7 @@ changePassword(passwords: any): Observable<any> {
       })
     );
   }
-}  
+  
 
     externalLogin(externalData:any): Observable<AuthResponse> {
     // This method is used to handle external login (e.g., Google, Facebook, etc.)
