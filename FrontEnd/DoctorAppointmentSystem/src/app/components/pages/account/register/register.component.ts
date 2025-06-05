@@ -11,7 +11,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { log } from 'console';
-import { log } from 'console';
 
 import {Register  } from "../../../../core/interfaces/register";
 @Component({
