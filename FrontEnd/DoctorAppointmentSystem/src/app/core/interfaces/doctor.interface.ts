@@ -21,6 +21,8 @@ interface Doctor {
   latitude: number;
   longitude: number;
   schedule: Schedule;
+  birthDate?: Date;
+  email?: string;
 }
 
 export type { Doctor };

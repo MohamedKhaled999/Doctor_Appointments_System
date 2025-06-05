@@ -34,6 +34,10 @@ import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.
 //     loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
 //   },
 //   {
+//     path: 'doctor-edit',
+//     loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
+//   },
+//   {
 //     path: 'register',
 //     component: RegisterComponent,
 //     title: 'Register Account'

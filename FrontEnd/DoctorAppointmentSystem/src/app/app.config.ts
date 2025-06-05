@@ -2,7 +2,7 @@
 
 import { provideAnimations } from '@angular/platform-browser/animations';
 
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
 
@@ -12,6 +12,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { headerInterceptor } from './core/interceptors/header.interceptor';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { routes } from './app.routes';
+import { MatNativeDateModule } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
@@ -20,7 +21,7 @@ export const appConfig: ApplicationConfig = {
 
   provideAnimations(),
   provideToastr({ timeOut: 1000, positionClass: 'toast-top-right' }),
-
+  importProvidersFrom(MatNativeDateModule)
 
   ]
 }

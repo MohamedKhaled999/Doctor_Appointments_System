@@ -14,12 +14,15 @@ export class DoctorService {
   getProfile(id: number): Observable<Doctor> {
     return this.http.get<Doctor>('');
   }
-  uploadPhoto(id: number, file: File): Observable<Doctor> {
+  uploadPhoto(file: File): Observable<Doctor> {
     const formData = new FormData();
     formData.append('photo', file);
     return this.http.post<Doctor>(``, formData);
   }
-  updateSchedule(id: number, schedule: Schedule): Observable<Doctor> {
+  updateSchedule(schedule: Schedule): Observable<Doctor> {
     return this.http.put<Doctor>('', schedule);
+  }
+  updateProfile(formData: FormData): Observable<Doctor> {
+    return this.http.put<Doctor>(``, formData);
   }
 }

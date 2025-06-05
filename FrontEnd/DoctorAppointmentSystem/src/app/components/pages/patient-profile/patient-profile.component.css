@@ -13,7 +13,7 @@
   border: 1px solid var(--secondary-color);
 }
 
-input[readonly='readonly'] {
+input[readonly] {
   background-color: #ddd;
 }
 

@@ -1,0 +1,40 @@
+<div class="dialog-content" id="reservationModal" tabindex="-1">
+  <h5 mat-dialog-title *ngIf="!data.id" class="modal-title fs-5" id="reservationModalLabel">Add Reservation</h5>
+  <h5 mat-dialog-title *ngIf="data.id" class="modal-title fs-5" id="reservationModalLabel">Edit Reservation</h5>
+  <div [formGroup]="reservationForm">
+    <div mat-dialog-content>
+      <mat-form-field class="form-field">
+        <mat-label>Start Time</mat-label>
+        <input matInput formControlName="startTime" type="time" />
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>End Time</mat-label>
+        <input matInput formControlName="endTime" type="time" />
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Max Reservations</mat-label>
+        <input matInput formControlName="maxAppointments" type="number" min="1" max="50" />
+      </mat-form-field>
+      <div *ngIf="
+          reservationForm.errors
+        " class="error">
+        <p *ngIf="reservationForm.errors['required']">All fields are required.</p>
+        <p *ngIf="reservationForm.errors['min'] || reservationForm.errors['max']">Max Reservations must be between 1 and
+          50.</p>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <button type="submit" mat-flat-button (click)="onSaveClick()" class="SP-bookBTN col-12 SP-CalSubmit w-100">
+        <span *ngIf="data.uuid">Edit Appointment</span>
+        <span *ngIf="!data.uuid">Add Appointment</span>
+      </button>
+      <button (click)="onCancelClick()" *ngIf="data.uuid" style="margin-left: 10px" mat-stroked-button
+        class="SP-deleteBTN col-12 btn btn-danger w-100">
+        Delete
+      </button>
+      <button style="margin-left: 10px" mat-stroked-button (click)="onNoClick()" class="SP-bookBTN col-12 w-100 btn">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
