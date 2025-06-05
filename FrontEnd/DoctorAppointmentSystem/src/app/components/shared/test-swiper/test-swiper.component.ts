@@ -18,7 +18,7 @@ export class TestSwiperComponent {
     this.toster.success('This is a success message!', 'Success');
   }
   showError() {
-    this.toster.error('This is an error message!', 'Error');
+    this.toster.error('This is an error message!', '');
   }
   showInfo() {
     this.toster.info('This is an info message!', 'Info');

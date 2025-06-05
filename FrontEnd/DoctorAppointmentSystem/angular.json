@@ -24,6 +24,7 @@
               {
                 "glob": "**/*",
                 "input": "public"
+                
               }
             ],
             "styles": [
@@ -33,6 +34,7 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css",
               "node_modules/ngx-toastr/toastr.css"
+              
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",

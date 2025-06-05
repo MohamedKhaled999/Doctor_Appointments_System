@@ -139,10 +139,15 @@
                         <div class="col-md-6 col-sm-12">
                             <label for="governorate" class="my-1">Governorate</label>
                             <span class="text-danger"> *</span>
-                            <select formControlName="governorate" id="governorate" class="form-select">
+                            <!-- <input type="text" formControlName="governorate" placeholder="Governorate" /> -->
+                           <!-- <select formControlName="governorate" id="governorate" class="form-select">
                                 <option value="">Select Governorate</option>
-                                <option *ngFor="let gov of governorates" [value]="gov">{{gov}}</option>
-                            </select>
+                                <option *ngFor="let item of governorates" [value]="item[1]">{{ item[0] }}</option>                   </select>
+                        
+                                 -->
+                                <select formControlName="governorate">
+                                    <option [value]="1">Cairo</option>
+                                    <option [value]="2">Giza</option>                         </select>
                             <div *ngIf="registerForm.get('governorate')?.errors && registerForm.get('governorate')?.touched"
                                 class="text-danger">
                                 <div *ngIf="registerForm.get('governorate')?.hasError('required')">Governorate is
@@ -150,16 +155,17 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <label for="birthDate" class="my-1">Birth Date</label>
+                            <label for="dateOfBirth" class="my-1">Birth Date</label>
                             <span class="text-danger"> *</span>
-                            <input formControlName="birthDate" id="birthDate" class="login-form-input rounded-1" type="date" />
-                        
-                            <div *ngIf="registerForm.get('birthDate')?.errors && registerForm.get('birthDate')?.touched" class="text-danger">
-                                <div *ngIf="registerForm.get('birthDate')?.hasError('required')">
+
+                            <input formControlName="dateOfBirth" type="date"  id="dateOfBirth" class="login-form-input rounded-1" type="date" />
+
+                            <div *ngIf="registerForm.get('dateOfBirth')?.errors && registerForm.get('dateOfBirth')?.touched" class="text-danger">
+                                <div *ngIf="registerForm.get('dateOfBirth')?.hasError('required')">
                                     Birth date is required
                                 </div>
-                                <div *ngIf="registerForm.get('birthDate')?.hasError('validDate')">
-                                    {{ registerForm.get('birthDate')?.errors?.['validDate'] }}
+                                <div *ngIf="registerForm.get('dateOfBirth')?.hasError('validDate')">
+                                    {{ registerForm.get('dateOfBirth')?.errors?.['validDate'] }}
                                 </div>
                             </div>
                         </div>
@@ -169,11 +175,9 @@
 
                 <div class="d-flex justify-content-between align-items-center">
                     <button type="button" (click)="prevStep()" class="btn login-submit w-25">Back</button>
-                    <button type="submit" class="btn register-submit" [disabled]="registerForm.invalid || isLoading" appRecaptcha 
-
-                  
-                        [siteKey]="siteKey"
-                        (resolved)="handleRecaptchaResponse($event)">
+                    <button type="submit" class="btn register-submit"
+                    
+                        >
                         <span *ngIf="!isLoading">Register</span>
                         <span *ngIf="isLoading">Registering...</span>   </button>
                 </div>

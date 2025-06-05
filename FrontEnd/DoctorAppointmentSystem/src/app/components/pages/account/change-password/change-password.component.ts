@@ -28,6 +28,7 @@ export class ChangePasswordComponent {
     private router: Router
   ) {
     this.changePasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]], 
       oldPassword: ['', Validators.required],
       newPassword: ['', [
         Validators.required,
@@ -51,7 +52,13 @@ export class ChangePasswordComponent {
     if (this.changePasswordForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
       
-      this.accountService.changePassword(this.changePasswordForm.value).subscribe({
+      const formData = {
+        email: this.changePasswordForm.value.email,
+        oldPassword: this.changePasswordForm.value.oldPassword,
+        newPassword: this.changePasswordForm.value.newPassword
+      };
+
+      this.accountService.changePassword(formData).subscribe({
         next: () => {
           Swal.fire({
             toast: true,
@@ -65,8 +72,16 @@ export class ChangePasswordComponent {
           this.changePasswordForm.reset();
           this.isSubmitting = false;
         },
-        error: (err: { error?: string }) => {
+        error: (err) => {
           this.isSubmitting = false;
+          let errorMessage = 'Failed to change password';
+          
+          if (err.error?.message) {
+            errorMessage = err.error.message;
+          } else if (err.error) {
+            errorMessage = err.error;
+          }
+
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -74,7 +89,7 @@ export class ChangePasswordComponent {
             timer: 3000,
             timerProgressBar: true,
             icon: 'error',
-            title: 'Failed to change password'
+            title: errorMessage
           });
         }
       });

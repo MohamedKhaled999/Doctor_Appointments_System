@@ -22,6 +22,7 @@ export interface DoctorRegisterVM {
     Female = 1
   }
   
+  
   export enum Governorate {
     Cairo = 0,
     Alexandria = 1,

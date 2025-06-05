@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../../../../core/services/account.service';
-import { ResetPasswordVM } from '../../../../core/models/reset-password.model';
+import { ResetPassword } from '../../../../core/interfaces/reset-password';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -22,6 +22,7 @@ export class ResetPasswordComponent {
   };
   email: string = '';
   token: string = '';
+  isSubmitting = false;
 
   constructor(
     private fb: FormBuilder,
@@ -39,14 +40,30 @@ export class ResetPasswordComponent {
     }, { validators: this.passwordMatchValidator });
 
     this.route.queryParams.subscribe(params => {
-      this.email = params['email'];
-      this.token = params['token'];
+      this.email = params['email'] || '';
+      this.token = params['token'] || '';
+      
+      if (!this.email || !this.token) {
+        Swal.fire({
+          title: 'Invalid Link',
+          text: 'The reset password link is invalid or expired',
+          icon: 'error'
+        }).then(() => {
+          this.router.navigate(['/forgot-password']);
+        });
+      }
     });
   }
 
   passwordMatchValidator(form: FormGroup) {
-    return form.get('newPassword')?.value === form.get('confirmPassword')?.value 
-      ? null : { mismatch: true };
+    const newPassword = form.get('newPassword')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    
+    if (newPassword && confirmPassword && newPassword !== confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ mismatch: true });
+      return { mismatch: true };
+    }
+    return null;
   }
 
   togglePasswordVisibility(field: 'new' | 'confirm') {
@@ -54,11 +71,13 @@ export class ResetPasswordComponent {
   }
 
   onSubmit() {
-    if (this.resetForm.valid) {
-      const resetData: ResetPasswordVM = {
-        ...this.resetForm.value,
+    if (this.resetForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
+      
+      const resetData: ResetPassword = {
         email: this.email,
-        token: this.token
+        token: this.token,
+        newPassword: this.resetForm.value.newPassword
       };
 
       this.accountService.resetPassword(resetData).subscribe({
@@ -72,10 +91,11 @@ export class ResetPasswordComponent {
             this.router.navigate(['/login']);
           });
         },
-        error: (err: { error?: string }) => {
+        error: (err) => {
+          this.isSubmitting = false;
           Swal.fire({
             title: 'Error!',
-            text:  'Failed to reset password',
+            text: err.message || 'Failed to reset password',
             icon: 'error'
           });
         }
