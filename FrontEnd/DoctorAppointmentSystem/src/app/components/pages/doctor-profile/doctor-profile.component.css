@@ -1,0 +1,243 @@
+:root {
+  --primary-color: #004085;
+  --primary-color-rgb: 0, 64, 133;
+  --secondary-color: #B3E5FC;
+  --secondary-color-rgb: 179, 229, 252;
+  --accent-color: #F8F9FA;
+  --accent-color-rgb: 248, 249, 250;
+}
+
+.container-fluid {
+  padding-top: 80px;
+
+  .doctor-photo {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+  }
+
+  .upload-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 123, 255, 0.8);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .nav-tabs .nav-link {
+    cursor: pointer;
+  }
+
+  .nav-tabs .nav-link.active {
+    color: #0d6efd;
+    border-bottom: 2px solid #0d6efd;
+  }
+
+  .appointment-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    padding: 0.5rem;
+    margin: 0.5rem;
+  }
+
+  .doctor-info h5 {
+    margin: 0;
+  }
+
+  .doctor-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+
+  #mapContainer {
+    width: 100%;
+    height: 400px;
+  }
+
+  .modal-body {
+    padding: 0 !important;
+  }
+}
+
+html {
+  scrollbar-color: var(--primary-color) var(--accent-color);
+}
+
+.SP-upload {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  bottom: 0;
+  right: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.SP-upload:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.8);
+}
+
+
+.SP-upload i {
+  color: var(--accent-color);
+  margin-top: 10px;
+}
+
+.SP-photo {
+  object-fit: cover;
+  object-position: center;
+  width: 150px;
+  height: 150px;
+}
+
+
+.SP-badge {
+  background-color: var(--primary-color);
+  color: var(--accent-color);
+}
+
+.SP-badge-scroll {
+  max-height: 80px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--accent-color);
+}
+
+.SP-icon {
+  background-color: rgba(var(--primary-color-rgb), 0.3);
+  color: var(--primary-color);
+  border-radius: 20px;
+  padding: 7px;
+}
+
+.SP-callBTN {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.SP-callBTN:hover {
+  background-color: var(--primary-color);
+  color: var(--accent-color);
+}
+
+
+
+.SP-active {
+  background-color: var(--primary-color);
+  color: var(--accent-color)
+}
+
+.SP-bookBTN {
+  background-color: var(--primary-color);
+  color: var(--accent-color);
+  border-color: var(--primary-color);
+  font-weight: bold;
+}
+
+.SP-bookBTN:hover {
+  color: var(--primary-color);
+  background-color: var(--accent-color);
+  border-color: var(--primary-color);
+}
+
+.SP-deleteBTN button {
+  background-color: #dc3545;
+  color: var(--accent-color);
+  border-color: #dc3545;
+  font-weight: bold;
+}
+
+.SP-deleteBTN button:hover {
+  color: #dc3545;
+  background-color: var(--accent-color);
+  border-color: #dc3545;
+}
+
+.SP-bookHeader {
+  background-color: var(--primary-color);
+  color: var(--accent-color);
+  font-weight: bold;
+}
+
+.SP-primaryText {
+  color: var(--primary-color);
+}
+
+.SP-bookCards * {
+  font-size: 0.9rem;
+}
+
+/* Swiper Booking Cards CSS */
+
+.swiper-slide {
+  display: flex;
+}
+
+.swiper-scrollbar {
+  background: var(--secondary-color);
+  /* Light grey background */
+  border-radius: 10px;
+}
+
+.swiper-scrollbar-drag {
+  background: var(--primary-color);
+  border-radius: 10px;
+}
+
+/* Calender CSS */
+
+.ib-hamburger,
+.left-divider-line,
+.ib-arrow-down-full-medium {
+  display: none !important;
+}
+
+#SP-Calendar {
+  border-color: var(--secondary-color);
+}
+
+#SP-Calendar .year-dropdown-button {
+  pointer-events: none;
+  cursor: default;
+  background-color: var(--accent-color);
+  padding: 5px 10px
+}
+
+#SP-Calendar .title-bar {
+  background-color: var(--primary-color);
+}
+
+#SP-Calendar .title-container {
+  background-color: var(--secondary-color);
+  color: var(--primary-color)
+}
+
+#SP-Calendar .header-days>* {
+  background-color: var(--secondary-color);
+  color: var(--primary-color)
+}
+
+#SP-Calendar .days>* {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+}
+
+#SP-Calendar .days>*:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+#SP-Calendar .cell>span.today {
+  background-color: var(--primary-color) !important;
+  color: var(--accent-color) !important;
+}
+
+#SP-Calendar .event {
+  cursor: pointer;
+}

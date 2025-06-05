@@ -1,28 +1,33 @@
 import { isPlatformBrowser } from '@angular/common';
-import { inject, PLATFORM_ID } from '@angular/core';
+import { afterNextRender, afterRender, inject, PLATFORM_ID } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  //inject router
   const router = inject(Router);
-   const _PLATFORM_ID= inject(PLATFORM_ID);
+  const platformId = inject(PLATFORM_ID);
 
-
-  // Check if the user is logged in by verifying the presence of a token in localStorage
-  const token = localStorage.getItem('userToken');
-
+  // Check platform first
+  if (isPlatformBrowser(platformId)) {
+    const token = localStorage.getItem('userToken');
+   afterNextRender(()=>{
+  console.log("auth guard is running");
+  console.log("Token:", token);
   
- if (isPlatformBrowser(_PLATFORM_ID)) {
-          if (localStorage.getItem('userToken')) {
-            return true;
-          }
- }else{
-            // If the user is not logged in, redirect to the login page
-            // and return false to prevent access to the requested route
-  router.navigate(['/login']);
-           return false;
- }
+})
+afterRender(()=>{
+  console.log("auth guard is running after render");
+  console.log("Token:", token);
 
+})
 
-  return true;
+    if (token) {
+      return true;
+    } else {
+      router.navigate(['/login']);
+      return false;
+    }
+  }
+
+  // If not running in browser, block access
+  return false;
 };

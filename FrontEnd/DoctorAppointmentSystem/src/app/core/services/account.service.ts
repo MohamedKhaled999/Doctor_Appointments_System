@@ -28,7 +28,9 @@ export class AccountService {
 
 
   login(email: string, password: string): Observable<AuthResponse> {
+  login(email: string, password: string): Observable<AuthResponse> {
     const body: Login = { email, password };
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body);
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body);
   }
 
@@ -126,3 +128,12 @@ changePassword(passwords: any): Observable<any> {
     );
   }
 }  
+
+    externalLogin(externalData:any): Observable<AuthResponse> {
+    // This method is used to handle external login (e.g., Google, Facebook, etc.)
+    // It sends the external login data to the backend for authentication.
+    return this.http.post<AuthResponse>(`${this.apiUrl}/external-login`, externalData);
+  }
+}
+
+
