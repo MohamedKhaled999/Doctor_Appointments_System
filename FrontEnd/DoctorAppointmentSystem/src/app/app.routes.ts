@@ -144,20 +144,16 @@ export const routes: Routes = [
     path: 'reset-password', 
     component: ResetPasswordComponent 
   },
+  { 
+    path: 'confirm-success',         //token ,email 
+    component: ConfirmEmailComponent // This can be a component that shows a success message after email confirmation
+  },
   {
     path: 'change-password',
     component: ChangePasswordComponent,
     canActivate: [authGuard],
-  },
-  { 
-    path: 'doctor-register', 
-    component: DoctorRegisterComponent 
-  },
-  { 
-    path: 'ConfirmEmail', 
-    component: ConfirmEmailComponent
-
   }
+  // add doctor register route
 ]
   },
   
