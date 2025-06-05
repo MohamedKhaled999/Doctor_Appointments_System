@@ -4,5 +4,6 @@
     {
         void SetItem(string key, string value);
         string? GetItem(string key);
+        List<string>? GetKeys(string prefix);
     }
 }

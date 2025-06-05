@@ -4,6 +4,6 @@
     {
         public List<NotificationMessage>? GetNotifications(int appUserId);
         Task SendNotification(int appUserId, NotificationMessage message);
-        void MarkAsRead(int appUserId, int notificationId);
+        void MarkAsRead(int appUserId, long notificationId);
     }
 }

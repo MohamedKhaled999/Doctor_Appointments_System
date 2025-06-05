@@ -18,45 +18,38 @@ namespace Services.Notifications
 
         public List<NotificationMessage>? GetNotifications(int appUserId)
         {
-            var notifications = _redisRepo.GetItem(appUserId.ToString());
-            if (notifications == null)
+            var userKeys = _redisRepo.GetKeys($"{appUserId}|");
+            if (userKeys == null)
                 return null;
-            return JsonSerializer.Deserialize<List<NotificationMessage>>(notifications);
+            var notifications = new List<NotificationMessage>();
+            foreach (var key in userKeys)
+            {
+                var notification = _redisRepo.GetItem(key);
+                notifications.Add(JsonSerializer.Deserialize<NotificationMessage>(notification));
+            }
+            return notifications.OrderBy(n => n.Id).ToList();
         }
 
         public async Task SendNotification(int appUserId, NotificationMessage message)
         {
-            string serializedMessages = string.Empty;
-            var existingMessages = _redisRepo.GetItem(appUserId.ToString());
-            if (existingMessages != null)
-            {
-                var messages = JsonSerializer.Deserialize<List<NotificationMessage>>(existingMessages);
-                message.Id = messages.Last().Id + 1;
-                messages.Add(message);
-                serializedMessages = JsonSerializer.Serialize(messages);
-            }
-            else
-            {
+            var userKeys = _redisRepo.GetKeys($"{appUserId}|");
+            if (userKeys.Count == 0)
                 message.Id = 1;
-                serializedMessages = JsonSerializer.Serialize(new List<NotificationMessage>() { message });
-            }
-
+            else
+                message.Id = int.Parse(userKeys.OrderBy(k => k).Last().Split("|")[1]) + 1;
             await _notificationSender.SendNotificationAsync(appUserId, JsonSerializer.Serialize(message));
-            _redisRepo.SetItem(appUserId.ToString(), serializedMessages);
+            _redisRepo.SetItem($"{appUserId}|{message.Id}", JsonSerializer.Serialize(message));
         }
 
-        public void MarkAsRead(int appUserId, int notificationId)
+        public void MarkAsRead(int appUserId, long notificationId)
         {
-            var existingMessages = _redisRepo.GetItem(appUserId.ToString());
-            if (existingMessages == null)
+            var message = _redisRepo.GetItem($"{appUserId}|{notificationId}");
+            if (message == null)
                 throw new ValidationException(["Message Unavailable"]);
 
-            var messages = JsonSerializer.Deserialize<List<NotificationMessage>>(existingMessages);
-            if (!messages.Where(m => m.Id == notificationId).Any())
-                throw new ValidationException(["Message Unavailable"]);
-
-            messages.Where(m => m.Id == notificationId).First().IsRead = true;
-            _redisRepo.SetItem(appUserId.ToString(), JsonSerializer.Serialize(messages));
+            var deserializedMessage = JsonSerializer.Deserialize<NotificationMessage>(message);
+            deserializedMessage.IsRead = true;
+            _redisRepo.SetItem($"{appUserId}|{notificationId}", JsonSerializer.Serialize(deserializedMessage));
         }
     }
 }
