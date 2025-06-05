@@ -1,3 +1,4 @@
+import { ExtrenalLoginComponent } from './components/shared/extrenal-login/extrenal-login.component';
 import { Routes } from '@angular/router';
 import { TestSwiperComponent } from './components/shared/test-swiper/test-swiper.component';
 import { RegisterComponent } from './components/pages/account/register/register.component';
@@ -174,6 +175,15 @@ export const routes: Routes = [
       component:AdminDashboardComponent
     }
   ]
+},
+{
+  path: 'test',
+  component: TestSwiperComponent,
+}
+,
+{
+  path: 'extrenal-login',
+  component: ExtrenalLoginComponent,
 }
 ,
 //NotFound

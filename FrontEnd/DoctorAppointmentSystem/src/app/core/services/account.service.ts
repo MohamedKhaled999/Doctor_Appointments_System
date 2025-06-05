@@ -51,6 +51,12 @@ export class AccountService {
       })
     );
   }
+
+    externalLogin(externalData:any): Observable<AuthResponse> {
+    // This method is used to handle external login (e.g., Google, Facebook, etc.)
+    // It sends the external login data to the backend for authentication.
+    return this.http.post<AuthResponse>(`${this.apiUrl}/external-login`, externalData);
+  }
 }
 
 

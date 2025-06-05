@@ -10,7 +10,10 @@ export class DataManagementService {
   // Signal to hold user data, initialized with an empty object lke email , role, and displayName 
   // This allows components to reactively update when UserData changes 
   // please continue with the same pattern 
-  public UserData = signal<UserManagementData>({} as UserManagementData);
+  // public UserData = signal<UserManagementData>({} as UserManagementData);
+  public UserRole = signal<string>("");
+  public UserName = signal<string>("");
+
 
   // you can save what you want in here in  signal
 
