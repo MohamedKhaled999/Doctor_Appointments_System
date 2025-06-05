@@ -1,6 +1,6 @@
 <div class="dialog-content" id="reservationModal" tabindex="-1">
-  <h5 mat-dialog-title *ngIf="!data.id" class="modal-title fs-5" id="reservationModalLabel">Add Reservation</h5>
-  <h5 mat-dialog-title *ngIf="data.id" class="modal-title fs-5" id="reservationModalLabel">Edit Reservation</h5>
+  <h5 mat-dialog-title *ngIf="!data.id" class="fs-5" id="reservationModalLabel">Add Reservation</h5>
+  <h5 mat-dialog-title *ngIf="data.id" class="fs-5" id="reservationModalLabel">Edit Reservation</h5>
   <div [formGroup]="reservationForm">
     <div mat-dialog-content>
       <mat-form-field class="form-field">

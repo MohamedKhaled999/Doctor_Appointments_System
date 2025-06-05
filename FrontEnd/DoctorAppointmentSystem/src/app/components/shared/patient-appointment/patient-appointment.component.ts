@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Appointment } from '../../../core/interfaces/appoinments.interface';
 import Swal from 'sweetalert2';
 import { PatientService } from '../../../core/services/patient.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ReviewDialogComponent } from '../review-dialog/review-dialog.component';
 
 @Component({
   selector: 'app-patient-appointment',
@@ -21,11 +23,10 @@ export class PatientAppointmentComponent {
   /**
    *
    */
-  constructor(private patientService: PatientService) {
+  constructor(private patientService: PatientService, private matDialog: MatDialog) {
+    console.log('PatientAppointmentComponent initialized with appointment:', this.appointment);
   }
   get isPast() {
-    console.log('Checking if appointment is past:', this.appointment);
-
     return this.appointment ? new Date(this.appointment.endTime) < new Date() : false;
   }
   onCancel() {
@@ -47,7 +48,23 @@ export class PatientAppointmentComponent {
     });
   }
   onAddReview(appointment: Appointment | undefined) {
-    this.addReview.emit(appointment);
+    this.openDialog();
+  }
+  openDialog() {
+    const dialogRef = this.matDialog.open(ReviewDialogComponent, {
+      width: '400px',
+      height: '400px',
+      panelClass: 'dialog-container',
+      data: {
+        appId: this.appointment?.id,
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Dialog closed with result:', result);
+        
+      }
+    });
   }
   onFileSelected(event: Event) {
     this.fileErrors = null;

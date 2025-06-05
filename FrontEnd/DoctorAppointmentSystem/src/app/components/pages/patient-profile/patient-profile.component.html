@@ -105,34 +105,3 @@
         </swiper-container>
     </div>
 </div>
-
-<div class="modal fade" id="SP-RevForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Rating Form</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="post" (ngSubmit)="onSubmit()" [formGroup]="reviewForm">
-                <div class="modal-body">
-                    <input type="hidden" class="SP-appID" name="AppID" />
-                    <div class="mb-3 SP-review">
-                        <label for="review" class="form-label">Your thoughts on the appointment with ?</label>
-                        <textarea class="form-control SP-reviewText" id="review" name="review" required
-                            rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="rate" class="form-label">Rating</label>
-                        <input class="form-control" id="rate" name="rate" required type="number" min="1" max="5"
-                            value="5">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn SP-bookBTN col-12 SP-CalSubmit">Add</button>
-                    <button type="button" class="btn SP-bookBTN col-12" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
