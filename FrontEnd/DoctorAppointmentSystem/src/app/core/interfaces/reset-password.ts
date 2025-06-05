@@ -1,5 +1,11 @@
+// export interface ResetPassword {
+//     newPassword: string;
+//     email?: string;
+//     token?: string;
+//   }
 export interface ResetPassword {
-    newPassword: string;
-    email?: string;
-    token?: string;
-  }
+  email: string;
+  token: string;
+  newPassword: string;
+  confirmPassword?: string; 
+}

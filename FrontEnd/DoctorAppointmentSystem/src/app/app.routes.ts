@@ -1,3 +1,4 @@
+import { ExtrenalLoginComponent } from './components/shared/extrenal-login/extrenal-login.component';
 import { Routes } from '@angular/router';
 import { TestSwiperComponent } from './components/shared/test-swiper/test-swiper.component';
 import { RegisterComponent } from './components/pages/account/register/register.component';
@@ -147,19 +148,16 @@ export const routes: Routes = [
     path: 'reset-password', 
     component: ResetPasswordComponent 
   },
+  { 
+    path: 'confirm-success',         //token ,email 
+    component: ConfirmEmailComponent // This can be a component that shows a success message after email confirmation
+  },
   {
     path: 'change-password',
     component: ChangePasswordComponent,
     canActivate: [authGuard],
-  },
-  { 
-    path: 'doctor-register', 
-    component: DoctorRegisterComponent 
-  },
-  { 
-    path: 'ConfirmEmail', 
-    component: ConfirmEmailComponent
   }
+  // add doctor register route
 ]
   },
   
@@ -178,6 +176,15 @@ export const routes: Routes = [
       component:AdminDashboardComponent
     }
   ]
+},
+{
+  path: 'test',
+  component: TestSwiperComponent,
+}
+,
+{
+  path: 'extrenal-login',
+  component: ExtrenalLoginComponent,
 }
 ,
 //NotFound

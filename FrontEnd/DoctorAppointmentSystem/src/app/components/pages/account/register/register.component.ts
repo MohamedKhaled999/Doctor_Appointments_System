@@ -12,7 +12,7 @@ import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { log } from 'console';
 
-
+import {Register  } from "../../../../core/interfaces/register";
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -35,10 +35,10 @@ export class RegisterComponent implements OnInit {
   showConfirmPassword = false;
   isLoading = false;
   validationErrors: string[] = [];
-  governorates = Object.values(Governorate);
+  governorates = Governorate;
   siteKey = environment.recaptcha.siteKey;
 
-  recaptchaLanguage = 'en'; 
+  recaptchaLanguage = 'en';
 
   constructor(
     private fb: FormBuilder,
@@ -82,7 +82,7 @@ export class RegisterComponent implements OnInit {
           ]
         ]
         
-      ,
+        ,
         phoneNumber: [
           '',
           [
@@ -91,12 +91,12 @@ export class RegisterComponent implements OnInit {
           ]
         ],
         governorate: ['', Validators.required],
-        birthDate: ['', [Validators.required, ValidDate()]]
+        dateOfBirth: ['', [Validators.required]]
         // recaptcha: [null, Validators.required],
       },
       { validators: this.passwordMatchValidator }
     );
-  } 
+  }
   ngOnInit(): void {
     this.loadRecaptchaScript();
   }
@@ -143,7 +143,7 @@ export class RegisterComponent implements OnInit {
   onSubmit(): void {
     console.log("onSubmit called");
     
-    console.log("Register form submitted",this.registerForm.invalid);
+    console.log("Register form submitted", this.registerForm.invalid);
     
     // Check if the form is valid before proceeding
 
@@ -160,21 +160,33 @@ export class RegisterComponent implements OnInit {
     //   password: formValue.password,
 
     //   phoneNumber: formValue.phoneNumber,
-    //   governorate: formValue.governorate,
+    //   governorate: formValue.        ,
     //   birthDate: formValue.birthDate,
 
     // };
-    const registerData = {
+    const registerRequest: Register = {
       firstName: formValue.firstName,
       lastName: formValue.lastName,
       email: formValue.email,
       password: formValue.password,
-      confirmPassword: formValue.confirmPassword,
       phoneNumber: formValue.phoneNumber,
-      governorate: formValue.governorate,
-      birthDate: formValue.birthDate,
-      // recaptchaToken: formValue.recaptcha,
+      governorate: Number(formValue.governorate),
+
+      birthDate: new Date(formValue.dateOfBirth).toISOString().split('T')[0]// "yyyy-MM-dd"
     };
+    
+    
+    // const registerData = {
+    //   firstName: formValue.firstName,
+    //   lastName: formValue.lastName,
+    //   email: formValue.email,
+    //   password: formValue.password,
+    //   confirmPassword: formValue.confirmPassword,
+    //   phoneNumber: formValue.phoneNumber,
+    //   governorate: formValue.governorate,
+    //   birthDate: formValue.birthDate,
+    //   // recaptchaToken: formValue.recaptcha,
+    // };
     /*
       firstName: string;
     lastName: string;
@@ -185,27 +197,25 @@ export class RegisterComponent implements OnInit {
     address?: string; // Optional field for address
     dateOfBirth?: Date; 
     */
-
-    this.accountService.register(registerData).subscribe({
+    console.log('Payload to send:', registerRequest);
+    this.accountService.register(registerRequest).subscribe({
       next: () => {
-        console.log('Registration successful');
-        this.router.navigate(['/NeedToConfirm']);
-        console.log('Registration successful');
+        console.log('Registration successful from component');
       },
-      error: (error:any) => {
-        console.log('Registration error:', error);
-        
+      error: (error: any) => {
         this.isLoading = false;
-        if (Array.isArray(error)) {
-          this.validationErrors = error;
+        if (Array.isArray(error.error)) {
+          this.validationErrors = error.error;
         } else {
           this.validationErrors = [
-            error || 'Registration failed. Please try again',
+            error.error || 'Registration failed. Please try again',
           ];
         }
       },
     });
+    
   }
+    
 
   togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
     if (field === 'password') {

@@ -1,49 +1,65 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { AccountService } from '../../../../core/services/account.service';
+import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-confirm-email',
+  imports:[CommonModule],
   templateUrl: './confirm-email.component.html',
   styleUrls: ['./confirm-email.component.css']
 })
 export class ConfirmEmailComponent implements OnInit, OnDestroy {
-  duration = 3;
+  duration = 5; 
   counter = this.duration;
   private countdownInterval: any;
+  isConfirmed = false;
+  isLoading = true;
 
-  constructor(private router: Router,private activatedRoute: ActivatedRoute ) {}
+  constructor(
+    public router: Router,
+    private route: ActivatedRoute,
+    private accountService: AccountService
+  ) {}
 
   ngOnInit(): void {
-    this .activatedRoute.params.subscribe(params => {
+    this.route.queryParams.subscribe(params => {
       const token = params['token'];
       const email = params['email'];
 
-
-      if (token) {
-        // Here you would typically call a service to confirm the email with the token
-        console.log('Email confirmation token:', token);
-        // Simulate email confirmation success
-        // this.accountService.confirmEmail(token).subscribe({
-        //   next: () => {
-        //     console.log('Email confirmed successfully');
-        //   },
-        //   error: (error) => {
-        //     console.error('Email confirmation failed:', error);
-        //   }
-        // });
+      if (token && email) {
+        this.confirmEmail(email, token);
       } else {
-        console.error('No token provided for email confirmation');
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Error',
+          text: 'Invalid confirmation link',
+          icon: 'error'
+        }).then(() => {
+          this.router.navigate(['/register']);
+        });
       }
     });
-    this.startCountdown()
   }
-  
 
-  ngOnDestroy(): void {
-
-    if (this.countdownInterval) {
-      clearInterval(this.countdownInterval);
-    }
+  confirmEmail(email: string, token: string): void {
+    this.accountService.confirmEmail({ email, token }).subscribe({
+      next: () => {
+        this.isConfirmed = true;
+        this.isLoading = false;
+        this.startCountdown();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Error',
+          text: err.message || 'Email confirmation failed',
+          icon: 'error'
+        }).then(() => {
+          this.router.navigate(['/register']);
+        });
+      }
+    });
   }
 
   startCountdown(): void {
@@ -52,12 +68,18 @@ export class ConfirmEmailComponent implements OnInit, OnDestroy {
         this.counter--;
       } else {
         clearInterval(this.countdownInterval);
-        this.router.navigate(['/dashboard']); 
+        this.router.navigate(['/login']); 
       }
     }, 1000);
   }
 
   getProgressWidth(): string {
     return `${(this.counter / this.duration) * 100}%`;
+  }
+
+  ngOnDestroy(): void {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
   }
 }
