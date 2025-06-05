@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Contracts;
 using Domain.Exceptions;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +21,7 @@ namespace Services
         UserManager<AppUser> userManager,
         IPatientService patientService,
         IDoctorOrchestrator doctorOrchestrator,
+        IUnitOfWork unitOfWork,
         IOptions<JWTOptions> options
         , IConfiguration configuration,
         IMapper mapper,
@@ -83,18 +85,41 @@ namespace Services
         /// <exception cref="ValidationException"></exception>
         public async Task<UserResultDto> RegisterAsync(RegisterDto registerDto)
         {
+            Shared.Transaction_Pattern.Transaction transaction = 
+                new Shared.Transaction_Pattern.Transaction();
+            
             var user = new AppUser
             {
                 Email = registerDto.Email,
                 UserName = $"{registerDto.FirstName}DocNet{registerDto.LastName}DocNet{registerDto.Email}",
             };
-
-            var result = await userManager.CreateAsync(user, registerDto.Password);
-            if (!result.Succeeded)
+            transaction.Execute( () =>
             {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                throw new ValidationException(errors);
-            }
+                var result = userManager.CreateAsync(user, registerDto.Password).Result;
+                if (!result.Succeeded)
+                {
+                    var errors = result.Errors.Select(e => e.Description).ToList();
+                    throw new ValidationException(errors);
+                }
+            },  () =>
+            {
+                var todelete = userManager.FindByEmailAsync(user.Email).Result;
+                if (todelete != null)
+                {
+                    var deleteResult = userManager.DeleteAsync(todelete).Result;
+                    if (!deleteResult.Succeeded)
+                    {
+                        var errors = deleteResult.Errors.Select(e => e.Description).ToList();
+                        throw new ValidationException(errors);
+                    }
+                }
+            });
+            //var result = await userManager.CreateAsync(user, registerDto.Password);
+            //if (!result.Succeeded)
+            //{
+            //    var errors = result.Errors.Select(e => e.Description).ToList();
+            //    throw new ValidationException(errors);
+            //}
 
 
 
@@ -102,14 +127,42 @@ namespace Services
             registerDto.AppUserID = user.Id;
             if (registerDto is DoctorRegisterDto doctor)
             {
-                await doctorOrchestrator.RegisterDoctor(doctor);
-                await userManager.AddToRoleAsync(user, "doctor");
+                transaction.Execute(async () =>
+                {
+                    await doctorOrchestrator.RegisterDoctor(doctor);
+                    await userManager.AddToRoleAsync(user, "doctor");
+                }, async () =>
+                {
+                    SpecificationsBase<Doctor> specifications = new SpecificationsBase<Doctor>(d => d.AppUserID == user.Id);
+                    var todelete = await unitOfWork.GetRepository<Doctor,int>().GetAllAsync(specifications);
+                    if (todelete != null)
+                    {
+                        unitOfWork.GetRepository<Doctor, int>().Delete(todelete[0]);
+                    }
+                });
+                //await doctorOrchestrator.RegisterDoctor(doctor);
+                //await userManager.AddToRoleAsync(user, "doctor");
             }
             else
             {
-                await patientService.AddAsync(registerDto);
-                await userManager.AddToRoleAsync(user, "patient");
+                transaction.Execute(async () =>
+                {
+                    await patientService.AddAsync(registerDto);
+                    await userManager.AddToRoleAsync(user, "patient");
+                }, async () =>
+                {
+                    SpecificationsBase<Patient> specifications = new SpecificationsBase<Patient>(p => p.AppUserID == user.Id);
+                    var todelete = await unitOfWork.GetRepository<Patient, int>().GetAllAsync(specifications);
+                    if (todelete != null)
+                    {
+                        unitOfWork.GetRepository<Patient, int>().Delete(todelete[0]);
+                    }
+                });
+                //await patientService.AddAsync(registerDto);
+                //await userManager.AddToRoleAsync(user, "patient");
             }
+            // check if u want to continue
+            transaction.Complete();
             await SendEmailConfirmationAsync(registerDto, user);
             var namesArr = user.UserName.Split("DocNet");
 

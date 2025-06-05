@@ -81,6 +81,7 @@ namespace Services
             new AuthenticationService(userManager,
                                       _patientService.Value,
                                       _doctorOrchestrator.Value,
+                                        unitOfWork,
                                       options,
                                       configuration,
                                       mapper,
