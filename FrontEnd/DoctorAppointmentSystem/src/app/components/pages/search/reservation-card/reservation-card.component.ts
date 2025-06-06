@@ -7,7 +7,6 @@ import { reservation } from './reservation';
   selector: 'app-reservation-card',
   imports: [
     CommonModule,
-    
   ],
   templateUrl: './reservation-card.component.html',
   styleUrl: './reservation-card.component.css'

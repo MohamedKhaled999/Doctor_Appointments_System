@@ -19,11 +19,9 @@ import { Inject, PLATFORM_ID } from '@angular/core';
 
 export class DoctorListComponent {
   public isBrowser: boolean;
-
   constructor(@Inject(PLATFORM_ID) private platformId: any) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
-
   ngOnInit() {
     if(this.isBrowser) {
       // Load AOS only in the browser
@@ -33,11 +31,17 @@ export class DoctorListComponent {
         offset: 75,
         once: false
       });
+      // console.log(`Doctor's Length: ${this.doctors.length}`)
     }
   }
-
-  PageSize: number = 6;
+  PageSize: number = 3;
   PageIndex: number = 1;
+
+  get pagedDoctors() {
+    const start = (this.PageIndex - 1) * this.PageSize;
+    return this.doctors.slice(start, start + this.PageSize);
+  }
+  
   doctors: Doctor[] = [
     {
       id: 1,
@@ -126,8 +130,8 @@ export class DoctorListComponent {
       ]
     },
     {
-      id: 2,
-      name: 'Jane Smith',
+      id: 3,
+      name: 'Jane Smithe',
       profilePictureUrl: 'femaleDoc.jpg',
       title: 'Dermatologist',
       qualifications: ['MBBS', 'MD', 'FAAD'],
@@ -160,8 +164,8 @@ export class DoctorListComponent {
       ]
     },
     {
-      id: 2,
-      name: 'Jane Smith',
+      id: 4,
+      name: 'Jane Smitheeee',
       profilePictureUrl: 'femaleDoc.jpg',
       title: 'Dermatologist',
       qualifications: ['MBBS', 'MD', 'FAAD'],
@@ -194,8 +198,8 @@ export class DoctorListComponent {
       ]
     },
     {
-      id: 2,
-      name: 'Jane Smith',
+      id: 5,
+      name: 'Jane Smitheeeeeeeee',
       profilePictureUrl: 'femaleDoc.jpg',
       title: 'Dermatologist',
       qualifications: ['MBBS', 'MD', 'FAAD'],
