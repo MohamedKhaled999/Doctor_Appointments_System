@@ -11,6 +11,6 @@ namespace Services.Abstraction
         int GetCount();
         Task AddAsync(RegisterDto registerDto);
         Task UpdateAsync(PatientDTO patientDto, int currentID);
-        Task DeleteAsync(int id, int currentID);
+        Task DeleteAsync(int appUserId);
     }
 }
