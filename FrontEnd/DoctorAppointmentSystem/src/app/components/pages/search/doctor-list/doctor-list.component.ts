@@ -5,11 +5,14 @@ import { NgModule } from '@angular/core';
 import { Doctor } from './doctor';
 import Aos from 'aos';
 
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+
+
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 @Component({
   selector: 'app-doctor-list',
-  imports: [DoctorCardComponent, CommonModule],
+  imports: [DoctorCardComponent, CommonModule,NgbPaginationModule],
   templateUrl: './doctor-list.component.html',
   styleUrl: './doctor-list.component.css'
 })
@@ -33,6 +36,8 @@ export class DoctorListComponent {
     }
   }
 
+  PageSize: number = 6;
+  PageIndex: number = 1;
   doctors: Doctor[] = [
     {
       id: 1,

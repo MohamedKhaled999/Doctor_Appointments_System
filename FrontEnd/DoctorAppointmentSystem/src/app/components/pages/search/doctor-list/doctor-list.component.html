@@ -3,3 +3,11 @@
 <div *ngFor="let doc of doctors" class="SP-docCard flex-wrap align-items-center p-3 mb-2 border rounded shadow-sm " data-aos="fade-left">
     <app-doctor-card [doctor]="doc"></app-doctor-card> 
 </div>
+<ngb-pagination
+	[collectionSize]="doctors.length"
+	[(page)]="PageIndex"
+	[maxSize]="PageSize"
+	[rotate]="true"
+	[ellipses]="false"
+	[boundaryLinks]="true"
+/>
