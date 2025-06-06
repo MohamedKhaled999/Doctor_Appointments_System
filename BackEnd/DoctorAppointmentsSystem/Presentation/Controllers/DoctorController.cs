@@ -11,7 +11,7 @@ namespace Presentation.Controllers
     {
         private readonly IServiceManager _serviceManager;
         public DoctorController(IServiceManager serviceManager) => _serviceManager = serviceManager;
-        [HttpGet]
+        [HttpGet("Profile/{id:int}")]
         public async Task<IActionResult> GetDoctorProfile(int id)
         {
             var doctorProfile = await _serviceManager.DoctorService.DoctorProfile(id);
@@ -23,6 +23,13 @@ namespace Presentation.Controllers
         //    await _serviceManager.DoctorOrchestrator.RegisterDoctor(doctorDTO);
         //    return Created();
         //}
+        [HttpGet("UserProfile")]
+        [Authorize(Roles = "doctor")]
+        public async Task<IActionResult> GetDoctorProfile()
+        {
+            var doctorProfile = await _serviceManager.DoctorService.DoctorProfile(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return Ok(doctorProfile);
+        }
         [HttpPut]
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> UpdateDoctor(DoctorEditDTO doctorDTO)
