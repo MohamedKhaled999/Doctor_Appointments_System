@@ -30,6 +30,7 @@ namespace Persistence
 
             try
             {
+                //await _context.Database.EnsureDeletedAsync();
                 if ((await _context.Database.GetPendingMigrationsAsync()).Any())
                     await _context.Database.MigrateAsync();
                 await InitializeIdentityAsync();
