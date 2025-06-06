@@ -14,9 +14,9 @@ namespace Presentation.Controllers
         public PatientController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
         [HttpGet]
-        public async Task<IActionResult> GetPatient(int id)
+        public async Task<IActionResult> GetPatient()
         {
-            var patient = await _serviceManager.PatientService.GetByIdAsync(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            var patient = await _serviceManager.PatientService.GetByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Ok(patient);
         }
 
