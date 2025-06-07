@@ -27,10 +27,10 @@ namespace Persistence
         }
         public async Task InitializeAsync()
         {
-
             try
             {
-                //await _context.Database.EnsureDeletedAsync();
+                // if (_context.Database.CanConnect())
+                //     await DropTablesAsync(_context);
                 if ((await _context.Database.GetPendingMigrationsAsync()).Any())
                     await _context.Database.MigrateAsync();
                 await InitializeIdentityAsync();
@@ -46,10 +46,6 @@ namespace Persistence
                     }
                 }
 
-
-
-
-
                 if (!await _context.Doctors.AnyAsync())
                 {
                     var DoctorsData = await File.ReadAllTextAsync(Path.Combine(_environment.WebRootPath, "Seeding", "doctors.json"));
@@ -64,7 +60,6 @@ namespace Persistence
                                 UserName = $"{doctor.FirstName}DocNet{doctor.LastName}DocNet{doctor.Email}",
                                 PhoneNumber = doctor.PhoneNumber,
                                 EmailConfirmed = true,
-
                             };
 
                             var result = await _userManager.CreateAsync(appUser, "P@ssw0rd");
@@ -76,36 +71,21 @@ namespace Persistence
                             //doctor.AppUserID = (await _userManager.FindByEmailAsync(appUser.Email))?.Id;
                             doctor.AppUserID = appUser.Id;
 
-
                             var result1 = await _userManager.AddToRoleAsync(appUser, "doctor");
-
                             if (!result1.Succeeded)
                             {
                                 throw new ValidationException(result.Errors.Select(e => e.Description));
                             }
-
-
-
                         }
-
-
                         await _context.AddRangeAsync(doctors);
-
                         await _context.SaveChangesAsync();
                     }
-
-
                 }
-
-
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine(ex.ToString());
             }
-
-
         }
         public async Task InitializeIdentityAsync()
         {
@@ -141,6 +121,35 @@ namespace Persistence
 
             }
 
+        }
+
+        private static async Task DropTablesAsync(AppDbContext context)
+        {
+            var dropConstraintsSql = @"
+            DECLARE @DropConstraints NVARCHAR(MAX) = '';
+            SELECT @DropConstraints += 
+                'ALTER TABLE ' + QUOTENAME(OBJECT_SCHEMA_NAME(parent_object_id)) + '.' +
+                QUOTENAME(OBJECT_NAME(parent_object_id)) + ' DROP CONSTRAINT ' + QUOTENAME(name) + ';' + CHAR(13)
+            FROM sys.foreign_keys;
+
+            EXEC sp_executesql @DropConstraints;
+            ";
+
+            var dropSequencesSql = @"
+            -- Drop all sequences
+            DECLARE @DropSequences NVARCHAR(MAX) = '';
+            SELECT @DropSequences += 
+                'DROP SEQUENCE ' + QUOTENAME(SCHEMA_NAME(schema_id)) + '.' + QUOTENAME(name) + ';' + CHAR(13)
+            FROM sys.sequences;
+
+            EXEC sp_executesql @DropSequences;
+            ";
+
+            var dropTablesSql = @"EXEC sp_msforeachtable 'DROP TABLE ?'";
+
+            await context.Database.ExecuteSqlRawAsync(dropConstraintsSql);
+            await context.Database.ExecuteSqlRawAsync(dropTablesSql);
+            await context.Database.ExecuteSqlRawAsync(dropSequencesSql);
         }
     }
 }
