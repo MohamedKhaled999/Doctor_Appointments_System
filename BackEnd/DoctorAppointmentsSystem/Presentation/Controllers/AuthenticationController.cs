@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Shared.Authentication;
 
 namespace Presentation.Controllers
 {
+
     public class AuthenticationController(IServiceManager serviceManager) : ApiController
     {
         [HttpPost("external-login")]
@@ -66,6 +68,7 @@ namespace Presentation.Controllers
 
         //change password
 
+        [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
         {
