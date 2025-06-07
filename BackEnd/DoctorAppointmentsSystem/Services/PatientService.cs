@@ -77,7 +77,7 @@ namespace Services
             if (result.IsValid)
             {
                 var oldPatient = await GetByAppUserIdInsideAsync(currentID);
-                oldPatient.Id = patientDto.Id;
+                patientDto.Id = oldPatient.Id;
                 if (oldPatient == null)
                     throw new ArgumentNullException($"Patient with ID {patientDto.Id} doesn't exist");
                 _unitOfWork.GetRepository<Patient, int>().Update(_mapper.Map(patientDto, oldPatient));
