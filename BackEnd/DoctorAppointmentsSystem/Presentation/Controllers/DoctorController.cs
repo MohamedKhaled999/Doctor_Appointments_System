@@ -27,7 +27,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> GetDoctorProfile()
         {
-            var doctorProfile = await _serviceManager.DoctorService.DoctorProfile(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            var doctorProfile = await _serviceManager.DoctorService.GetByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Ok(doctorProfile);
         }
         [HttpPut]
