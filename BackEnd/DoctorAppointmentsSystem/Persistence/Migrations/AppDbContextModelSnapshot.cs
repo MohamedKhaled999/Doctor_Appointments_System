@@ -100,6 +100,9 @@ namespace Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Canceled")
+                        .HasColumnType("bit");
+
                     b.Property<int>("DoctorReservationID")
                         .HasColumnType("int");
 

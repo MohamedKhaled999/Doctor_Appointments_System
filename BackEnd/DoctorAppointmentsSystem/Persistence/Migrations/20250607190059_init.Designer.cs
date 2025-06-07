@@ -12,7 +12,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250607173756_init")]
+    [Migration("20250607190059_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -102,6 +102,9 @@ namespace Persistence.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Canceled")
+                        .HasColumnType("bit");
 
                     b.Property<int>("DoctorReservationID")
                         .HasColumnType("int");
