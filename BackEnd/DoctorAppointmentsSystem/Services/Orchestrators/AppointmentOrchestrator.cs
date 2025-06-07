@@ -221,6 +221,9 @@ namespace Services.Orchestrators
 
         public async Task AddDoctorReservationAsync(NewResDTO reservation, int appUserId)
         {
+            if (reservation.Date <= DateTime.Now)
+                throw new ValidationException(["Can't add reservation on this date"]);
+
             var doctor = await _doctorService.GetByAppUserIdAsync(appUserId);
             if (doctor.ID != reservation.DoctorID)
                 throw new UnAuthorizedException("Access Denied");
