@@ -1,1 +1,107 @@
-<p>patient-profile works!</p>
+<div style="padding-top:80px">
+    <div class="col-12 pt-3 d-flex justify-content-center gap-3 list-unstyled p-0">
+        <button class="btn" [ngClass]="{'active-tab patient-tab-active': activeTab === 'details'}"
+            (click)="switchTab('details')"><span>Details</span></button>
+        <button class="btn" [ngClass]="{'active-tab patient-tab-active': activeTab === 'appointments'}"
+            (click)="switchTab('appointments')"><span>My Appointments</span></button>
+    </div>
+    <!-- Details Tab -->
+    <div id="patient-tab-1" class="row w-75 patient-profile-container mx-auto p-3 shadow-sm rounded-4" *ngIf="activeTab === 'details'">
+        <div class="col-12 col-md-2 text-center">
+            <!-- <img id="patient-profile-image" src="/images/default.png" alt="patient image"
+                class="rounded-circle w-100" /> -->
+        </div>
+        <form method="post" class="form-container d-flex flex-column justify-content-between gap-3 col-12 col-md-10 p-3"
+            (ngSubmit)="onSubmit()" [formGroup]="patientForm">
+            <div class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+            <div class="row justify-content-between">
+                <div class="col-12 col-md-6">
+                    <label for="firstName" class="form-label my-1">First Name</label>
+                    <input name="firstName" formControlName="firstName" id="firstName"
+                        class="login-form-input rounded-1" readonly />
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="lastName" class="form-label my-1">Last Name</label>
+                    <input name="lastName" formControlName="lastName" id="lastName" class="login-form-input rounded-1"
+                        readonly />
+                </div>
+            </div>
+            <div class="row justify-content-between">
+                <div class="row justify-content-between">
+                    <div class="col-12 col-md-6">
+                        <label for="email" class="form-label my-1">Email</label>
+                        <input name="email" formControlName="email" id="email" class="login-form-input rounded-1" readonly />
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="phoneNumber" class="form-label my-1">Phone Number</label>
+                        <input name="phoneNumber" formControlName="phoneNumber" id="phoneNumber"
+                        class="login-form-input rounded-1" />
+                        <span class="text-danger"
+                        *ngIf="patientForm.get('phoneNumber')?.invalid && (patientForm.get('phoneNumber')?.touched || patientForm.get('phoneNumber')?.dirty)">
+                        <span *ngIf="patientForm.get('phoneNumber')?.errors?.['required']">Phone Number is required.</span>
+                        <span *ngIf="patientForm.get('phoneNumber')?.errors?.['pattern']">Invalid phone number
+                            format.</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item" id="patient-more-information">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button position-relative" id="patient-more-information-button" (click)="toggleAccordion()"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                            aria-controls="collapseOne">
+                            <span class="px-1 mx-auto">More Information <i id="patient-arrow-icon" [ngClass]="{'up': isAccordionOpen}"
+                                    class="fa-solid fa-arrow-down ms-1"></i></span>
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div>
+                                <label for="birthDate" class="form-label my-1">Birth Date</label>
+                                <input name="birthDate" formControlName="birthDate" id="birthDate"
+                                    class="login-form-input rounded-1" readonly />
+                            </div>
+                            <div>
+                                <label for="governorate" class="form-label my-1">Governorate</label>
+                                <select name="governorate" formControlName="governorate" class="form-select">
+                                    <option value="0" selected disabled>Select Governorate</option>
+                                    @for(governorate of governorates; track $index)
+                                    {
+                                    <option value="{{governorate}}">{{governorate}}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <button routerLink="/account/change-password" class="btn login-submit">Change Password</button>
+                <input type="submit" class="btn login-submit" [disabled]="patientForm.invalid" value="Save Changes" />
+            </div>
+        </form>
+    </div>
+
+    <!-- Appointments Tab -->
+    <div id="patient-tab-2" class="row w-75 patient-appointments-container mx-auto shadow-sm rounded-4" *ngIf="activeTab === 'appointments'">
+        <swiper-container class="w-100 h-100 p-3 mx-auto position-relative" pagination="true"
+            pagination-clickable="true" slides-per-view="1" grid-rows="2" space-between="40">
+            @if (patient?.appointments != null && patient?.appointments?.length != 0)
+            {
+            @for(appointment of patient?.appointments; track $index)
+            {
+            <swiper-slide
+                class="patient-appointment-card p-3 shadow overflow-hidden d-flex gap-3 bg-white rounded-3 align-items-center position-relative"
+                data-aos="fade-left">
+                <app-patient-appointment [appointment]="appointment"></app-patient-appointment>
+            </swiper-slide>
+            }
+            }
+            @else
+            {
+            <h2 class="text-center mt-5">No Appointment has been booked so far</h2>
+            }
+        </swiper-container>
+    </div>
+</div>

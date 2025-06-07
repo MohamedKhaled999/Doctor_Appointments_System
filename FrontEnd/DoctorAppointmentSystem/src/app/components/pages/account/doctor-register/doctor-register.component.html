@@ -1,1 +1,300 @@
-<p>doctor-register works!</p>
+<div class="container  d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card p-4 shadow-lg SP-card col-10 col-md-6 mx-auto"
+        style="padding: 100px 20px 20px; color: var(--primary-color)">
+        <h2>Enter Your Information</h2>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+            <div class="accordion form-container" id="doctorRegisterAccordion">
+
+                <!-- Personal Information -->
+                <div class="accordion-item doctor-register-div">
+                    <h2 class="accordion-header" id="headingPersonal">
+                        <button class="accordion-button" type="button">
+                            Personal Information
+                        </button>
+                    </h2>
+                    <div id="collapsePersonal" class="accordion-collapse show">
+                        <div
+                            class="accordion-body register-input-group d-flex flex-column gap-3 justify-content-between">
+                            <div class="row gap-1 gap-md-0">
+                                <div class="col-md-6 col-sm-12">
+                                    <label class="my-1 ">First Name</label>
+                                    <input formControlName="firstName" class="login-form-input rounded-1"  />
+                                    @if (registerForm.get('firstName')?.invalid &&
+                                    registerForm.get('firstName')?.touched) {
+                                    <span class="text-danger">First name is required</span>
+                                    }
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label class="my-1">Last Name</label>
+                                    <input formControlName="lastName" class="login-form-input rounded-1" />
+                                    @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched)
+                                    {
+                                    <span class="text-danger">Last name is required</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="row gap-1 gap-md-0">
+                                <div class="col-md-6 col-sm-12">
+                                    
+                                        <label>Gender</label>
+                                        <select formControlName="gender" class="login-form-input rounded-1 form-select">
+                                            <option [ngValue]="null" disabled>Select Gender</option>
+                                            <!-- 
+                                                                                Renders:
+                                                                                <option value="0">Male</option>
+                                                                                <option value="1">Female</option>
+                                                                              -->
+                                            <option *ngFor="let opt of genderOptions" [ngValue]="opt.value">
+                                                {{opt.label}}
+                                            </option>
+                                        </select>                                                           </div>
+                                
+                                <!-- <div class="col-md-6 col-sm-12">
+                                    <label>Gender</label>
+                                    <select formControlName="gender" class="login-form-input rounded-1 form-select">
+                                        <option [ngValue]="null" disabled>Select Gender</option>
+                                        <option *ngFor="let genderOption of genderOptions" [value]="genderOption.value">
+                                            {{ genderOption.label }}
+                                        </option>
+                                    </select>
+                                    @if (registerForm.get('gender')?.invalid && registerForm.get('gender')?.touched) {
+                                    <span class="text-danger">Gender is required</span>
+                                    }                            </div> -->
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Birth Date</label>
+                                    <input formControlName="birthDate" class="login-form-input rounded-1 form-control"
+                                        type="date" />
+                                    @if (registerForm.get('birthDate')?.invalid &&
+                                    registerForm.get('birthDate')?.touched) {
+                                    <span class="text-danger">Birth date is required</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="mb-3 col-12 col-md-6">
+                                <label>Profile Image</label>
+                                <!-- <input type="file" (change)="onFileChange($event)"
+                                    class="login-form-input rounded-1 form-control" /> -->
+                       
+                            <input type="file" name="Image" (change)="onFileChange($event)" class="login-form-input rounded-1 form-control"
+                                accept=".jpg,.jpeg,.png,.gif,.bmp,.webp,.svg" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="accordion-item doctor-register-div">
+                    <h2 class="accordion-header" id="headingContact">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseContact">
+                            Contact Information
+                        </button>
+                    </h2>
+                    <div id="collapseContact" class="accordion-collapse collapse"
+                        data-bs-parent="#doctorRegisterAccordion">
+                        <div
+                            class="accordion-body register-input-group d-flex flex-column gap-3 justify-content-between">
+                            <div class="row gap-1 gap-md-0">
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Email</label>
+                                    <input formControlName="email" class="login-form-input rounded-1 form-control" />
+                                    @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+                                    <span class="text-danger">Valid email is required</span>
+                                    }
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Phone Number</label>
+                                    <input formControlName="phoneNumber"
+                                        class="login-form-input rounded-1 form-control" />
+                                    @if (registerForm.get('phoneNumber')?.invalid &&
+                                    registerForm.get('phoneNumber')?.touched) {
+                                    <span class="text-danger">Phone number is required</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="row gap-1 gap-md-0">
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Governorate</label>
+                                    <select formControlName="governorate"
+                                        class="login-form-input rounded-1 form-select">
+                                        <option [ngValue]="null" disabled>Select Governorate</option>
+                                        <option *ngFor="let gov of governorateOptions" [value]="gov.value">{{ gov.label
+                                            }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Address</label>
+                                    <input formControlName="address" class="login-form-input rounded-1 form-control" />
+                                    @if (registerForm.get('address')?.invalid && registerForm.get('address')?.touched) {
+                                    <span class="text-danger">Address is required</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-evenly align-items-center">
+                                <p class="align-self-start">Pick Your Location</p>
+                                <button type="button" (click)="pickLocation()" class="btn login-submit mb-3">
+                                    Pick Automatically (Permission Needed)
+                                </button>
+                                <div #mapContainer id="map" style="height: 300px; width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Credentials -->
+                <div class="accordion-item doctor-register-div">
+                    <h2 class="accordion-header" id="headingCredentials">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseCredentials">
+                            Account Credentials
+                        </button>
+                    </h2>
+                    <div id="collapseCredentials" class="accordion-collapse collapse"
+                        data-bs-parent="#doctorRegisterAccordion">
+                        <div class="accordion-body">
+                            <div class="mb-3">
+                                <label class="form-label SP-primaryText">Password</label>
+                                <div class="input-group">
+                                    <input formControlName="password"
+                                        [type]="showPassword.password ? 'text' : 'password'"
+                                        class="login-pass form-control">
+                                    <button type="button" class="btn SP-toggle-password"
+                                        (click)="togglePasswordVisibility('password')">
+                                        <i class="fas" [class.fa-eye]="!showPassword.password"
+                                            [class.fa-eye-slash]="showPassword.password"></i>
+                                    </button>
+                                </div>
+                                @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+                                <span class="text-danger">
+                                    @if (registerForm.get('password')?.errors?.['required']) {
+                                    <div>Password is required</div>
+                                    }
+                                    @if (registerForm.get('password')?.errors?.['minlength']) {
+                                    <div>Must be at least 8 characters</div>
+                                    }
+                                    @if (registerForm.get('password')?.errors?.['pattern']) {
+                                    <div>Requires uppercase, number, and special character</div>
+                                    }
+                                </span>
+                                }
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label SP-primaryText">Confirm Password</label>
+                                <div class="input-group">
+                                    <input formControlName="confirmPassword"
+                                        [type]="showPassword.confirmPassword ? 'text' : 'password'"
+                                        class="login-pass form-control">
+                                    <button type="button" class="btn SP-toggle-password"
+                                        (click)="togglePasswordVisibility('confirmPassword')">
+                                        <i class="fas" [class.fa-eye]="!showPassword.confirmPassword"
+                                            [class.fa-eye-slash]="showPassword.confirmPassword"></i>
+                                    </button>
+                                </div>
+                                @if (registerForm.get('confirmPassword')?.invalid &&
+                                registerForm.get('confirmPassword')?.touched) {
+                                <span class="text-danger">
+                                    @if (registerForm.get('confirmPassword')?.errors?.['required']) {
+                                    <div>Confirmation is required</div>
+                                    }
+                                    @if (registerForm.get('confirmPassword')?.errors?.['mismatch']) {
+                                    <div>Passwords don't match</div>
+                                    }
+                                </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Details -->
+                <div class="accordion-item doctor-register-div">
+                    <h2 class="accordion-header" id="headingProfessional">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseProfessional">
+                            Professional Details
+                        </button>
+                    </h2>
+                    <div id="collapseProfessional" class="accordion-collapse collapse"
+                        data-bs-parent="#doctorRegisterAccordion">
+                        <div
+                            class="accordion-body register-input-group d-flex flex-column gap-3 justify-content-between">
+                            <div class="mb-3">
+                                <label>Specialty</label>
+                                <select formControlName="specialtyID" class="login-form-input rounded-1 form-select">
+                                    <option [ngValue]="null" disabled>Select Specialty</option>
+                                    <option *ngFor="let spec of specialties" [value]="spec.id">{{ spec.name }}</option>
+                                </select>
+                                @if (registerForm.get('specialtyID')?.invalid &&
+                                registerForm.get('specialtyID')?.touched) {
+                                <span class="text-danger">Specialty is required</span>
+                                }
+                            </div>
+                            <div class="row gap-2 gap-md-0">
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Fees</label>
+                                    <input formControlName="fees" class="login-form-input rounded-1 form-control" />
+                                    <!-- @if (registerForm.get('fees')?.invalid && registerForm.get('fees')?.touched) {
+                                    <span class="text-danger">Valid fee amount is required</span>
+                                    } -->
+                                    @if (registerForm.get('fees')?.invalid && registerForm.get('fees')?.touched) {
+                                    <span class="text-danger">
+                                        @if (registerForm.get('fees')?.errors?.['required']) {
+                                        <div>Fees are required</div>
+                                        }
+                                        @if (registerForm.get('fees')?.errors?.['min']) {
+                                        <div>Fees must be positive</div>
+                                        }
+                                    </span>                                     }
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Waiting Time (minutes)</label>
+                                    <input formControlName="waitingTime"
+                                        class="login-form-input rounded-1 form-control" />
+                                        @if (registerForm.get('waitingTime')?.invalid && registerForm.get('waitingTime')?.touched) {
+                                        <span class="text-danger">
+                                            @if (registerForm.get('waitingTime')?.errors?.['required']) {
+                                            <div>Waiting time is required</div>
+                                            }
+                                            @if (registerForm.get('waitingTime')?.errors?.['min'] || registerForm.get('waitingTime')?.errors?.['max']) {
+                                            <div>Must be between 0-60 minutes</div>
+                                            }
+                                        </span>
+                                        }
+                                          
+                                    <!-- @if (registerForm.get('waitingTime')?.invalid &&
+                                    registerForm.get('waitingTime')?.touched) {
+                                    <span class="text-danger">Must be between 0-60 minutes</span>
+                                    } -->
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label>About</label>
+                                <textarea formControlName="about" class="login-form-input rounded-1 form-control"></textarea>
+                                <!-- @if (registerForm.get('about')?.invalid && registerForm.get('about')?.touched) {
+                                                            <span class="text-danger">About section is required (max 500 chars)</span>
+                                                            } -->
+                                @if (registerForm.get('about')?.invalid && registerForm.get('about')?.touched) {
+                                <span class="text-danger">
+                                    @if (registerForm.get('about')?.errors?.['required']) {
+                                    <div>About section is required</div>
+                                    }
+                                    @if (registerForm.get('about')?.errors?.['minlength']) {
+                                    <div>Minimum 20 characters required</div>
+                                    }
+                                    @if (registerForm.get('about')?.errors?.['maxlength']) {
+                                    <div>Maximum 500 characters allowed</div>
+                                    }
+                                </span>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center m-3">
+                <button type="submit" class="btn login-submit mb-3 w-50">Register</button>
+            </div>
+        </form>
+    </div>
+    </div>

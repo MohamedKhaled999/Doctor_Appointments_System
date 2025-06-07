@@ -1,0 +1,116 @@
+.active-tab {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.SP-reviewText {
+  border-color: var(--primary-color);
+}
+
+.patient-profile-container,
+.patient-appointments-container {
+  color: var(--primary-color);
+  border: 1px solid var(--secondary-color);
+}
+
+input[readonly] {
+  background-color: #ddd;
+}
+
+#patient-more-information {
+  color: white;
+  border: none;
+  background-color: var(--primary-color);
+}
+
+#patient-more-information-button {
+  color: white;
+  background-color: var(--primary-color);
+}
+
+#patient-more-information-button:focus {
+  box-shadow: none;
+}
+
+#patient-more-information-button::after {
+  display: none;
+}
+
+#patient-arrow-icon {
+  transition: 0.2s;
+}
+
+#patient-arrow-icon.up {
+  transform: scaleY(-1);
+}
+
+.patient-tab {
+  color: var(--primary-color);
+}
+
+.patient-tab:hover {
+  background-color: var(--secondary-color);
+}
+
+.patient-tab-active,
+.patient-tab-active:hover {
+  color: white !important;
+  background-color: var(--primary-color);
+}
+
+.patient-appointments-container {
+  height: 600px;
+}
+
+.patient-appointment-card {
+  background-image: linear-gradient(to right, #a2d9ff, #e0f7ff) !important;
+}
+
+@media(max-width: 768px) {
+  .patient-appointment-card {
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 10px;
+  }
+
+  .patient-appointment-card-content {
+    width: 100% !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 10px;
+  }
+
+  .patient-appointment-card-content>div {
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 5px;
+  }
+
+  .patient-appointment-card-content>div:nth-child(even) {
+    padding-bottom: 10px !important;
+  }
+
+  .appointment-doctor-image {
+    height: 80px;
+    width: 80px;
+  }
+}
+
+.appointment-doctor-image {
+  width: 100px;
+  height: 100px;
+  border: 1px solid var(--secondary-color);
+}
+
+.appointment-cancel-icon {
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+  color: var(--primary-color);
+  font-size: 20px;
+}
+
+.patient-appointment-details i {
+  color: var(--primary-color);
+}

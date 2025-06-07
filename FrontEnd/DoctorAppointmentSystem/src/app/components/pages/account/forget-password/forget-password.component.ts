@@ -1,11 +1,73 @@
 import { Component } from '@angular/core';
 
+import { AccountService } from '../../../../core/services/account.service';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 @Component({
+
   selector: 'app-forget-password',
-  imports: [],
+  standalone: true ,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './forget-password.component.html',
-  styleUrl: './forget-password.component.css'
+  styleUrls: ['./forget-password.component.css']
 })
 export class ForgetPasswordComponent {
+  forgetPasswordForm: FormGroup;
+  isSubmitting = false;
 
+  constructor(
+    private fb: FormBuilder,
+    private accountService: AccountService,
+    private router: Router
+  ) {
+    this.forgetPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required]
+    });
+  }
+
+  onSubmit() {
+    if (this.forgetPasswordForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
+      
+      const forgetPasswordData = {
+        email: this.forgetPasswordForm.value.email,
+        firstName: this.forgetPasswordForm.value.firstName,
+        lastName: this.forgetPasswordForm.value.lastName
+      };
+
+      this.accountService.forgotPassword(forgetPasswordData).subscribe({
+        next: () => {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Password reset link has been sent to your email',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            this.router.navigate(['/login']);
+          });
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          let errorMessage = 'Failed to process your request';
+          
+          if (err.status === 404) {
+            errorMessage = 'User not found with this email';
+          } else if (err.error?.message) {
+            errorMessage = err.error.message;
+          }
+
+          Swal.fire({
+            title: 'Error',
+            text: errorMessage,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
+    }
+  }
 }

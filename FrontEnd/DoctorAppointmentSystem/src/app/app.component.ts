@@ -1,8 +1,9 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, PLATFORM_ID,OnInit  } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TestSwiperComponent } from "./components/shared/test-swiper/test-swiper.component";
 import AOS from 'aos'; 
 import { isPlatformBrowser } from '@angular/common';
+import { DataManagementService } from './core/services/data-management.service';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,7 @@ export class AppComponent {
   title = 'DoctorAppointmentSystem';
   isBrowser: boolean;
   
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {
+  constructor(private userData:DataManagementService, @Inject(PLATFORM_ID) private platformId: any) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -31,5 +32,8 @@ export class AppComponent {
     }
        // You can perform any initialization logic here
     console.log('AppComponent initialized');
+
+  //  this.userData.UserRole.set(localStorage.getItem("userRole")!);
+
   }
 }
