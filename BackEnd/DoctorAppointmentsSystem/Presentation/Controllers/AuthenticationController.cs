@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Shared.Authentication;
+using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
@@ -72,7 +73,8 @@ namespace Presentation.Controllers
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
         {
-            var result = await serviceManager.AuthenticationService.ChangePasswordAsync(changePasswordDto);
+
+            var result = await serviceManager.AuthenticationService.ChangePasswordAsync(changePasswordDto, User.FindFirstValue(ClaimTypes.Email));
             return Ok(result);
         }
     }
