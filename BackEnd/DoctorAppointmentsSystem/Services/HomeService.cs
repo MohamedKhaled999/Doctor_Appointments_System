@@ -29,6 +29,8 @@ namespace Services
                     new HomeSpecialtyDTO()
                     {
                         Name = specialty.Name,
+                        Description = specialty.Description,
+                        Image = specialty.ImageURL,
                         NumberOfDoctors = _unitOfWork.GetRepository<Doctor, int>().GetCount(new HomeSpecialtySpecifications(d => d.SpecialtyID == specialty.Id))
                     });
 

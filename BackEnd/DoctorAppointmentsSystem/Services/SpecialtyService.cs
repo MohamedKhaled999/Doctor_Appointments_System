@@ -20,7 +20,6 @@ namespace Services
             var specialties = await _unitOfWork.GetRepository<Specialty, int>().GetAllAsync();
             var specialtyDTOs = _mapper.Map<List<SpecialtyDTO>>(specialties);
             return specialtyDTOs;
-
         }
         public async Task<SpecialtyDTO> GetSpecialtyById(int id)
         {
@@ -59,7 +58,5 @@ namespace Services
             _unitOfWork.GetRepository<Specialty, int>().Delete(specialty);
             await _unitOfWork.SaveChangesAsync();
         }
-
     }
-
 }

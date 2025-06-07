@@ -54,7 +54,7 @@ namespace Persistence
                     {
                         foreach (var doctor in doctors)
                         {
-                            var appUser = new Domain.Models.AppUser()
+                            var appUser = new AppUser()
                             {
                                 Email = doctor.Email,
                                 UserName = $"{doctor.FirstName}DocNet{doctor.LastName}DocNet{doctor.Email}",

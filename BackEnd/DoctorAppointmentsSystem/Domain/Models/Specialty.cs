@@ -9,6 +9,7 @@ namespace Domain.Models
         [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Specialty Name must be alphabetic")]
         public string Name { get; set; }
         public string ImageURL { get; set; }
+        public string Description { get; set; }
         public virtual ICollection<Doctor>? Doctors { get; set; }
     }
 }

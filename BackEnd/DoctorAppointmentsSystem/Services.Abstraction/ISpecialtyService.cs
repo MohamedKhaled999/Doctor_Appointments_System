@@ -9,6 +9,5 @@ namespace Services.Abstraction
         Task AddSpecialty(SpecialtyDTO specialty);
         Task UpdateSpecialty(SpecialtyDTO specialty);
         Task DeleteSpecialty(int id);
-        //Task<IEnumerable<Doctor>> GetSpecialtyDoctors(int id);
     }
 }
