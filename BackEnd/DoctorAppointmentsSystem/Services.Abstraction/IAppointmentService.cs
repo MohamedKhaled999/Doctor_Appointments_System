@@ -18,5 +18,6 @@ namespace Services.Abstraction
         public int GetCount(int patientId);
         Task AddAsync(int patientId, int doctorReservationId, int transactionId);
         Task DeleteAsync(int id);
+        Task SetCanceledAsync(int id);
     }
 }

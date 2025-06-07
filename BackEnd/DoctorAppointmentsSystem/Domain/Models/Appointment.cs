@@ -7,6 +7,7 @@
         public int TransactionId { get; set; }
         public string? DocumentUrls { get; set; }
         public string? PrescriptionUrl { get; set; }
+        public bool Canceled { get; set; } = false;
         public virtual DoctorReservation DoctorReservation { get; set; }
         public virtual Patient Patient { get; set; }
         public virtual Transaction Transaction { get; set; }

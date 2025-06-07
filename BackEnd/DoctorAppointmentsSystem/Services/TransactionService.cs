@@ -54,7 +54,7 @@ namespace Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(int id, int amount)
+        public async Task UpdateAsync(int id, double amount)
         {
             var transaction = _mapper.Map<Transaction>(await GetByIdAsync(id));
             if (transaction == null)

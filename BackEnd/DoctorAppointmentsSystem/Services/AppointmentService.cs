@@ -121,7 +121,6 @@ namespace Services
             return _unitOfWork.GetRepository<Appointment, int>().GetCount(specs);
         }
 
-
         public async Task AddAsync(int patientId, int doctorReservationId, int transactionId)
         {
             var appointment = new Appointment()
@@ -140,6 +139,15 @@ namespace Services
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {id} doesn't exist");
             _unitOfWork.GetRepository<Appointment, int>().Delete(appointment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task SetCanceledAsync(int id)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(id);
+            if (appointment == null)
+                throw new ValidationException(["Appointment doesn't exist"]);
+            appointment.Canceled = true;
             await _unitOfWork.SaveChangesAsync();
         }
     }

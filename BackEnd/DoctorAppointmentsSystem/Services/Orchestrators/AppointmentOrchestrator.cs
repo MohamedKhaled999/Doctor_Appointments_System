@@ -244,7 +244,7 @@ namespace Services.Orchestrators
             await _notificationService.SendNotification(appUserId, notification);
         }
 
-        public async Task CancelAppointmentAsync(int id, int currentPatientAppUserId = -1, float refundPercent = 1F)
+        public async Task CancelAppointmentAsync(int id, int currentPatientAppUserId = -1)
         {
             var patient = await _appointmentService.GetPatientByAppointmentId(id);
             if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
@@ -256,9 +256,20 @@ namespace Services.Orchestrators
             if (appointment.StartTime.Date < DateTime.Now)
                 throw new ValidationException(["Appointment date has already passed"]);
 
+            var remainingTime = appointment.StartTime - DateTime.Now;
+            if (remainingTime < TimeSpan.FromHours(12))
+                throw new ValidationException(["Can't cancel appointment (less than 12 hours remaining)"]);
+
             var transactionId = await _appointmentService.GetTransactionId(id);
 
-            await refundAsync(id, transactionId, refundPercent);
+            if (remainingTime >= TimeSpan.FromHours(12) && remainingTime < TimeSpan.FromHours(24))
+                await CancelAsync(id, transactionId, 0.5F);
+
+            else if (remainingTime >= TimeSpan.FromHours(24) && remainingTime < TimeSpan.FromHours(48))
+                await CancelAsync(id, transactionId, 0.75F);
+
+            else
+                await CancelAsync(id, transactionId, 1F);
 
             var email = new EmailDTO()
             {
@@ -267,7 +278,7 @@ namespace Services.Orchestrators
                 Subject = "Appointment Canceled",
                 Link = _configuration["FrontEnd:Url"],
             };
-            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime.Date);
+            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime.Date, remainingTime >= TimeSpan.FromHours(48));
 
             var notification = new NotificationMessage()
             {
@@ -322,19 +333,27 @@ namespace Services.Orchestrators
             _notificationService.SendNotification(appUserId, patientReminder).Wait();
         }
 
-        private async Task refundAsync(int appointmentId, int transactionId, float percent = 1F)
+        private async Task CancelAsync(int appointmentId, int transactionId, float percent = 1F)
         {
             var refundDto = new RefundDto()
             {
                 PaymentId = await _transactionService.GetPaymentId(transactionId),
                 Percent = percent,
-                IsPartial = percent != 1F
+                IsPartial = percent < 1F
             };
             await _paymentService.Refund(refundDto);
 
-            await _appointmentService.DeleteAsync(appointmentId);
-
-            await _transactionService.DeleteAsync(transactionId);
+            if (!refundDto.IsPartial)
+            {
+                await _appointmentService.DeleteAsync(appointmentId);
+                await _transactionService.DeleteAsync(transactionId);
+            }
+            else
+            {
+                var transaction = await _transactionService.GetByIdAsync(transactionId);
+                await _transactionService.UpdateAsync(transactionId, transaction.Amount);
+                await _appointmentService.SetCanceledAsync(appointmentId);
+            }
         }
     }
 }
