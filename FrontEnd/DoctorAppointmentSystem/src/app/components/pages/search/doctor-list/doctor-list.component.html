@@ -4,5 +4,11 @@
     <app-doctor-card [doctor]="doc"></app-doctor-card> 
 </div>
 
-<!-- Sends doctors.length to child and getting page Index from child to reshow the new records on pagination -->
+<!-- Sends doctors.length to child and getting page Index from child to reshow the new records on pagination.
+      You can use this component in any other component that needs pagination.
+      1. Add the component to the parent component's template.
+      2. Pass the number of records to the [numberOfRecords] input.
+      3. Listen to the (pageIndexChange) output to get the current page index.
+     Also, take a look in get pagedDoctors function in doctor-list.component.ts, you will need to implement pagination logic
+      in case you wanted to use the pagination component elsewhere -->
 <app-pagination [numberOfRecords]="doctors.length"  (pageIndexChange)="pageIndexParent = $event"></app-pagination>
