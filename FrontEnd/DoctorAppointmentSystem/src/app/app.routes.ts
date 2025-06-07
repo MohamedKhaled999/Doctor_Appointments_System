@@ -100,7 +100,7 @@ export const routes: Routes = [
       ,
       {
         path:'profile',
-        canActivate:[authGuard],
+        // canActivate:[authGuard],
         children:[
         {
             path: '',
@@ -108,13 +108,21 @@ export const routes: Routes = [
             pathMatch: 'full'
       },
       {
-        path:'patient',
+        path:'patient', //profile/patient
         component: PatientProfileComponent
       },
       {
-        path:'doctor',
+        path:'doctor/:id',  //profile/doctor?id=1
         component: DoctorEditComponent
       }
+      ,{
+         
+        path:'doctor',  //profile/doctor?id=1
+        component: DoctorEditComponent,
+        canActivate: [authGuard]
+        
+      }
+
         ]
       },
      

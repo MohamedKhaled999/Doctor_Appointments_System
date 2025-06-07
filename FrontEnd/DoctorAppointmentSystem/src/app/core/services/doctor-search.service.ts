@@ -4,10 +4,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { tap, map, catchError, of } from 'rxjs';
 import { Doctor } from '../interfaces/doctor';
 import { reservation } from '../interfaces/reservation';
+import { environment } from '../environments/environment';
 @Injectable({ providedIn: 'root' })
-export class DoctorService {
+export class DoctorSearchService {
 
-  private readonly baseUrl = '/api/doctors';
+  // Base URL for the doctor API
+   private readonly apiUrl = `${environment.apiUrl}/doctors`;
   private http = inject(HttpClient);
 
   // Signal containing all doctors
@@ -24,7 +26,7 @@ export class DoctorService {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.http.get<any[]>(`${this.baseUrl}/search`).pipe(
+    this.http.get<any[]>(`${this.apiUrl}/search`).pipe(
       map(response => this.transformDoctors(response)),
       tap(doctors => {
         this.doctors.set(doctors);
