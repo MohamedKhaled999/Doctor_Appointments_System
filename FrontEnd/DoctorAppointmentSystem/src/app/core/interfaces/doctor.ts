@@ -1,4 +1,4 @@
-import { reservation } from "../reservation-card/reservation";
+import { reservation } from "./reservation";
 
 export interface Doctor {
     id:number;
@@ -7,10 +7,10 @@ export interface Doctor {
     title: string;
     qualifications: string[];
     fees: number; // consultation fees
-    specializations: string[]; // array of specializations
+    specializations: string[]; // in db it should be enum
     rating: number;
     waitingTime: number; // in minutes
-    governorate: string; // state or region
+    governorate: string; // in db it should be enum
     location: string; // city or specific area
     phone: string;
     reservations: reservation[];

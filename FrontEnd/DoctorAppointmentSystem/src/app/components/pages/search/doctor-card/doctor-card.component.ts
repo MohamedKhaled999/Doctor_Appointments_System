@@ -1,6 +1,6 @@
 import { Component, Input, OnInit,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
-import { Doctor } from '../doctor-list/doctor';
+import { Doctor } from '../../../../core/interfaces/doctor';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReservationCardComponent } from '../reservation-card/reservation-card.component';

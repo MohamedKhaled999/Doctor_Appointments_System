@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { DoctorCardComponent } from "../doctor-card/doctor-card.component";
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { Doctor } from './doctor';
+import { Doctor } from '../../../../core/interfaces/doctor';
 import Aos from 'aos';
 
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';

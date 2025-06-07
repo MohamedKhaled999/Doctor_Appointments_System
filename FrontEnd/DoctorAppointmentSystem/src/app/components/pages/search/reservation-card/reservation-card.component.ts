@@ -1,7 +1,7 @@
 import { Component , Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { reservation } from './reservation';
+import { reservation } from '../../../../core/interfaces/reservation';
 
 @Component({
   selector: 'app-reservation-card',
