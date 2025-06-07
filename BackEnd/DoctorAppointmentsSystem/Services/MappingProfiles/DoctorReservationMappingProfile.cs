@@ -10,8 +10,6 @@ namespace Services.MappingProfiles
         {
 
             CreateMap<DoctorReservation, DoctorReservationDTO>()
-                .ForMember(dest => dest.ResID, src => src.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Time, src => src.MapFrom(src => $"{src.StartTime.ToString("hh:mm tt")}|{src.EndTime.ToString("hh:mm tt")}"))
                 .ForMember(dest => dest.Day, src => src.MapFrom(src => src.EndTime.Day))
                 .ForMember(dest => dest.IsAvailable, src => src.Ignore()); // Ignore this property as it will be set in the service layer
 
