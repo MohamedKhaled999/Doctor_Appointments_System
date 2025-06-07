@@ -121,7 +121,7 @@ export const routes: Routes = [
     ]
   },
   {
-    path: '',
+    path: 'search',
     component: SearchComponent,
     title: 'Search'
   },
