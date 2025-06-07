@@ -29,11 +29,15 @@ export class AppComponent {
     });
      AOS.refresh();
 
-    }
-       // You can perform any initialization logic here
-    console.log('AppComponent initialized');
+  //     console.log('AppComponent initialized');
 
   //  this.userData.UserRole.set(localStorage.getItem("userRole")!);
+
+
+
+    }
+       // You can perform any initialization logic here
+   
 
   }
 }
