@@ -46,6 +46,7 @@ namespace DoctorAppointmentsSystem.Web
             #region Identity
             builder.Services.AddIdentity<AppUser, IdentityRole<int>>(op =>
             {
+                op.SignIn.RequireConfirmedEmail = true;
                 op.User.RequireUniqueEmail = true;
                 op.Password.RequireLowercase = false;
                 op.Password.RequireNonAlphanumeric = false;
