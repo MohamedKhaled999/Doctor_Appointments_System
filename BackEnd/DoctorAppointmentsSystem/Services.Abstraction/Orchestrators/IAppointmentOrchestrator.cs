@@ -17,7 +17,7 @@ namespace Services.Abstraction.Orchestrators
         Task DeleteAppointmentPrescription(int appointmentId, int reservationId, int currentDoctorAppUserId);
         Task SaveAppointmentAsync(int patientId, int doctorReservationId, string paymentId);
         Task AddDoctorReservationAsync(NewResDTO reservation, int appUserId);
-        Task CancelAppointmentAsync(int id, int currentPatientAppUserId);
+        Task CancelAppointmentAsync(int id, int currentPatientAppUserId = -1, float refundPercent = 1F);
         Task CancelReservationAsync(int id, int currentDoctorAppUserId);
     }
 }

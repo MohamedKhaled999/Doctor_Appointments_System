@@ -76,9 +76,8 @@ namespace Services
             var result = _validator.Validate(newPatient);
             if (result.IsValid)
             {
-                var oldPatient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(patientDto.Id);
-                if (oldPatient.AppUserID != currentID)
-                    throw new UnAuthorizedException("Access Denied");
+                var oldPatient = await GetByAppUserIdInsideAsync(currentID);
+                patientDto.Id = oldPatient.Id;
                 if (oldPatient == null)
                     throw new ArgumentNullException($"Patient with ID {patientDto.Id} doesn't exist");
                 _unitOfWork.GetRepository<Patient, int>().Update(_mapper.Map(patientDto, oldPatient));
@@ -91,15 +90,22 @@ namespace Services
             }
         }
 
-        public async Task DeleteAsync(int id, int currentID)
+        public async Task DeleteAsync(int appUserId)
         {
-            var patient = await _unitOfWork.GetRepository<Patient, int>().GetByIdAsync(id);
+            var patient = await GetByAppUserIdInsideAsync(appUserId);
             if (patient == null)
-                throw new ArgumentNullException($"Patient with ID {id} doesn't exist");
-            if (patient.AppUserID != currentID)
-                throw new UnAuthorizedException("Access Denied");
+                throw new ArgumentNullException($"Patient doesn't exist");
             _unitOfWork.GetRepository<Patient, int>().Delete(patient);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task<Patient?> GetByAppUserIdInsideAsync(int appUserId)
+        {
+            var specs = new SpecificationsBase<Patient>(p => p.AppUserID == appUserId);
+            var patient = (await _unitOfWork.GetRepository<Patient, int>().GetAllAsync(specs)).FirstOrDefault();
+            if (patient == null)
+                return null;
+            return patient;
         }
     }
 }

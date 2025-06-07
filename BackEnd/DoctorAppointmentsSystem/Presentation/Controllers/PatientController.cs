@@ -28,9 +28,9 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeletePatient(int id)
+        public async Task<IActionResult> DeletePatient()
         {
-            await _serviceManager.PatientService.DeleteAsync(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            await _serviceManager.PatientService.DeleteAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return NoContent();
         }
     }

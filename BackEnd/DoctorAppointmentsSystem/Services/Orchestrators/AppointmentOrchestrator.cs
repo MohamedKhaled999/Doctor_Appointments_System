@@ -221,6 +221,9 @@ namespace Services.Orchestrators
 
         public async Task AddDoctorReservationAsync(NewResDTO reservation, int appUserId)
         {
+            if (reservation.Date <= DateTime.Now || reservation.Date - DateTime.Now >= TimeSpan.FromDays(14))
+                throw new ValidationException(["Can't add reservation on this day"]);
+
             var doctor = await _doctorService.GetByAppUserIdAsync(appUserId);
             if (doctor.ID != reservation.DoctorID)
                 throw new UnAuthorizedException("Access Denied");
@@ -241,7 +244,7 @@ namespace Services.Orchestrators
             await _notificationService.SendNotification(appUserId, notification);
         }
 
-        public async Task CancelAppointmentAsync(int id, int currentPatientAppUserId = -1)
+        public async Task CancelAppointmentAsync(int id, int currentPatientAppUserId = -1, float refundPercent = 1F)
         {
             var patient = await _appointmentService.GetPatientByAppointmentId(id);
             if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
@@ -255,15 +258,7 @@ namespace Services.Orchestrators
 
             var transactionId = await _appointmentService.GetTransactionId(id);
 
-            var refundDto = new RefundDto()
-            {
-                PaymentId = await _transactionService.GetPaymentId(transactionId)
-            };
-            await _paymentService.Refund(refundDto);
-
-            await _appointmentService.DeleteAsync(id);
-
-            await _transactionService.DeleteAsync(transactionId);
+            await refundAsync(id, transactionId, refundPercent);
 
             var email = new EmailDTO()
             {
@@ -287,11 +282,13 @@ namespace Services.Orchestrators
             var reservation = await _doctorReservationService.GetDoctorReservationByID(id);
             if (reservation == null)
                 throw new ValidationException(["Reservation Not Found"]);
-            if (reservation.Day < DateTime.Now.Day)
-                throw new ValidationException(["Reservation date has already passed"]);
             var doctor = await _doctorReservationService.GetDoctorByReservationId(id);
             if (doctor.AppUserId != currentDoctorAppUserId)
                 throw new UnAuthorizedException("Access Denied");
+            if (reservation.StartTime < DateTime.Now)
+                throw new ValidationException(["Reservation date has already passed"]);
+            if (reservation.StartTime - DateTime.Now < TimeSpan.FromDays(2))
+                throw new ValidationException(["Can't cancel reservation (less than 48 hours left)"]);
 
             var appointments = await _doctorReservationService.GetAppointmentsByReservationId(id);
 
@@ -323,6 +320,21 @@ namespace Services.Orchestrators
                 Message = $"Reminder: you have an appointment with Dr. {doctorName} after 3 hours."
             };
             _notificationService.SendNotification(appUserId, patientReminder).Wait();
+        }
+
+        private async Task refundAsync(int appointmentId, int transactionId, float percent = 1F)
+        {
+            var refundDto = new RefundDto()
+            {
+                PaymentId = await _transactionService.GetPaymentId(transactionId),
+                Percent = percent,
+                IsPartial = percent != 1F
+            };
+            await _paymentService.Refund(refundDto);
+
+            await _appointmentService.DeleteAsync(appointmentId);
+
+            await _transactionService.DeleteAsync(transactionId);
         }
     }
 }
