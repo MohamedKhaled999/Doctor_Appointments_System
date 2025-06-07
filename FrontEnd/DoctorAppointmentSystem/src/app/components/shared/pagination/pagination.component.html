@@ -1,0 +1,14 @@
+<div class="pagination-container" *ngIf="numberOfRecords > pageSize">
+  <ngb-pagination 
+    [collectionSize]="numberOfRecords"
+    [(page)]="pageIndex"
+    [pageSize]="pageSize"
+    [maxSize]="5"
+    [rotate]="true"
+    [ellipses]="false"
+    aria-label="Custom pagination"
+    (pageChange)="onPageChange($event)">
+    <ng-template ngbPaginationPrevious>Previous</ng-template>
+	<ng-template ngbPaginationNext>Next</ng-template>
+  </ngb-pagination>
+</div>

@@ -3,12 +3,19 @@
 <div *ngFor="let doc of pagedDoctors" class="SP-docCard flex-wrap align-items-center p-3 mb-2 border rounded shadow-sm " data-aos="fade-left">
     <app-doctor-card [doctor]="doc"></app-doctor-card> 
 </div>
-<ngb-pagination
-	[collectionSize]="doctors.length"
-	[(page)]="PageIndex"
-	[pageSize]="PageSize"
+
+<!-- Sends doctors.length to child and getting page Index from child to reshow the new records on pagination -->
+<app-pagination [numberOfRecords]="doctors.length"  (pageIndexChange)="pageIndexParent = $event"></app-pagination>
+<!-- <div class="pagination-container" *ngIf="doctors.length > pageSize">
+  <ngb-pagination 
+    [collectionSize]="doctors.length"
+    [(page)]="pageIndexParent"
+    [pageSize]="pageSize"
     [maxSize]="5"
-	[rotate]="true"
-	[ellipses]="false"
-	[boundaryLinks]="true"
-/>
+    [rotate]="true"
+    [ellipses]="false"
+    aria-label="Custom pagination">
+    <ng-template ngbPaginationPrevious>Previous</ng-template>
+	<ng-template ngbPaginationNext>Next</ng-template>
+  </ngb-pagination>
+</div> -->

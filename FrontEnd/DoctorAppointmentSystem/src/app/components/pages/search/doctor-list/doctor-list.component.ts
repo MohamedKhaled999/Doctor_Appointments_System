@@ -10,9 +10,10 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
+import { PaginationComponent } from "../../../shared/pagination/pagination.component";
 @Component({
   selector: 'app-doctor-list',
-  imports: [DoctorCardComponent, CommonModule,NgbPaginationModule],
+  imports: [DoctorCardComponent, CommonModule, NgbPaginationModule, PaginationComponent],
   templateUrl: './doctor-list.component.html',
   styleUrl: './doctor-list.component.css'
 })
@@ -34,14 +35,14 @@ export class DoctorListComponent {
       // console.log(`Doctor's Length: ${this.doctors.length}`)
     }
   }
-  PageSize: number = 3;
-  PageIndex: number = 1;
-
+  // ---------------------Pagination-------------------
+  pageSize: number = 3;
+  pageIndexParent: number = 1;
   get pagedDoctors() {
-    const start = (this.PageIndex - 1) * this.PageSize;
-    return this.doctors.slice(start, start + this.PageSize);
+    const start = (this.pageIndexParent - 1) * this.pageSize;
+    return this.doctors.slice(start, start + this.pageSize);
   }
-  
+  //--------------------------------------------
   doctors: Doctor[] = [
     {
       id: 1,
