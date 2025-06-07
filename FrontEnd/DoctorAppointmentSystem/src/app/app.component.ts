@@ -6,7 +6,7 @@ import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TestSwiperComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

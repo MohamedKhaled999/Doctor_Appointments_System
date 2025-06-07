@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-pagination',
-  imports: [ CommonModule, NgbPaginationModule, PaginationComponent],
+  imports: [ CommonModule, NgbPaginationModule],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.css'
 })
@@ -15,7 +15,7 @@ export class PaginationComponent {
 
   pageIndex: number = 1;
 
-  pageSize: number = 3;
+  pageSize: number = 6;
 
   onPageChange(newIndex: number) {
     this.pageIndexChange.emit(newIndex);

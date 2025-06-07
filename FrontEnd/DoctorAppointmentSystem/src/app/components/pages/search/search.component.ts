@@ -5,7 +5,7 @@ import { DoctorListComponent } from "./doctor-list/doctor-list.component";
 
 @Component({
   selector: 'app-search',
-  imports: [DoctorCardComponent, DoctorFiltersComponent, DoctorListComponent],
+  imports: [ DoctorFiltersComponent, DoctorListComponent],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
