@@ -89,15 +89,23 @@ namespace Services
         /// <exception cref="ValidationException"></exception>
         public async Task<UserResultDto> RegisterAsync(RegisterDto registerDto)
         {
-            Shared.Transaction_Pattern.Transaction transaction = 
+            var userEmail = await userManager.FindByEmailAsync(registerDto.Email);
+            if (userEmail != null)
+            {
+                throw new ValidationException(new List<string> { "Email Already Exist!" });
+            }
+
+            Shared.Transaction_Pattern.Transaction transaction =
                 new Shared.Transaction_Pattern.Transaction();
-            
+
+
+
             var user = new AppUser
             {
                 Email = registerDto.Email,
                 UserName = $"{registerDto.FirstName}DocNet{registerDto.LastName}DocNet{registerDto.Email}",
             };
-            transaction.Execute( () =>
+            transaction.Execute(() =>
             {
                 var result = userManager.CreateAsync(user, registerDto.Password).Result;
                 if (!result.Succeeded)
@@ -105,7 +113,7 @@ namespace Services
                     var errors = result.Errors.Select(e => e.Description).ToList();
                     throw new ValidationException(errors);
                 }
-            },  () =>
+            }, async () =>
             {
                 var todelete = userManager.FindByEmailAsync(user.Email).Result;
                 if (todelete != null)
@@ -138,7 +146,7 @@ namespace Services
                 }, async () =>
                 {
                     SpecificationsBase<Doctor> specifications = new SpecificationsBase<Doctor>(d => d.AppUserID == user.Id);
-                    var todelete = await unitOfWork.GetRepository<Doctor,int>().GetAllAsync(specifications);
+                    var todelete = await unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specifications);
                     if (todelete != null)
                     {
                         unitOfWork.GetRepository<Doctor, int>().Delete(todelete[0]);
