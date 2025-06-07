@@ -232,7 +232,13 @@ namespace Services
 
         public async Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto, string email)
         {
-            var user = await userManager.FindByEmailAsync(email) ?? throw new Exception("User Not Found!");
+
+            var user = await userManager.FindByEmailAsync(email);
+            if (user is null)
+            {
+                throw new UserNotFoundException($"{email}");
+            }
+
             var result = await userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
             if (!result.Succeeded)
                 throw new UnAuthorizedException("Failed to Change Password!");
