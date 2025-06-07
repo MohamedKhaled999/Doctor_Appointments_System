@@ -120,7 +120,7 @@ export const routes: Routes = [
         path:'doctor',  //profile/doctor?id=1
         component: DoctorEditComponent,
         canActivate: [authGuard]
-        
+
       }
 
         ]
