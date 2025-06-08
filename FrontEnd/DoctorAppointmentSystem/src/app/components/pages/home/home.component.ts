@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy , CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import Swiper from 'swiper';
 import Typed from 'typed.js';
@@ -30,7 +30,10 @@ RouterLink ,
     RatingComponent, 
   ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  
+
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   homeData: any;
@@ -126,7 +129,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   //   return this.aosAnimations[index];
   // }
 
-  
+
   getRandomAosAnimation(): string {
     const index = Math.floor(Math.random() * this.aosAnimations.length);
     return this.aosAnimations[index];

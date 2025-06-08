@@ -5,9 +5,12 @@ import { DataManagementService } from './core/services/data-management.service';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { isPlatformBrowser } from '@angular/common';
 import AOS from 'aos'; 
+
+import { NgxSpinnerComponent } from 'ngx-spinner';
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet , NgxSpinnerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
