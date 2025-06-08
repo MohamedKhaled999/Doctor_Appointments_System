@@ -1,5 +1,5 @@
 <div style="padding-top:80px">
-    <div class="col-12 pt-3 d-flex justify-content-center gap-3 list-unstyled p-0">
+    <div class="col-12 pt-3 d-flex justify-content-center gap-3 list-unstyled p-0 mb-3">
         <button class="btn" [ngClass]="{'active-tab patient-tab-active': activeTab === 'details'}"
             (click)="switchTab('details')"><span>Details</span></button>
         <button class="btn" [ngClass]="{'active-tab patient-tab-active': activeTab === 'appointments'}"
@@ -94,6 +94,7 @@
             <swiper-slide
                 class="patient-appointment-card p-3 shadow overflow-hidden d-flex gap-3 bg-white rounded-3 align-items-center position-relative"
                 data-aos="fade-left">
+                <!-- patient-appointment-card p-3 shadow overflow-hidden d-flex gap-3 bg-white rounded-3 align-items-center position-relative -->
                 <app-patient-appointment [appointment]="appointment"></app-patient-appointment>
             </swiper-slide>
             }

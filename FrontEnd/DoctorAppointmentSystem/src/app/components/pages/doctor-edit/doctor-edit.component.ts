@@ -68,8 +68,10 @@ export class DoctorEditComponent implements OnInit {
     //     birthDate: profile.birthDate!,
     //     image: null
     //   };
-    // });
-    this.doctor = {
+    //   console.log('Doctor Profile:', this.doctor);
+      
+  // });
+  this.doctor = {
       firstName: 'John Doe',
       lastName: 'Smith',
       gender: 'male',

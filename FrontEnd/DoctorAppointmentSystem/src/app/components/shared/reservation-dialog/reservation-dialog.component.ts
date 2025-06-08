@@ -27,8 +27,8 @@ export class ReservationDialogComponent {
    */
   constructor(public dialogRef: MatDialogRef<ReservationDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.reservationForm = new FormGroup({
-      id: new FormControl(''),
-      date: new FormControl('', [Validators.required]),
+      id: new FormControl(data.id || ''),
+      date: new FormControl(data.date || '', [Validators.required]),
       startTime: new FormControl('', [Validators.required]),
       endTime: new FormControl('', [Validators.required]),
       maxAppointments: new FormControl('', [Validators.required, Validators.min(1)])

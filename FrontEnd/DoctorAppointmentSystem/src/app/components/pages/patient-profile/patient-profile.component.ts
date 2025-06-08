@@ -46,7 +46,7 @@ export class PatientProfileComponent implements OnInit {
     //     lastName: this.patient.lastName,
     //     email: this.patient.email,
     //     phoneNumber: this.patient.phoneNumber,
-    //     governorate: this.patient.governorate,
+    //     governorate: this.governorates[parseInt(this.patient.governorate) - 1],
     //     birthDate: this.patient.birthDate
     //   });
     // }
@@ -73,14 +73,14 @@ export class PatientProfileComponent implements OnInit {
         }
       ]
     }
-    this.patientForm.patchValue({
-      firstName: this.patient.firstName,
-      lastName: this.patient.lastName,
-      email: this.patient.email,
-      phoneNumber: this.patient.phoneNumber,
-      governorate: this.patient.governorate,
-      birthDate: this.patient.birthDate.toISOString().split('T')[0]
-    });
+     this.patientForm.patchValue({
+        firstName: this.patient.firstName,
+        lastName: this.patient.lastName,
+        email: this.patient.email,
+        phoneNumber: this.patient.phoneNumber,
+        governorate: this.governorates[parseInt(this.patient.governorate) - 1],
+        birthDate: this.patient.birthDate
+      });
     if (this.router.snapshot.queryParamMap.get('orderSucceeded') === 'true') {
       this.orderSucceeded = true;
       Swal.fire({
@@ -109,7 +109,16 @@ export class PatientProfileComponent implements OnInit {
   }
   onSubmit() {
     if (this.patientForm.invalid) return;
-    this.patientService.updateProfile(this.patientForm.getRawValue()).subscribe(() => {
+    const patient = {
+      id: this.patient?.id || 0,
+      firstName: this.patientForm.value.firstName,
+      lastName: this.patientForm.value.lastName,
+      email: this.patientForm.value.email,
+      phoneNumber: this.patientForm.value.phoneNumber,
+      governorate: this.governorates.indexOf(this.patientForm.value.governorate) + 1,
+      birthDate: this.patientForm.value.birthDate
+    };
+    this.patientService.updateProfile(patient).subscribe(() => {
       Swal.fire({
         icon: 'success',
         title: 'Your profile has been updated!',
@@ -120,9 +129,5 @@ export class PatientProfileComponent implements OnInit {
       (error) => {
         this.errorMessage = error.error.message;
       });
-  }
-  transferData(appID: number, docName: string) {
-    (<HTMLInputElement>document.querySelector(".SP-appID")).value = appID.toString();
-    (<HTMLLabelElement>document.querySelector(".SP-review label")).innerText = `Thoughts on the appointment with Dr ${docName} ?`
   }
 }

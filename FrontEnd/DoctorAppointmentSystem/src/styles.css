@@ -14,3 +14,21 @@ body {
 html {
     scrollbar-color: var(--primary-color) var(--accent-color);
 }
+.form-container .login-form-input {
+    display: block;
+    width: 100%;
+    outline: none;
+    border: 1px solid var(--secondary-color);
+    padding: 5px 10px;
+    border-radius: 10px !important;
+}
+
+.login-submit {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+}
+
+.login-submit:hover {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+}

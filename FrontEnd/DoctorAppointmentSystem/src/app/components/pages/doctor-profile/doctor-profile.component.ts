@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Inject} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DoctorService } from '../../../core/services/doctor.service';
 import { Doctor } from '../../../core/interfaces/doctor.interface';
@@ -17,12 +17,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ReservationDialogComponent } from '../../shared/reservation-dialog/reservation-dialog.component';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { AccountService } from '../../../core/services/account.service';
+import Swal from 'sweetalert2';
 
 declare var bootstrap: any;
 declare var calendarJS: any;
 
 export enum CalendarView {
-  Month= 'month',
+  Month = 'month',
   Week = 'week',
   Day = 'day'
 }
@@ -33,8 +35,9 @@ export enum CalendarView {
   templateUrl: './doctor-profile.component.html',
   styleUrl: './doctor-profile.component.css'
 })
-export class DoctorProfileComponent implements OnInit, AfterViewInit {
+export class DoctorProfileComponent implements OnInit {
   doctor: Doctor | undefined;
+  myProfile = false;
   reviews: Rating[] | undefined;
   pagedReviews: Rating[] | undefined;
   currentPage = 1;
@@ -83,7 +86,7 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
   /**
    *
   */
-  constructor(private doctorService: DoctorService, private route: ActivatedRoute, public dialog: MatDialog) {
+  constructor(private doctorService: DoctorService, private route: ActivatedRoute, public dialog: MatDialog, private auth: AccountService) {
     this.generateCalendarView(this.currentView, this.viewDate);
     this.generateTimeSlots();
   }
@@ -262,25 +265,35 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const reservation: Reservation = {
-          id: result.id,
-          date: result.date,
-          time: `${result.startTime} - ${result.endTime}`,
-          day: this.selectedDate!.getDay(),
-          isAvailable: true
+        const reservation = {
+          date: result.date.setDate(result.date.getDate() + 1),
+          endTime: result.endTime,
+          startTime: result.startTime,
+          maxRes: result.maxAppointments,
+          doctorId: this.doctor?.id,
         };
-        // this.doctorService.addReservation(this.doctor!.id, reservation).subscribe(() => {
-        //   Swal.fire({
-        //     title: 'Success',
-        //     text: 'Reservation added successfully',
-        //     icon: 'success',
-        //     confirmButtonText: 'OK'
-        //   });
-        // });
-        console.log('Reservation added:', reservation);
+        console.log('reservation', reservation);
+        
+        this.doctorService.addReservation(reservation).subscribe(() => {
+          Swal.fire({
+            title: 'Success',
+            text: 'Reservation added successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          this.doctorService.getReservations(this.doctor!.id).subscribe(reservations => {
+            reservations.forEach(reservation => {
+              reservation.date = new Date(reservation.startTime.split('T')[0]);
+              reservation.time = `${reservation.startTime.split('T')[1]} - ${reservation.endTime.split('T')[1]}`;
+            });
+            if (this.doctor) {
+              this.doctor.reservations = reservations;
+            }
+          });
+        });
       }
     });
-  } 
+  }
   isCurrentMonth(date: Date): boolean {
     return (
       date.getMonth() === this.viewDate.getMonth() &&
@@ -291,122 +304,127 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
     this.viewDate = new Date();
     this.generateCalendarView(this.currentView, this.viewDate);
   }
-  ngAfterViewInit(): void {
-    this.initMap();
-    // this.modalInstance = new bootstrap.Modal(document.getElementById('reservationModal') as HTMLElement);
-    // this.initCalendar(this.doctor!.reservations);
-  }
   setTab(arg0: string) {
     this.selectedTab = arg0 as 'details' | 'reviews' | 'calendar';
     if (arg0 === 'calendar') {
     }
   }
   ngOnInit(): void {
-    // this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe(profile => {
-    //   this.doctor = profile;
-    //   this.reviews = profile.ratings;
+    this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe(profile => {
+      this.doctor = profile;
+      this.initMap();
+      this.doctorService.getReservations(this.doctor.id).subscribe(reservations => {
+        reservations.forEach(reservation => {
+          reservation.date = new Date(reservation.startTime.split('T')[0]);
+          reservation.time = `${reservation.startTime.split('T')[1]} - ${reservation.endTime.split('T')[1]}`;
+        });
+        if (this.doctor) {
+          this.doctor.reservations = reservations;
+        }
+      });
+      // this.reviews = profile.ratings;
+      // this.pageCount = Math.ceil(this.reviews!.length / this.pageSize);
+      // this.setPage(1);
+    });
+    // this.doctor = {
+    //   id: 1,
+    //   name: 'John Doe',
+    //   title: 'Cardiologist',
+    //   gender: 'male',
+    //   image: 'https://example.com/doctor.jpg',
+    //   qualifications: 'MD, PhD',
+    //   fees: 100,
+    //   specialty: 'Cardiology',
+    //   rating: 4.5,
+    //   waitingTime: 30,
+    //   governorate: 'Cairo',
+    //   location: 'Cairo',
+    //   phone: '0123456789',
+    //   ratings: [
+    //     {
+    //       id: 1,
+    //       patientName: 'John Doe',
+    //       rate: 4,
+    //       review: 'Great doctor!',
+    //       date: '2025-10-01',
+    //       docId: 1
+    //     },
+    //     {
+    //       id: 2,
+    //       patientName: 'Jane Doe',
+    //       rate: 5,
+    //       review: 'Excellent service!',
+    //       date: '2025-10-02',
+    //       docId: 1
+    //     },
+    //     {
+    //       id: 3,
+    //       patientName: 'Alice Smith',
+    //       rate: 3,
+    //       review: 'Average experience.',
+    //       date: '2025-10-03',
+    //       docId: 1
+    //     },
+    //     {
+    //       id: 4,
+    //       patientName: 'Bob Johnson',
+    //       rate: 2,
+    //       review: 'Not satisfied with the service.',
+    //       date: '2025-10-04',
+    //       docId: 1
+    //     },
+    //     {
+    //       id: 5,
+    //       patientName: 'Charlie Brown',
+    //       rate: 4,
+    //       review: 'Good doctor, but waiting time was long.',
+    //       date: '2025-10-05',
+    //       docId: 1
+    //     },
+    //     {
+    //       id: 6,
+    //       patientName: 'David Wilson',
+    //       rate: 5,
+    //       review: 'Highly recommend!',
+    //       date: '2025-10-06',
+    //       docId: 1
+    //     }
+    //   ],
+    //   reservations: [
+    //     {
+    //       day: 1,
+    //       time: '10:00 AM - 11:00 AM',
+    //       id: 1,
+    //       isAvailable: true,
+    //       date: new Date('2025-6-01')
+    //     },
+    //     {
+    //       day: 1,
+    //       time: '11:00 AM - 12:00 PM',
+    //       id: 2,
+    //       isAvailable: false,
+    //       date: new Date('2025-6-02')
+    //     },
+    //     {
+    //       day: 2,
+    //       time: '10:00 AM - 11:00 AM',
+    //       id: 3,
+    //       isAvailable: true,
+    //       date: new Date('2025-6-03')
+    //     }
+    //   ],
+    //   latitude: 30.0444,
+    //   longitude: 31.2357,
+    //   schedule: {
+    //     startTime: '08:00',
+    //     endTime: '17:00',
+    //     days: ['0', '1', '1', '1', '1', '1', '0'],
+    //     reservationQuota: 10
+    //   }
+    // }
+    // this.reviews = this.doctor.ratings;
     //   this.pageCount = Math.ceil(this.reviews!.length / this.pageSize);
     //   this.setPage(1);
-    // });
-    this.doctor = {
-      id: 1,
-      name: 'John Doe',
-      title: 'Cardiologist',
-      gender: 'male',
-      image: 'https://example.com/doctor.jpg',
-      qualifications: 'MD, PhD',
-      fees: 100,
-      specialty: 'Cardiology',
-      rating: 4.5,
-      waitingTime: 30,
-      governorate: 'Cairo',
-      location: 'Cairo',
-      phone: '0123456789',
-      ratings: [
-        {
-          id: 1,
-          patientName: 'John Doe',
-          rate: 4,
-          review: 'Great doctor!',
-          date: '2025-10-01',
-          docId: 1
-        },
-        {
-          id: 2,
-          patientName: 'Jane Doe',
-          rate: 5,
-          review: 'Excellent service!',
-          date: '2025-10-02',
-          docId: 1
-        },
-        {
-          id: 3,
-          patientName: 'Alice Smith',
-          rate: 3,
-          review: 'Average experience.',
-          date: '2025-10-03',
-          docId: 1
-        },
-        {
-          id: 4,
-          patientName: 'Bob Johnson',
-          rate: 2,
-          review: 'Not satisfied with the service.',
-          date: '2025-10-04',
-          docId: 1
-        },
-        {
-          id: 5,
-          patientName: 'Charlie Brown',
-          rate: 4,
-          review: 'Good doctor, but waiting time was long.',
-          date: '2025-10-05',
-          docId: 1
-        },
-        {
-          id: 6,
-          patientName: 'David Wilson',
-          rate: 5,
-          review: 'Highly recommend!',
-          date: '2025-10-06',
-          docId: 1
-        }
-      ],
-      reservations: [
-        {
-          day: 1,
-          time: '10:00 AM - 11:00 AM',
-          id: 1,
-          isAvailable: true,
-          date: new Date('2025-6-01')
-        },
-        {
-          day: 1,
-          time: '11:00 AM - 12:00 PM',
-          id: 2,
-          isAvailable: false,
-          date: new Date('2025-6-02')
-        },
-        {
-          day: 2,
-          time: '10:00 AM - 11:00 AM',
-          id: 3,
-          isAvailable: true,
-          date: new Date('2025-6-03')
-        }
-      ],
-      latitude: 30.0444,
-      longitude: 31.2357,
-      schedule: {
-        startTime: '08:00',
-        endTime: '17:00',
-        days: ['0', '1', '1', '1', '1', '1', '0'],
-        reservationQuota: 10
-      }
-    }
-    this.reviews = this.doctor.ratings;
-      this.pageCount = Math.ceil(this.reviews!.length / this.pageSize);
-      this.setPage(1);
   }
   setPage(arg0: number) {
     if (arg0 < 1 || arg0 > this.pageCount) return;
@@ -462,89 +480,6 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
       marker.bindPopup(`<b>${this.doctor!.name}</b><br>${this.doctor!.location}`).openPopup();
     });
   }
-  initCalendar(reservations: Reservation[]): void {
-    const script = document.createElement('script');
-    script.src = '/calenderJS/dist/calendar.min.js';
-    document.body.appendChild(script);
-    script.onload = () => {
-      const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth();
-      const nextMonthDate = new Date(currentYear, currentMonth + 1, 1);
-      this.calendarInstance = new calendarJS(
-        this.calendarContainer?.nativeElement,
-        {
-          initialDateTime: currentDate,
-          minimumYear: currentYear,
-          maximumYear: nextMonthDate.getFullYear(),
-          manualEditingEnabled: false,
-          views: {
-            fullMonth: {
-              enabled: true,
-              isPinUpViewEnabled: false,
-              showExtraTitleBarButtons: false,
-              showPreviousNextMonthNames: false
-            },
-            fullDay: { enabled: false },
-            fullWeek: { enabled: false },
-            fullYear: { enabled: false },
-            timeline: { enabled: false },
-            allEvents: { enabled: false }
-          },
-          fullScreenModeEnabled: false,
-          exportEventsEnabled: false,
-          importEventsEnabled: false,
-          configurationDialogEnabled: false,
-          jumpToDateEnabled: false,
-          dragAndDropForEventsEnabled: false,
-          sideMenu: {
-            showDays: false,
-            showEventTypes: false,
-            showGroups: false,
-            showWorkingDays: false,
-            showWeekendDays: false
-          },
-          events: {
-            onPreviousMonth: (displayDate: Date) => {
-              this.calendarInstance.setCurrentDisplayDate(
-                new Date(currentYear, currentMonth, 1)
-              );
-            },
-            onNextMonth: (displayDate: Date) => {
-              this.calendarInstance.setCurrentDisplayDate(
-                new Date(currentYear, currentMonth + 1, 1)
-              );
-            },
-            onEventClick: (event: CalendarReservation) => {
-              // this.reservationForm.controls['date'].setValue = event.from.toString();
-              // this.reservationForm.controls['id'].setValue = event.ResID;
-              // this.reservationForm.controls['startTime'].setValue = event.from
-              //   .toTimeString()
-              //   .slice(0, 5);
-
-              // if (event.isAllDay) {
-              //   this.calFormBTN.nativeElement.innerText = 'Add';
-              //   this.formValues.startTime = '09:00';
-              //   this.formValues.endTime = '17:00';
-              //   this.deleteBTNDiv.nativeElement.classList.add('d-none');
-              // } else {
-              //   this.calFormBTN.nativeElement.innerText = 'Update';
-              //   this.deleteBTNDiv.nativeElement.classList.remove('d-none');
-              //   this.formValues.startTime = event.from
-              //     .toTimeString()
-              //     .slice(0, 5);
-              //   this.formValues.endTime = event.to
-              //     .toTimeString()
-              //     .slice(0, 5);
-              // }
-              this.modalInstance.show();
-            }
-          }
-        }
-      );
-
-    }
-  }
   uploadPhoto(event: any): void {
     this.doctorService.uploadPhoto(event.target.files[0]).subscribe();
   }
@@ -554,18 +489,25 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(ReservationDialogComponent, {
       width: '400px',
       panelClass: 'dialog-container',
-      data: reservation
+      data: {
+        id: reservation.id,
+        date: reservation.date,
+        startTime: reservation.time?.split(' - ')[0],
+        endTime: reservation.time?.split(' - ')[1],
+        maxAppointments: 1
+      }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const newReservation: Reservation = {
+        const newReservation = {
           id: result.id,
           date: result.date,
-          time: `${result.startTime} - ${result.endTime}`,
-          day: result.date.getDay(),
-          isAvailable: true
+          startTime: result.startTime,
+          endTime: result.endTime,
+          maxRes: result.maxAppointments,
+          doctorId: this.doctor?.id
         };
-        // this.doctorService.addReservation(this.doctor!.id, newReservation).subscribe(() => {
+        // this.doctorService.editReservation(this.doctor!.id, newReservation).subscribe(() => {
         //   Swal.fire({
         //     title: 'Success',
         //     text: 'Reservation added successfully',
@@ -597,7 +539,7 @@ export class DoctorProfileComponent implements OnInit, AfterViewInit {
   }
   getReservationsForDateTime(date: Date, time: string): Reservation[] {
     if (!this.doctor || !this.doctor.reservations) return [];
-    return this.doctor.reservations.filter(reservation => 
+    return this.doctor.reservations.filter(reservation =>
       this.isSameDate(reservation.date, date) && reservation.time?.startsWith(time)
     );
   }

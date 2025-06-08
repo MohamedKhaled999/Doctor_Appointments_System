@@ -25,7 +25,7 @@
         </a>
 
         <ng-container>
-          <a [routerLink]="['/doctor/edit', doctor?.id]" class="btn col-12 SP-callBTN mt-3 w-100 my-1">
+          <a [routerLink]="['/profile/doctor/edit']" class="btn col-12 SP-callBTN mt-3 w-100 my-1">
             <i class="fa-solid fa-pen-to-square"></i> Edit Profile
           </a>
           <a class="btn col-12 SP-callBTN mt-3 w-100 my-1">
@@ -103,7 +103,7 @@
         <div class="tab-pane fade" [class.active]="selectedTab === 'reviews'" [class.show]="selectedTab === 'reviews'">
           <h4>Patient Reviews</h4>
           <div class="reviewsContainer">
-            <ng-container *ngIf="reviews?.length === 0">
+            <ng-container *ngIf="reviews === undefined || reviews?.length === 0">
               <h5 class="text-center text-primary py-3 p-3 SP-primaryText ">No Review Exists</h5>
             </ng-container>
             <ng-container *ngFor="let review of pagedReviews">
@@ -131,22 +131,24 @@
             </ng-container>
 
             <!-- Pagination -->
-            <nav aria-label="Page navigation">
-              <ul class="pagination justify-content-center">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                  <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
-                </li>
-                <li class="page-item" *ngFor="
+            <ng-container *ngIf="reviews && reviews.length > 0">
+              <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
+                  </li>
+                  <li class="page-item" *ngFor="
                     let p of [].constructor(pageCount);
                     let idx = index
                   " [class.active]="idx + 1 === currentPage">
-                  <a class="page-link" (click)="setPage(idx + 1)">{{ idx + 1 }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === pageCount">
-                  <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
-                </li>
-              </ul>
-            </nav>
+                    <a class="page-link" (click)="setPage(idx + 1)">{{ idx + 1 }}</a>
+                  </li>
+                  <li class="page-item" [class.disabled]="currentPage === pageCount">
+                    <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
+                  </li>
+                </ul>
+              </nav>
+            </ng-container>
           </div>
         </div>
 
@@ -236,10 +238,10 @@
                     <button mat-icon-button (click)="next()" (keydown.enter)="next()" (keydown.space)="next()">
                       <mat-icon>&gt;</mat-icon>
                     </button>
-                    <button mat-flat-button (click)="selectDate()" (keydown.enter)="selectDate()"
+                    <!-- <button mat-flat-button (click)="selectDate()" (keydown.enter)="selectDate()"
                       (keydown.space)="selectDate()">
                       Add Reservation
-                    </button>
+                    </button> -->
                   </div>
                 </div>
 
@@ -301,15 +303,14 @@
                         <div (click)="selectDate(monthDays[i], timeSlot)"
                           (keydown.enter)="selectDate(monthDays[i], timeSlot)"
                           (keydown.space)="selectDate(monthDays[i], timeSlot)" class="cell-overlay" tabindex="0"></div>
-                          <div tabindex="0" *ngFor="
+                        <div tabindex="0" *ngFor="
                           
                           let reservation of getReservationsForDateTime(
                             monthDays[i],
-                            timeSlot)"
-                            (click)="editReservation(reservation, $event)"
-                              (keydown.enter)="editReservation(reservation, $event)"
-                              (keydown.space)="editReservation(reservation, $event)"
-                          cdkDrag cdkDragHandle [cdkDragData]="reservation" class="reservation">
+                            timeSlot)" (click)="editReservation(reservation, $event)"
+                          (keydown.enter)="editReservation(reservation, $event)"
+                          (keydown.space)="editReservation(reservation, $event)" cdkDrag cdkDragHandle
+                          [cdkDragData]="reservation" class="reservation">
                           <span>{{ reservation.time }}</span>
                         </div>
                       </td>
@@ -325,22 +326,19 @@
                       <td [width]="10" class="calendar-slot-cell">
                         <span>{{ slot }}</span>
                       </td>
-                      <td cdkDropList
-                        (cdkDropListDropped)="drop($event, monthDays[0], slot)"
+                      <td cdkDropList (cdkDropListDropped)="drop($event, monthDays[0], slot)"
                         [cdkDropListData]="doctor?.reservations">
                         <div (click)="selectDate(monthDays[0], slot)" (keydown.enter)="selectDate(monthDays[0], slot)"
                           (keydown.space)="selectDate(monthDays[0], slot)" class="cell-overlay" tabindex="0"></div>
-                        
+
                         <div tabindex="0" *ngFor="
                 let reservation of getReservationsForDateTime(
                         monthDays[0],
                         slot
-                        )"
-                cdkDrag cdkDragHandle [cdkDragData]="reservation"
-                              (click)="editReservation(reservation, $event)"
-                              (keydown.enter)="editReservation(reservation, $event)"
-                              (keydown.space)="editReservation(reservation, $event)"
-              class="reservation">
+                        )" cdkDrag cdkDragHandle [cdkDragData]="reservation"
+                          (click)="editReservation(reservation, $event)"
+                          (keydown.enter)="editReservation(reservation, $event)"
+                          (keydown.space)="editReservation(reservation, $event)" class="reservation">
                           <span>{{ reservation.time }}</span>
                         </div>
                       </td>

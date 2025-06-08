@@ -70,7 +70,7 @@ import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.
 //   {
 //     path: 'change-password',
 //     component: ChangePasswordComponent
-  
+
 //   },
 //   { 
 //     path: 'doctor-register', 
@@ -87,7 +87,7 @@ import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.
 export const routes: Routes = [
   // blank
   {
-    path: '' ,
+    path: '',
     component: BlankLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -98,25 +98,33 @@ export const routes: Routes = [
       }
       ,
       {
-        path:'profile',
-        canActivate:[authGuard],
-        children:[
-        {
+        path: 'profile',
+        // canActivate: [authGuard],
+        children: [
+          {
             path: '',
             redirectTo: 'not-found',
             pathMatch: 'full'
-      },
-      {
-        path:'patient',
-        component: PatientProfileComponent
-      },
-      {
-        path:'doctor',
-        component: DoctorEditComponent
-      }
+          },
+          {
+            path: 'patient',
+            loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
+          },
+          {
+            path: 'doctor',
+            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+          },
+          {
+            path: 'doctor/edit',
+            loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent)
+          },
+          {
+            path: 'doctor/:id',
+            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+          }
         ]
       },
-     
+
     ]
   },
   // auth 
@@ -124,73 +132,73 @@ export const routes: Routes = [
     path: '',
     component: AuthLayoutComponent,
     children: [
-  {
-    path: 'register',
-    component: RegisterComponent,
-    title: 'Register Account'
+      {
+        path: 'register',
+        component: RegisterComponent,
+        title: 'Register Account'
+      },
+      {
+        path: 'login',
+        component: LoginComponent,
+        title: 'Sign In - Doctor Appointments'
+      },
+      {
+        path: 'forgot-password',
+        component: ForgetPasswordComponent,
+        title: 'Password Recovery - Doctor Appointments'
+      },
+      {
+        path: 'need-to-confirm',
+        component: NeedToConfirmComponent,
+        title: 'Need to Confirm - Doctor Appointments'
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent
+      },
+      {
+        path: 'confirm-success',         //token ,email 
+        component: ConfirmEmailComponent // This can be a component that shows a success message after email confirmation
+      },
+      {
+        path: 'change-password',
+        component: ChangePasswordComponent,
+        canActivate: [authGuard],
+      }
+      // add doctor register route
+    ]
   },
-  { 
-    path: 'login', 
-    component: LoginComponent,
-    title: 'Sign In - Doctor Appointments'
-  },
-  {
-    path: 'forgot-password',
-    component: ForgetPasswordComponent,
-    title: 'Password Recovery - Doctor Appointments'
-  },
-  {
-    path: 'need-to-confirm',
-    component: NeedToConfirmComponent, 
-    title: 'Need to Confirm - Doctor Appointments'
-  },
-  { 
-    path: 'reset-password', 
-    component: ResetPasswordComponent 
-  },
-  { 
-    path: 'confirm-success',         //token ,email 
-    component: ConfirmEmailComponent // This can be a component that shows a success message after email confirmation
-  },
-  {
-    path: 'change-password',
-    component: ChangePasswordComponent,
-    canActivate: [authGuard],
-  }
-  // add doctor register route
-]
-  },
-  
-  
-  // admin layout
-{
 
-  path:'admin',
-  component:AdminLayoutComponent,
-  canActivate:[authGuard],
-  children:[
-    {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
-    {
-      path:'dashboard',
-      title: 'Admin Dashboard - Doctor Appointments',
-      component:AdminDashboardComponent
-    }
-  ]
-},
-{
-  path: 'test',
-  component: TestSwiperComponent,
-}
-,
-{
-  path: 'extrenal-login',
-  component: ExtrenalLoginComponent,
-}
-,
-//NotFound
-{
+
+  // admin layout
+  {
+
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        title: 'Admin Dashboard - Doctor Appointments',
+        component: AdminDashboardComponent
+      }
+    ]
+  },
+  {
+    path: 'test',
+    component: TestSwiperComponent,
+  }
+  ,
+  {
+    path: 'extrenal-login',
+    component: ExtrenalLoginComponent,
+  }
+  ,
+  //NotFound
+  {
     path: '**',
-    component: NotFoundComponent , title: 'NotFound'
-}
+    component: NotFoundComponent, title: 'NotFound'
+  }
 
 ]
