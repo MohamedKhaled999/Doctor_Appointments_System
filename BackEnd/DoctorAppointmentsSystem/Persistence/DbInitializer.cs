@@ -29,8 +29,8 @@ namespace Persistence
         {
             try
             {
-                // if (_context.Database.CanConnect())
-                //     await DropTablesAsync(_context);
+                //if (_context.Database.CanConnect())
+                //    await DropTablesAsync(_context);
                 if ((await _context.Database.GetPendingMigrationsAsync()).Any())
                     await _context.Database.MigrateAsync();
                 await InitializeIdentityAsync();

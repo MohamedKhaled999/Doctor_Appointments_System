@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -211,6 +211,7 @@ namespace Persistence.Migrations
                     Governorate = table.Column<int>(type: "int", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AppUserID = table.Column<int>(type: "int", nullable: true),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     SpecialtyID = table.Column<int>(type: "int", nullable: false),
                     Fees = table.Column<int>(type: "int", nullable: false),
                     WaitingTime = table.Column<int>(type: "int", nullable: false),
