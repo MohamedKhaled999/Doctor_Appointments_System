@@ -196,10 +196,11 @@ namespace Services.Orchestrators
             };
             await _notificationService.SendNotification(patient.AppUserId, patientNotification);
 
-            BackgroundJob.Schedule(
+            var jobId = BackgroundJob.Schedule(
                 () => AppointmentReminderJob(patient.AppUserId, appointment.Doctor),
                     appointment.StartTime.AddHours(-3) - DateTime.Now
                 );
+            await _appointmentService.AddJobIdAsync(appointment.Id, jobId);
 
             var reservation = await _doctorReservationService.GetDoctorReservationByID(doctorReservationId);
             if (!reservation.IsAvailable)
@@ -249,6 +250,8 @@ namespace Services.Orchestrators
             var patient = await _appointmentService.GetPatientByAppointmentId(id);
             if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
                 throw new UnAuthorizedException("Access Denied");
+            if (await _appointmentService.IsCanceledAsync(id))
+                throw new ValidationException(["Appointment has already been canceled"]);
 
             var appointment = await _appointmentService.GetWithDoctorAsync(id);
             if (appointment == null)
@@ -343,6 +346,9 @@ namespace Services.Orchestrators
             };
             await _paymentService.Refund(refundDto);
 
+            var jobId = await _appointmentService.GetJobIdAsync(appointmentId);
+            BackgroundJob.Delete(jobId);
+
             if (!refundDto.IsPartial)
             {
                 await _appointmentService.DeleteAsync(appointmentId);
@@ -351,7 +357,7 @@ namespace Services.Orchestrators
             else
             {
                 var transaction = await _transactionService.GetByIdAsync(transactionId);
-                await _transactionService.UpdateAsync(transactionId, transaction.Amount);
+                await _transactionService.UpdateAsync(transactionId, transaction.Amount * percent);
                 await _appointmentService.SetCanceledAsync(appointmentId);
             }
         }

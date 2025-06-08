@@ -106,6 +106,32 @@ namespace Services
             return _mapper.Map<PatientAppUserDTO>(appointment.Patient);
         }
 
+        public async Task AddJobIdAsync(int appointmentId, string jobId)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(appointmentId);
+            if (appointment == null)
+                throw new ValidationException(["Appointment doesn't exist"]);
+            appointment.JobId = jobId;
+            _unitOfWork.GetRepository<Appointment, int>().Update(appointment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<string?> GetJobIdAsync(int id)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(id);
+            if (appointment == null)
+                throw new ValidationException(["Appointment doesn't exist"]);
+            return appointment.JobId;
+        }
+
+        public async Task<bool> IsCanceledAsync(int id)
+        {
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(id);
+            if (appointment == null)
+                throw new ValidationException(["Appointment doesn't exist"]);
+            return appointment.Canceled;
+        }
+
         public async Task<List<AppointmentDTO>?> GetByPatientAsync(int patientId, int pageIndex = 1, int pageSize = 20)
         {
             var specs = new AppointmentPaginationSpecifications(a => a.PatientId == patientId, pageIndex, pageSize);
@@ -148,6 +174,7 @@ namespace Services
             if (appointment == null)
                 throw new ValidationException(["Appointment doesn't exist"]);
             appointment.Canceled = true;
+            _unitOfWork.GetRepository<Appointment, int>().Update(appointment);
             await _unitOfWork.SaveChangesAsync();
         }
     }
