@@ -16,12 +16,13 @@ import { routes } from './app.routes';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FacebookLoginProvider, GoogleLoginProvider, MicrosoftLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
+import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
   provideZoneChangeDetection({ eventCoalescing: true }),
   provideRouter(routes), provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch(), withInterceptors([headerInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([headerInterceptor,loadingInterceptor])),
   
 
   provideAnimations(),

@@ -38,6 +38,7 @@
                "node_modules/swiper/swiper-bundle.css",
               "node_modules/nouislider/dist/nouislider.min.css",
               "node_modules/ngx-toastr/toastr.css",
+                "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
               "src/styles.css"
 
             ],
