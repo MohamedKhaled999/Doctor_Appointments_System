@@ -52,7 +52,6 @@ export class DoctorListComponent {
       // console.log('Current page:', this.currentPage);
     }
   });
-  doctors: Doctor[] = [];
 
   currentPage: number = 1;
   totalDoctors: number = 0;
@@ -60,6 +59,8 @@ export class DoctorListComponent {
   numberOfRecords: number = 0;
   maxPages: number = 0;
   loading: boolean = false;
+  doctors: Doctor[] = [];
+
   loadDoctors(): void {
     this.loading = true;
     this.doctors = [];
@@ -70,7 +71,6 @@ export class DoctorListComponent {
         this.numberOfPages = response.total_pages;
         console.log('Total pages:', this.numberOfPages);
         this.numberOfRecords = this.numberOfPages * this.pageSize;
-
         this.totalDoctors = response.total_results;
         this.pageIndexParent.set(response.page); // Update the current page index
         // this.pageSize = response.pageSize || this.pageSize; // Ensure pageSize is set correctly
@@ -88,24 +88,6 @@ export class DoctorListComponent {
       
     });
   }
-
-  // loadDoctorDetails(): void {
-  //   if (this.doctors.length === 0) return;
-
-  //   this.isLoadingDetails = true;
-
-  //   this.doctorService.getDetailsForDoctors(this.doctors)
-  //     .subscribe({
-  //       next: (doctorsWithDetails) => {
-  //         this.doctors = doctorsWithDetails;
-  //         this.isLoadingDetails = false;
-  //       },
-  //       error: (error) => {
-  //         console.error('Error fetching doctor details:', error);
-  //         this.isLoadingDetails = false;
-  //       }
-  //     });
-  // }
 
   // doctors: Doctor[] = [
   //   {

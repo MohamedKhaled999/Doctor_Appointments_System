@@ -2,7 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { tap, map, catchError, of, Observable } from 'rxjs';
-
+import { Governorate } from '../enums/governorate.enum';
 import { Doctor, DoctorResponse } from '../interfaces/doctor';
 import { reservation } from '../interfaces/reservation';
 import { environment } from '../environments/environment';
@@ -67,8 +67,8 @@ export class DoctorSearchService {
       specializations: doctor.specialty || [],
       rating: doctor.rating || 0,
       waitingTime: doctor.waitingTime || 0,
-      governorate: doctor.governorate || 0,
-      location: doctor.location || 'Unknown',
+      governorate: Governorate[doctor.governorate].toString() || 'Governorate is Unknown',
+      location: doctor.location || 'Location is Unknown',
       phone: doctor.phone || 'Not available',
       reservations: []
 

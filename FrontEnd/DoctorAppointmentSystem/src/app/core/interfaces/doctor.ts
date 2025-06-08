@@ -22,3 +22,4 @@ export interface DoctorResponse {
     total_results: number;
     page: number;
 }
+
