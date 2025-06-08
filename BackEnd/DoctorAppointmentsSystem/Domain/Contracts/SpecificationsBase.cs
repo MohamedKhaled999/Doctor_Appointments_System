@@ -20,11 +20,11 @@ namespace Domain.Contracts
         public bool IsPaginated { get; private set; }
         #endregion
 
-        protected void AddInclude(Expression<Func<T, object>> expression)
+        public void AddInclude(Expression<Func<T, object>> expression)
             => IncludeExpressions.Add(expression);
-        protected void SetOrderBy(Expression<Func<T, object>> expression)
+        public void SetOrderBy(Expression<Func<T, object>> expression)
             => OrderBy = expression;
-        protected void SetOrderByDescending(Expression<Func<T, object>> expression)
+        public void SetOrderByDescending(Expression<Func<T, object>> expression)
             => OrderByDescending = expression;
         public void ApplyPagination(int pageIndex, int pageSize)
         {

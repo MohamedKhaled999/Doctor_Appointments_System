@@ -40,6 +40,7 @@ namespace Services
             return transaction.Id;
         }
 
+
         public async Task AddAsync(int patientId, int doctorId, int amount, string paymentId)
         {
             var transaction = new Transaction()
@@ -71,6 +72,14 @@ namespace Services
                 throw new ArgumentNullException($"Transaction with ID {id} doesn't exist");
             _unitOfWork.GetRepository<Transaction, int>().Delete(transaction);
             await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task<double> GetDoctorRevenue(int docID)
+        {
+            var specs = new SpecificationsBase<Transaction>(t => t.DoctorId == docID);
+            var transactions = await _unitOfWork.GetRepository<Transaction, int>().GetAllAsync(specs);
+            if (transactions == null || !transactions.Any())
+                return 0;
+            return transactions.Sum(t => t.Amount  * (95 / 100));
         }
     }
 }

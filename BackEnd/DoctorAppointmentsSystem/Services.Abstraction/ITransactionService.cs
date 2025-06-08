@@ -10,5 +10,6 @@ namespace Services.Abstraction
         Task AddAsync(int patientId, int doctorId, int amount, string paymentId);
         Task UpdateAsync(int id, double amount);
         Task DeleteAsync(int id);
+        Task<double> GetDoctorRevenue(int docID);
     }
 }

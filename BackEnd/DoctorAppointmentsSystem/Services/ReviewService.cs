@@ -55,6 +55,16 @@ namespace Services
                 totalRating += review.Rate;
             return totalRating / reviews.Count;
         }
+        public async Task<decimal> GetAvgRatings()
+        {
+            var reviews = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetAllAsync();
+            if (reviews.Count == 0)
+                return 0;
+            decimal totalRating = 0;
+            foreach (var review in reviews)
+                totalRating += review.Rate;
+            return totalRating / reviews.Count;
+        }
 
         public async Task DeleteReview(int ReviewId)
         {

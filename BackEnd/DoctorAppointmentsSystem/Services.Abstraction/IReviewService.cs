@@ -12,5 +12,8 @@ namespace Services.Abstraction
         Task<ReviewDTO> GetReviewByID(int id);
         Task<ICollection<ReviewDTO>> GetDoctorReviews(int doctorId, int pageIndex = 1, int pageSize = 5);
         Task<float> GetDoctorAverageRating(int docId);
+        Task<decimal> GetAvgRatings();
+
+
     }
 }

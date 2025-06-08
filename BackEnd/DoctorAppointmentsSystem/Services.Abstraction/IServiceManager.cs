@@ -21,5 +21,6 @@ namespace Services.Abstraction
         IUploadService UploadService { get; }
         IRedisRepo RedisRepo { get; }
         INotificationService NotificationService { get; }
+        IAdminOrchestrator AdminOrchestrator { get; }
     }
 }

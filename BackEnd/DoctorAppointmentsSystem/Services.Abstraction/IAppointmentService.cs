@@ -16,6 +16,7 @@ namespace Services.Abstraction
         Task<PatientAppUserDTO> GetPatientByAppointmentId(int id);
         Task<List<AppointmentDTO>?> GetByPatientAsync(int patientId, int pageIndex, int pageSize);
         public int GetCount(int patientId);
+        public int GetDoctorAppointmentsCount(int doctorId);
         Task AddAsync(int patientId, int doctorReservationId, int transactionId);
         Task DeleteAsync(int id);
         Task SetCanceledAsync(int id);

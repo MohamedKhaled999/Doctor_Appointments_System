@@ -42,6 +42,8 @@ namespace Services
         private readonly Lazy<IRedisRepo> _redisRepo;
         private readonly Lazy<INotificationService> _notificationService;
 
+        private readonly Lazy<IAdminOrchestrator> _adminOrchestrator;
+
         private readonly IWebHostEnvironment _environment;
 
         public ServiceManager(IUnitOfWork unitOfWork,
@@ -77,6 +79,8 @@ namespace Services
             _redisRepo = new Lazy<IRedisRepo>(() => new RedisRepo(configuration));
             _notificationService = new Lazy<INotificationService>(() => new NotificationService(this, new NotificationSender(serviceProvider.GetRequiredService<IHubContext<NotificationHub>>())));
 
+            _adminOrchestrator = new Lazy<IAdminOrchestrator>(() => new AdminOrchestrator(unitOfWork, this));
+
             _authenticationService = new Lazy<IAuthenticationService>(() =>
             new AuthenticationService(userManager,
                                       _patientService.Value,
@@ -86,6 +90,7 @@ namespace Services
                                       configuration,
                                       mapper,
                                       _emailService.Value));
+
         }
         public IHomeService HomeService => _homeService.Value;
 
@@ -118,5 +123,7 @@ namespace Services
         public IRedisRepo RedisRepo => _redisRepo.Value;
 
         public INotificationService NotificationService => _notificationService.Value;
+
+        public IAdminOrchestrator AdminOrchestrator => _adminOrchestrator.Value; 
     }
 }
