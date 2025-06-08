@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TestSwiperComponent } from "./components/shared/test-swiper/test-swiper.component";
+
 import { DataManagementService } from './core/services/data-management.service';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TestSwiperComponent],
+  imports: [RouterOutlet ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

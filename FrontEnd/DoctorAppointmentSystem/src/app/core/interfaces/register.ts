@@ -18,7 +18,7 @@ export interface Register {
   email: string;
   password: string;
   phoneNumber?: string;
-  birthDate?: string; // لأنه سترسل كـ "yyyy-MM-dd"
+  birthDate?: string; 
 
     governorate: Governorate;
 

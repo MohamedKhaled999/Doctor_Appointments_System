@@ -14,6 +14,7 @@
             <div *ngIf="currentStep === 1" id="register-step-1"
                 class="d-flex form-container py-1 w-100 flex-column justify-content-around gap-3">
                 <div>
+                    
                     <h4>Account Information</h4>
                     <div *ngIf="validationErrors.length" class="validation-summary text-danger">
                         <div *ngFor="let error of validationErrors">{{error}}</div>
@@ -145,9 +146,36 @@
                                 <option *ngFor="let item of governorates" [value]="item[1]">{{ item[0] }}</option>                   </select>
                         
                                  -->
-                                <select formControlName="governorate">
+                                 <select formControlName="governorate" id="governorate" class="form-select">
+                                    <option [value]="0">All</option>
                                     <option [value]="1">Cairo</option>
-                                    <option [value]="2">Giza</option>                         </select>
+                                    <option [value]="2">Alexandria</option>
+                                    <option [value]="3">Giza</option>
+                                    <option [value]="4">Dakahlia</option>
+                                    <option [value]="5">Red Sea</option>
+                                    <option [value]="6">Beheira</option>
+                                    <option [value]="7">Fayoum</option>
+                                    <option [value]="8">Gharbia</option>
+                                    <option [value]="9">Ismailia</option>
+                                    <option [value]="10">Menofia</option>
+                                    <option [value]="11">Minya</option>
+                                    <option [value]="12">Qaliubiya</option>
+                                    <option [value]="13">New Valley</option>
+                                    <option [value]="14">Suez</option>
+                                    <option [value]="15">Aswan</option>
+                                    <option [value]="16">Assiut</option>
+                                    <option [value]="17">Beni Suef</option>
+                                    <option [value]="18">Port Said</option>
+                                    <option [value]="19">Damietta</option>
+                                    <option [value]="20">Sharkia</option>
+                                    <option [value]="21">South Sinai</option>
+                                    <option [value]="22">Kafr El Sheikh</option>
+                                    <option [value]="23">Matrouh</option>
+                                    <option [value]="24">Luxor</option>
+                                    <option [value]="25">Qena</option>
+                                    <option [value]="26">North Sinai</option>
+                                    <option [value]="27">Sohag</option>
+                                                     </select>
                             <div *ngIf="registerForm.get('governorate')?.errors && registerForm.get('governorate')?.touched"
                                 class="text-danger">
                                 <div *ngIf="registerForm.get('governorate')?.hasError('required')">Governorate is

@@ -17,10 +17,11 @@ import { AdminDashboardComponent } from './components/pages/admin-dashboard/admi
 import { authGuard } from './core/guards/auth.guard';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { profile } from 'console';
+
 import { PatientProfileComponent } from './components/pages/patient-profile/patient-profile.component';
 import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.component';
-
-// export const routes: Routes = [
+import { Doctor } from './core/models/Doctor';
+// rt const routes: Routes = [
 //   {
 //     path: 'test',
 //     component: TestSwiperComponent,
@@ -144,20 +145,20 @@ export const routes: Routes = [
     path: 'reset-password', 
     component: ResetPasswordComponent 
   },
+  { 
+    path: 'doctor-register',         //token ,email 
+    component: DoctorRegisterComponent // This can be a component that shows a success message after email confirmation
+      },
+      {
+        path: 'confirm-success',         //token ,email 
+        component: ConfirmEmailComponent // This 
+  },
   {
     path: 'change-password',
     component: ChangePasswordComponent,
     canActivate: [authGuard],
-  },
-  { 
-    path: 'doctor-register', 
-    component: DoctorRegisterComponent 
-  },
-  { 
-    path: 'ConfirmEmail', 
-    component: ConfirmEmailComponent
-
   }
+  // add doctor register route
 ]
   },
   
@@ -194,3 +195,7 @@ export const routes: Routes = [
 }
 
 ]
+// {
+//   path: 'doctors',
+//   loadComponent: () => import('./components/pages/doctor-profile').then(m => m.DoctorsComponent)
+// // }

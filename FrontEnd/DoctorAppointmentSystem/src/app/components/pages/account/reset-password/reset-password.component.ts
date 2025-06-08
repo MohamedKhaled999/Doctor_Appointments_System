@@ -44,6 +44,9 @@ export class ResetPasswordComponent {
       this.token = params['token'] || '';
       
       if (!this.email || !this.token) {
+        console.log('Email:', this.email);
+        console.log('Token:', this.token);
+     
         Swal.fire({
           title: 'Invalid Link',
           text: 'The reset password link is invalid or expired',

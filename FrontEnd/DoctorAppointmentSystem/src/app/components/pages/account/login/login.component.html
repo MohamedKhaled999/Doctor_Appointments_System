@@ -13,14 +13,14 @@
       class="form-container w-50 h-100 px-5 py-4 d-flex flex-column justify-content-between align-items-center gap-3">
       
       <h2 class="login-title">Login</h2>
-
-   =
+<app-extrenal-login></app-extrenal-login>
+   <!-- =
       <div class="w-100 d-flex justify-content-evenly align-items-center">
         <a *ngFor="let provider of externalProviders" 
            (click)="externalLogin(provider.name)"
            class="fab {{provider.iconClass}} login-social-icon d-flex justify-content-center align-items-center">
         </a>
-      </div>
+      </div> -->
 
       <div class="w-100 d-flex input-div flex-column justify-content-between gap-2">
         <div *ngIf="externalProviders.length" class="text-center text-muted separation-div">
@@ -60,6 +60,11 @@
           <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger mt-1">
             <div *ngIf="loginForm.get('password')?.hasError('required')">Password is required</div>
           </div>
+          <div class="form-check mt-2">
+            <input type="checkbox" id="rememberMe" class="form-check-input" formControlName="rememberMe">
+            <label for="rememberMe" class="form-check-label">Remember Me</label>
+          </div>
+          
         </div>
       </div>
 

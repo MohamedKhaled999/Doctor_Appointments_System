@@ -1,25 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
 import { Doctor } from '../interfaces/doctor.interface';
-import { Schedule } from '../interfaces/Schedule.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorService {
+  constructor(private api: ApiService) { }
 
-  constructor(private http: HttpClient) { }
+  getDoctors(): Observable<Doctor[]> {
+    return this.api.getDoctors();
+  }
 
-  getProfile(id: number): Observable<Doctor> {
-    return this.http.get<Doctor>('');
+  getDoctorById(id: number): Observable<Doctor> {
+    return this.api.getDoctorById(id);
   }
-  uploadPhoto(id: number, file: File): Observable<Doctor> {
-    const formData = new FormData();
-    formData.append('photo', file);
-    return this.http.post<Doctor>(``, formData);
-  }
-  updateSchedule(id: number, schedule: Schedule): Observable<Doctor> {
-    return this.http.put<Doctor>('', schedule);
+
+  searchDoctors(specialty?: string): Observable<Doctor[]> {
+    const params: any = {};
+    if (specialty) params.speciality = specialty;
+    return this.api.searchDoctors(params);
   }
 }

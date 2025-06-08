@@ -1,0 +1,414 @@
+:root {
+    --primary-color: #004085;
+    --primary-color-rgb: 0, 64, 133;
+    --secondary-color: #B3E5FC;
+    --secondary-color-rgb: 179, 229, 252;
+    --accent-color: #F8F9FA;
+    --accent-color-rgb: 248, 249, 250;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+}
+
+.home {
+    --primary-color: #031B4E;
+    --secondary-color: #00A3E1;
+    /* me */
+    --accent-color: #fffefe;
+    --card-text-color: #666;
+    --bg-icon-opacity: 0.1;
+
+    .divider-block {
+        height: 100px;
+        background-color: var(--primary-color);
+        clip-path: polygon(0 0, 100% 0, 100% 50%, 0 100%);
+    }
+
+    .bg-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--primary-color);
+        opacity: 0.4;
+        z-index: 20;
+    }
+
+    .services {
+        background-color: var(--primary-color);
+    }
+
+    .doctors {
+        background-color: var(--primary-color);
+        padding-bottom: 50px;
+    }
+
+    .card {
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .my-nav-tabs {
+        .my-controls {
+            .my-btn {
+                background-color: transparent;
+                color: white;
+                border: 1px solid var(--secondary-color);
+                margin: 0 5px;
+
+                &.active {
+                    background-color: var(--secondary-color);
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .doctor-button-next,
+    .doctor-button-prev {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .doctor-button-next {
+        right: 0;
+    }
+
+    .doctor-button-prev {
+        left: 0;
+    }
+}
+:root {
+    --card-text-color: black;
+    /* Not Added to Project yet  */
+    scroll-behavior: smooth;
+}
+
+
+.home .swiper {
+    width: 600px;
+    height: 300px;
+}
+
+.home .swiper-slide img 
+{
+    opacity: 0;
+    transform: scale(1.5);
+    transition: transform 2s ease-in, opacity 1s ease-in;
+}
+
+.home .swiper-slide-active img {
+    transform: scale(1);
+    opacity: 1;
+}
+   /* Apply box-sizing globally *me/
+.divider-block {
+    margin-block: 15px;
+    padding-block: 15px; }
+        /* Apply box-sizing globally */
+        *,
+        ::after,
+        ::before {
+            box-sizing: border-box;
+        }
+    
+        /* Styles for the divider block inside the home component */
+        .home[_ngcontent-ng-c3354827600] .divider-block[_ngcontent-ng-c3354827600] {
+            height: 100px;
+            background-color: white ;
+    
+        }
+
+                /* .overflow-hidden {
+                    overflow: hidden !important;
+             
+                }
+              
+        
+                *,
+                ::after,
+                ::before {
+                    box-sizing: border-box;
+                }     */
+.home .bg-header {
+    position: absolute;
+    inset: 0;
+    bottom: 50px;
+    height: 100%;
+    z-index: 10;
+    opacity: 0.75;
+    width: 100%;
+    background-color: var(--primary-color);
+}
+
+.home #words,
+.home #words + span {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.home .services .card {
+    --bg-icon-opacity: 0.025;
+
+    height :100%
+}
+
+
+.home .services .card {
+    background-color: var(--accent-color) !important;
+    transition: all 0.3s ease-in;
+}
+
+    .home .services .card * {
+        transition: all 0.3s ease-in;
+    }
+
+    .home .services .card::after {
+        content: '\f061';
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 24px;
+        color: var(--primary-font-color);
+        position: absolute;
+        right: 0px;
+        bottom: 5px;
+        width: 45px;
+        height: 45px;
+        transform: rotate(-45deg);
+        transition: all 1s;
+    }
+
+    .home .services .card::before {
+        content: "";
+        position: absolute;
+        right: 5px;
+        bottom: 5px;
+        background-color: var(--secondary-color);
+        width: 45px;
+        height: 45px;
+        border-radius: 30px;
+    }
+
+
+
+
+
+
+    .home .services .card:hover {
+        --primary-color: #b3e5fc;
+        --secondary-color: #004085;
+        --accent-color: #B3E5FC;
+        --accent-color: #01BDE0;
+        --primary-font-color: rgb(255, 255, 255);
+        --bg-icon-opacity: 0.08;
+        --card-text-color: white;
+        scale: 1.04;
+        color: white !important;
+    }
+
+        .home .services .card:hover::after {
+            transform: rotate(-45deg) translate(30px, 0px)
+        }
+
+.home .doctors {
+    /* background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4), url("https: //neurolux.me/wp-content/uploads/2019/05/b8-1.jpg"); */
+    padding-block: 70px;
+    background-attachment: fixed;
+}
+
+    .home .doctors .swiper-slide:not(.my-slide-btn) {
+    }
+
+.home .doctor-button-prev {
+    left: 8%;
+    /* Move left arrow further left */
+}
+
+.home .doctor-button-next {
+    right: 8%;
+    /* Move right arrow further right */
+}
+
+.home .doctor-button-prev,
+.home .doctor-button-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007bff;
+    z-index: 12;
+}
+
+.home .my-slide-btn {
+    width: fit-content !important;
+}
+
+.home .my-controls {
+    border-radius: 10px;
+    /* background-color: var(--accent-color); */
+    padding-block: 8px;
+    width: 75%;
+    overflow: hidden;
+    padding-inline: 10px;
+    margin: auto;
+    /* box-shadow: 0 0 3px 1px var(--primary-color) inset; */
+}
+
+    .home .my-controls .my-slide-btn .my-btn {
+        background-color: white;
+        color: #004085;
+        transition: all 0.2s ease-in-out;
+        font-size: 14px;
+        font-weight: 600 !important;
+    }
+
+        .home .my-controls .my-slide-btn .my-btn:hover {
+            /* border: #004085; */
+            outline: 3px solid #004085a5;
+            /* box-shadow:  0 0 2px 1px var(--primary-color) ; */
+            scale: 1.05;
+        }
+        .home .my-controls .my-slide-btn .my-btn.mixitup-control-active {
+            background-color: #004085 !important;
+            color: white;
+        }
+
+.home .doctor-stars {
+    background-clip: text !important;
+    color: transparent !important;
+    font-size: 1.5rem;
+}
+
+.home .my-nav-tabs .swiper-slide img {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+        
+                .divider-block ,.divider-blocks{
+                    width: 100%;
+                    height: 40px;
+                  
+                    background-color: white;
+                   
+                    clear: both;
+                  
+                    float: none;
+                  
+                    clip-path: none !important;
+                  
+                    -webkit-clip-path: none !important;
+                   
+                }
+        /* ME */
+                .SP-primaryTextt {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    
+                }
+                          .servicesn {
+                              background-color: white;   }
+
+                              /* doesnot work */
+                              .home .my-nav-tabs .doctor-card {
+                                box-shadow: 0 0 2px 3px #00408588;
+                                margin-block: 15px;
+                                position: relative;
+                                transition: all 1s;
+                                overflow: hidden;
+                                z-index: 1;
+                            }
+                            
+                            .home .my-nav-tabs .doctor-card::after {
+                                content: "";
+                                position: absolute;
+                                bottom: -50%;
+                                left: -50%;
+                                width: 200%;
+                                height: 200%;
+                                transition: all 1s;
+                                border-top-right-radius: 999px;
+                                background-image: linear-gradient(-45deg, #004085d8 0% 20%, rgba(255, 255, 255, 0.562));
+                                z-index: 0;
+                            }
+                            
+                            .home .my-nav-tabs .doctor-card:hover {
+                                transform: scale(1.0083) translateY(-10px);
+                            }
+                            
+                            .home .my-nav-tabs .doctor-card:hover::after {
+                                bottom: 0;
+                                left: 0;
+                            }
+                            /* ///
+                             */
+
+                                                         .doctor-navigation {
+                                                             position: absolute;
+                                                             top: 50%;
+                                                             width: 100%;
+                                                             display: flex;
+                                                             justify-content: space-between;
+                                                             transform: translateY(-50%);
+                                                             z-index: 10;
+                                                         }
+                            
+                                                         .doctor-button-prev,
+                                                         .doctor-button-next {
+                                                             position: relative;
+                                                             margin: 0 15px;
+                                                             cursor: pointer;
+                                                             background: white;
+                                                             border-radius: 50%;
+                                                             width: 40px;
+                                                             height: 40px;
+                                                             display: flex;
+                                                             align-items: center;
+                                                             justify-content: center;
+                                                         }
+                            
+                                                         .swiper-container {
+                                                             padding: 0 50px;
+                                                             /* Add space for buttons */                             }
+
+                                                                                                                         /* doctors-carousel.component.scss */
+                                                                                                                         .my-nav-tabs {
+                                                                                                                             .my-controls {
+                                                                                                                                 .overhiddenflow- {
+                                                                                                                                     position: relative;
+                                                                                                                                 }
+                                                                                                                             }
+                                                            
+                                                                                                                             .doctor-button-prev {
+                                                                                                                                 left: 8%;
+                                                                                                                             }
+                                                            
+                                                                                                                             .doctor-button-next {
+                                                                                                                                 right: 8%;
+                                                                                                                             }
+                                                            
+                                                                                                                             .doctor-button-prev,
+                                                                                                                             .doctor-button-next {
+                                                                                                                                 position: absolute;
+                                                                                                                                 top: 50%;
+                                                                                                                                 transform: translateY(-50%);
+                                                                                                                                 color: #007bff;
+                                                                                                                                 z-index: 12;
+                                                                                                                             }
+                                                            
+                                                                                                                             .doctors {
+                                                                                                                                 /* background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4), url("../images/home/ser_bg.jpg"); */
+                                                                                                                                 padding-block: 70px;
+                                                                                                                                 background-attachment: fixed;
+                                                                                                                             }
+                                                                                                                         }
