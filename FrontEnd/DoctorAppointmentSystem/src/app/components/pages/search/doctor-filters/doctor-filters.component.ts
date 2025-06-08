@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Filter, Specialities, Governorates, Gender } from './filter';
+import { Filter, Specialities, Gender } from './filter';
+import { Governorate } from '../../../../core/enums/governorate.enum';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as noUiSlider from 'nouislider';
@@ -22,12 +23,17 @@ export class DoctorFiltersComponent implements AfterViewInit {
   Gender = Gender;
 
   SpecialitiesList = Object.values(Specialities);
-  GovernoratesList = Object.values(Governorates);
+  GovernoratesList = Object.keys(Governorate)
+    .filter(key => isNaN(Number(key)))
+    .map(key => ({
+      name: key,
+      value: Governorate[key as keyof typeof Governorate]
+    }));
   GenderList = Object.values(Gender);
   filters: Filter = {
     doctorName: '',
     speciality: Specialities.All,
-    governorate: Governorates.All,
+    governorate: Governorate.All,
     gender: Gender.All,
     waitingTime: undefined,
     minPrice: undefined,
@@ -44,12 +50,11 @@ export class DoctorFiltersComponent implements AfterViewInit {
 
  
 
-  ngAfterViewInit(): void {
+ngAfterViewInit(): void {
 
-
-   
   if(this.isBrowser){
-    
+    console.log(this.GovernoratesList);
+
     // Wait Slider
     if (this.waitSlider && this.waitSlider.nativeElement) {
       noUiSlider.create(this.waitSlider.nativeElement, {
@@ -107,7 +112,7 @@ export class DoctorFiltersComponent implements AfterViewInit {
     this.filters = {
       doctorName: '',
       speciality: Specialities.All,
-      governorate: Governorates.All,
+      governorate: Governorate.All,
       gender: Gender.All,
     };
   }

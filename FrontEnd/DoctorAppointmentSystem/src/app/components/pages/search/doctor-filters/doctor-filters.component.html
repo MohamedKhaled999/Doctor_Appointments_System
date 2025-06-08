@@ -36,7 +36,7 @@
             </select>
             -->
             <select class="form-select SP-select SP-govSelect" name="governorate" [(ngModel)]="filters.governorate">
-                <option *ngFor="let gov of GovernoratesList" [value]="gov">{{ gov }}</option>
+                <option *ngFor="let gov of GovernoratesList" [value]="gov.value">{{ gov.name }}</option>
             </select>
         </div>
 

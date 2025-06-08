@@ -1,9 +1,9 @@
-
+import { Governorate } from '../../../../core/enums/governorate.enum';
 export interface Filter {
     // id: string;
     doctorName: string;
     speciality : Specialities;
-    governorate : Governorates;
+    governorate : Governorate;
     gender : Gender;
     waitingTime?: number;
     minPrice?: number;
@@ -30,33 +30,31 @@ export enum Specialities {
     Angioplastist = 'Angioplastist',
     Endocrinologist = 'Endocrinologist',
     Urologist = 'Urologist',
-    Dentist = 'Dentist',
-    // Psychiatrist = 'Psychiatrist',
-    // Gynecologist = 'Gynecologist',
+    Dentist = 'Dentist'
 }
 
-export enum Governorates {
-    All = 'All',
-    Cairo = 'Cairo',
-    Alexandria = 'Alexandria',
-    Giza = 'Giza',
-    Dakahlia = 'Dakahlia',
-    RedSea = 'RedSea',
-    Beheira = 'Beheira',
-    Fayoum = 'Fayoum',
-    Gharbia = 'Gharbia',
-    Ismailia = 'Ismailia',
-    Menofia = 'Menofia',
-    Minya = 'Minya',
-    Qaliubiya = 'Qaliubiya',
-    NewValley = 'NewValley',
-    Suez = 'Suez',
-    Aswan = 'Aswan',
-    Assiut = 'Assiut',
-    BeniSuef = 'BeniSuef',
-    PortSaid = 'PortSaid',
-    Damietta = 'Damietta'
-}
+// export enum Governorates {
+//     All = 'All',
+//     Cairo = 'Cairo',
+//     Alexandria = 'Alexandria',
+//     Giza = 'Giza',
+//     Dakahlia = 'Dakahlia',
+//     RedSea = 'RedSea',
+//     Beheira = 'Beheira',
+//     Fayoum = 'Fayoum',
+//     Gharbia = 'Gharbia',
+//     Ismailia = 'Ismailia',
+//     Menofia = 'Menofia',
+//     Minya = 'Minya',
+//     Qaliubiya = 'Qaliubiya',
+//     NewValley = 'NewValley',
+//     Suez = 'Suez',
+//     Aswan = 'Aswan',
+//     Assiut = 'Assiut',
+//     BeniSuef = 'BeniSuef',
+//     PortSaid = 'PortSaid',
+//     Damietta = 'Damietta'
+// }
 
 export enum Gender {
     All = 'All',
