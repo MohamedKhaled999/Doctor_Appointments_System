@@ -1,6 +1,6 @@
 <h1 *ngIf="doctors.length === 0" class="SP-primaryText text-center p-3">No Doctor Exists</h1>
 
-<div *ngFor="let doc of pagedDoctors" class="SP-docCard flex-wrap align-items-center p-3 mb-2 border rounded shadow-sm " data-aos="fade-left">
+<div *ngFor="let doc of doctors" class="SP-docCard flex-wrap align-items-center p-3 mb-2 border rounded shadow-sm " data-aos="fade-left">
     <app-doctor-card [doctor]="doc"></app-doctor-card> 
 </div>
 
@@ -11,4 +11,4 @@
       3. Listen to the (pageIndexChange) output to get the current page index.
      Also, take a look in get pagedDoctors function in doctor-list.component.ts, you will need to implement pagination logic
       in case you wanted to use the pagination component elsewhere -->
-<app-pagination [numberOfRecords]="doctors.length"  (pageIndexChange)="pageIndexParent = $event"></app-pagination>
+<app-pagination [numberOfRecords]="numberOfRecords"  (pageIndexChange)="pageIndexParent = $event"></app-pagination>

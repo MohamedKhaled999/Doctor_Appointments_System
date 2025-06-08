@@ -15,3 +15,10 @@ export interface Doctor {
     phone: string;
     reservations: reservation[];
 }
+
+export interface DoctorResponse {
+    results: Doctor[];
+    total_pages: number;
+    total_results: number;
+    page: number;
+}
