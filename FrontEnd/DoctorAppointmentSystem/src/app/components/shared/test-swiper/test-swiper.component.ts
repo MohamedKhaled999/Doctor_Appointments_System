@@ -6,10 +6,11 @@ import { log } from 'node:console';
 import { DataManagementService } from '../../../core/services/data-management.service';
 
 declare const google: any;
+import { ReservationCardComponent } from "../../pages/search/reservation-card/reservation-card.component";
 
 @Component({
   selector: 'app-test-swiper',
-  imports: [SocialLoginModule ],
+  imports: [SocialLoginModule, ReservationCardComponent],
   templateUrl: './test-swiper.component.html',
   styleUrl: './test-swiper.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -17,14 +18,50 @@ declare const google: any;
 })
 export class TestSwiperComponent {
 
-
-  constructor(private toster: ToastrService, private authService: SocialAuthService ,
-     private userData:DataManagementService) {
-    // You can initialize any properties or services here if needed
-
-   
+  // Sample data for the swiper
+  reservations = [
     
-  }
+        {
+          ResID: 101,
+          Day: 2, // Monday (assuming 0 is Sunday)
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 102,
+          Day: 3,
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 103,
+          Day: 4, // Wednesday
+          Time: '09:00|10:00 AM',
+          IsAvailable: false
+        },
+          {
+          ResID: 101,
+          Day: 2, // Monday (assuming 0 is Sunday)
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 102,
+          Day: 3,
+          Time: '09:00|10:00 AM',
+          IsAvailable: true
+        },
+        {
+          ResID: 103,
+          Day: 4, // Wednesday
+          Time: '09:00|10:00 AM',
+          IsAvailable: false
+        }
+      
+  ];
+
+
+
 
   isPatient:boolean =false;
 
@@ -81,4 +118,16 @@ export class TestSwiperComponent {
     // 👉 Send this token to your backend for verification
   }
 
+   
+    
+  
+  constructor(private toster: ToastrService, private authService: SocialAuthService ,
+     private userData:DataManagementService) {
+    // You can initialize any properties or services here if needed
+
+   
+    
+  }
+
+ 
 }

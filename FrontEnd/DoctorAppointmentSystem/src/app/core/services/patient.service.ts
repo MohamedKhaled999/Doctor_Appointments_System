@@ -16,4 +16,7 @@ export class PatientService {
   updateProfile(patient: Patient): Observable<Patient> {
     return this.http.put<Patient>('', patient);
   }
+  addFilesToAppointment(appointmentId: number, formData: FormData): Observable<any> {
+    return this.http.post<any>(`/appointments/${appointmentId}/files`, formData);
+  }
 }

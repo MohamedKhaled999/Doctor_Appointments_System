@@ -20,7 +20,6 @@ export class PatientProfileComponent implements OnInit {
   governorates: string[];
   errorMessage: string = '';
   patientForm: FormGroup;
-  reviewForm: FormGroup;
   patient: Patient | undefined;
   activeTab: string = 'details';
   orderSucceeded: boolean | null = null;
@@ -36,11 +35,6 @@ export class PatientProfileComponent implements OnInit {
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\+?\d{11}$/)]],
       governorate: ['', [Validators.required]],
       birthDate: [{ value: '', disables: true }]
-    });
-    this.reviewForm = this.fb.group({
-      appId: [{ value: 0, disables: true }],
-      review: ['', [Validators.required, Validators.minLength(10)]],
-      rate: [0, [Validators.required]]
     });
     this.governorates = this.governoratesService.getGovernorates();
   }
@@ -68,8 +62,8 @@ export class PatientProfileComponent implements OnInit {
       appointments: [
         {
           id: 1,
-          startTime: new Date('2025-10-01T10:00:00'),
-          endTime: new Date('2025-10-01T11:00:00'),
+          startTime: new Date('2025-06-01T10:00:00'),
+          endTime: new Date('2025-06-01T11:00:00'),
           doctor: 'Dr. Mohamed',
           specialty: 'Cardiology',
           governorate: 'Cairo',

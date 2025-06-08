@@ -12,14 +12,15 @@ export class DoctorService {
   getDoctors(): Observable<Doctor[]> {
     return this.api.getDoctors();
   }
-
-  getDoctorById(id: number): Observable<Doctor> {
-    return this.api.getDoctorById(id);
+  uploadPhoto(file: File): Observable<Doctor> {
+    const formData = new FormData();
+    formData.append('photo', file);
+    return this.http.post<Doctor>(``, formData);
   }
-
-  searchDoctors(specialty?: string): Observable<Doctor[]> {
-    const params: any = {};
-    if (specialty) params.speciality = specialty;
-    return this.api.searchDoctors(params);
+  updateSchedule(schedule: Schedule): Observable<Doctor> {
+    return this.http.put<Doctor>('', schedule);
+  }
+  updateProfile(formData: FormData): Observable<Doctor> {
+    return this.http.put<Doctor>(``, formData);
   }
 }

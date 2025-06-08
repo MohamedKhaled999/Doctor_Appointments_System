@@ -1,3 +1,4 @@
+import { SearchComponent } from './components/pages/search/search.component';
 import { ExtrenalLoginComponent } from './components/shared/extrenal-login/extrenal-login.component';
 import { Routes } from '@angular/router';
 import { TestSwiperComponent } from './components/shared/test-swiper/test-swiper.component';
@@ -34,6 +35,10 @@ import { Doctor } from './core/models/Doctor';
 //   {
 //     path: 'doctor-profile/:id',
 //     loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
+//   },
+//   {
+//     path: 'doctor-edit',
+//     loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
 //   },
 //   {
 //     path: 'register',
@@ -84,7 +89,7 @@ import { Doctor } from './core/models/Doctor';
 export const routes: Routes = [
   // blank
   {
-    path: '' ,
+    path: '',
     component: BlankLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -95,64 +100,84 @@ export const routes: Routes = [
       }
       ,
       {
-        path:'profile',
-        canActivate:[authGuard],
-        children:[
-        {
+        path: 'profile',
+        // canActivate:[authGuard],
+        children: [
+          {
             path: '',
             redirectTo: 'not-found',
             pathMatch: 'full'
-      },
-      {
-        path:'patient',
-        component: PatientProfileComponent
-      },
-      {
-        path:'doctor',
-        component: DoctorEditComponent
-      }
+          },
+          {
+            path: 'patient', //profile/patient
+            component: PatientProfileComponent
+          },
+          {
+            path: 'doctor/:id',  //profile/doctor?id=1
+            component: DoctorEditComponent
+          }
+          , {
+         
+            path: 'doctor',  //profile/doctor?id=1
+            component: DoctorEditComponent,
+            canActivate: [authGuard]
+
+          }
+
         ]
       },
      
     ]
+  },
+  {
+    path: 'search',
+    component: SearchComponent,
+    title: 'Search'
   },
   // auth 
   {
     path: '',
     component: AuthLayoutComponent,
     children: [
-  {
-    path: 'register',
-    component: RegisterComponent,
-    title: 'Register Account'
-  },
-  { 
-    path: 'login', 
-    component: LoginComponent,
-    title: 'Sign In - Doctor Appointments'
-  },
-  {
-    path: 'forgot-password',
-    component: ForgetPasswordComponent,
-    title: 'Password Recovery - Doctor Appointments'
-  },
-  {
-    path: 'need-to-confirm',
-    component: NeedToConfirmComponent, 
-    title: 'Need to Confirm - Doctor Appointments'
-  },
-  { 
-    path: 'reset-password', 
-    component: ResetPasswordComponent 
-  },
-  { 
-    path: 'doctor-register',         //token ,email 
-    component: DoctorRegisterComponent // This can be a component that shows a success message after email confirmation
+      {
+        path: 'register',
+        component: RegisterComponent,
+        title: 'Register Account'
+      },
+      {
+        path: 'login',
+        component: LoginComponent,
+        title: 'Sign In - Doctor Appointments'
+      },
+      {
+        path: 'forgot-password',
+        component: ForgetPasswordComponent,
+        title: 'Password Recovery - Doctor Appointments'
+      },
+      {
+        path: 'need-to-confirm',
+        component: NeedToConfirmComponent,
+        title: 'Need to Confirm - Doctor Appointments'
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent
+      },
+      {
+        path: 'doctor-register',         //token ,email 
+        component: DoctorRegisterComponent // This can be a component that shows a success message after email confirmation
       },
       {
         path: 'confirm-success',         //token ,email 
-        component: ConfirmEmailComponent // This 
-  },
+        component: ConfirmEmailComponent
+      },
+      {
+        path: 'confirm-success',         //token ,email 
+        component: ConfirmEmailComponent
+        
+      } // This 
+    
+,
   {
     path: 'change-password',
     component: ChangePasswordComponent,

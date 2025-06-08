@@ -17,7 +17,8 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -28,28 +29,32 @@
               }
             ],
             "styles": [
+              "node_modules/@angular/material/prebuilt-themes/azure-blue.css",
+              "node_modules/aos/dist/aos.css" ,
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/sweetalert2/dist/sweetalert2.min.css",
               "node_modules/leaflet/dist/leaflet.css" ,
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
         
-              "node_modules/ngx-toastr/toastr.css",
-              "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
-              
-              "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css",
-              "https://unpkg.com/aos@2.3.1/dist/aos.css",
-              "node_modules/leaflet/dist/leaflet.css",
+             
+     
                "node_modules/swiper/swiper-bundle.css",
-  "node_modules/aos/dist/aos.css",
 
-              "src/styles.css"
+
+             
               
+              "node_modules/nouislider/dist/nouislider.min.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "src/styles.css"
+
             ],
             "scripts": [
+           
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/aos/dist/aos.js",
               "node_modules/sweetalert2/dist/sweetalert2.all.min.js"
-              
             ],
+
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -100,7 +105,8 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [

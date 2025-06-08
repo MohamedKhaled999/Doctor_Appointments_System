@@ -10,14 +10,9 @@
               alt="Doctor Image"
               class="rounded-circle img-thumbnail SP-photo"
             /> -->
-            <input
-              #uploadInput
-              type="file"
-              class="d-none SP-file"
-              (change)="
+            <input #uploadInput type="file" class="d-none SP-file" (change)="
                 uploadPhoto($event)
-              "
-            />
+              " />
             <div class="SP-upload"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
           </div>
         </form>
@@ -44,48 +39,27 @@
     <div class="col-md-8">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a
-            class="nav-link SP-primaryText"
-            [class.active]="selectedTab === 'details'"
-            (click)="setTab('details')"
-            >Details</a
-          >
+          <a class="nav-link SP-primaryText" [class.active]="selectedTab === 'details'"
+            (click)="setTab('details')">Details</a>
         </li>
         <li class="nav-item">
-          <a
-            class="nav-link SP-primaryText"
-            [class.active]="selectedTab === 'reviews'"
-            (click)="setTab('reviews')"
-            >Reviews</a
-          >
+          <a class="nav-link SP-primaryText" [class.active]="selectedTab === 'reviews'"
+            (click)="setTab('reviews')">Reviews</a>
         </li>
-        <li
-          class="nav-item"
-        >
-          <a
-            class="nav-link SP-primaryText"
-            [class.active]="selectedTab === 'calendar'"
-            (click)="setTab('calendar')"
-            >Calendar</a
-          >
+        <li class="nav-item">
+          <a class="nav-link SP-primaryText" [class.active]="selectedTab === 'calendar'"
+            (click)="setTab('calendar')">Calendar</a>
         </li>
       </ul>
 
       <div class="tab-content mt-3">
         <!-- DETAILS TAB -->
-        <div
-          class="tab-pane fade"
-          [class.active]="selectedTab === 'details'"
-          [class.show]="selectedTab === 'details'"
-        >
+        <div class="tab-pane fade" [class.active]="selectedTab === 'details'" [class.show]="selectedTab === 'details'">
           <!-- Upcoming Appointments Slider -->
           <div class="my-3 col-12 flex-wrap justify-content-center gap-2 SP-bookCards">
             <div class="swiper-container swiper mySwiper">
               <div class="swiper-wrapper">
-                <div
-                  class="swiper-slide appointment-card"
-                  *ngFor="let slot of doctor?.reservations"
-                >
+                <div class="swiper-slide appointment-card" *ngFor="let slot of doctor?.reservations">
                 </div>
               </div>
               <div class="swiper-scrollbar position-static mt-2"></div>
@@ -122,162 +96,86 @@
           </p>
 
           <h4>Map</h4>
-          <div
-            #mapContainer
-            class="w-100 col-12"
-            style="height: 400px;"
-          ></div>
+          <div #mapContainer class="w-100 col-12" style="height: 400px;"></div>
         </div>
 
         <!-- REVIEWS TAB -->
-        <div
-          class="tab-pane fade"
-          [class.active]="selectedTab === 'reviews'"
-          [class.show]="selectedTab === 'reviews'"
-        >
+        <div class="tab-pane fade" [class.active]="selectedTab === 'reviews'" [class.show]="selectedTab === 'reviews'">
           <h4>Patient Reviews</h4>
           <div class="reviewsContainer">
             <ng-container *ngIf="reviews?.length === 0">
               <h5 class="text-center text-primary py-3 p-3 SP-primaryText ">No Review Exists</h5>
             </ng-container>
-            <!-- <ng-container *ngFor="let review of pagedReviews">
+            <ng-container *ngFor="let review of pagedReviews">
               <div class="border p-3 mb-2 rounded" data-aos="fade-left">
                 <h5>{{ review.patientName }}</h5>
                 <p>{{ review.review }}</p>
-                <p class="text-primary">
+                <p class="SP-primaryText">
                   Rating:
                   <ng-container [ngSwitch]="review.rate">
-                    <i
-                      *ngSwitchCase="rate <= 1"
-                      class="fa-regular fa-face-frown me-2"
-                    ></i>
-                    <i
-                      *ngSwitchCase="review.rate <= 2.5"
-                      class="fa-regular fa-face-frown-open me-2"
-                    ></i>
-                    <i
-                      *ngSwitchCase="review.rate <= 3"
-                      class="fa-regular fa-face-meh me-2"
-                    ></i>
-                    <i
-                      *ngSwitchCase="review.rate < 4.5"
-                      class="fa-regular fa-face-smile me-2"
-                    ></i>
-                    <i
-                      *ngSwitchDefault
-                      class="fa-regular fa-face-smile-beam me-2"
-                    ></i>
+                    <i *ngSwitchCase="review.rate <= 1" class="fa-regular fa-face-frown SP-icon me-2"></i>
+                    <i *ngSwitchCase="review.rate <= 2.5" class="fa-regular fa-face-frown-open SP-icon me-2"></i>
+                    <i *ngSwitchCase="review.rate <= 3" class="fa-regular fa-face-meh SP-icon me-2"></i>
+                    <i *ngSwitchCase="review.rate < 4.5" class="fa-regular fa-face-smile SP-icon me-2"></i>
+                    <i *ngSwitchDefault class="fa-regular fa-face-smile-beam SP-icon me-2"></i>
                   </ng-container>
                   <ng-container>
-                    <i
-                      *ngFor="let star of [].constructor(Math.floor(review.rate))"
-                      class="fa-solid fa-star"
-                    ></i>
-                    <i
-                      *ngIf="review.rate % 1 !== 0"
-                      class="fa-solid fa-star-half-stroke"
-                    ></i>
-                    <i
-                      *ngFor="let star of [].constructor(5 - Math.ceil(review.rate))"
-                      class="fa-regular fa-star"
-                    ></i>
+                    <i *ngFor="let star of [].constructor(floorRate(review.rate))" class="fa-solid fa-star"></i>
+                    <i *ngIf="review.rate % 1 !== 0" class="fa-solid fa-star-half-stroke"></i>
+                    <i *ngFor="let star of [].constructor(5 - ceilRate(review.rate))" class="fa-regular fa-star"></i>
                   </ng-container>
                   <span>{{ review.rate }}</span>
                 </p>
-                <p class="fs-6 text-primary">{{ review.date | date:'mediumDate' }}</p>
+                <p class="fs-6 SP-primaryText">{{ review.date | date:'mediumDate' }}</p>
               </div>
             </ng-container>
 
-            <!-- Pagination
+            <!-- Pagination -->
             <nav aria-label="Page navigation">
               <ul class="pagination justify-content-center">
-                <li
-                  class="page-item"
-                  [class.disabled]="currentPage === 1"
-                >
-                  <a
-                    class="page-link"
-                    (click)="setPage(currentPage - 1)"
-                    >&laquo;</a
-                  >
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
                 </li>
-                <li
-                  class="page-item"
-                  *ngFor="
+                <li class="page-item" *ngFor="
                     let p of [].constructor(pageCount);
                     let idx = index
-                  "
-                  [class.active]="idx + 1 === currentPage"
-                >
-                  <a
-                    class="page-link"
-                    (click)="setPage(idx + 1)"
-                    >{{ idx + 1 }}</a
-                  >
+                  " [class.active]="idx + 1 === currentPage">
+                  <a class="page-link" (click)="setPage(idx + 1)">{{ idx + 1 }}</a>
                 </li>
-                <li
-                  class="page-item"
-                  [class.disabled]="currentPage === pageCount"
-                >
-                  <a
-                    class="page-link"
-                    (click)="setPage(currentPage + 1)"
-                    >&raquo;</a
-                  >
+                <li class="page-item" [class.disabled]="currentPage === pageCount">
+                  <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
                 </li>
               </ul>
-            </nav> -->
+            </nav>
           </div>
         </div>
 
         <!-- CALENDAR TAB (Doctors Only) -->
-        <div
-          class="tab-pane fade"
-          [class.active]="selectedTab === 'calendar'"
-          [class.show]="selectedTab === 'calendar'"
-        >
+        <div class="tab-pane fade" [class.active]="selectedTab === 'calendar'"
+          [class.show]="selectedTab === 'calendar'">
           <form (ngSubmit)="saveSchedule()" style="color: var(--primary-color)">
             <h3>Assign Default Schedule</h3>
             <div class="d-flex flex-column gap-3 justify-content-between">
               <div class="row gx-2 gap-2 gap-md-0">
                 <div class="col-md-6 col-sm-12 mb-3">
                   <label for="startTime" class="form-label">From</label>
-                  <input
-                    id="startTime"
-                    type="time"
-                    class="form-control"
-                    [(ngModel)]="scheduleForm.startTime"
-                    name="startTime"
-                    required
-                  />
+                  <input id="startTime" type="time" class="form-control" [(ngModel)]="scheduleForm.startTime"
+                    name="startTime" required />
                 </div>
                 <div class="col-md-6 col-sm-12 mb-3">
                   <label for="endTime" class="form-label">To</label>
-                  <input
-                    id="endTime"
-                    type="time"
-                    class="form-control"
-                    [(ngModel)]="scheduleForm.endTime"
-                    name="endTime"
-                    required
-                  />
+                  <input id="endTime" type="time" class="form-control" [(ngModel)]="scheduleForm.endTime" name="endTime"
+                    required />
                 </div>
               </div>
 
               <div>
                 <label class="form-label">Days</label>
                 <div class="d-flex flex-wrap gap-2 p-2 justify-content-between">
-                  <div
-                    class="form-check col-5 col-md-3 doctor-register-days"
-                    *ngFor="let day of weekDays; let i = index"
-                  >
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      [(value)]="scheduleForm.days[i]"
-                      (change)="toggleDay(i)"
-                      id="day{{ i }}"
-                    />
+                  <div class="form-check col-5 col-md-3 doctor-register-days"
+                    *ngFor="let day of weekDays; let i = index">
+                    <input class="form-check-input" type="checkbox" [(value)]="scheduleForm.days[i]"
+                      (change)="toggleDay(i)" id="day{{ i }}" />
                     <label class="form-check-label" [for]="'day' + i">
                       {{ day }}
                     </label>
@@ -289,21 +187,11 @@
                 <div class="w-50">
                   <div class="d-flex align-items-center w-100">
                     <label class="form-label text-center me-2">Reservation Quota</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      min="1"
-                      max="50"
-                      [(ngModel)]="scheduleForm.reservationQuota"
-                      name="reservationQuota"
-                      required
-                    />
+                    <input type="number" class="form-control" min="1" max="50"
+                      [(ngModel)]="scheduleForm.reservationQuota" name="reservationQuota" required />
                   </div>
                 </div>
-                <button
-                  type="submit"
-                  class="btn btn-primary w-25"
-                >
+                <button type="submit" class="btn btn-primary w-25">
                   Edit
                 </button>
               </div>
@@ -314,124 +202,151 @@
 
           <div id="SP-Calendar" #calendarContainer style="height: 600px;" class="mt-3">
             <!-- FullCalendar or any JS calendar goes here -->
-          </div>
+            <div class="container" cdkDropListGroup>
+              <div class="calendar-container">
+                <div class="calendar-header">
+                  <div>
+                    <h2 class="calendar-month" *ngIf="currentView === 'month' || currentView === 'week'">
+                      {{ viewDate | date : "MMMM" }}
+                      <span>{{ viewDate | date : "y" }}</span>
+                    </h2>
+                    <h2 class="calendar-month" *ngIf="currentView === 'day'">
+                      {{ viewDate | date : "d MMMM" }}
+                      <span>{{ viewDate | date : "y" }}</span>
+                    </h2>
+                    <span class="calendar-dayname" *ngIf="currentView === 'day'">
+                      {{ viewDate | date : "EEEE" }}
+                    </span>
+                  </div>
+                  <mat-button-toggle-group class="calendar-view-toggle" name="currentView"
+                    (change)="switchToView($event.value)" aria-label="Calendar-View">
+                    <mat-button-toggle checked="{{ true }}" value="{{ CalendarView.Month }}">Month</mat-button-toggle>
+                    <mat-button-toggle value="{{ CalendarView.Week }}">Week</mat-button-toggle>
+                    <mat-button-toggle value="{{ CalendarView.Day }}">Day</mat-button-toggle>
+                  </mat-button-toggle-group>
+                  <div class="calendar-controls">
+                    <button mat-icon-button (click)="previous()" (keydown.enter)="previous()"
+                      (keydown.space)="previous()">
+                      <mat-icon>&lt;</mat-icon>
+                    </button>
+                    <button mat-stroked-button (click)="viewToday()" (keydown.enter)="viewToday()"
+                      (keydown.space)="viewToday()">
+                      Today
+                    </button>
+                    <button mat-icon-button (click)="next()" (keydown.enter)="next()" (keydown.space)="next()">
+                      <mat-icon>&gt;</mat-icon>
+                    </button>
+                    <button mat-flat-button (click)="selectDate()" (keydown.enter)="selectDate()"
+                      (keydown.space)="selectDate()">
+                      Add Reservation
+                    </button>
+                  </div>
+                </div>
 
-          <!-- Modal for reservation placement -->
-          <div
-            class="modal fade SP-CalForm"
-            id="reservationModal"
-            tabindex="-1"
-            aria-labelledby="reservationModalLabel"
-            aria-hidden="true"
-          >
-            <div
-              class="modal-dialog modal-dialog-centered"
-            >
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1
-                    class="modal-title fs-5"
-                    id="reservationModalLabel"
-                  >
-                    Working Day Form
-                  </h1>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <form (ngSubmit)="addReservation()" [formGroup]="reservationForm">
-                  <div class="modal-body">
-                    <input
-                      type="hidden"
-                      formControlName="id"
-                      name="id"
-                    />
-                    <div class="mb-3 d-none">
-                      <input
-                        type="hidden"
-                        name="date"
-                        formControlName="date"
-                        required
-                      />
-                    </div>
-                    <div class="mb-3">
-                      <label
-                        for="resStartTime"
-                        class="form-label"
-                        >Start Time</label
-                      >
-                      <input
-                        type="time"
-                        class="form-control"
-                        id="resStartTime"
-                        formControlName="startTime"
-                        name="startTime"
-                        required
-                      />
-                    </div>
-                    <div class="mb-3">
-                      <label
-                        for="resEndTime"
-                        class="form-label"
-                        >End Time</label
-                      >
-                      <input
-                        type="time"
-                        class="form-control"
-                        id="resEndTime"
-                        formControlName="endTime"
-                        name="endTime"
-                        required
-                      />
-                    </div>
-                    <div class="mb-3">
-                      <label
-                        for="maxRes"
-                        class="form-label"
-                        >Max Reservations</label
-                      >
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="maxRes"
-                        formControlName="maxAppointments"
-                        name="maxRes"
-                        min="1"
-                        max="50"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button
-                      type="submit"
-                      class="btn SP-bookBTN col-12 SP-CalSubmit w-100"
-                    >
-                      {{ reservationForm.controls['id'].value ? 'Update' : 'Add' }} Reservation
-                    </button>
-                    <button
-                      type="button"
-                      class="btn SP-bookBTN col-12 w-100"
-                      data-bs-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                  </div>
-                </form>
-                <div
-                  class="modal-footer d-none SP-deleteBTN"
-                  *ngIf="reservationForm.controls['id'].value"
-                >
-                  <button
-                    class="col-12 btn btn-danger w-100"
-                    (click)="onDeleteReservation()"
-                  >
-                    Delete Reservation
-                  </button>
-                </div>
+                <!-- Month @start -->
+                <table width="100%" cellspacing="0" cellpadding="0" class="calendar-view-month"
+                  *ngIf="currentView === 'month'">
+                  <thead>
+                    <tr>
+                      <th *ngFor="let day of weekDays">
+                        {{ day }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody cdkDropListGroup>
+                    <tr *ngFor="let week of weeks">
+                      <td *ngFor="let date of week" [class.today]="isToday(date)"
+                        (cdkDropListDropped)="drop($event, date)" [cdkDropListData]="doctor?.reservations" cdkDropList
+                        [ngStyle]="{ opacity: isCurrentMonth(date) ? '1' : '0.5' }">
+                        <div (click)="selectDate(date)" (keydown.enter)="selectDate(date)"
+                          (keydown.space)="selectDate(date)" class="cell-overlay" tabindex="0"></div>
+                        <div class="date">
+                          {{ date.getDate() }}
+                        </div>
+                        <div class="appointments">
+                          <ng-container *ngFor="let reservation of doctor?.reservations">
+                            <div tabindex="0" *ngIf="isSameDate(reservation.date, date)" class="reservation" cdkDrag
+                              cdkDragHandle [cdkDragData]="reservation" (click)="editReservation(reservation, $event)"
+                              (keydown.enter)="editReservation(reservation, $event)"
+                              (keydown.space)="editReservation(reservation, $event)">
+                              <span>{{ reservation.time }}</span>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- Month @end -->
+
+                <!-- Week View -->
+                <table width="100%" cellspacing="0" cellpadding="0" class="calendar-view-week"
+                  *ngIf="currentView === 'week'">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th *ngFor="let day of weekDays; index as i">
+                        {{ day }} {{ monthDays[i].getDate() }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody cdkDropListGroup>
+                    <tr *ngFor="let timeSlot of timeSlots">
+                      <td [width]="10" class="calendar-slot-cell">
+                        <span>{{ timeSlot }}</span>
+                      </td>
+                      <td *ngFor="let day of weekDays; index as i" cdkDropList
+                        (cdkDropListDropped)="drop($event, monthDays[i], timeSlot)"
+                        [cdkDropListData]="doctor?.reservations">
+                        <div (click)="selectDate(monthDays[i], timeSlot)"
+                          (keydown.enter)="selectDate(monthDays[i], timeSlot)"
+                          (keydown.space)="selectDate(monthDays[i], timeSlot)" class="cell-overlay" tabindex="0"></div>
+                          <div tabindex="0" *ngFor="
+                          
+                          let reservation of getReservationsForDateTime(
+                            monthDays[i],
+                            timeSlot)"
+                            (click)="editReservation(reservation, $event)"
+                              (keydown.enter)="editReservation(reservation, $event)"
+                              (keydown.space)="editReservation(reservation, $event)"
+                          cdkDrag cdkDragHandle [cdkDragData]="reservation" class="reservation">
+                          <span>{{ reservation.time }}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- Day View -->
+                <table width="100%" cellspacing="0" cellpadding="0" class="calendar-view-day"
+                  *ngIf="currentView === 'day'">
+                  <tbody cdkDropListGroup>
+                    <tr *ngFor="let slot of timeSlots">
+                      <td [width]="10" class="calendar-slot-cell">
+                        <span>{{ slot }}</span>
+                      </td>
+                      <td cdkDropList
+                        (cdkDropListDropped)="drop($event, monthDays[0], slot)"
+                        [cdkDropListData]="doctor?.reservations">
+                        <div (click)="selectDate(monthDays[0], slot)" (keydown.enter)="selectDate(monthDays[0], slot)"
+                          (keydown.space)="selectDate(monthDays[0], slot)" class="cell-overlay" tabindex="0"></div>
+                        
+                        <div tabindex="0" *ngFor="
+                let reservation of getReservationsForDateTime(
+                        monthDays[0],
+                        slot
+                        )"
+                cdkDrag cdkDragHandle [cdkDragData]="reservation"
+                              (click)="editReservation(reservation, $event)"
+                              (keydown.enter)="editReservation(reservation, $event)"
+                              (keydown.space)="editReservation(reservation, $event)"
+              class="reservation">
+                          <span>{{ reservation.time }}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

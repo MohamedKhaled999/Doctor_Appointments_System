@@ -13,6 +13,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { headerInterceptor } from './core/interceptors/header.interceptor';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { routes } from './app.routes';
+import { MatNativeDateModule } from '@angular/material/core';
 import { FacebookLoginProvider, GoogleLoginProvider, MicrosoftLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
@@ -25,6 +26,8 @@ export const appConfig: ApplicationConfig = {
 
   provideAnimations(),
   provideToastr({ timeOut: 1000, positionClass: 'toast-top-right' }),
+  importProvidersFrom(MatNativeDateModule),
+
     //  importProvidersFrom(),
     {
       provide: 'SocialAuthServiceConfig',
