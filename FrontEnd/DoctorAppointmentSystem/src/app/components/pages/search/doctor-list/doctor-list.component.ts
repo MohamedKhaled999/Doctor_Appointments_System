@@ -12,6 +12,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { PaginationComponent } from "../../../shared/pagination/pagination.component";
 import { DoctorSearchService } from '../../../../core/services/doctor-search.service';
+import { signal, effect } from '@angular/core';
 
 @Component({
   selector: 'app-doctor-list',
@@ -39,15 +40,19 @@ export class DoctorListComponent {
   }
 
 
-  // ---------------------Pagination-------------------
   pageSize: number = 6;
-  pageIndexParent: number = 1;
+  pageIndexParent = signal(1);
+
+  pageIndexParentEffect = effect(() => {
+    const pageIndex = this.pageIndexParent();
+    if (typeof pageIndex === 'number' && pageIndex !== this.currentPage) {
+      this.currentPage = pageIndex;
+      this.loadDoctors();
+      // console.log('Page index changed:', pageIndex);
+      // console.log('Current page:', this.currentPage);
+    }
+  });
   doctors: Doctor[] = [];
-  get pagedDoctors() {
-    const start = (this.pageIndexParent - 1) * this.pageSize;
-    return this.doctors.slice(start, start + this.pageSize);
-  }
-  //---------------------------------------------------
 
   currentPage: number = 1;
   totalDoctors: number = 0;
@@ -64,10 +69,10 @@ export class DoctorListComponent {
         console.log('Doctors loaded:', this.doctors);
         this.numberOfPages = response.total_pages;
         console.log('Total pages:', this.numberOfPages);
-      this.numberOfRecords = this.numberOfPages * this.pageSize;
+        this.numberOfRecords = this.numberOfPages * this.pageSize;
 
         this.totalDoctors = response.total_results;
-        this.pageIndexParent = response.page; // Update the current page index
+        this.pageIndexParent.set(response.page); // Update the current page index
         // this.pageSize = response.pageSize || this.pageSize; // Ensure pageSize is set correctly
         // this.maxPages = Math.ceil(this.totalDoctors / this.pageSize);
 
