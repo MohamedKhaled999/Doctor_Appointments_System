@@ -25,13 +25,29 @@ namespace Presentation.Controllers
             return Ok(reservations);
         }
 
+        [HttpGet("appointments")]
+        [Authorize(Roles = "doctor")]
+        public async Task<IActionResult> GetAppointments(int reservationId)
+        {
+            var appointments = await _serviceManager.AppointmentOrchestrator.GetAppointmentsByReservationId(reservationId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return Ok(appointments);
+        }
+
         [HttpPost]
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> NewReservation(NewResDTO reservation)
         {
             reservation.ResID = 0;
-            await _serviceManager.AppointmentOrchestrator.AddDoctorReservationAsync(reservation, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
-            return Created();
+            var newReservation = await _serviceManager.AppointmentOrchestrator.AddDoctorReservationAsync(reservation, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return Ok(newReservation);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "doctor")]
+        public async Task<IActionResult> EditReservation(NewResDTO reservation)
+        {
+            var newReservation = await _serviceManager.AppointmentOrchestrator.AddDoctorReservationAsync(reservation, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return Ok(newReservation);
         }
 
         [HttpPost("prescription")]

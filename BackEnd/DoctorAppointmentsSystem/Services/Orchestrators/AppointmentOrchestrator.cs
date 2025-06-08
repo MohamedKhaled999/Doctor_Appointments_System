@@ -1,13 +1,17 @@
-﻿using Domain.Exceptions;
+﻿using Domain.Contracts;
+using Domain.Exceptions;
+using Domain.Models;
 using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Services.Abstraction;
 using Services.Abstraction.Notifications;
 using Services.Abstraction.Orchestrators;
+using Services.Specifications.Appointment;
 using Shared.DTOs.Appointment;
 using Shared.DTOs.DoctorReservation;
 using Shared.DTOs.Email;
+using Shared.DTOs.Patient;
 using Shared.Enums;
 using Shared.Payment;
 
@@ -24,6 +28,7 @@ namespace Services.Orchestrators
         private readonly IEmailService _emailService;
         private readonly IUploadService _uploadService;
         private readonly INotificationService _notificationService;
+        private readonly IReviewService _reviewService;
         private readonly IConfiguration _configuration;
 
         public AppointmentOrchestrator(IServiceManager serviceManager, IConfiguration configuration)
@@ -37,6 +42,7 @@ namespace Services.Orchestrators
             _emailService = serviceManager.EmailService;
             _uploadService = serviceManager.UploadService;
             _notificationService = serviceManager.NotificationService;
+            _reviewService = serviceManager.ReviewService;
             _configuration = configuration;
         }
 
@@ -72,6 +78,16 @@ namespace Services.Orchestrators
         {
             var patient = await _patientService.GetByAppUserIdAsync(appUserId);
             return _appointmentService.GetCount(patient.Id);
+        }
+
+        public async Task<List<AppointmentDTO>?> GetAppointmentsByReservationId(int reservationId, int appUserId)
+        {
+            var reservation = await _doctorReservationService.GetDoctorReservationByID(reservationId);
+            var doctor = await _doctorService.GetByAppUserIdAsync(appUserId);
+            if (reservation.DoctorID != doctor.ID)
+                throw new UnAuthorizedException("Access Denied");
+
+            return await _doctorReservationService.GetAppointmentsByReservationId(reservationId);
         }
 
         public async Task<string> CreatePaymentSessionAsync(int patientAppUserId, int doctorReservationId)
@@ -179,6 +195,21 @@ namespace Services.Orchestrators
             await _appointmentService.DeleteAppointmentPrescription(appointmentId);
         }
 
+        public async Task AddReview(AddReviewDTO review, int appUserId)
+        {
+            var doctor = await _doctorReservationService.GetDoctorByReservationId(review.DoctorReservationId);
+            var patient = await _patientService.GetByAppUserIdAsync(appUserId);
+            var appointments = await _appointmentService.GetByPatientAndDoctorAsync(patient.Id, doctor.Id);
+            if (!appointments.Any(a => a.StartTime < DateTime.Now && a.Canceled == false))
+                throw new ValidationException(["You don't have any completed appointment with this doctor"]);
+
+            var existingReviewId = await _reviewService.GetReviewByPatientAndDoctor(patient.Id, doctor.Id);
+            if (existingReviewId != null)
+                await _reviewService.DeleteReview(existingReviewId.Value);
+
+            await _reviewService.AddReview(review, patient.Id);
+        }
+
         public async Task SaveAppointmentAsync(int patientId, int doctorReservationId, string paymentId)
         {
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
@@ -220,29 +251,44 @@ namespace Services.Orchestrators
             }
         }
 
-        public async Task AddDoctorReservationAsync(NewResDTO reservation, int appUserId)
+        public async Task<DoctorReservationDTO> AddDoctorReservationAsync(NewResDTO reservation, int appUserId)
         {
             if (reservation.Date <= DateTime.Now || reservation.Date - DateTime.Now >= TimeSpan.FromDays(14))
                 throw new ValidationException(["Can't add reservation on this day"]);
+            if (reservation.EndTime - reservation.StartTime < TimeSpan.FromMinutes(30))
+                throw new ValidationException(["End time must be after start time by 30 minutes at minimum"]);
 
             var doctor = await _doctorService.GetByAppUserIdAsync(appUserId);
             if (doctor.ID != reservation.DoctorID)
                 throw new UnAuthorizedException("Access Denied");
-            await _doctorReservationService.AddDoctorReservation(reservation);
 
-            var newReservation = await _doctorReservationService.GetLastReservationByDoctor(reservation.DoctorID);
-            var today = DateTime.Now;
-            DateOnly reservationDate;
-            if (today.Day > newReservation.Day)
-                reservationDate = new DateOnly(today.Year, today.AddMonths(-1).Month, newReservation.Day);
-            else
-                reservationDate = new DateOnly(today.Year, today.Month, newReservation.Day);
-            var notification = new NotificationMessage()
+            DoctorReservationDTO newReservation;
+            if (reservation.ResID == 0)
             {
-                EventType = NotificationEvents.Doctor_ReservationAdded,
-                Message = $"Reservation on {reservationDate} has been added."
-            };
-            await _notificationService.SendNotification(appUserId, notification);
+                await _doctorReservationService.AddDoctorReservation(reservation);
+
+                newReservation = await _doctorReservationService.GetLastReservationByDoctor(reservation.DoctorID);
+                var today = DateTime.Now;
+                DateOnly reservationDate;
+                if (today.Day > newReservation.Day)
+                    reservationDate = new DateOnly(today.Year, today.AddMonths(-1).Month, newReservation.Day);
+                else
+                    reservationDate = new DateOnly(today.Year, today.Month, newReservation.Day);
+                var notification = new NotificationMessage()
+                {
+                    EventType = NotificationEvents.Doctor_ReservationAdded,
+                    Message = $"Reservation on {reservationDate} has been added."
+                };
+                await _notificationService.SendNotification(appUserId, notification);
+            }
+
+            else
+            {
+                await _doctorReservationService.EditDoctorReservation(reservation);
+                newReservation = await _doctorReservationService.GetDoctorReservationByID(reservation.ResID);
+            }
+
+            return newReservation;
         }
 
         public async Task CancelAppointmentAsync(int id, int currentPatientAppUserId = -1)

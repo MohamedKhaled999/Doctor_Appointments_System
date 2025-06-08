@@ -28,6 +28,15 @@ namespace Services
             return _mapper.Map<AppointmentDTO?>(appointment);
         }
 
+        public async Task<List<AppointmentDTO>?> GetByPatientAndDoctorAsync(int patientId, int doctorId)
+        {
+            var specs = new SpecificationsBase<Appointment>(a => a.PatientId == patientId && a.DoctorReservation.DoctorID == doctorId);
+            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(specs);
+            if (appointment == null)
+                return null;
+            return _mapper.Map<List<AppointmentDTO>?>(appointment);
+        }
+
         public async Task<AppointmentDTO?> GetWithDoctorAsync(int id)
         {
             var appointment = (await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(new AppointmentDoctorSpecifications(a => a.Id == id))).FirstOrDefault();

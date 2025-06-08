@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
+using Shared.DTOs.Patient;
 using System.Security.Claims;
 
 namespace Presentation.Controllers
@@ -62,6 +63,13 @@ namespace Presentation.Controllers
         {
             await _serviceManager.AppointmentOrchestrator.DeleteAppointmentDocument(appointmentId, documentUrl, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return NoContent();
+        }
+
+        [HttpPost("review")]
+        public async Task<IActionResult> AddReview(AddReviewDTO review)
+        {
+            await _serviceManager.AppointmentOrchestrator.AddReview(review, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return Created();
         }
     }
 }
