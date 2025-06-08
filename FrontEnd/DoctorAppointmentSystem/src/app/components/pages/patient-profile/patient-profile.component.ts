@@ -68,19 +68,19 @@ export class PatientProfileComponent implements OnInit {
           specialty: 'Cardiology',
           governorate: 'Cairo',
           location: 'Cairo',
-          doctorImagePath: 'doctor.jpg',
+          doctorImagePath: 'maleDoc.jpg',
           isExist: true
         }
       ]
     }
-     this.patientForm.patchValue({
-        firstName: this.patient.firstName,
-        lastName: this.patient.lastName,
-        email: this.patient.email,
-        phoneNumber: this.patient.phoneNumber,
-        governorate: this.governorates[parseInt(this.patient.governorate) - 1],
-        birthDate: this.patient.birthDate
-      });
+    this.patientForm.patchValue({
+      firstName: this.patient.firstName,
+      lastName: this.patient.lastName,
+      email: this.patient.email,
+      phoneNumber: this.patient.phoneNumber,
+      governorate: this.governorates[parseInt(this.patient.governorate) - 1],
+      birthDate: this.patient.birthDate
+    });
     if (this.router.snapshot.queryParamMap.get('orderSucceeded') === 'true') {
       this.orderSucceeded = true;
       Swal.fire({

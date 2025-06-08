@@ -1,36 +1,40 @@
-  <!-- <img [src]="'/images/' + appointment?.doctorImagePath" alt="Doctor Image" class="appointment-doctor-image rounded-circle me-3 object-fit-cover m-2" /> -->
-  <div class="d-flex flex-wrap justify-content-between patient-appointment-card-content w-75">
-    <div class="doctor-info d-flex flex-column">
-      <h5 class="mb-1">Dr. {{ appointment?.doctor }}</h5>
+<img [src]="'https://doc-net2.runasp.net/uploads/images/' + appointment?.doctorImagePath" alt="Doctor Image"
+  class="appointment-doctor-image rounded-circle object-fit-cover m-2" />
+<div class="w-75 patient-appointment-card-content d-flex flex-wrap justify-content-between">
+  <div class="d-flex flex-column">
+    <h5 class="mb-1">Dr. {{ appointment?.doctor }}</h5>
     <p class="text-muted mb-1">{{ appointment?.specialty }}</p>
-    </div>
-    <div class="details text-end d-flex flex-column mt-sm-1">
-      <div class="patient-appointment-details">
-        <i class="fas fa-map-marker-alt me-1"></i>
-        {{ appointment?.governorate }}: {{appointment?.location }}
-      </div>
-      <div [ngClass]="{'text-danger': isPast}" class="patient-appointment-details mt-sm-2 mb-3">
-        <i class="far fa-calendar-alt me-1"></i>
-        {{ appointment?.startTime | date: 'd MMMM yyyy \'at\' h:mm a' }}
-        to {{ appointment?.endTime | date: 'h:mm a' }}
-      </div>
-    </div>
-    <div class="col-12" *ngIf="!isPast" >
-      <label for="medicalFiles" class="form-label mb-2">Attach Medical Files (PDF, JPG, PNG, JPEG &lt; 5MB)</label>
-      <input id="medicalFiles" type="file" class="form-control mb-2" (change)="onFileSelected($event)" multiple 
-        [accept]="acceptedFileTypes" />
-        <small class="form-text text-muted mb-2">You can attach multiple files.</small>
-        <div *ngIf="fileErrors" class="text-danger mb-2 mt-1">
-          <p *ngFor="let error of fileErrors">{{ error }}</p>
-        </div>
-    </div>
-    <div class="col-12">
-      <button *ngIf="isPast && appointment?.isExist" (click)="onAddReview(appointment)" class="btn btn-primary review-btn bottom-0 end-0 mt-2 SP-bookBTN m-3">Add Review</button>
-    </div>
-    <ul class="list-unstyled list-group d-flex flex-wrap justify-content-between mt-2" *ngIf="selectedFiles.length > 0">
-      <li *ngFor="let file of selectedFiles" class="mb-2 list-group-item d-flex justify-content-between align-items-center">
-          <i class="fas fa-file-alt me-1"></i> {{ file.name }} ({{ file.size / 1024 | number: '1.0-2' }} KB)
-      </li>
-    </ul>
   </div>
-<i *ngIf="!isPast" class="fas fa-times appointment-cancel-icon position-absolute" title="Cancel Appointment" (click)="onCancel()"></i>
+  <div class="d-flex flex-column">
+    <div class="patient-appointment-details">
+      <i class="fas fa-map-marker-alt me-1"></i>
+      {{ appointment?.governorate }}: {{appointment?.location }}
+    </div>
+    <div [ngClass]="{'text-danger': isPast}" class="patient-appointment-details mt-sm-2 mb-3">
+      <i class="far fa-calendar-alt me-1"></i>
+      {{ appointment?.startTime | date: 'd MMMM yyyy \'at\' h:mm a' }}
+      to {{ appointment?.endTime | date: 'h:mm a' }}
+    </div>
+  </div>
+  <div class="col-12" *ngIf="!isPast">
+    <label for="medicalFiles" class="form-label mb-2">Attach Medical Files (PDF, JPG, PNG, JPEG &lt; 5MB)</label>
+    <input id="medicalFiles" type="file" class="form-control mb-2" (change)="onFileSelected($event)" multiple
+      [accept]="acceptedFileTypes" />
+    <small class="form-text text-muted mb-2">You can attach multiple files.</small>
+    <div *ngIf="fileErrors" class="text-danger mb-2 mt-1">
+      <p *ngFor="let error of fileErrors">{{ error }}</p>
+    </div>
+  </div>
+  <ul class="list-unstyled list-group d-flex flex-wrap justify-content-between mt-2" *ngIf="selectedFiles.length > 0">
+    <li *ngFor="let file of selectedFiles"
+      class="mb-2 list-group-item d-flex justify-content-between align-items-center">
+      <i class="fas fa-file-alt me-1"></i> {{ file.name }} ({{ file.size / 1024 | number: '1.0-2' }} KB)
+    </li>
+  </ul>
+</div>
+<div class="position-absolute bottom-0 end-0 p-3">
+  <button *ngIf="isPast && appointment?.isExist" (click)="onAddReview(appointment)"
+    class="btn btn-primary review-btn SP-bookBTN">Add Review</button>
+</div>
+<i *ngIf="!isPast" class="fas fa-times appointment-cancel-icon position-absolute" title="Cancel Appointment"
+  (click)="onCancel()"></i>
