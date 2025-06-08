@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 
 import { DataManagementService } from './core/services/data-management.service';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
