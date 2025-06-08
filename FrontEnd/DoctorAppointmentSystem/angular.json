@@ -35,14 +35,7 @@
               "node_modules/sweetalert2/dist/sweetalert2.min.css",
               "node_modules/leaflet/dist/leaflet.css" ,
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-        
-             
-     
                "node_modules/swiper/swiper-bundle.css",
-
-
-             
-              
               "node_modules/nouislider/dist/nouislider.min.css",
               "node_modules/ngx-toastr/toastr.css",
               "src/styles.css"

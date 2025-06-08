@@ -13,6 +13,11 @@ import { NavbarComponent } from "../../navbar/navbar.component";
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+// import mixitup from 'mixitup';
+// import mixitup, { Mixer } from 'mixitup';
+// import mixitup, { Mixer } from 'mixitup'; // ✅ Correct way
+
+
 
 @Component({
   selector: 'app-home',
@@ -39,6 +44,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private swiper3!: Swiper;
   private typed!: Typed;
 
+  mixer: any; // ✅ Now valid
   constructor(private apiService: ApiService ,@Inject(PLATFORM_ID) private platformId: Object ,  private cdr: ChangeDetectorRef,) {}
 
   ngOnInit(): void {
@@ -50,12 +56,31 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
    
   }
 
-  ngAfterViewInit(): void {
+   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.initSwipers();
       this.initTyped();
+
+      // ✅ Dynamic import of mixitup to avoid SSR issues
+      import('mixitup').then(({ default: mixitup }) => {
+        this.mixer = mixitup('#mixContainer', {
+          animation: {
+            duration: 300
+          },
+          callbacks: {
+            onMixEnd: () => {
+              console.log('MixItUp filter completed');
+            }
+          }
+        });
+      }).catch(err => {
+        console.error('Failed to load mixitup:', err);
+      });
     }
   }
+
+
+
   loadHomeData(): void {
     this.apiService.getHomeData().subscribe({
       next: (data) => {
@@ -90,6 +115,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   //   const index = Math.floor(Math.random() * this.aosAnimations.length);
   //   return this.aosAnimations[index];
   // }
+
+  
   getRandomAosAnimation(): string {
     const index = Math.floor(Math.random() * this.aosAnimations.length);
     return this.aosAnimations[index];

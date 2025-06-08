@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
 import { Doctor } from '../interfaces/doctor.interface';
+import { Schedule } from '../interfaces/Schedule.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorService {
-  constructor(private api: ApiService) { }
+  constructor( private http: HttpClient,private api: ApiService) { }
 
   getDoctors(): Observable<Doctor[]> {
     return this.api.getDoctors();

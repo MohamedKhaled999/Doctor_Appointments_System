@@ -73,8 +73,9 @@
                                 <div >
                                     <div class="card-body ">
                                         <div class="small-icon pb-4" style="width: 60px; height: 60px">
-                                            <svg [innerHTML]="getSpecialtyIcon(specialty.id)" viewBox="0 0 60 60" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"></svg>
+                                            <!-- <svg [innerHTML]="getSpecialtyIcon(specialty.id)" viewBox="0 0 60 60" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"></svg> -->
+                                                
                                         </div>
                                         <h3 class="fs-5 text-primary-color fw-bold">{{ specialty.name }}</h3>
                                         <p class="text-opacity-75 fw-semibold"
@@ -154,8 +155,8 @@
                     </div>
                 </div>
             </div>
-        </div>
 
+            
         <div class="overflow-hidden position-relative mt-5">
             <div class="swiper-container position-relative w-75 m-auto overflow-hidden" style="height:50%;">
                 <div class="swiper-wrapper" id="mixContainer">
@@ -194,6 +195,8 @@
                 </div>
             </div>
         </div>
+        </div>
+
 
         <div class="doctor-button-next fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
             style="color: var(--primary-color);">

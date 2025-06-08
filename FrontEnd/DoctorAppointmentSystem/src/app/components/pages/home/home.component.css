@@ -87,6 +87,7 @@ body {
         left: 0;
     }
 }
+
 :root {
     --card-text-color: black;
     /* Not Added to Project yet  */
@@ -99,8 +100,7 @@ body {
     height: 300px;
 }
 
-.home .swiper-slide img 
-{
+.home .swiper-slide img {
     opacity: 0;
     transform: scale(1.5);
     transition: transform 2s ease-in, opacity 1s ease-in;
@@ -110,25 +110,26 @@ body {
     transform: scale(1);
     opacity: 1;
 }
-   /* Apply box-sizing globally *me/
+
+/* Apply box-sizing globally *me/
 .divider-block {
     margin-block: 15px;
     padding-block: 15px; }
         /* Apply box-sizing globally */
-        *,
-        ::after,
-        ::before {
-            box-sizing: border-box;
-        }
-    
-        /* Styles for the divider block inside the home component */
-        .home[_ngcontent-ng-c3354827600] .divider-block[_ngcontent-ng-c3354827600] {
-            height: 100px;
-            background-color: white ;
-    
-        }
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
 
-                /* .overflow-hidden {
+/* Styles for the divider block inside the home component */
+.home[_ngcontent-ng-c3354827600] .divider-block[_ngcontent-ng-c3354827600] {
+    height: 100px;
+    background-color: white;
+
+}
+
+/* .overflow-hidden {
                     overflow: hidden !important;
              
                 }
@@ -151,7 +152,7 @@ body {
 }
 
 .home #words,
-.home #words + span {
+.home #words+span {
     font-size: 2rem;
     font-weight: bold;
 }
@@ -159,7 +160,7 @@ body {
 .home .services .card {
     --bg-icon-opacity: 0.025;
 
-    height :100%
+    height: 100%
 }
 
 
@@ -168,56 +169,56 @@ body {
     transition: all 0.3s ease-in;
 }
 
-    .home .services .card * {
-        transition: all 0.3s ease-in;
-    }
+.home .services .card * {
+    transition: all 0.3s ease-in;
+}
 
-    .home .services .card::after {
-        content: '\f061';
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        font-size: 24px;
-        color: var(--primary-font-color);
-        position: absolute;
-        right: 0px;
-        bottom: 5px;
-        width: 45px;
-        height: 45px;
-        transform: rotate(-45deg);
-        transition: all 1s;
-    }
+.home .services .card::after {
+    content: '\f061';
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 24px;
+    color: var(--primary-font-color);
+    position: absolute;
+    right: 0px;
+    bottom: 5px;
+    width: 45px;
+    height: 45px;
+    transform: rotate(-45deg);
+    transition: all 1s;
+}
 
-    .home .services .card::before {
-        content: "";
-        position: absolute;
-        right: 5px;
-        bottom: 5px;
-        background-color: var(--secondary-color);
-        width: 45px;
-        height: 45px;
-        border-radius: 30px;
-    }
-
-
+.home .services .card::before {
+    content: "";
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    background-color: var(--secondary-color);
+    width: 45px;
+    height: 45px;
+    border-radius: 30px;
+}
 
 
 
 
-    .home .services .card:hover {
-        --primary-color: #b3e5fc;
-        --secondary-color: #004085;
-        --accent-color: #B3E5FC;
-        --accent-color: #01BDE0;
-        --primary-font-color: rgb(255, 255, 255);
-        --bg-icon-opacity: 0.08;
-        --card-text-color: white;
-        scale: 1.04;
-        color: white !important;
-    }
 
-        .home .services .card:hover::after {
-            transform: rotate(-45deg) translate(30px, 0px)
-        }
+
+.home .services .card:hover {
+    --primary-color: #b3e5fc;
+    --secondary-color: #004085;
+    --accent-color: #B3E5FC;
+    --accent-color: #01BDE0;
+    --primary-font-color: rgb(255, 255, 255);
+    --bg-icon-opacity: 0.08;
+    --card-text-color: white;
+    scale: 1.04;
+    color: white !important;
+}
+
+.home .services .card:hover::after {
+    transform: rotate(-45deg) translate(30px, 0px)
+}
 
 .home .doctors {
     /* background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4), url("https: //neurolux.me/wp-content/uploads/2019/05/b8-1.jpg"); */
@@ -225,8 +226,7 @@ body {
     background-attachment: fixed;
 }
 
-    .home .doctors .swiper-slide:not(.my-slide-btn) {
-    }
+.home .doctors .swiper-slide:not(.my-slide-btn) {}
 
 .home .doctor-button-prev {
     left: 8%;
@@ -262,24 +262,25 @@ body {
     /* box-shadow: 0 0 3px 1px var(--primary-color) inset; */
 }
 
-    .home .my-controls .my-slide-btn .my-btn {
-        background-color: white;
-        color: #004085;
-        transition: all 0.2s ease-in-out;
-        font-size: 14px;
-        font-weight: 600 !important;
-    }
+.home .my-controls .my-slide-btn .my-btn {
+    background-color: white;
+    color: #004085;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    font-weight: 600 !important;
+}
 
-        .home .my-controls .my-slide-btn .my-btn:hover {
-            /* border: #004085; */
-            outline: 3px solid #004085a5;
-            /* box-shadow:  0 0 2px 1px var(--primary-color) ; */
-            scale: 1.05;
-        }
-        .home .my-controls .my-slide-btn .my-btn.mixitup-control-active {
-            background-color: #004085 !important;
-            color: white;
-        }
+.home .my-controls .my-slide-btn .my-btn:hover {
+    /* border: #004085; */
+    outline: 3px solid #004085a5;
+    /* box-shadow:  0 0 2px 1px var(--primary-color) ; */
+    scale: 1.05;
+}
+
+.home .my-controls .my-slide-btn .my-btn.mixitup-control-active {
+    background-color: #004085 !important;
+    color: white;
+}
 
 .home .doctor-stars {
     background-clip: text !important;
@@ -293,122 +294,125 @@ body {
 }
 
 
-        
-                .divider-block ,.divider-blocks{
-                    width: 100%;
-                    height: 40px;
-                  
-                    background-color: white;
-                   
-                    clear: both;
-                  
-                    float: none;
-                  
-                    clip-path: none !important;
-                  
-                    -webkit-clip-path: none !important;
-                   
-                }
-        /* ME */
-                .SP-primaryTextt {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    
-                }
-                          .servicesn {
-                              background-color: white;   }
 
-                              /* doesnot work */
-                              .home .my-nav-tabs .doctor-card {
-                                box-shadow: 0 0 2px 3px #00408588;
-                                margin-block: 15px;
-                                position: relative;
-                                transition: all 1s;
-                                overflow: hidden;
-                                z-index: 1;
-                            }
-                            
-                            .home .my-nav-tabs .doctor-card::after {
-                                content: "";
-                                position: absolute;
-                                bottom: -50%;
-                                left: -50%;
-                                width: 200%;
-                                height: 200%;
-                                transition: all 1s;
-                                border-top-right-radius: 999px;
-                                background-image: linear-gradient(-45deg, #004085d8 0% 20%, rgba(255, 255, 255, 0.562));
-                                z-index: 0;
-                            }
-                            
-                            .home .my-nav-tabs .doctor-card:hover {
-                                transform: scale(1.0083) translateY(-10px);
-                            }
-                            
-                            .home .my-nav-tabs .doctor-card:hover::after {
-                                bottom: 0;
-                                left: 0;
-                            }
-                            /* ///
+.divider-block,
+.divider-blocks {
+    width: 100%;
+    height: 40px;
+
+    background-color: white;
+
+    clear: both;
+
+    float: none;
+
+    clip-path: none !important;
+
+    -webkit-clip-path: none !important;
+
+}
+
+/* ME */
+.SP-primaryTextt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.servicesn {
+    background-color: white;
+}
+
+/* doesnot work */
+.home .my-nav-tabs .doctor-card {
+    box-shadow: 0 0 2px 3px #00408588;
+    margin-block: 15px;
+    position: relative;
+    transition: all 1s;
+    overflow: hidden;
+}
+
+ .home .my-nav-tabs .doctor-card::after {
+        content: "";
+        position: absolute;
+        bottom: -100%;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        transition: all 1s;
+        border-top-right-radius: 999px;
+        background-image: linear-gradient(-45deg,#004085d8 0% 20%,rgba(255, 255, 255, 0.562) );
+    }
+     
+.home .my-nav-tabs .doctor-card:hover {
+        transform: scale(1.0083) translateY(-10px);
+    }
+    
+.home .my-nav-tabs .doctor-card:hover::after {
+            bottom: -60%;
+            left: -50%;
+        }
+/* ///
                              */
 
-                                                         .doctor-navigation {
-                                                             position: absolute;
-                                                             top: 50%;
-                                                             width: 100%;
-                                                             display: flex;
-                                                             justify-content: space-between;
-                                                             transform: translateY(-50%);
-                                                             z-index: 10;
-                                                         }
-                            
-                                                         .doctor-button-prev,
-                                                         .doctor-button-next {
-                                                             position: relative;
-                                                             margin: 0 15px;
-                                                             cursor: pointer;
-                                                             background: white;
-                                                             border-radius: 50%;
-                                                             width: 40px;
-                                                             height: 40px;
-                                                             display: flex;
-                                                             align-items: center;
-                                                             justify-content: center;
-                                                         }
-                            
-                                                         .swiper-container {
-                                                             padding: 0 50px;
-                                                             /* Add space for buttons */                             }
+.doctor-navigation {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    z-index: 10;
+}
 
-                                                                                                                         /* doctors-carousel.component.scss */
-                                                                                                                         .my-nav-tabs {
-                                                                                                                             .my-controls {
-                                                                                                                                 .overhiddenflow- {
-                                                                                                                                     position: relative;
-                                                                                                                                 }
-                                                                                                                             }
-                                                            
-                                                                                                                             .doctor-button-prev {
-                                                                                                                                 left: 8%;
-                                                                                                                             }
-                                                            
-                                                                                                                             .doctor-button-next {
-                                                                                                                                 right: 8%;
-                                                                                                                             }
-                                                            
-                                                                                                                             .doctor-button-prev,
-                                                                                                                             .doctor-button-next {
-                                                                                                                                 position: absolute;
-                                                                                                                                 top: 50%;
-                                                                                                                                 transform: translateY(-50%);
-                                                                                                                                 color: #007bff;
-                                                                                                                                 z-index: 12;
-                                                                                                                             }
-                                                            
-                                                                                                                             .doctors {
-                                                                                                                                 /* background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4), url("../images/home/ser_bg.jpg"); */
-                                                                                                                                 padding-block: 70px;
-                                                                                                                                 background-attachment: fixed;
-                                                                                                                             }
-                                                                                                                         }
+.doctor-button-prev,
+.doctor-button-next {
+    position: relative;
+    margin: 0 15px;
+    cursor: pointer;
+    background: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swiper-container {
+    padding: 0 50px;
+    /* Add space for buttons */
+}
+
+/* doctors-carousel.component.scss */
+.my-nav-tabs {
+    .my-controls {
+        .overhiddenflow- {
+            position: relative;
+        }
+    }
+
+    .doctor-button-prev {
+        left: 8%;
+    }
+
+    .doctor-button-next {
+        right: 8%;
+    }
+
+    .doctor-button-prev,
+    .doctor-button-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #007bff;
+        z-index: 12;
+    }
+
+    .doctors {
+        /* background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4), url("../images/home/ser_bg.jpg"); */
+        padding-block: 70px;
+        background-attachment: fixed;
+    }
+}
