@@ -6,6 +6,7 @@
         public string Specialty { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public bool Canceled { get; set; }
         public string DocumentUrls { get; set; }
         public string Location { get; set; }
         public string Doctor { get; set; }

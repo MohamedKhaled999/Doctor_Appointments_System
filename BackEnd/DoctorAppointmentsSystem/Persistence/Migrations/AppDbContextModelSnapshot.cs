@@ -109,6 +109,9 @@ namespace Persistence.Migrations
                     b.Property<string>("DocumentUrls")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("JobId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 

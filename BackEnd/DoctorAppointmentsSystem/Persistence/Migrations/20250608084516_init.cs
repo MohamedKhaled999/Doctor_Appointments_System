@@ -332,7 +332,8 @@ namespace Persistence.Migrations
                     TransactionId = table.Column<int>(type: "int", nullable: false),
                     DocumentUrls = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrescriptionUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Canceled = table.Column<bool>(type: "bit", nullable: false)
+                    Canceled = table.Column<bool>(type: "bit", nullable: false),
+                    JobId = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

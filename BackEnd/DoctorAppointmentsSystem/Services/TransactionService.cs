@@ -57,7 +57,7 @@ namespace Services
 
         public async Task UpdateAsync(int id, double amount)
         {
-            var transaction = _mapper.Map<Transaction>(await GetByIdAsync(id));
+            var transaction = await _unitOfWork.GetRepository<Transaction, int>().GetByIdAsync(id);
             if (transaction == null)
                 throw new ArgumentNullException($"Transaction with ID {id} doesn't exist");
             transaction.Amount = amount;
