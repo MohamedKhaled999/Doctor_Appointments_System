@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Services.Abstraction.Orchestrators;
+using Shared.DTOs.Doctor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,12 @@ namespace Presentation.Controllers
         {
             var dashboard = await _serviceManager.AdminOrchestrator.GetDashboardDataAsync();
             return Ok(dashboard);
+        }
+        [HttpPost("AddSpeciality")]
+        public async Task<IActionResult> AddSpeciality(SpecialtyDTO specialtyDTO)
+        {
+            await _serviceManager.SpecialtyService.AddSpecialty(specialtyDTO);
+            return Created("", new { success = true });
         }
 
     }
