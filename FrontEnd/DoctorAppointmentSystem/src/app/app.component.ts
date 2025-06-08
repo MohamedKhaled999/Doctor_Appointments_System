@@ -6,8 +6,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { isPlatformBrowser } from '@angular/common';
 import AOS from 'aos'; 
 
-import { NgxSpinnerComponent } from 'ngx-spinner';
 
+import { NgxSpinnerComponent } from 'ngx-spinner';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet , NgxSpinnerComponent],

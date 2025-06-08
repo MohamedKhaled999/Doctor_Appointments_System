@@ -5,95 +5,15 @@
     --secondary-color-rgb: 179, 229, 252;
     --accent-color: #F8F9FA;
     --accent-color-rgb: 248, 249, 250;
+    --primary-font-color: #004085;
+        --card-text-color: black;
+        /* Not Added to Project yet  */
+        scroll-behavior: smooth;
 }
 
 body {
     font-family: "Montserrat", sans-serif;
 }
-
-.home {
-    --primary-color: #031B4E;
-    --secondary-color: #00A3E1;
-    /* me */
-    --accent-color: #fffefe;
-    --card-text-color: #666;
-    --bg-icon-opacity: 0.1;
-
-    .divider-block {
-        height: 100px;
-        background-color: var(--primary-color);
-        clip-path: polygon(0 0, 100% 0, 100% 50%, 0 100%);
-    }
-
-    .bg-header {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--primary-color);
-        opacity: 0.4;
-        z-index: 20;
-    }
-
-    .services {
-        background-color: var(--primary-color);
-    }
-
-    .doctors {
-        background-color: var(--primary-color);
-        padding-bottom: 50px;
-    }
-
-    .card {
-        transition: all 0.3s ease;
-
-        &:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-    }
-
-    .my-nav-tabs {
-        .my-controls {
-            .my-btn {
-                background-color: transparent;
-                color: white;
-                border: 1px solid var(--secondary-color);
-                margin: 0 5px;
-
-                &.active {
-                    background-color: var(--secondary-color);
-                    color: white;
-                }
-            }
-        }
-    }
-
-    .doctor-button-next,
-    .doctor-button-prev {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 10;
-        cursor: pointer;
-    }
-
-    .doctor-button-next {
-        right: 0;
-    }
-
-    .doctor-button-prev {
-        left: 0;
-    }
-}
-
-:root {
-    --card-text-color: black;
-    /* Not Added to Project yet  */
-    scroll-behavior: smooth;
-}
-
 
 .home .swiper {
     width: 600px;
@@ -111,39 +31,6 @@ body {
     opacity: 1;
 }
 
-.swiper-slide{
-    width: fit-content;
-    padding: 25px;
-}
-/* Apply box-sizing globally *me/
-.divider-block {
-    margin-block: 15px;
-    padding-block: 15px; }
-        /* Apply box-sizing globally */
-*,
-::after,
-::before {
-    box-sizing: border-box;
-}
-
-/* Styles for the divider block inside the home component */
-.home[_ngcontent-ng-c3354827600] .divider-block[_ngcontent-ng-c3354827600] {
-    height: 100px;
-    background-color: white;
-
-}
-
-/* .overflow-hidden {
-                    overflow: hidden !important;
-             
-                }
-              
-        
-                *,
-                ::after,
-                ::before {
-                    box-sizing: border-box;
-                }     */
 .home .bg-header {
     position: absolute;
     inset: 0;
@@ -225,12 +112,16 @@ body {
 }
 
 .home .doctors {
-    /* background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4), url("https: //neurolux.me/wp-content/uploads/2019/05/b8-1.jpg"); */
+    
+        /* url("../images/home/ser_bg.jpg" */
+    background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4);
     padding-block: 70px;
     background-attachment: fixed;
 }
-
-.home .doctors .swiper-slide:not(.my-slide-btn) {}
+.home .doctors .swiper-slide:not(.my-slide-btn){}
+.my-slide-btn {width: fit-content !important;
+    margin-left: 20px;
+}
 
 .home .doctor-button-prev {
     left: 8%;
@@ -297,38 +188,6 @@ body {
     transform: scale(1);
 }
 
-
-
-.divider-block,
-.divider-blocks {
-    width: 100%;
-    height: 40px;
-
-    background-color: white;
-
-    clear: both;
-
-    float: none;
-
-    clip-path: none !important;
-
-    -webkit-clip-path: none !important;
-
-}
-
-/* ME */
-.SP-primaryTextt {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-.servicesn {
-    background-color: white;
-}
-
-/* doesnot work */
 .home .my-nav-tabs .doctor-card {
     box-shadow: 0 0 2px 3px #00408588;
     margin-block: 15px;
@@ -337,121 +196,23 @@ body {
     overflow: hidden;
 }
 
- .home .my-nav-tabs .doctor-card::after {
-        content: "";
-        position: absolute;
-        bottom: -100%;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        transition: all 1s;
-        border-top-right-radius: 999px;
-        background-image: linear-gradient(-45deg,#004085d8 0% 20%,rgba(255, 255, 255, 0.562) );
-    }
-     
-.home .my-nav-tabs .doctor-card:hover {
-        transform: scale(1.0083) translateY(-10px);
-    }
-    
-.home .my-nav-tabs .doctor-card:hover::after {
-            bottom: -60%;
-            left: -50%;
-        }
-/* ///
-                             */
-
-.doctor-navigation {
+.home .my-nav-tabs .doctor-card::after {
+    content: "";
     position: absolute;
-    top: 50%;
+    bottom: -100%;
+    left: -100%;
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    transform: translateY(-50%);
-    z-index: 10;
+    height: 100%;
+    transition: all 1s;
+    border-top-right-radius: 999px;
+    background-image: linear-gradient(-45deg, #004085d8 0% 20%, rgba(255, 255, 255, 0.562));
 }
 
-.doctor-button-prev,
-.doctor-button-next {
-    position: relative;
-    margin: 0 15px;
-    cursor: pointer;
-    background: white;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.home .my-nav-tabs .doctor-card:hover {
+    transform: scale(1.0083) translateY(-10px);
 }
 
-.swiper-container {
-    padding: 0 50px;
-    /* Add space for buttons */
+.home .my-nav-tabs .doctor-card:hover::after {
+    bottom: -60%;
+    left: -50%;
 }
-
-/* doctors-carousel.component.scss */
-.my-nav-tabs {
-    .my-controls {
-        .overhiddenflow- {
-            position: relative;
-        }
-    }
-
-    .doctor-button-prev {
-        left: 8%;
-    }
-
-    .doctor-button-next {
-        right: 8%;
-    }
-
-    .doctor-button-prev,
-    .doctor-button-next {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #007bff;
-        z-index: 12;
-    }
-
-    .doctors {
-        /* background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4), url("../images/home/ser_bg.jpg"); */
-        padding-block: 70px;
-        background-attachment: fixed;
-    }
-}
-/* 8/6 */
-.doctor-button-prev,
-.doctor-button-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    cursor: pointer;
-    background: white;
-    padding: 5px 10px;
-    border: 3px solid #6c757d;
-    border-radius: 50%;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    color: var(--primary-color);
-    font-size: 1.5rem;
-}
-
-.doctor-button-prev {
-    left: 8%;
-}
-
-.doctor-button-next {
-    right: 8%;
-}
-
-.swiper-container {
-    position: relative;
-    width: 75%;
-    margin: auto;
-    overflow: hidden;
-}
-.doctor-button-prev,
-.doctor-button-next {
-    z-index: 1000;
-    pointer-events: all; }
