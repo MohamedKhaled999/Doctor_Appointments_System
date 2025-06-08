@@ -7,7 +7,7 @@ import { isPlatformBrowser } from '@angular/common';
 import AOS from 'aos'; 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet ],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

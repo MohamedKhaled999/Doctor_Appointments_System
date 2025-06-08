@@ -6,23 +6,29 @@ import * as AOS from 'aos';
 import { Doctor } from '../../../core/interfaces/doctor.interface';
 import { Specialty } from '../../../core/interfaces/specialty.interface';
 import { CommonModule } from '@angular/common';
+import 'swiper/css';
+import { Navigation } from 'swiper/modules';
 import { RouterLink } from '@angular/router';
 import { RatingComponent } from '../../shared/rating/rating.component';
-import { FooterComponent } from '../../../footer/footer.component';
-import { NavbarComponent } from "../../navbar/navbar.component";
+
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+
 // import mixitup from 'mixitup';
 // import mixitup, { Mixer } from 'mixitup';
-// import mixitup, { Mixer } from 'mixitup'; // ✅ Correct way
+// import mixitup, { Mixer } from 'mixitup'; // 
 
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, RatingComponent],
+  imports: [
+    CommonModule,
+RouterLink ,
+    RatingComponent, 
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -30,6 +36,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   homeData: any;
   specialties: Specialty[] = [];
   doctors: Doctor[] = [];
+  
   filteredDoctors: Doctor[] = [];
   activeFilter: string = 'all';
   loading = true;
@@ -57,11 +64,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
    ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.initSwipers();
+     if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        this.initSwipers();
+      }, 100); 
+      
+     
       this.initTyped();
 
-      // ✅ Dynamic import of mixitup to avoid SSR issues
       import('mixitup').then(({ default: mixitup }) => {
         this.mixer = mixitup('#mixContainer', {
           animation: {
@@ -140,7 +150,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         el: '.swiper-scrollbar'
       }
     });
-  this.swiper2 = new Swiper('.swiper-container', {
+    // lllllllll
+    
+    this.swiper2 = new Swiper('.swiper-container', {
+      modules: [Navigation],
       navigation: {
         nextEl: '.doctor-button-next',
         prevEl: '.doctor-button-prev',
@@ -151,24 +164,24 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         320: { slidesPerView: 2 },
         768: { slidesPerView: 3 },
         1024: { slidesPerView: 4 }
+      
+  
+        
+        
+
       },
       on: {
-        init: () => {
-          console.log('Doctors swiper initialized');
+        init: (swiper) => {
+          console.log('Doctors swiper initialized with navigation:', {
+            next: swiper.navigation.nextEl,
+            prev: swiper.navigation.prevEl
+          });
         }
       }
     });
-    this.swiper3 = new Swiper('.swiper-container-btns', {
-      spaceBetween: 5,
-      breakpoints: {
-        100: { slidesPerView: 2 },
-        300: { slidesPerView: 3 },
-        500: { slidesPerView: 4 },
-        1024: { slidesPerView: 10 }
-      }
-    });
-
-    this.swiper3.slideTo(0);
+ 
+    
+    this.swiper2.slideTo(0);
   }
 
   initTyped(): void {

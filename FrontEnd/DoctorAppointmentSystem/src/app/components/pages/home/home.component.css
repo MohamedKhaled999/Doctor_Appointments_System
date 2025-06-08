@@ -111,6 +111,10 @@ body {
     opacity: 1;
 }
 
+.swiper-slide{
+    width: fit-content;
+    padding: 25px;
+}
 /* Apply box-sizing globally *me/
 .divider-block {
     margin-block: 15px;
@@ -416,3 +420,38 @@ body {
         background-attachment: fixed;
     }
 }
+/* 8/6 */
+.doctor-button-prev,
+.doctor-button-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    cursor: pointer;
+    background: white;
+    padding: 5px 10px;
+    border: 3px solid #6c757d;
+    border-radius: 50%;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.doctor-button-prev {
+    left: 8%;
+}
+
+.doctor-button-next {
+    right: 8%;
+}
+
+.swiper-container {
+    position: relative;
+    width: 75%;
+    margin: auto;
+    overflow: hidden;
+}
+.doctor-button-prev,
+.doctor-button-next {
+    z-index: 1000;
+    pointer-events: all; }

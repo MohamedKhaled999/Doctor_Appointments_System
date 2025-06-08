@@ -68,13 +68,15 @@
                         <div *ngFor="let specialty of specialties; let i = index; trackBy: trackSpecialtyId" class="col-md-4 col-sm-6"
                             [attr.data-aos]="specialtyAosValues[i]">
 
-                        <a [routerLink]="['/doctor/search']" [queryParams]="{ Speciality: specialty.id }" class="text-decoration-none">
+                        <a  [routerLink]="['/doctor/search']" [queryParams]="{ Speciality: specialty.id }" class="text-decoration-none"> 
                             <div class="card position-relative p-4 bg-white shadow rounded overflow-hidden item " style="background-color: aqua;">
                                 <div >
                                     <div class="card-body ">
-                                        <div class="small-icon pb-4" style="width: 60px; height: 60px">
+                                        <div class="small-icon pb-4 mb-5" style="width: 60px; height: 60px">
                                             <!-- <svg [innerHTML]="getSpecialtyIcon(specialty.id)" viewBox="0 0 60 60" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg"></svg> -->
+                                                <img [src]="'https://doc-net2.runasp.net/uploads/images/' + specialty.image"
+                                                    class="card-img-top rounded-circle mx-auto mb-5" alt="Doctor" style="width: 100px; height: 100px;">
                                                 
                                         </div>
                                         <h3 class="fs-5 text-primary-color fw-bold">{{ specialty.name }}</h3>
@@ -158,6 +160,15 @@
 
             
         <div class="overflow-hidden position-relative mt-5">
+            <div class="doctor-button-next fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
+                style="color: var(--primary-color);">
+                <i class="position-relative fa-solid fa-circle-chevron-right"></i>
+            </div>
+            <div class="doctor-button-prev fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
+                style="color: var(--primary-color);">
+                <i class="fa-solid fa-circle-chevron-left"></i>
+            </div>
+     
             <div class="swiper-container position-relative w-75 m-auto overflow-hidden" style="height:50%;">
                 <div class="swiper-wrapper" id="mixContainer">
                     <div *ngFor="let doctor of filteredDoctors; let i = index" class="swiper-slide mix" [attr.data-aos]="doctorAosValues[i]"
@@ -167,6 +178,7 @@
                   
                         
                         <a [routerLink]="['/doctor/profile', doctor.id]" class="text-decoration-none">
+                             
                             <div class="slide-content card doctor-card "  style="width: 300px;">
                                 <!-- <img [src]="'uploads/images/' + doctor.image"
                                     class="card-img-top rounded-circle mx-auto mt-3" alt="Doctor"
@@ -196,16 +208,17 @@
             </div>
         </div>
         </div>
+        <!-- <app-doctors-carousel [doctors]="doctors" [specialties]="specialties"></app-doctors-carousel> -->
+<!-- parent.component.html -->
 
-
-        <div class="doctor-button-next fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
+        <!-- <div class="doctor-button-next fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
             style="color: var(--primary-color);">
             <i class="position-relative fa-solid fa-circle-chevron-right"></i>
         </div>
         <div class="doctor-button-prev fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
             style="color: var(--primary-color);">
-            <i class="fa-solid fa-circle-chevron-left"></i>
-        </div>
+            <i class="fa-solid fa-circle-chevron-left"></i> -->
+        <!-- </div> -->
     </section>
 
 
