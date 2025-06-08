@@ -5,6 +5,7 @@ namespace Domain.Models
 {
     public class Doctor : Person
     {
+        public bool IsApproved { get; set; } = false;
         public int SpecialtyID { get; set; }
         [DataType(DataType.Currency)]
         public int Fees { get; set; }
@@ -32,5 +33,6 @@ namespace Domain.Models
         public virtual Specialty Specialty { get; set; }
         public virtual ICollection<DoctorReservation>? DoctorReservations { get; set; }
         public virtual ICollection<Review>? Reviews { get; set; }
+
     }
 }

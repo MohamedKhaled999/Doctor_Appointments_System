@@ -53,35 +53,23 @@ namespace Services.Orchestrators
         }
         public async Task<List<SpecialtyDistribution>> GetSpecialtyDistributionAsync()
         {
-            var specialties = await _serviceManager.SpecialtyService.GetAllSpecialties();
-            if (specialties == null || !specialties.Any())
-                return new List<SpecialtyDistribution>();
-            var distribution = new List<SpecialtyDistribution>();
-            foreach (var specialty in specialties)
+            return (await _serviceManager.HomeService.GetHomeData()).Specialties.Select(s => new SpecialtyDistribution
             {
-                SpecificationsBase<Doctor> spec = new SpecificationsBase<Doctor>(d => d.SpecialtyID == specialty.ID);
-                var doctorsCount = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(spec);
-                distribution.Add(new SpecialtyDistribution
-                {
-                    Name = specialty.Name,
-                    Value = doctorsCount.Count()
-                });
-            }
-            return distribution;
-
+                Name = s.Name,
+                Value = s.NumberOfDoctors
+            }).ToList();
         }
         public async Task<List<AppointmentStatus>> GetAppointmentStatusAsync()
         {
             var AppointmentStatusList = new List<AppointmentStatus>();
             SpecificationsBase<Appointment> spec = new SpecificationsBase<Appointment>(null);
             spec.AddInclude(a => a.DoctorReservation);
-            spec.AddInclude(a => a.Transaction);
             var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(spec);
             if (appointments == null || !appointments.Any())
                 return new List<AppointmentStatus>();
             var totalAppointments = appointments.Count();
-            var completedAppointments = appointments.Count(a => a.DoctorReservation.EndTime < DateTime.Now);
-            var pendingAppointments = appointments.Count(a => a.DoctorReservation.StartTime > DateTime.Now);
+            var completedAppointments = appointments.Count(a => a.DoctorReservation.EndTime < DateTime.Now && a.Canceled == false);
+            var pendingAppointments = appointments.Count(a => a.DoctorReservation.StartTime > DateTime.Now && a.Canceled == false);
             var cancelledAppointments = appointments.Count(a => a.Canceled == true);
             AppointmentStatusList.Add(new AppointmentStatus()
             {
@@ -125,7 +113,7 @@ namespace Services.Orchestrators
                     Revenue = (decimal)await _serviceManager.TransactionService.GetDoctorRevenue(doctor.Id)
                 });
             }
-            return topDoctors.OrderByDescending(d => d.Rating).Take(10).ToList();
+            return topDoctors.OrderByDescending(d => d.Revenue).Take(10).ToList();
         }
         public async Task<List<RecentAppointment>> GetRecentAppointmentsAsync()
         {
@@ -147,7 +135,7 @@ namespace Services.Orchestrators
                     Doctor = $"{appointment.DoctorReservation.Doctor.FirstName} {appointment.DoctorReservation.Doctor.LastName}",
                     Date = appointment.DoctorReservation.StartTime.Date.ToShortDateString(),
                     Time = appointment.DoctorReservation.StartTime.ToShortTimeString(),
-                    Status = appointment.Canceled ? "Cancelled" : "Completed"
+                    Status = appointment.Canceled ? "Cancelled" : "Pending"
                 });
             }
             return recentAppointments;
@@ -180,7 +168,7 @@ namespace Services.Orchestrators
             var appointmentsThisMonth = await GetMonthAppoiments(Month);
             if (appointmentsThisMonth == null || !appointmentsThisMonth.Any())
                 return 0d;
-            return appointmentsThisMonth.Sum(a => a.Transaction.Amount * (5 / 100));
+            return appointmentsThisMonth.Select(a => a.Transaction.Amount).Sum() * .05;
         }
         private async Task<double> GetGrowthRate()
         {

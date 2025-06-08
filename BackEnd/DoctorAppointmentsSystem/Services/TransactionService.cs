@@ -79,7 +79,7 @@ namespace Services
             var transactions = await _unitOfWork.GetRepository<Transaction, int>().GetAllAsync(specs);
             if (transactions == null || !transactions.Any())
                 return 0;
-            return transactions.Sum(t => t.Amount  * (95 / 100));
+            return transactions.Select(t => t.Amount).Sum() * .95;
         }
     }
 }
