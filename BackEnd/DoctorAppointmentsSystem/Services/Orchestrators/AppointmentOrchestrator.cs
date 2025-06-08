@@ -326,7 +326,7 @@ namespace Services.Orchestrators
             await _notificationService.SendNotification(currentDoctorAppUserId, notification);
         }
 
-        private void AppointmentReminderJob(int appUserId, string doctorName)
+        public void AppointmentReminderJob(int appUserId, string doctorName)
         {
             var patientReminder = new NotificationMessage()
             {
@@ -347,7 +347,8 @@ namespace Services.Orchestrators
             await _paymentService.Refund(refundDto);
 
             var jobId = await _appointmentService.GetJobIdAsync(appointmentId);
-            BackgroundJob.Delete(jobId);
+            if (jobId != null)
+                BackgroundJob.Delete(jobId);
 
             if (!refundDto.IsPartial)
             {
