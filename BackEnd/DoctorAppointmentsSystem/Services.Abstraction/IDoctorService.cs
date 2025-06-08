@@ -11,6 +11,7 @@ namespace Services.Abstraction
         public Task<DoctorProfileDTO> DoctorProfile(int doctorId);
         public Task<DoctorProfileDTO?> GetByAppUserIdAsync(int appUserId);
         public Task<List<DoctorSearchDTO>> SearchDoctor(FilterSearchDTO filter);
+        public Task<SearchPageDTO> SearchPageDTO(FilterSearchDTO filter);
         //Task<Doctor?> GetDoctorInfo(int doctorID);
         //Task<List<Doctor>> GetDoctorsOrderedByRating();
         //Task<List<Doctor>> GetAllDoctors();

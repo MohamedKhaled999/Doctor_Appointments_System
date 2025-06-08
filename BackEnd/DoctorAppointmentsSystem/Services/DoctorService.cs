@@ -94,7 +94,19 @@ namespace Services
 
             return doctors.ToList();
 
-
+        }
+        private async Task<int> GetTotalPageCout(int pageSize)
+        {
+            var totalCount = _unitOfWork.GetRepository<Doctor, int>().GetCount();
+            return (int)Math.Ceiling((double)totalCount / pageSize);
+        }
+        public async Task<SearchPageDTO> SearchPageDTO(FilterSearchDTO filter)
+        {
+            return new SearchPageDTO
+            {
+                TotalPageNumber = await GetTotalPageCout(filter.PageSize),
+                Doctors = await SearchDoctor(filter)
+            };
         }
     }
 }

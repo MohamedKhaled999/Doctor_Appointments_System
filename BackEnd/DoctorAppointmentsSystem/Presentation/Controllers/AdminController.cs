@@ -1,0 +1,30 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Services.Abstraction;
+using Services.Abstraction.Orchestrators;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Presentation.Controllers
+{
+    //[Authorize(Roles = "admin")]
+    public class AdminController : ApiController
+    {
+        private readonly IServiceManager _serviceManager;
+        public AdminController(IServiceManager serviceManager) 
+        {
+            _serviceManager = serviceManager;
+        }
+
+        [HttpGet("FullDashBoard")]
+        public async Task<IActionResult> GetFullDashboard()
+        {
+            var dashboard = await _serviceManager.AdminOrchestrator.GetDashboardDataAsync();
+            return Ok(dashboard);
+        }
+
+    }
+}

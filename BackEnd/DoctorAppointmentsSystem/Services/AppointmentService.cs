@@ -146,6 +146,11 @@ namespace Services
             var specs = new SpecificationsBase<Appointment>(a => a.PatientId == patientId);
             return _unitOfWork.GetRepository<Appointment, int>().GetCount(specs);
         }
+        public int GetDoctorAppointmentsCount(int doctorId)
+        {
+            var specs = new SpecificationsBase<Appointment>(a => a.DoctorReservation.DoctorID == doctorId);
+            return _unitOfWork.GetRepository<Appointment, int>().GetCount(specs);
+        }
 
         public async Task AddAsync(int patientId, int doctorReservationId, int transactionId)
         {

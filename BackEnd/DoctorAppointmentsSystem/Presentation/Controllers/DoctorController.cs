@@ -38,9 +38,14 @@ namespace Presentation.Controllers
             return Ok(new { success = true });
         }
         [HttpGet("search")]
+        //public async Task<IActionResult> SearchDoctors([FromQuery] FilterSearchDTO searchDTO)
+        //{
+        //    var doctors = await _serviceManager.DoctorService.SearchDoctor(searchDTO);
+        //    return Ok(doctors);
+        //}
         public async Task<IActionResult> SearchDoctors([FromQuery] FilterSearchDTO searchDTO)
         {
-            var doctors = await _serviceManager.DoctorService.SearchDoctor(searchDTO);
+            var doctors = await _serviceManager.DoctorService.SearchPageDTO(searchDTO);
             return Ok(doctors);
         }
     }
