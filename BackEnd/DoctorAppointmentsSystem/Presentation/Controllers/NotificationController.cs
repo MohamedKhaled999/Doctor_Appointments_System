@@ -17,6 +17,8 @@ namespace Presentation.Controllers
         public IActionResult GetNotifications()
         {
             var notification = _serviceManager.NotificationService.GetNotifications(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            if (notification == null)
+                return NotFound();
             return Ok(notification);
         }
 

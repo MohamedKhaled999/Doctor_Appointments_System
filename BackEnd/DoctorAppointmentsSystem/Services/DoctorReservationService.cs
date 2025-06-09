@@ -83,12 +83,12 @@ namespace Services
                 .GetCount(new SpecificationsBase<Appointment>(x => x.DoctorReservationID == id));
             return reservationDTO;
         }
-        public async Task<List<DoctorReservationDTO>> GetReservationsByDocID(int id)
+        public async Task<List<DoctorReservationDTO>?> GetReservationsByDocID(int id)
         {
             var reservations = await _unitOfWork.GetRepository<DoctorReservation, int>()
                 .GetAllAsync(new SpecificationsBase<DoctorReservation>(x => x.DoctorID == id && x.StartTime > DateTime.Now));
             if (reservations == null || reservations.Count == 0)
-                throw new Exception("No reservations found for this doctor");
+                return null;
             var reservationDTOs = _mapper.Map<List<DoctorReservationDTO>>(reservations);
             int i = 0;
             foreach (var reservation in reservationDTOs)
@@ -97,7 +97,6 @@ namespace Services
                     .GetCount(new SpecificationsBase<Appointment>(x => x.DoctorReservationID == reservations[i].Id));
                 i++;
             }
-
             return reservationDTOs;
         }
         public async Task<DoctorReservationDTO?> GetLastReservationByDoctor(int doctorId)

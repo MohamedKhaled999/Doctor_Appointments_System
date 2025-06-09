@@ -46,7 +46,7 @@ namespace Services.Orchestrators
             _configuration = configuration;
         }
 
-        public async Task<List<DoctorReservationDTO>> GetDoctorReservationsByAppUserIdAsync(int appUserId)
+        public async Task<List<DoctorReservationDTO>?> GetDoctorReservationsByAppUserIdAsync(int appUserId)
         {
             var doctor = await _doctorService.GetByAppUserIdAsync(appUserId);
             return await _doctorReservationService.GetReservationsByDocID(doctor.ID);
@@ -97,7 +97,7 @@ namespace Services.Orchestrators
                 throw new ArgumentNullException($"Reservation with ID {doctorReservationId} doesn't exist");
             if (!reservation.IsAvailable)
                 throw new ValidationException(["Maximum Appointments Exceeded"]);
-            if (reservation.Day < DateTime.Now.Day)
+            if (reservation.EndTime < DateTime.Now)
                 throw new ValidationException(["Reservation date has already passed"]);
 
             var doctor = await _doctorReservationService.GetDoctorByReservationId(doctorReservationId);
@@ -121,7 +121,7 @@ namespace Services.Orchestrators
             if (currentPatientAppUserId != -1 && patient.AppUserId != currentPatientAppUserId)
                 throw new UnAuthorizedException("Access Denied");
 
-            var appointment = await _appointmentService.GetByIdAsync(appointmentId);
+            var appointment = await _appointmentService.GetWithDoctorAsync(appointmentId);
             if (appointment.StartTime < DateTime.Now)
                 throw new ValidationException(["Appointment date has already passed"]);
             if (appointment == null)
@@ -136,7 +136,7 @@ namespace Services.Orchestrators
             var reservation = await _doctorReservationService.GetDoctorReservationByID(reservationId);
             if (reservation == null)
                 throw new ValidationException(["Reservation Not Found"]);
-            if (reservation.Day > DateTime.Now.Day)
+            if (reservation.EndTime > DateTime.Now)
                 throw new ValidationException(["Reservation date hasn't passed yet"]);
             var doctor = await _doctorReservationService.GetDoctorByReservationId(reservationId);
             if (doctor.AppUserId != currentDoctorAppUserId)
@@ -175,7 +175,7 @@ namespace Services.Orchestrators
             var reservation = await _doctorReservationService.GetDoctorReservationByID(reservationId);
             if (reservation == null)
                 throw new ValidationException(["Reservation Not Found"]);
-            if (reservation.Day > DateTime.Now.Day)
+            if (reservation.EndTime > DateTime.Now)
                 throw new ValidationException(["Reservation date hasn't passed yet"]);
             var doctor = await _doctorReservationService.GetDoctorByReservationId(reservationId);
             if (doctor.AppUserId != currentDoctorAppUserId)
@@ -236,16 +236,10 @@ namespace Services.Orchestrators
             var reservation = await _doctorReservationService.GetDoctorReservationByID(doctorReservationId);
             if (!reservation.IsAvailable)
             {
-                var today = DateTime.Now;
-                DateOnly reservationDate;
-                if (today.Day > reservation.Day)
-                    reservationDate = new DateOnly(today.Year, today.AddMonths(-1).Month, reservation.Day);
-                else
-                    reservationDate = new DateOnly(today.Year, today.Month, reservation.Day);
                 var doctorNotification = new NotificationMessage()
                 {
                     EventType = NotificationEvents.Doctor_MaximumAppointmentsReached,
-                    Message = $"Reservation on {reservationDate} has reached maximum number of appointments."
+                    Message = $"Reservation on {reservation.StartTime} has reached maximum number of appointments."
                 };
                 await _notificationService.SendNotification(doctor.AppUserId, doctorNotification);
             }
@@ -268,16 +262,10 @@ namespace Services.Orchestrators
                 await _doctorReservationService.AddDoctorReservation(reservation);
 
                 newReservation = await _doctorReservationService.GetLastReservationByDoctor(reservation.DoctorID);
-                var today = DateTime.Now;
-                DateOnly reservationDate;
-                if (today.Day > newReservation.Day)
-                    reservationDate = new DateOnly(today.Year, today.AddMonths(-1).Month, newReservation.Day);
-                else
-                    reservationDate = new DateOnly(today.Year, today.Month, newReservation.Day);
                 var notification = new NotificationMessage()
                 {
                     EventType = NotificationEvents.Doctor_ReservationAdded,
-                    Message = $"Reservation on {reservationDate} has been added."
+                    Message = $"Reservation on {newReservation.StartTime} has been added."
                 };
                 await _notificationService.SendNotification(appUserId, notification);
             }
@@ -358,16 +346,10 @@ namespace Services.Orchestrators
 
             await _doctorReservationService.DeleteDoctorReservation(id);
 
-            var today = DateTime.Now;
-            DateOnly reservationDate;
-            if (today.Day > reservation.Day)
-                reservationDate = new DateOnly(today.Year, today.AddMonths(-1).Month, reservation.Day);
-            else
-                reservationDate = new DateOnly(today.Year, today.Month, reservation.Day);
             var notification = new NotificationMessage()
             {
                 EventType = NotificationEvents.Doctor_ReservationCanceled,
-                Message = $"Reservation on {reservationDate} {((appointments.Count > 0) ? $"with {appointments.Count} associated appointment(s)" : "")} has been canceled."
+                Message = $"Reservation on {reservation.StartTime} {((appointments.Count > 0) ? $"with {appointments.Count} associated appointment(s)" : "")} has been canceled."
             };
             await _notificationService.SendNotification(currentDoctorAppUserId, notification);
         }
