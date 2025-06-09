@@ -1,13 +1,13 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router, NavigationEnd, Event as RouterEvent, RouterLink, RouterModule} from '@angular/router';
+import { Component, OnInit, Inject, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
+import { Router, NavigationEnd, Event as RouterEvent, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [NgbCollapse, CommonModule ,RouterLink ,RouterModule],
+  imports: [NgbCollapse, CommonModule, RouterLink, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -19,27 +19,27 @@ export class NavbarComponent implements OnInit {
 
   private router = inject(Router);
   private authService = inject(AuthService);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
 
   constructor() {
- 
-    window.addEventListener("scroll", function () {
-      const header = document.getElementsByTagName("header")[0];
-      const nav = document.getElementsByTagName("nav")[0];
-      if (!header || !nav) return;
+    if (this.isBrowser) {
+      window.addEventListener("scroll", function () {
+        const header = document.getElementsByTagName("header")[0];
+        const nav = document.getElementsByTagName("nav")[0];
+        if (!header || !nav) return;
 
-      const length =
-        header.scrollHeight -
-        window.pageYOffset -
-        nav.offsetHeight;
+        const length = header.scrollHeight - window.pageYOffset - nav.offsetHeight;
 
-      if (length < 0) {
-        nav.classList.replace("py-1", "py-2");
-        nav.classList.replace("bg-primary-color-75", "bg-primary-color");
-      } else {
-        nav.classList.replace("py-2", "py-1");
-        nav.classList.replace("bg-primary-color", "bg-primary-color-75");
-      }
-    });
+        if (length < 0) {
+          nav.classList.replace("py-1", "py-2");
+          nav.classList.replace("bg-primary-color-75", "bg-primary-color");
+        } else {
+          nav.classList.replace("py-2", "py-1");
+          nav.classList.replace("bg-primary-color", "bg-primary-color-75");
+        }
+      });
+    }
   }
 
   ngOnInit(): void {
@@ -53,7 +53,7 @@ export class NavbarComponent implements OnInit {
       if (auth !== undefined) {
         this.isAuthenticated = auth;
         if (auth) {
-          this.userRole = this.authService.getUserRole(); 
+          this.userRole = this.authService.getUserRole();
         }
       }
     });
@@ -61,6 +61,8 @@ export class NavbarComponent implements OnInit {
 
   toggleNavbar(): void {
     this.isCollapsed = !this.isCollapsed;
+    if (!this.isBrowser) return;
+
     const nav = document.getElementById('MainNav');
     if (nav) {
       if (this.isHome && !this.isCollapsed) {
