@@ -1,1 +1,232 @@
-<p>home works!</p>
+
+
+<div class="home">
+
+    <header class="position-relative">
+
+        <!-- Slider main container -->
+        <div class="swiper w-100 vh-100 bg-primary-color">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                <div class="swiper-slide bg-dark ">
+                    <img class="w-100 h-100 d-none d-md-block" src="images/home/homecovernewen1-eg-en.jpg" alt="" />
+                </div>
+                <div class="swiper-slide bg-primary">
+                    <img class="w-100 h-100  d-none d-md-block" src="images/home/homecovernewen2-eg-en.jpg" alt="" />
+                </div>
+                <div class="swiper-slide bg-dark">
+                    <img class="w-100 h-100  d-none d-md-block" src="images/home/homecovernewen3-eg-en.jpg" alt="" />
+                </div>
+                <div class="swiper-slide bg-dark">
+                    <img class="w-100 h-100  d-none d-md-block" src="images/home/homecovernewen4-eg-en.jpg" alt="" />
+                </div>
+            </div>
+
+            <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
+
+            <!-- If we need scrollbar -->
+            <div class="swiper-scrollbar"></div>
+        </div>
+        <div class="bg-header"></div>
+        <div class="fw-bold text-white position-absolute top-50 ps-5 w-50" style="z-index: 30">
+            <span id="words" class="d-inline rounded"></span>
+        </div>
+    </header>
+<!-- me -->
+    <div class="divider-blocks"></div>
+
+    <section class="overflow-hidden">
+        <div  style="background-color: rgb(255, 255, 255);" class="services  servicesn pb-5 " id="services" >
+            <div class="container">
+                <div class="head text-center my-4" data-aos="fade-up">
+                    <h2 class="section-header fs-1">
+                        <span>
+                            <i class="fa-solid fa-plus fa-2xs" style="color: var(--secondary-color) !important"></i>
+                            <i class="fa-solid fa-plus fa-xs" style="color: var(--secondary-color)"></i>
+                            <i class="fa-solid fa-plus fa-sm" style="color: var(--secondary-color)"></i>
+                        </span>
+                        <span class="text-primary-color fw-bold">SERVICES</span>
+                        <span>
+                            <i class="fa-solid fa-plus fa-sm" style="color: var(--secondary-color)"></i>
+                            <i class="fa-solid fa-plus fa-xs" style="color: var(--secondary-color)"></i>
+                            <i class="fa-solid fa-plus fa-2xs" style="color: var(--secondary-color)"></i>
+                        </span>
+                    </h2>
+                    <p class="fs-5 pb-4 position-relative w-50 m-auto fw-semibold text-secondary">
+                        We offer a wide range of specialized medical services to ensure the best care for our patients.
+                        Here are some of our top services.
+                        <br> For more, use the <b>search</b> feature.
+                    </p>
+                </div>
+
+                <div class="row g-4 pt-2">
+                    <!-- Start of ngFor loop -->
+                    <!-- <div *ngFor="let specialty of specialties; trackBy: trackSpecialtyId" class="col-md-4 col-sm-6 "
+                        [attr.data-aos]="getRandomAosAnimation()"> -->
+                        <div *ngFor="let specialty of specialties; let i = index; trackBy: trackSpecialtyId" class="col-md-4 col-sm-6"
+                            [attr.data-aos]="specialtyAosValues[i]">
+
+                        <a  [routerLink]="['/doctor/search']" [queryParams]="{ Speciality: specialty.id }" class="text-decoration-none"> 
+                            <div class="card position-relative p-4 bg-white shadow rounded overflow-hidden item " style="background-color: aqua;">
+                                <div >
+                                    <div class="card-body ">
+                                        <div class="small-icon pb-4 mb-5" style="width: 60px; height: 60px">
+                                            <!-- <svg [innerHTML]="getSpecialtyIcon(specialty.id)" viewBox="0 0 60 60" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"></svg> -->
+                                                <img [src]="'https://doc-net2.runasp.net/uploads/images/' + specialty.image"
+                                                    class="card-img-top rounded-circle mx-auto mb-5" alt="Doctor" style="width: 100px; height: 100px;">
+                                                
+                                        </div>
+                                        <h3 class="fs-5 text-primary-color fw-bold">{{ specialty.name }}</h3>
+                                        <p class="text-opacity-75 fw-semibold"
+                                            style="font-weight: 400; font-size: 15px; line-height: 24px; color: var(--card-text-color);">
+                                            {{ specialty.description }}
+                                        </p>
+                                        <div class="pt-1" style="border-bottom: 2px dashed var(--secondary-color)">
+                                        </div>
+                                    </div>
+                
+                                    <div style="width: 140px; opacity: var(--bg-icon-opacity)"
+                                        class="bg-icon position-absolute top-0 end-0 pt-1 pe-1">
+                                        <!-- <svg [innerHTML]="getSpecialtyIcon(specialty.id)" viewBox="0 0 60 60" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"></svg> -->
+                                            <img [src]="'https://doc-net2.runasp.net/uploads/images/' + specialty.image"
+                                                class="card-img-top rounded-circle mx-auto mt-3" alt="Doctor" style="width: 100px; height: 100px;">
+                                    </div>
+                                    <!-- <img [src]="'http://localhost:4200/uploads/images/' + doct.image" alt="{{ doc.name }}" width="200"> -->
+                                </div>
+                
+                                <div class="card-body py-0">
+                                    <div>
+                                        <span class="d-inline-block"
+                                            style="width: 10px; height: 10px; border-radius: 50%; background-color: var(--secondary-color);"></span>
+                                        <span>
+                                            {{ getDoctorCountBySpecialtyName(specialty.name) }}
+                                           + Doctor{{ getDoctorCountBySpecialtyName(specialty.name) !== 1 ? 's' : '' }}
+                                        </span>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- <div class="divider-block "></div> -->
+
+    <section class="doctors" style="background-color: #004085d4;">
+        <header class="head text-center my-4" data-aos="fade-up">
+            <h2 class="section-header fs-1">
+                <span>
+                    <i class="fa-solid fa-plus fa-2xs" style="color: var(--accent-color) !important"></i>
+                    <i class="fa-solid fa-plus fa-xs" style="color: var(--accent-color)"></i>
+                    <i class="fa-solid fa-plus fa-sm" style="color: var(--accent-color)"></i>
+                </span>
+                <span class="text-primary-color fw-bold fs-1">Doctors</span>
+                <span>
+                    <i class="fa-solid fa-plus fa-sm" style="color: var(--accent-color)"></i>
+                    <i class="fa-solid fa-plus fa-xs" style="color: var(--accent-color)"></i>
+                    <i class="fa-solid fa-plus fa-2xs" style="color: var(--accent-color)"></i>
+                </span>
+            </h2>
+            <p class="text-white fw-semibold fs-5 pb-4 position-relative w-50 m-auto">
+                Meet our top-rated doctors, recognized for their expertise, dedication, and compassionate care. Browse
+                their profiles to find the right specialist for your needs.
+                <br> For more, use the <b>search</b> feature.
+            </p>
+        </header>
+
+        <div class="my-nav-tabs">
+            <div class="my-controls">
+                <div class="overhiddenflow- position-relative">
+                    <div class="swiper-container-btns position-relative" style="width: fit-content !important;">
+                        <div class="swiper-wrapper filter-buttons ps-3">
+                            <div class="swiper-slide my-slide-btn">
+                                <a class="btn my-btn" (click)="filterDoctors('all')">Show All</a>
+                            </div>
+                            <div *ngFor="let specialty of specialties" class="swiper-slide my-slide-btn">
+                                <a class="btn my-btn" (click)="filterDoctors(specialty.name)">{{specialty.name}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        <div class="overflow-hidden position-relative mt-5">
+            <div class="doctor-button-next fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
+                style="color: var(--primary-color);">
+                <i class="position-relative fa-solid fa-circle-chevron-right"></i>
+            </div>
+            <div class="doctor-button-prev fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
+                style="color: var(--primary-color);">
+                <i class="fa-solid fa-circle-chevron-left"></i>
+            </div>
+     
+            <div class="swiper-container position-relative w-75 m-auto overflow-hidden" style="height:50%;">
+                <div class="swiper-wrapper" id="mixContainer">
+                    <div *ngFor="let doctor of filteredDoctors; let i = index" class="swiper-slide mix" [attr.data-aos]="doctorAosValues[i]"
+                        [class.active]="activeFilter === 'all' || activeFilter === doctor.specialty">
+               
+                      
+                  
+                        
+                        <a [routerLink]="['/doctor/profile', doctor.id]" class="text-decoration-none">
+                             
+                            <div class="slide-content card doctor-card ">
+                                <!-- <img [src]="'uploads/images/' + doctor.image"
+                                    class="card-img-top rounded-circle mx-auto mt-3" alt="Doctor"
+                                    style="width: 100px; height: 100px;"> -->
+                                    
+                                    <img [src]="'https://doc-net2.runasp.net/uploads/images/' + doctor.image"
+                                        class="card-img-top rounded-circle mx-auto mt-3" alt="Doctor" style="width: 100px; height: 100px;">
+
+                                   
+                                <div class="card-body text-center">
+                                    
+                                    <h5 class="card-title text-primary-color text-nowrap" [title]="doctor.name">
+                                        {{doctor.name}}</h5>
+                                    <p class="card-text text-muted">{{doctor.specialty}}</p>
+                                    <span class="list-group-item text-nowrap" [title]="doctor.location">
+                                        <i class="fas fa-map-marker-alt text-primary-color"></i> {{doctor.location}}
+                                    </span>
+                                    <div class="SP-primaryText SP-primaryTextt mt-2">
+                                        <app-rating [rating]="doctor.rating"></app-rating>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!-- <app-doctors-carousel [doctors]="doctors" [specialties]="specialties"></app-doctors-carousel> -->
+<!-- parent.component.html -->
+
+        <!-- <div class="doctor-button-next fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
+            style="color: var(--primary-color);">
+            <i class="position-relative fa-solid fa-circle-chevron-right"></i>
+        </div>
+        <div class="doctor-button-prev fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
+            style="color: var(--primary-color);">
+            <i class="fa-solid fa-circle-chevron-left"></i> -->
+        <!-- </div> -->
+    </section>
+
+</div>
+
+
+  
+     <zapier-interfaces-chatbot-embed
+      is-popup="true"
+      chatbot-id="cmbnvur0h00av11nnfk4l88qd"
+    ></zapier-interfaces-chatbot-embed>
+   

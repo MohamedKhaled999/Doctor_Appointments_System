@@ -1,0 +1,35 @@
+<div class="card-header SP-bookHeader p-1">
+    {{ getNextDate(app.Day) }}
+
+</div>
+
+<div class="card-body SP-primaryText flex-column justify-content-center p-2">
+    @if (app.Time != null && app.IsAvailable)
+    {
+        <p class="mb-1">From <strong> {{ fromTime }} </strong></p>
+        <p class="mb-1">To <strong> {{ toTime }} </strong></p>
+    }
+    @else if (!app.IsAvailable)
+    {
+        <p class="mb-1">All Appointments</p>
+        <p class="mb-1">Reserved</p>
+    }
+    @else
+    {
+        <p class="mb-1">No Available</p>
+        <p class="mb-1">Appointments</p>
+    }
+</div>
+<!-- @if (User.IsInRole("patient"))
+{
+    <button onclick="ShowModal(@app.ResID)" class="card-footer btn @(app.Time == null || app.IsAvailable ? "" : "disabled")  SP-bookBTN p-1">Book</button>
+}
+@else if(!User.Identity.IsAuthenticated)
+{
+    <a asp-action="Login" asp-controller="Account" class="card-footer btn SP-bookBTN p-1">Book</a>
+}
+@else
+{
+    <a class="card-footer btn disabled SP-bookBTN p-1">Doctors can't book in this release</a>
+} -->
+

@@ -28,46 +28,157 @@ export class ForgetPasswordComponent {
       lastName: ['', Validators.required]
     });
   }
+  
 
-  onSubmit() {
-    if (this.forgetPasswordForm.valid && !this.isSubmitting) {
-      this.isSubmitting = true;
+  // onSubmit() {
+  //   if (this.forgetPasswordForm.valid && !this.isSubmitting) {
+  //     this.isSubmitting = true;
       
-      const forgetPasswordData = {
-        email: this.forgetPasswordForm.value.email,
-        firstName: this.forgetPasswordForm.value.firstName,
-        lastName: this.forgetPasswordForm.value.lastName
-      };
+  //     const forgetPasswordData = {
+  //       email: this.forgetPasswordForm.value.email,
+  //       firstName: this.forgetPasswordForm.value.firstName,
+  //       lastName: this.forgetPasswordForm.value.lastName
+  //     };
 
-      this.accountService.forgotPassword(forgetPasswordData).subscribe({
-        next: () => {
-          Swal.fire({
-            title: 'Success!',
-            text: 'Password reset link has been sent to your email',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            this.router.navigate(['/login']);
-          });
-        },
-        error: (err) => {
-          this.isSubmitting = false;
-          let errorMessage = 'Failed to process your request';
+  //     this.accountService.forgotPassword(forgetPasswordData).subscribe({
+  //       next: () => {
+  //         Swal.fire({
+  //           title: 'Success!',
+  //           text: 'Password reset link has been sent to your email',
+  //           //email exist
+  //           icon: 'success',
+  //           confirmButtonText: 'OK'
+  //         }).then(() => {
+  //           this.router.navigate(['/login']);
+  //         });
+  //       },
+  //       error: (err) => {
+  //         this.isSubmitting = false;
+  //         let errorMessage = 'Failed to process your request';
           
-          if (err.status === 404) {
-            errorMessage = 'User not found with this email';
-          } else if (err.error?.message) {
-            errorMessage = err.error.message;
-          }
+  //         if (err.status === 404) {
+  //           errorMessage = 'User not found with this email';
+  //         } else if (err.error?.message) {
+  //           errorMessage = err.error.message;
+  //         }
 
-          Swal.fire({
-            title: 'Error',
-            text: errorMessage,
-            icon: 'error',
-            confirmButtonText: 'OK'
+  //         Swal.fire({
+  //           title: 'Error',
+  //           text: errorMessage,
+  //           icon: 'error',
+  //           confirmButtonText: 'OK'
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
+  // onSubmit() {
+  //   // Only submit if the form is valid and we're not already submitting
+  //   if (this.forgetPasswordForm.valid && !this.isSubmitting) {
+  //     this.isSubmitting = true;  // Prevent multiple submissions
+      
+  //     const forgetPasswordData = {
+  //       email: this.forgetPasswordForm.value.email,
+  //       firstName: this.forgetPasswordForm.value.firstName,
+  //       lastName: this.forgetPasswordForm.value.lastName
+  //     };
+  
+    //   // Send the request to the server
+    //   this.accountService.forgotPassword(forgetPasswordData).subscribe({
+    //     next: () => {
+    //       Swal.fire({
+    //         title: 'Success!',
+    //         text: 'Password reset link has been sent to your email.',
+    //         icon: 'success',
+    //         confirmButtonText: 'OK'
+    //       }).then(() => {
+    //         this.router.navigate(['/login']);  // Redirect to the login page after success
+    //       });
+    //     },
+    //     error: (err) => {
+    //       this.isSubmitting = false;  // Reset the submitting flag
+          
+    //       // Custom error handling
+    //       let errorMessage = 'Failed to process your request';
+          
+    //       if (err.status === 404) {
+    //         errorMessage = 'User not found with this email.';
+    //       } else if (err.error?.message) {
+    //         errorMessage = err.error.message;
+    //       }
+          
+    //       Swal.fire({
+    //         title: 'Error',
+    //         text: errorMessage,
+    //         icon: 'error',
+    //         confirmButtonText: 'OK'
+    //       });
+    //     }
+    //   });
+    // } else {
+    //   // If form is invalid, show a validation error
+    //   Swal.fire({
+    //     title: 'Error',
+    //     text: 'Please fill in all required fields.',
+    //     icon: 'error',
+    //     confirmButtonText: 'OK'
+      //   });
+      onSubmit() {
+        if (this.forgetPasswordForm.valid && !this.isSubmitting) {
+          this.isSubmitting = true;
+          const forgetPasswordData = {
+            email: this.forgetPasswordForm.value.email,
+            firstName: this.forgetPasswordForm.value.firstName,
+            lastName: this.forgetPasswordForm.value.lastName
+          };
+      
+          this.accountService.forgetPassword(forgetPasswordData).subscribe({
+            next: (response) => {
+              if (response && response.token) {
+           
+                console.log('Token received:', response.token);
+            
+                Swal.fire({
+                  title: 'Success!',
+                  text: 'Password reset link has been sent to your email.',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }).then(() => {
+                  this.router.navigate(['/login']);
+                });
+              } else {
+                // If there's no token, just show the success message
+                Swal.fire({
+                  title: 'Success!',
+                  text: 'Password reset link has been sent to your email.',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }).then(() => {
+                  this.router.navigate(['/login']);
+                });
+              }
+            },
+            error: (err) => {
+              this.isSubmitting = false;
+              let errorMessage = 'Failed to process your request';
+      
+              if (err.status === 404) {
+                errorMessage = 'User not found with this email.';
+              } else if (err.error?.message) {
+                errorMessage = err.error.message;
+              }
+      
+              Swal.fire({
+                title: 'Error',
+                text: errorMessage,
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+            }
           });
         }
-      });
+      }
+      
     }
-  }
-}
+  
+  

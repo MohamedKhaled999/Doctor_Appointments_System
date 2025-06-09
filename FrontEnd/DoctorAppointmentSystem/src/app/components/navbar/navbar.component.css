@@ -1,0 +1,156 @@
+:root {
+    --primary-color: #004085;
+    --primary-color-rgb: 0, 64, 133;
+    --secondary-color: #B3E5FC;
+    --secondary-color-rgb: 179, 229, 252;
+    --accent-color: #F8F9FA;
+    --accent-color-rgb: 248, 249, 250;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+}
+.divider-block {
+    margin-block: 15px;
+    padding-block: 15px;
+}
+
+nav {
+    z-index: 999;
+    transition: all 0.7s ease-out;
+}
+
+.text-primary-color {
+    color: var(--primary-font-color);
+}
+
+.bg-primary-color-75 {
+    background-color: hsla(211, 100%, 26%, 0);
+}
+
+.bg-primary-color {
+    background-color: var(--primary-color);
+}
+
+.bg-secondary-color {
+    background-color: var(--secondary-color);
+}
+
+.bg-accent-color {
+    background-color: var(--accent-color);
+}
+
+nav li.nav-item {
+    width: 100%;
+    padding-inline: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+nav li.nav-item a {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+nav li.nav-item a:hover {
+    font-size: 18px;
+    color: white;
+}
+
+nav li.nav-item::after {
+    content: "";
+    background-color: var(--secondary-color);
+    height: 3px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    transition: all 1s;
+}
+
+nav li.nav-item:hover::after {
+    content: "";
+    background-color: var(--secondary-color);
+    height: 13px;
+    width: 100%;
+    border-start-end-radius: 30px;
+    position: absolute;
+    bottom: 0;
+    left: 0%;
+    opacity: 0.8;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .bg-primary-color-75 {
+        background-color: hsla(211, 100%, 26%, 1);
+    }
+
+}
+a
+.navbar {
+    transition: all 0.3s ease;
+    z-index: 1030;
+}
+/* ADDED */
+/* .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030;
+} */
+
+.nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: 5px; }
+        /* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+    for details on configuring this project to bundle and minify static web assets. */
+    
+        a.navbar-brand {
+            white-space: normal;
+            text-align: center;
+            word-break: break-all;
+        }
+    
+        a {
+            color: #0077cc;
+        }
+    
+        .btn-primary {
+            color: #fff;
+            background-color: #1b6ec2;
+            border-color: #1861ac;
+        }
+    
+        .nav-pills .nav-link.active,
+        .nav-pills .show>.nav-link {
+            color: #fff;
+            background-color: #1b6ec2;
+            border-color: #1861ac;
+        }
+    
+        .border-top {
+            border-top: 1px solid #e5e5e5;
+        }
+    
+        .border-bottom {
+            border-bottom: 1px solid #e5e5e5;
+        }
+    
+        .box-shadow {
+            box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+        }
+    
+        button.accept-policy {
+            font-size: 1rem;
+            line-height: inherit;
+        }
+    
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            white-space: nowrap;
+            line-height: 60px; }

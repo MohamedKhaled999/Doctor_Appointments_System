@@ -1,0 +1,146 @@
+/* :root {
+    --primary-color: #004085;
+    --primary-color-rgb: 0, 64, 133;
+    --secondary-color: #B3E5FC;
+    --secondary-color-rgb: 179, 229, 252;
+    --accent-color: #F8F9FA;
+    --accent-color-rgb: 248, 249, 250;
+} */
+
+html {
+    scrollbar-color: #004085 #F8F9FA;
+}
+
+
+
+.SP-filters>div {
+    position: sticky;
+    
+}
+
+.SP-filters, .SP-doctorsList {
+    padding: 1rem;
+    background: #F8F9FA;
+}
+
+/* .SP-genderRadios input:checked {
+    background-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(var(--secondary-color-rgb), 0.25); /* Adjust color & opacity */
+/* } */
+
+.SP-Slider .noUi-connect {
+    background: #004085;
+}
+
+.SP-Slider {
+    height: 1rem;
+}
+
+.SP-filterBTN, .SP-resetBTN {
+    background-color: #004085;
+    color: #F8F9FA;
+}
+
+    .SP-filterBTN:hover, .SP-resetBTN:hover {
+        background-color: #B3E5FC;
+    }
+
+.SP-Slider {
+    height: 10px;
+}
+
+    .SP-Slider .noUi-handle {
+        height: 18px;
+        width: 18px;
+        top: -5px;
+        right: -9px; /* half the width */
+        border-radius: 2px;
+        border: 1px solid #004085;
+    }
+
+        .SP-Slider .noUi-handle::after, .SP-Slider .noUi-handle::before {
+            display: none;
+        }
+
+.SP-filters i {
+    color: #004085;
+}
+
+.SP-badge {
+    background-color: #004085;
+    color: #F8F9FA;
+}
+
+.SP-fees {
+    color: #004085;
+}
+
+.SP-callBTN {
+    border-color: #004085;
+    color: #004085;
+}
+
+    .SP-callBTN:hover {
+        background-color: #004085;
+        color: #F8F9FA;
+    }
+
+.SP-icon {
+    background-color: rgba(0, 64, 133, 0.3);
+    color: #004085;
+    border-radius: 20px;
+    padding: 7px;
+}
+
+.SP-badge-scroll {
+    max-height: 80px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #004085 #F8F9FA;
+}
+
+.SP-bookBTN {
+    background-color: #004085;
+    color: #F8F9FA;
+    border-color: #004085;
+    font-weight: bold;
+}
+
+    .SP-bookBTN:hover {
+        color: #004085;
+        background-color: #F8F9FA;
+        border-color: #004085;
+    }
+
+.SP-bookHeader {
+    background-color: #004085;
+    color: #F8F9FA;
+    font-weight: bold;
+}
+
+.SP-primaryText {
+    color: #004085;
+}
+
+.SP-bookCards * {
+    font-size: 0.9rem;
+}
+
+.swiper-slide {
+    display: flex;
+}
+
+.swiper-scrollbar {
+    background: #B3E5FC; /* Light grey background */
+    border-radius: 10px;
+}
+
+.swiper-scrollbar-drag {
+    background: #004085;
+    border-radius: 10px;
+}
+
+.SP-active {
+    background-color: #004085;
+    color : #F8F9FA;
+}

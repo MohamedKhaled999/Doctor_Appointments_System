@@ -5,6 +5,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 
@@ -14,12 +15,15 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { routes } from './app.routes';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FacebookLoginProvider, GoogleLoginProvider, MicrosoftLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
+import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
   provideZoneChangeDetection({ eventCoalescing: true }),
   provideRouter(routes), provideClientHydration(withEventReplay()),
-  provideHttpClient(withFetch(), withInterceptors([headerInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([headerInterceptor,loadingInterceptor])),
+  
 
   provideAnimations(),
   provideToastr({ timeOut: 1000, positionClass: 'toast-top-right' }),
@@ -50,3 +54,4 @@ export const appConfig: ApplicationConfig = {
     }
   ]
 }
+// provideHttpClient(withFetch(), withInterceptors([ErrorInterceptor])),

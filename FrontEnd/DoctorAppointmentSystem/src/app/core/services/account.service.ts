@@ -6,7 +6,7 @@ import { LoginResponse } from '../../core/interfaces/login-response.mode';
 import { ForgetPasswordVM } from '../models/forget-password.model';
 import { ResetPasswordVM } from '../models/reset-password.model';
 import { ChangePassword } from '../interfaces/change-password';
-import { tap } from 'rxjs/operators'; 
+import { map, tap } from 'rxjs/operators'; 
 import { Router } from '@angular/router';
 import { Login } from '../interfaces/login';
 import { AuthResponse } from '../interfaces/auth-response';
@@ -27,11 +27,11 @@ export class AccountService {
   constructor(private http: HttpClient, private router: Router) { }
 
 
-
+  // login(email: string, password: string): Observable<AuthResponse> {
   login(email: string, password: string): Observable<AuthResponse> {
     const body: Login = { email, password };
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body);
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body);
+   
   }
 
   confirmEmail(confirmData: { email: string; token: string }): Observable<any> {
@@ -49,14 +49,34 @@ export class AccountService {
       );
   }
   requestPasswordReset(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+    return this.http.post(`${this.apiUrl}/forgot-password `, { email });
   }
-  // forgotPassword(forgetPasswordData: ForgetPasswordVM): Observable<any> {
-  //   return this.http.post(`${this.apiUrl}/forget-password`, forgetPasswordData);
-  // }
-  forgotPassword(forgetPasswordData: ForgetPassword): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forget-password`, forgetPasswordData);
+ 
+ 
+  forgetPassword(forgetPasswordData: ForgetPassword): Observable<{ token: string }> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, forgetPasswordData, { 
+      responseType: 'text'  
+    }).pipe(
+      map((response: string) => {
+        if (!response) {
+          throw new Error('Empty response received');
+        }
+        return { token: response }; 
+      }),
+      catchError((error) => {
+        let errorMessage = 'An unknown error occurred';
+        if (error.error instanceof ErrorEvent) {
+       
+          errorMessage = error.error.message;
+        } else {
+          errorMessage = error.message || error.statusText;
+        }
+        console.error('Error occurred:', errorMessage);
+        return throwError(() => new Error(errorMessage));
+      })
+    );
   }
+  
   // resetPassword(resetData: ResetPasswordVM): Observable<any> {
   //   return this.http.post(`${this.apiUrl}/reset-password`, resetData);
   // }
@@ -64,9 +84,19 @@ export class AccountService {
 changePassword(passwords: any): Observable<any> {
   return this.http.post(`${this.apiUrl}/change-password`, passwords);
 }
-  registerDoctor(doctorData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}/doctor-register`, doctorData);
-  }
+registerDoctor(doctorData: FormData): Observable<any> {
+  return this.http.post(`${this.apiUrl}/doctor-register`, doctorData).pipe(
+    tap(() => {
+      console.log('Registration successful');
+      this.router.navigate(['/need-to-confirm']); 
+    }),
+    catchError((error) => {
+      console.error('Error during registration:', error);
+      throw error;
+    })
+  );
+}
+
   // registerDoctor(doctorData: FormData): Observable<AuthResponse> {
   //   return this.http.post<AuthResponse>(`${this.apiUrl}/doctor-register`, doctorData);
   // }
@@ -127,7 +157,7 @@ changePassword(passwords: any): Observable<any> {
       })
     );
   }
-  
+
 
     externalLogin(externalData:any): Observable<AuthResponse> {
     // This method is used to handle external login (e.g., Google, Facebook, etc.)

@@ -7,17 +7,21 @@ import { SocialauthService } from '../../../../core/services/socialauth.service'
 import { ExternalProvider } from '../../../../core/models/external-provider.model';
 import { LoginResponse } from '../../../../core/interfaces/login-response.mode';
 import { log } from 'console';
+import { ExtrenalLoginComponent } from '../../../shared/extrenal-login/extrenal-login.component';
+import { AuthResponse } from '../../../../core/interfaces/auth-response';
+import Swal from 'sweetalert2';
 
 const customEmailPattern = /^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.com$/;
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink,ExtrenalLoginComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+
   loginForm: FormGroup;
   showPassword = false;
   isLoading = false;
@@ -37,19 +41,19 @@ export class LoginComponent {
       rememberMe: [false]
     });
 
-    this.loadExternalProviders();
+    // this.loadExternalProviders();
   }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
-  private loadExternalProviders(): void {
-    this.socialAuthService.getExternalProviders().subscribe({
-      next: (providers) => this.externalProviders = providers,
-      error: () => this.handleError('Failed to load login options')
-    });
-  }
+  // private loadExternalProviders(): void {
+  //   this.socialAuthService.getExternalProviders().subscribe({
+  //     next: (providers) => this.externalProviders = providers,
+  //     error: () => this.handleError('Failed to load login options')
+  //   });
+  // }
 
   onSubmit(): void {
     if (this.loginForm.invalid) return;
@@ -60,18 +64,27 @@ export class LoginComponent {
       console.log('Login attempt:', { email, password, rememberMe });
     this.accountService.login(email, password).subscribe({
       next: (response) => {
-        // this.storeAuthData(response, rememberMe);
+        this.storeAuthData(response, rememberMe);
         console.log('Login successful:', response);
         
         this.router.navigate(['/home']);
       },
       error: (error) =>{
+      
+        if (error.status === 401 ) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Email Not Confirmed',
+            text: 'Please confirm your email address before logging in.',
+            confirmButtonText: 'OK'
+          });
+        } else {
           this.handleLoginError(error);
-          console.log('Login error:', error);
+        }
       }    });
   }
 
-  private storeAuthData(response: LoginResponse, remember: boolean): void {
+  private storeAuthData(response: AuthResponse, remember: boolean): void {
     const storage = remember ? localStorage : sessionStorage;
     storage.setItem('userToken', response.token);
   }
@@ -85,13 +98,13 @@ export class LoginComponent {
     }
   }
 
-  async externalLogin(provider: string): Promise<void> {
-    try {
-      await this.socialAuthService.externalLogin(provider);
-    } catch {
-      this.handleError('External login failed');
-    }
-  }
+  // async externalLogin(provider: string): Promise<void> {
+  //   try {
+  //     await this.socialAuthService.externalLogin(provider);
+  //   } catch {
+  //     this.handleError('External login failed');
+  //   }
+  // }
 
   private handleError(message: string): void {
     this.isLoading = false;

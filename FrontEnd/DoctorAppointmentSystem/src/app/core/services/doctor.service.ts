@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
+import { ApiService } from './api.service';
 import { Doctor } from '../interfaces/doctor.interface';
 import { Schedule } from '../interfaces/Schedule.interface';
 import { environment } from '../environments/environment';
@@ -9,7 +10,10 @@ import { environment } from '../environments/environment';
   providedIn: 'root'
 })
 export class DoctorService {
-  constructor(private http: HttpClient) {}
+  constructor( private http: HttpClient,private api: ApiService) { }
+  getDoctors(): Observable<Doctor[]> {
+    return this.api.getDoctors();
+  }
   getProfile(id?: number): Observable<Doctor> {
     return this.http.get<Doctor>(`${environment.apiUrl}/Doctor/${id? `?id=${id}` : 'UserProfile'}`);
   }

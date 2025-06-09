@@ -1,0 +1,30 @@
+/* doctors-carousel.component.scss */
+.my-nav-tabs {
+    .my-controls {
+        .overhiddenflow- {
+            position: relative;
+        }
+    }
+
+    .doctor-button-prev {
+        left: 8%;
+    }
+
+    .doctor-button-next {
+        right: 8%;
+    }
+
+    .doctor-button-prev,
+    .doctor-button-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #007bff;
+        z-index: 12;
+    }
+
+    .doctors {
+        background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4), url("../images/home/ser_bg.jpg");
+        padding-block: 70px;
+        background-attachment: fixed;
+    } }

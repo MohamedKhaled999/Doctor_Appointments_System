@@ -1,0 +1,109 @@
+
+::ng-deep .pagination-container {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 2rem;
+  /* border: 1px solid #dee2e6; */
+  /* box-shadow: 0 1px 3px rgba(0,0,0,0.08); */
+}
+
+::ng-deep .pagination {
+  justify-content: stretch;
+  margin: 0;
+  gap: 0;
+  display: flex;
+  width: 100%;
+}
+
+::ng-deep .pagination .page-item {
+  border-right: 1px solid #dee2e6;
+  flex: 1; /* Make each item take equal space */
+}
+
+::ng-deep .pagination .page-item:last-child {
+  border-right: none;
+}
+
+::ng-deep .pagination .page-link {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6 !important;
+  border-right: none !important;
+  color: #004085;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-width: 45px;
+  text-align: center;
+  border-radius: 0 !important;
+  width: 100%; /* Make link fill the entire flex item */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep .pagination .page-item:first-child .page-link {
+  border-top-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+}
+
+::ng-deep .pagination .page-item:last-child .page-link {
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+  border-right: 1px solid #dee2e6 !important;
+}
+
+::ng-deep .pagination .page-item:hover .page-link {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+  color: #004085;
+  z-index: 2;
+}
+
+::ng-deep .pagination .page-item.active .page-link {
+  background-color: #004085 !important;
+  border-color: #004085 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  z-index: 3;
+}
+
+::ng-deep .pagination .page-item.disabled .page-link {
+  color: #6c757d !important;
+  background-color: #f8f9fa !important;
+  border-color: #dee2e6 !important;
+  cursor: not-allowed;
+}
+
+::ng-deep .pagination .page-item.disabled:hover .page-link {
+  background-color: #f8f9fa !important;
+  border-color: #dee2e6 !important;
+  color: #6c757d !important;
+}
+
+/* Navigation arrows with classic styling */
+::ng-deep .pagination .page-item:first-child .page-link,
+::ng-deep .pagination .page-item:last-child .page-link {
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.25rem;
+}
+
+@media (max-width: 576px) {
+  ::ng-deep .pagination .page-link {
+    padding: 0.5rem 0.75rem;
+    min-width: 40px;
+    font-size: 0.9rem;
+  }
+  
+  ::ng-deep .pagination .page-item:first-child .page-link,
+  ::ng-deep .pagination .page-item:last-child .page-link {
+    padding: 0.5rem 1rem;
+  }
+  
+  ::ng-deep .pagination-container {
+    padding: 1.5rem;
+  }
+}

@@ -1,0 +1,54 @@
+<!-- doctors-carousel.component.html -->
+<div class="my-nav-tabs">
+    <div class="my-controls">
+        <div class="overhiddenflow- position-relative">
+            <div class="swiper-container-btns position-relative" style="width: fit-content !important;">
+                <div class="swiper-wrapper filter-buttons ps-3">
+                    <div class="swiper-slide my-slide-btn">
+                        <a class="btn my-btn" (click)="filterDoctors('all')">Show All</a>
+                    </div>
+                    <div class="swiper-slide my-slide-btn" *ngFor="let specialty of specialties">
+                        <a class="btn my-btn" (click)="filterDoctors('.' + specialty)">{{specialty}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overflow-hidden position-relative mt-5">
+        <div class="swiper-container position-relative w-75 m-auto overflow-hidden" style="height:50%;">
+            <div class="swiper-wrapper" id="mixContainer">
+                <div class="swiper-slide mix {{doctor.specialty}}" *ngFor="let doctor of doctors">
+                    <a [routerLink]="['/doctor', doctor.id]" class="text-decoration-none">
+                        <div class="slide-content card doctor-card">
+                            <img [src]="'assets/images/doctors/' + doctor.image"
+                                class="card-img-top rounded-circle mx-auto mt-3" alt="Doctor"
+                                style="width: 100px; height: 100px;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-primary-color text-nowrap" [title]="doctor.name">
+                                    {{doctor.name}}</h5>
+                                <p class="card-text text-muted">{{doctor.specialty}}</p>
+                                <span class="list-group-item text-nowrap" [title]="doctor.location">
+                                    <i class="fas fa-map-marker-alt text-primary-color"></i> {{doctor.location}}
+                                </span>
+                                <div class="SP-primaryText mt-2">
+                                    <app-rating [rating]="doctor.rating"></app-rating>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="doctor-button-next fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
+            style="color: var(--primary-color);">
+            <i class="position-relative fa-solid fa-circle-chevron-right"></i>
+        </div>
+        <div class="doctor-button-prev fs-2 btn btn-light p-0 px-1 border border-3 border-secondary shadow-lg"
+            style="color: var(--primary-color);">
+            <i class="fa-solid fa-circle-chevron-left"></i>
+        </div>
+    </div>
+    </div>
