@@ -4,22 +4,17 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { tap, map, catchError, of, Observable } from 'rxjs';
 import { Governorate } from '../enums/governorate.enum';
 import { Doctor, DoctorResponse } from '../interfaces/doctor';
-import { reservation } from '../interfaces/reservation';
+import { reservation, ReservationResponse } from '../interfaces/reservation';
 import { environment } from '../environments/environment';
 import { Specialities } from '../enums/speciality.enum';
 import { Gender } from '../enums/gender.enum';
 import { effect } from '@angular/core';
 import { DoctorListComponent } from '../../components/pages/search/doctor-list/doctor-list.component';
-import { DoctorReservationService } from '../services/doctor-reservations.service'
-
 @Injectable({ providedIn: 'root' })
+export class DoctorReservationService {
 
-export class DoctorSearchService {
-
-  private reservationService  = inject(DoctorReservationService);
-  
   // Base URL for the doctor API
-  private readonly apiUrl = `${environment.apiUrl}/Doctor/search`;
+   private readonly apiUrl = `${environment.apiUrl}/doctor/reservations`;
   private http = inject(HttpClient);
 
   // Signal containing all doctors
@@ -146,6 +141,25 @@ export class DoctorSearchService {
     //   reservations: doctor.appointments?.map((a: any) => this.transformReservation(a)) || []
     }));
   }
+
+getReservations(doctorId: number = 1): Observable<ReservationResponse> {
+    return this.http.get<any[]>(`${this.apiUrl}?doctorId=${doctorId}`).pipe(
+        map((response: any[]) => ({
+            reservations: response.map(res => ({
+                ResId: res.id,
+                DoctorId: res.doctorID,
+                Day: res.day,
+                StartTime: res.startTime,
+                EndTime: res.endTime,
+                IsAvailable: res.isAvailable
+            }))
+        })),
+        catchError(error => {
+            console.error('Error fetching reservations:', error);
+            throw error;
+        })
+    );
+}
 
 //   private transformReservation(apiReservation: any): reservation {
 //     return {

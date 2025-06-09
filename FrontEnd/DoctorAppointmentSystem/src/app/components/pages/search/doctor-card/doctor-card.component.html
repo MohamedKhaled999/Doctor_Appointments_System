@@ -52,7 +52,7 @@
                         >
                         @for (reservation of doctor.reservations; track $index) {
                         <swiper-slide class="card d-flex text-center" [ngClass]="doctor.reservations.length == 2 ? ' w-50' : doctor.reservations.length == 1 ? 'w-100' : ''">
-                            <app-reservation-card [app]="reservation"></app-reservation-card>
+                            <app-reservation-card [appointment]="reservation"></app-reservation-card>
                         </swiper-slide>
                         }
                     </swiper-container>

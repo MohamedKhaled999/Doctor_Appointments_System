@@ -35,6 +35,7 @@ export class DoctorListComponent {
         offset: 75,
         once: false
       });
+
       this.DoctorSearchService.pageIndexSource.set('list');
       this.loadDoctors();
     }

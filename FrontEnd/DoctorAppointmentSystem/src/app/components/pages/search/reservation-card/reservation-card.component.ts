@@ -2,6 +2,7 @@ import { Component , Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { reservation } from '../../../../core/interfaces/reservation';
+import { DataManagementService } from '../../../../core/services/data-management.service';
 
 @Component({
   selector: 'app-reservation-card',
@@ -12,19 +13,23 @@ import { reservation } from '../../../../core/interfaces/reservation';
   styleUrl: './reservation-card.component.css'
 })
 export class ReservationCardComponent {
-  @Input() app : any;
+  @Input() appointment : any;
   authService : any;
   showModal: any;
   fromTime: string = '';
   toTime: string = '';
-
-ngOnInit() {
-  if (this.app && this.app.Time) {
-    const times = this.app.Time.split('|');
-    this.fromTime = times[0] || '';
-    this.toTime = times[1] || '';
+  Role: any;
+  constructor(private userData :DataManagementService){}
+  ngOnInit() {
+    if (this.appointment && this.appointment.Time) {
+      const times = this.appointment.Time.split('|');
+      this.fromTime = times[0] || '';
+      this.toTime = times[1] || '';
+    }
+    
+    this.Role =   this.userData.UserRole.set(localStorage.getItem("userRole")!);
+    console.log(`Role : ${this.Role} thanks`);
   }
-}
   getNextDate(day: number): string {
 
     const today = new Date();

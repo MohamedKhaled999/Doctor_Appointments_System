@@ -1,15 +1,15 @@
 <div class="card-header SP-bookHeader p-1">
-    {{ getNextDate(app.Day) }}
+    {{ getNextDate(appointment.Day) }}
 
 </div>
 
 <div class="card-body SP-primaryText flex-column justify-content-center p-2">
-    @if (app.Time != null && app.IsAvailable)
+    @if (appointment.Time != null && appointment.IsAvailable)
     {
         <p class="mb-1">From <strong> {{ fromTime }} </strong></p>
         <p class="mb-1">To <strong> {{ toTime }} </strong></p>
     }
-    @else if (!app.IsAvailable)
+    @else if (!appointment.IsAvailable)
     {
         <p class="mb-1">All Appointments</p>
         <p class="mb-1">Reserved</p>
@@ -20,7 +20,8 @@
         <p class="mb-1">Appointments</p>
     }
 </div>
-<!-- @if (User.IsInRole("patient"))
+<!--
+@if (Role.IsInRole("patient"))
 {
     <button onclick="ShowModal(@app.ResID)" class="card-footer btn @(app.Time == null || app.IsAvailable ? "" : "disabled")  SP-bookBTN p-1">Book</button>
 }
@@ -31,5 +32,25 @@
 @else
 {
     <a class="card-footer btn disabled SP-bookBTN p-1">Doctors can't book in this release</a>
-} -->
+}
+-->
 
+<!-- Angular version -->
+<!-- <button 
+    *ngIf="Role == 'patient'" 
+    (click)="showModal(app.ResID)" 
+    class="card-footer btn SP-bookBTN p-1" 
+    [class.disabled]="app.Time == null || !app.IsAvailable">
+    Book
+</button>
+<a 
+    *ngIf="!isAuthenticated" 
+    routerLink="/account/login" 
+    class="card-footer btn SP-bookBTN p-1">
+    Book
+</a>
+<a 
+    *ngIf="Role !== 'patient' && isAuthenticated" 
+    class="card-footer btn disabled SP-bookBTN p-1">
+    Doctors can't book in this release
+</a> -->
