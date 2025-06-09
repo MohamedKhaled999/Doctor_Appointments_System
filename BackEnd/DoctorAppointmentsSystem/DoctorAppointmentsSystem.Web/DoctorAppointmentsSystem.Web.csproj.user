@@ -2,6 +2,6 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ActiveDebugProfile>https</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>D:\ITI\Graduation Project\Doctor_Appointments_System\BackEnd\DoctorAppointmentsSystem\DoctorAppointmentsSystem.Web\Properties\PublishProfiles\site27322-WebDeploy1.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>D:\ITI\Graduation Project\Doctor_Appointments_System\BackEnd\DoctorAppointmentsSystem\DoctorAppointmentsSystem.Web\Properties\PublishProfiles\site27322-WebDeploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
