@@ -21,7 +21,8 @@ namespace Services
                         }
                     },
                     User = configuration["NotificationSettings:User"],
-                    Password = configuration["NotificationSettings:Password"]
+                    Password = configuration["NotificationSettings:Password"],
+                    AbortOnConnectFail = false
                 }
             );
             _server = mux.GetServer(mux.GetEndPoints()[0]);
@@ -29,7 +30,7 @@ namespace Services
         }
 
         public void SetItem(string key, string value)
-            => _database.StringSet(key, value, TimeSpan.FromDays(7));
+            => _database.StringSet(key, value, TimeSpan.FromDays(3));
 
         public string? GetItem(string key)
             => _database.StringGet(key);

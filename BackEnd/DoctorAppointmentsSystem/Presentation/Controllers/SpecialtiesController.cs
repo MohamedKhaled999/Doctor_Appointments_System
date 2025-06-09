@@ -9,6 +9,8 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetAllSpecialties()
         {
             var specialties = await serviceManager.SpecialtyService.GetAllSpecialties();
+            if (specialties == null)
+                return NotFound();
             return Ok(specialties);
         }
     }

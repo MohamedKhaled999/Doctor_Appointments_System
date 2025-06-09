@@ -22,6 +22,8 @@ namespace Presentation.Controllers
                 reservations = await _serviceManager.AppointmentOrchestrator.GetDoctorReservationsByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             else
                 reservations = await _serviceManager.DoctorReservationService.GetReservationsByDocID(doctorId);
+            if (reservations == null)
+                return NotFound();
             return Ok(reservations);
         }
 
@@ -30,6 +32,8 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetAppointments(int reservationId)
         {
             var appointments = await _serviceManager.AppointmentOrchestrator.GetAppointmentsByReservationId(reservationId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            if (appointments == null)
+                return NotFound();
             return Ok(appointments);
         }
 

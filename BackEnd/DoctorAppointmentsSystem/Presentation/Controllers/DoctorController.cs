@@ -15,6 +15,8 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetDoctorProfile(int id)
         {
             var doctorProfile = await _serviceManager.DoctorService.DoctorProfile(id);
+            if (doctorProfile == null)
+                return NotFound();
             return Ok(doctorProfile);
         }
         //[HttpPost("Register")]
@@ -28,6 +30,8 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetDoctorProfile()
         {
             var doctorProfile = await _serviceManager.DoctorService.GetByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            if (doctorProfile == null)
+                return NotFound();
             return Ok(doctorProfile);
         }
         [HttpPut]

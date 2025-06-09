@@ -7,7 +7,7 @@ namespace Services.Abstraction.Orchestrators
 {
     public interface IAppointmentOrchestrator
     {
-        Task<List<DoctorReservationDTO>> GetDoctorReservationsByAppUserIdAsync(int appUserId);
+        Task<List<DoctorReservationDTO>?> GetDoctorReservationsByAppUserIdAsync(int appUserId);
         Task<List<AppointmentDTO>?> GetAppointmentsByAppUserIdAsync(int appUserId, int pageIndex, int pageSize);
         Task<string[]?> GetAppointmentDocuments(int appointmentId, int currentPatientAppUserId);
         Task<int> GetAppointmentCountByPatient(int appUserId);

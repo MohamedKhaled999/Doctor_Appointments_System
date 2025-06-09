@@ -17,6 +17,8 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetPatient()
         {
             var patient = await _serviceManager.PatientService.GetByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            if (patient == null)
+                return NotFound();
             return Ok(patient);
         }
 

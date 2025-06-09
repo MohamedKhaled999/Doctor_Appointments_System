@@ -19,6 +19,8 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetAppointments(int pageIndex, int pageSize)
         {
             var appointments = await _serviceManager.AppointmentOrchestrator.GetAppointmentsByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), pageIndex, pageSize);
+            if (appointments == null)
+                return NotFound();
             return Ok(appointments);
         }
 
@@ -33,6 +35,8 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetDocuments(int appointmentId)
         {
             var docs = await _serviceManager.AppointmentOrchestrator.GetAppointmentDocuments(appointmentId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            if (docs == null)
+                return NotFound();
             return Ok(docs);
         }
 
