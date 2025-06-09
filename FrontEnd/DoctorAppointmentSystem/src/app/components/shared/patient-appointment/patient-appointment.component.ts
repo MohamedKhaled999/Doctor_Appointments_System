@@ -9,7 +9,7 @@ import { NotificationsComponent } from "../notifications/notifications.component
 
 @Component({
   selector: 'app-patient-appointment',
-  imports: [CommonModule, NotificationsComponent],
+  imports: [CommonModule],
   templateUrl: './patient-appointment.component.html',
   styleUrl: './patient-appointment.component.css'
 })
