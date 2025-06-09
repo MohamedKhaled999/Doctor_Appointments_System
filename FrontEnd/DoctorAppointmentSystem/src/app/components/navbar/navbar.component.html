@@ -65,7 +65,9 @@
         </li>
         } @if (dataService.isAuthenticated()===true) {
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/', userRole, 'profile']"
+          <a
+            class="nav-link"
+            [routerLink]="['/', 'profile', dataService.UserRole()]"
             >Profile</a
           >
         </li>
