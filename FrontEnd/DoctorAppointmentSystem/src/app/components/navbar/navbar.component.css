@@ -45,7 +45,9 @@ nav li.nav-item {
     padding-inline: 5px;
     position: relative;
     overflow: hidden;
+    color:#fcfafa
 }
+
 
 nav li.nav-item a {
     font-size: 18px;
@@ -103,7 +105,7 @@ a
 
 .nav-link.active {
     font-weight: bold;
-    text-decoration: underline;
+    /* text-decoration: underline; */
     text-underline-offset: 5px; }
         /* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
     for details on configuring this project to bundle and minify static web assets. */
@@ -115,7 +117,7 @@ a
         }
     
         a {
-            color: #0077cc;
+            color: #b6b8ba;
         }
     
         .btn-primary {
