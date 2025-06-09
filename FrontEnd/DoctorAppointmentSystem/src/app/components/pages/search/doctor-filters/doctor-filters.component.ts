@@ -109,7 +109,7 @@ ngAfterViewInit(): void {
         format: wNumb({ decimals: 0 }),
         pips: {
           mode: 'values',
-          values: [0, 100, 200, 400, 600, 800, 1000],
+          values: [0, 200, 400, 600, 800, 1000],
           density: 2
         } as any
       });
