@@ -4,7 +4,7 @@ import { Doctor } from '../../../../core/interfaces/doctor';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReservationCardComponent } from '../reservation-card/reservation-card.component';
-
+import { DoctorReservationService } from '../../../../core/services/doctor-reservations.service';
 @Component({
   selector: 'app-doctor-card',
   imports: [
@@ -24,12 +24,31 @@ export class DoctorCardComponent implements OnInit {
   authService : any;
   showModal: any;
   getNextDate:any;
-  constructor() {
+  constructor(private DoctorReservationService: DoctorReservationService) {
 
   }
   ngOnInit() {
     
     // You can perform any initialization logic here if needed
     // console.log('Doctor Card Component Initialized');
+    this.loadReservations();
+  }
+  loadReservations(): void {
+    this.DoctorReservationService.isLoading.set(true);
+    
+    this.DoctorReservationService.getReservations(this.doctor.id).subscribe({
+      next: (response) => {
+        this.doctor.reservations = response.reservations;
+        // console.log(`reservation response: ${this.doctor.reservations}`)
+        // console.log('reservation response:', JSON.stringify(response, null, 2));
+        this.DoctorReservationService.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error fetching reservations:', error);
+        this.doctor.reservations =[];
+        this.DoctorReservationService.isLoading.set(false);
+      }
+      
+    });
   }
 }

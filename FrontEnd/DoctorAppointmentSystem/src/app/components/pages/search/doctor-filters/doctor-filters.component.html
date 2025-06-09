@@ -36,7 +36,7 @@
             </select>
             -->
             <select class="form-select SP-select SP-govSelect" name="governorate" [(ngModel)]="filters.governorate">
-                <option *ngFor="let gov of GovernoratesList" [value]="gov">{{ gov }}</option>
+                <option *ngFor="let gov of GovernoratesList" [value]="gov.value">{{ gov.name }}</option>
             </select>
         </div>
 
@@ -68,7 +68,7 @@
 
         <div class="">
             <label class="my-2">Price</label>
-            <div class="SP-Slider SP-priceSlider mx-2 my-5" #priceSlider></div>
+            <div class="SP-Slider SP-priceSlider mx-2 mb-5" #priceSlider></div>
             <!--
             <input type="hidden" class="minPrice" value="@ViewBag.minPrice" name="minPrice">
             <input type="hidden" class="maxPrice" value="@ViewBag.maxPrice" name="maxPrice">
@@ -77,9 +77,9 @@
             <input type="hidden" class="maxPrice" [(ngModel)]="filters.maxPrice" name="maxPrice">
         </div>
         <div class="d-flex flex-wrap justify-content-center gap-1">
-            <button class="btn SP-filterBTN mb-2 col-12" type="submit">Filter</button>
+            <button class="btn SP-filterBTN mb-2 col-12 mt-5" type="submit">Filter</button>
             <!-- <input type="submit" class="d-none" /> -->
-            <input type="reset" class="btn SP-resetBTN mb-2 col-12" (click)="onReset()">
+            <input class="btn SP-resetBTN mb-2 col-12" (click)="onReset()" value="Reset">
         </div>
     </form>
 </div>

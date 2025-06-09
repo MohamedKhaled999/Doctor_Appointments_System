@@ -47,7 +47,7 @@
                             <i class="fa-solid fa-plus fa-xs" style="color: var(--secondary-color)"></i>
                             <i class="fa-solid fa-plus fa-sm" style="color: var(--secondary-color)"></i>
                         </span>
-                        <span class="text-primary-color fw-bold">SERVICES</span>
+                        <span class="text-primary-color fw-bold " style="color: #004085;">SERVICES</span>
                         <span>
                             <i class="fa-solid fa-plus fa-sm" style="color: var(--secondary-color)"></i>
                             <i class="fa-solid fa-plus fa-xs" style="color: var(--secondary-color)"></i>
@@ -68,8 +68,8 @@
                         <div *ngFor="let specialty of specialties; let i = index; trackBy: trackSpecialtyId" class="col-md-4 col-sm-6"
                             [attr.data-aos]="specialtyAosValues[i]">
 
-                        <a  [routerLink]="['/doctor/search']" [queryParams]="{ Speciality: specialty.id }" class="text-decoration-none"> 
-                            <div class="card position-relative p-4 bg-white shadow rounded overflow-hidden item " style="background-color: aqua;">
+                        <a  [routerLink]="['/search']" [queryParams]="{ Speciality: specialty.id }" class="text-decoration-none" > 
+                            <div class="card position-relative p-4 bg-white shadow rounded overflow-hidden item " >
                                 <div >
                                     <div class="card-body ">
                                         <div class="small-icon pb-4 mb-5" style="width: 60px; height: 60px">
@@ -79,7 +79,7 @@
                                                     class="card-img-top rounded-circle mx-auto mb-5" alt="Doctor" style="width: 100px; height: 100px;">
                                                 
                                         </div>
-                                        <h3 class="fs-5 text-primary-color fw-bold">{{ specialty.name }}</h3>
+                                        <h3 class="fs-5 text-primary-color  fw-bold" style="color: #004085;">{{ specialty.name }}</h3>
                                         <p class="text-opacity-75 fw-semibold"
                                             style="font-weight: 400; font-size: 15px; line-height: 24px; color: var(--card-text-color);">
                                             {{ specialty.description }}
@@ -118,7 +118,7 @@
         </div>
     </section>
 
-    <!-- <div class="divider-block "></div> -->
+    <div class="divider-block "></div>
 
     <section class="doctors" style="background-color: #004085d4;">
         <header class="head text-center my-4" data-aos="fade-up">
@@ -128,7 +128,7 @@
                     <i class="fa-solid fa-plus fa-xs" style="color: var(--accent-color)"></i>
                     <i class="fa-solid fa-plus fa-sm" style="color: var(--accent-color)"></i>
                 </span>
-                <span class="text-primary-color fw-bold fs-1">Doctors</span>
+                <span class=" fw-bold fs-1"  style="color: #004085">Doctors</span>
                 <span>
                     <i class="fa-solid fa-plus fa-sm" style="color: var(--accent-color)"></i>
                     <i class="fa-solid fa-plus fa-xs" style="color: var(--accent-color)"></i>
@@ -148,7 +148,7 @@
                     <div class="swiper-container-btns position-relative" style="width: fit-content !important;">
                         <div class="swiper-wrapper filter-buttons ps-3">
                             <div class="swiper-slide my-slide-btn">
-                                <a class="btn my-btn" (click)="filterDoctors('all')">Show All</a>
+                                <a class="btn my-btn " style="background-color: #004085; color:white" (click)="filterDoctors('all')">Show All</a>
                             </div>
                             <div *ngFor="let specialty of specialties" class="swiper-slide my-slide-btn">
                                 <a class="btn my-btn" (click)="filterDoctors(specialty.name)">{{specialty.name}}</a>
@@ -177,7 +177,7 @@
                       
                   
                         
-                        <a [routerLink]="['/doctor/profile', doctor.id]" class="text-decoration-none">
+                        <a [routerLink]="['/profile/doctor', doctor.id]" class="text-decoration-none">
                              
                             <div class="slide-content card doctor-card ">
                                 <!-- <img [src]="'uploads/images/' + doctor.image"
@@ -190,11 +190,12 @@
                                    
                                 <div class="card-body text-center">
                                     
-                                    <h5 class="card-title text-primary-color text-nowrap" [title]="doctor.name">
+                                    <h5 class="card-title text-nowrap " style="color: #004085" [title]="doctor.name">
                                         {{doctor.name}}</h5>
                                     <p class="card-text text-muted">{{doctor.specialty}}</p>
                                     <span class="list-group-item text-nowrap" [title]="doctor.location">
-                                        <i class="fas fa-map-marker-alt text-primary-color"></i> {{doctor.location}}
+                                        <i class="fas fa-map-marker-alt" style="color: #004085"></i>
+                                        {{doctor.location}}
                                     </span>
                                     <div class="SP-primaryText SP-primaryTextt mt-2">
                                         <app-rating [rating]="doctor.rating"></app-rating>

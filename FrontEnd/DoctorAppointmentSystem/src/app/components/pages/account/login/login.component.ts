@@ -10,6 +10,8 @@ import { log } from 'console';
 import { ExtrenalLoginComponent } from '../../../shared/extrenal-login/extrenal-login.component';
 import { AuthResponse } from '../../../../core/interfaces/auth-response';
 import Swal from 'sweetalert2';
+import { UserManagementData } from '../../../../core/interfaces/user-management-data';
+import { DataManagementService } from '../../../../core/services/data-management.service';
 
 const customEmailPattern = /^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.com$/;
 
@@ -33,6 +35,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private accountService: AccountService,
     private socialAuthService: SocialauthService,
+    private dataService:DataManagementService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
@@ -70,12 +73,13 @@ export class LoginComponent {
         this.router.navigate(['/home']);
       },
       error: (error) =>{
-      
-        if (error.status === 401 ) {
+        error=error.error;
+        console.log(error);
+        if (error.StatusCode === 401 ) {
           Swal.fire({
             icon: 'warning',
-            title: 'Email Not Confirmed',
-            text: 'Please confirm your email address before logging in.',
+            title: 'Email',
+            text: error.ErrorMessage,
             confirmButtonText: 'OK'
           });
         } else {
@@ -85,8 +89,18 @@ export class LoginComponent {
   }
 
   private storeAuthData(response: AuthResponse, remember: boolean): void {
-    const storage = remember ? localStorage : sessionStorage;
-    storage.setItem('userToken', response.token);
+ 
+    localStorage.setItem('userToken', response.token);
+    localStorage.setItem('rememberMe', remember.toString());
+    localStorage.setItem('userRole', response.role);
+    localStorage.setItem('userName', response.displayName);
+    this.dataService.isAuthenticated.set(true);
+    this. dataService.UserName.set(response.displayName);
+    this.dataService.UserRole.set(response.role);
+
+
+
+
   }
 
   private handleLoginError(error: any): void {

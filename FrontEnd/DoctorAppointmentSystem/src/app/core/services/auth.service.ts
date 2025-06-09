@@ -1,39 +1,47 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { DataManagementService } from './data-management.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
   private token: string | null = null;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private router: Router) {
-    // Only run this code in the browser
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private router: Router,
+  private dataServsice: DataManagementService
+) {
+
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('authToken');
-      this.isAuthenticatedSubject.next(!!token);
+      // const token = localStorage.getItem('userToken');
+      // this.isAuthenticatedSubject.next(!!token);
     }
   }
 
-  // Retrieve user role from localStorage or any other source
+
   getUserRole(): string {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('userRole') || '';
     }
-    return '';  // Return empty string if it's not in the browser
+    return '';  
   }
 
-  // Logout the user and clear the token and role from localStorage
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('authToken');
+      localStorage.removeItem('userToken');
       localStorage.removeItem('userRole');
+      localStorage.removeItem('userName');
+      localStorage.removeItem('rememberMe');
+      this.dataServsice.UserName.set('');
+      this.dataServsice.UserRole.set('');
+      this.dataServsice.isAuthenticated.set(false);
+
     }
-    this.isAuthenticatedSubject.next(false);
+    // this.isAuthenticatedSubject.next(false);
+    this.dataServsice.isAuthenticated.set(false);
     this.router.navigate(['/']);
   }
 

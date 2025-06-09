@@ -1,6 +1,13 @@
 export interface reservation {
-    ResID : number;
+    DoctorId : number;
+    ResId : number;
     Day : number;
-    Time : string;
+    StartTime : string;
+    EndTime : string;
     IsAvailable : boolean;
+}
+
+
+export interface ReservationResponse {
+    reservations : reservation[];
 }

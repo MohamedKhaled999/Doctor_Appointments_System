@@ -1,15 +1,15 @@
 <div class="card-header SP-bookHeader p-1">
-    {{ getNextDate(app.Day) }}
+    {{ getNextDate(appointment.Day) }}
 
 </div>
 
 <div class="card-body SP-primaryText flex-column justify-content-center p-2">
-    @if (app.Time != null && app.IsAvailable)
+    @if ( appointment.IsAvailable)
     {
         <p class="mb-1">From <strong> {{ fromTime }} </strong></p>
         <p class="mb-1">To <strong> {{ toTime }} </strong></p>
     }
-    @else if (!app.IsAvailable)
+    @else if (!appointment.IsAvailable)
     {
         <p class="mb-1">All Appointments</p>
         <p class="mb-1">Reserved</p>
@@ -20,16 +20,39 @@
         <p class="mb-1">Appointments</p>
     }
 </div>
-<!-- @if (User.IsInRole("patient"))
+
+@if (this.userData.UserRole() === "patient")
 {
-    <button onclick="ShowModal(@app.ResID)" class="card-footer btn @(app.Time == null || app.IsAvailable ? "" : "disabled")  SP-bookBTN p-1">Book</button>
+    <button onclick="book(appointment.ResID)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</button>
 }
-@else if(!User.Identity.IsAuthenticated)
+@else if(this.userData.UserRole() === "doctor")
 {
-    <a asp-action="Login" asp-controller="Account" class="card-footer btn SP-bookBTN p-1">Book</a>
+    <a class="card-footer btn disabled SP-bookBTN p-1" style="width: 100%;">Doctors can't book in this release</a>
 }
 @else
 {
-    <a class="card-footer btn disabled SP-bookBTN p-1">Doctors can't book in this release</a>
-} -->
+    <a 
+    routerLink="/login" 
+     class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</a>
+}
 
+
+<!-- Angular version -->
+<!-- <button 
+    *ngIf="Role !== 'doctor'" 
+    (click)="showModal(appointment.ResID)" 
+    class="card-footer btn SP-bookBTN p-1" 
+    [class.disabled]="appointment.Time == null || !appointment.IsAvailable">
+    Book
+</button>
+<a 
+    *ngIf="!isAuthenticated" 
+    routerLink="/account/login" 
+    class="card-footer btn SP-bookBTN p-1">
+    Book
+</a>
+<a 
+    *ngIf="Role === 'doctor' && isAuthenticated" 
+    class="card-footer btn disabled SP-bookBTN p-1">
+    Doctors can't book in this release
+</a> -->

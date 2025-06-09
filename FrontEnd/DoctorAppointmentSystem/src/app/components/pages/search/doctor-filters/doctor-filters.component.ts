@@ -1,5 +1,8 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Filter, Specialities, Governorates, Gender } from './filter';
+import { Filter } from './filter';
+import { Specialities } from '../../../../core/enums/speciality.enum';
+import { Gender } from '../../../../core/enums/gender.enum';
+import { Governorate } from '../../../../core/enums/governorate.enum';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as noUiSlider from 'nouislider';
@@ -8,6 +11,9 @@ import { NgModule } from '@angular/core';
 import { NouisliderModule } from 'ng2-nouislider';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
+import { filter } from 'rxjs';
+import { DoctorSearchService } from '../../../../core/services/doctor-search.service';
+import { effect } from '@angular/core';
 @Component({
   selector: 'app-doctor-filters',
   imports: [CommonModule, FormsModule, NouisliderModule],
@@ -22,34 +28,54 @@ export class DoctorFiltersComponent implements AfterViewInit {
   Gender = Gender;
 
   SpecialitiesList = Object.values(Specialities);
-  GovernoratesList = Object.values(Governorates);
+  GovernoratesList = Object.keys(Governorate)
+    .filter(key => isNaN(Number(key)))
+    .map(key => ({
+      name: key,
+      value: Governorate[key as keyof typeof Governorate]
+    }));
   GenderList = Object.values(Gender);
   filters: Filter = {
     doctorName: '',
     speciality: Specialities.All,
-    governorate: Governorates.All,
+    governorate: Governorate.All,
     gender: Gender.All,
-    waitingTime: undefined,
-    minPrice: undefined,
-    maxPrice: undefined,
+    waitingTime: 60, // Default waiting time in minutes
+    minPrice: 0,
+    maxPrice: 1000,
   };
  sliderConfig:any = {};
 
 
  public isBrowser: boolean;
+  // loading: boolean = false;
+  // doctors: any[] = [];
+  // currentPage: number = 1;
+  // pageSize: number = 6;
+  // numberOfPages: number = 0;
+  // numberOfRecords: number = 0;
+  // totalDoctors: number = 0;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {
+  constructor(@Inject(PLATFORM_ID) private platformId: any, private DoctorSearchService: DoctorSearchService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
+  pageIndexEffect = effect(() => {
+    const pageIndex = this.DoctorSearchService.pageIndex();
+    if (typeof pageIndex === 'number' && pageIndex !== this.DoctorSearchService.currentPage() && this.DoctorSearchService.pageIndexSource() == 'filter') {
+      this.DoctorSearchService.currentPage.set(pageIndex);
+      this.loadDoctors();
+      // console.log('Page index changed:', pageIndex);
+      // console.log('Current page:', this.currentPage);
+    }
+  });
  
 
-  ngAfterViewInit(): void {
+ngAfterViewInit(): void {
 
-
-   
   if(this.isBrowser){
-    
+    console.log(this.GovernoratesList);
+
     // Wait Slider
     if (this.waitSlider && this.waitSlider.nativeElement) {
       noUiSlider.create(this.waitSlider.nativeElement, {
@@ -83,7 +109,7 @@ export class DoctorFiltersComponent implements AfterViewInit {
         format: wNumb({ decimals: 0 }),
         pips: {
           mode: 'values',
-          values: [0, 100, 200, 400, 600, 800, 1000],
+          values: [0, 200, 400, 600, 800, 1000],
           density: 2
         } as any
       });
@@ -99,16 +125,77 @@ export class DoctorFiltersComponent implements AfterViewInit {
 
   }
 
+    // doctorName: '',
+    // speciality: Specialities.All,
+    // governorate: Governorate.All,
+    // gender: Gender.All,
+    // waitingTime: 60, // Default waiting time in minutes
+    // minPrice: 0,
+    // maxPrice: 1000,
+
   onFilter(): void {
     console.log('Filters applied:', this.filters);
+    this.DoctorSearchService.doctorName.set(this.filters.doctorName);
+    this.DoctorSearchService.speciality.set(this.filters.speciality);
+    this.DoctorSearchService.governorate.set(this.filters.governorate);
+    this.DoctorSearchService.gender.set(this.filters.gender);
+    this.DoctorSearchService.waitingTime.set(this.filters.waitingTime ?? 60);
+    this.DoctorSearchService.minPrice.set(this.filters.minPrice ?? 0);
+    this.DoctorSearchService.maxPrice.set(this.filters.maxPrice ?? 1000);
+    this.DoctorSearchService.currentPage.set(1);
+    this.DoctorSearchService.pageIndexSource.set('filter');
+    this.loadDoctors();
   }
 
+    loadDoctors(): void {
+    this.DoctorSearchService.isLoading.set(true);
+    this.DoctorSearchService.doctors.set([]);
+    this.DoctorSearchService.getFilteredDoctorsWithPagination(this.DoctorSearchService.currentPage()
+    , this.DoctorSearchService.pageSize()
+    , this.DoctorSearchService.doctorName()
+    , this.DoctorSearchService.speciality()
+    , this.DoctorSearchService.governorate()
+    , this.DoctorSearchService.gender()
+    , this.DoctorSearchService.waitingTime()
+    , this.DoctorSearchService.minPrice()
+    , this.DoctorSearchService.maxPrice()).subscribe({
+      next: (response) => {
+        this.DoctorSearchService.doctors.set(response.results);
+        console.log('Doctors loaded:', this.DoctorSearchService.doctors());
+        this.DoctorSearchService.numberOfPages.set(response.total_pages);
+        console.log('Total pages:', this.DoctorSearchService.numberOfPages());
+        this.DoctorSearchService.numberOfRecords.set(this.DoctorSearchService.numberOfPages() * this.DoctorSearchService.pageSize());
+        this.DoctorSearchService.totalDoctors.set(response.total_results);
+        this.DoctorSearchService.pageIndex.set(response.page); // Update the current page index  555555555555555555555555555555555555
+        // this.pageSize = response.pageSize || this.pageSize; // Ensure pageSize is set correctly
+        // this.maxPages = Math.ceil(this.totalDoctors / this.pageSize);
+
+        // After loading doctors, fetch their details to get durations
+        // this.loadDoctorDetails();
+
+        this.DoctorSearchService.isLoading.set(false);
+        console.log("Tracing: Doctors loaded:", this.DoctorSearchService.doctors());
+        console.log("Tracing: Total pages:", this.DoctorSearchService.numberOfPages());
+        console.log("Tracing: Number of records:", this.DoctorSearchService.numberOfRecords());
+        console.log("Tracing: Total doctors:", this.DoctorSearchService.totalDoctors());
+        console.log("Tracing: Current page index:", this.DoctorSearchService.pageIndex());
+
+      },
+      error: (error) => {
+        console.error('Error fetching movies:', error);
+        this.DoctorSearchService.isLoading.set(false);
+      }
+    });
+  }
   onReset(): void {
     this.filters = {
       doctorName: '',
       speciality: Specialities.All,
-      governorate: Governorates.All,
+      governorate: Governorate.All,
       gender: Gender.All,
+      waitingTime: 0,
+      minPrice: 0,
+      maxPrice: 1000
     };
   }
 }
