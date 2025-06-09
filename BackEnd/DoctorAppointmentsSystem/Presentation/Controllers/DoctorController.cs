@@ -36,7 +36,7 @@ namespace Presentation.Controllers
         }
         [HttpPut]
         [Authorize(Roles = "doctor")]
-        public async Task<IActionResult> UpdateDoctor(DoctorEditDTO doctorDTO)
+        public async Task<IActionResult> UpdateDoctor([FromBody]DoctorEditDTO doctorDTO)
         {
             await _serviceManager.DoctorService.UpdateDoctor(doctorDTO, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Ok(new { success = true });
