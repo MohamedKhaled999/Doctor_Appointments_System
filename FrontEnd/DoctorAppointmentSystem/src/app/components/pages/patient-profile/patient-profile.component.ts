@@ -8,10 +8,11 @@ import { GovernoratesService } from '../../../core/services/governorates.service
 import { Patient } from '../../../core/interfaces/patient.interface';
 import { Appointment } from '../../../core/interfaces/appoinments.interface';
 import { PatientAppointmentComponent } from "../../shared/patient-appointment/patient-appointment.component";
+import { NotificationsComponent } from "../../shared/notifications/notifications.component";
 
 @Component({
   selector: 'app-patient-profile',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PatientAppointmentComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, PatientAppointmentComponent, NotificationsComponent],
   templateUrl: './patient-profile.component.html',
   styleUrl: './patient-profile.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -38,49 +39,59 @@ export class PatientProfileComponent implements OnInit {
     });
     this.governorates = this.governoratesService.getGovernorates();
   }
-  ngOnInit(): void {
-    // this.patientService.getProfile().subscribe((response: Patient) => {
-    //   this.patient = response;
-    //   this.patientForm.patchValue({
-    //     firstName: this.patient.firstName,
-    //     lastName: this.patient.lastName,
-    //     email: this.patient.email,
-    //     phoneNumber: this.patient.phoneNumber,
-    //     governorate: this.governorates[parseInt(this.patient.governorate) - 1],
-    //     birthDate: this.patient.birthDate
-    //   });
-    // }
-    // );
-    this.patient = {
-      id: 1,
-      firstName: 'Ahmed',
-      lastName: 'Ali',
-      email: 'q9E0J@example.com',
-      phoneNumber: '01234567890',
-      governorate: 'Cairo',
-      birthDate: new Date(),
-      appointments: [
-        {
-          id: 1,
-          startTime: new Date('2025-06-01T10:00:00'),
-          endTime: new Date('2025-06-01T11:00:00'),
-          doctor: 'Dr. Mohamed',
-          specialty: 'Cardiology',
-          governorate: 'Cairo',
-          location: 'Cairo',
-          doctorImagePath: 'maleDoc.jpg',
-          isExist: true
-        }
-      ]
-    }
-    this.patientForm.patchValue({
-      firstName: this.patient.firstName,
-      lastName: this.patient.lastName,
-      email: this.patient.email,
-      phoneNumber: this.patient.phoneNumber,
-      governorate: this.governorates[parseInt(this.patient.governorate) - 1],
-      birthDate: this.patient.birthDate
+  refreshAppointments() {
+    this.patientService.getAppoinments(1, 500).subscribe((appointments: Appointment[]) => {
+      if (!this.patient) return;
+      this.patient.appointments = appointments;
     });
+  }
+  ngOnInit(): void {
+    this.patientService.getProfile().subscribe((response: Patient) => {
+      this.patient = response;
+      // this.patientService.getAppoinments(1, 500).subscribe((appointments: Appointment[]) => {
+      //   if (!this.patient) return;
+      //   this.patient.appointments = appointments;
+      // });
+      this.patientForm.patchValue({
+        firstName: this.patient.firstName,
+        lastName: this.patient.lastName,
+        email: this.patient.email,
+        phoneNumber: this.patient.phoneNumber,
+        governorate: this.governorates[parseInt(this.patient.governorate) - 1],
+        birthDate: this.patient.birthDate
+      });
+    }
+    );
+    // this.patient = {
+    //   id: 1,
+    //   firstName: 'Ahmed',
+    //   lastName: 'Ali',
+    //   email: 'q9E0J@example.com',
+    //   phoneNumber: '01234567890',
+    //   governorate: 'Cairo',
+    //   birthDate: new Date(),
+    //   appointments: [
+    //     {
+    //       id: 1,
+    //       startTime: new Date('2025-06-01T10:00:00'),
+    //       endTime: new Date('2025-06-01T11:00:00'),
+    //       doctor: 'Dr. Mohamed',
+    //       specialty: 'Cardiology',
+    //       governorate: 'Cairo',
+    //       location: 'Cairo',
+    //       doctorImagePath: 'maleDoc.jpg',
+    //       isExist: true
+    //     }
+    //   ]
+    // }
+    // this.patientForm.patchValue({
+    //   firstName: this.patient.firstName,
+    //   lastName: this.patient.lastName,
+    //   email: this.patient.email,
+    //   phoneNumber: this.patient.phoneNumber,
+    //   governorate: this.governorates[parseInt(this.patient.governorate) - 1],
+    //   birthDate: this.patient.birthDate
+    // });
     if (this.router.snapshot.queryParamMap.get('orderSucceeded') === 'true') {
       this.orderSucceeded = true;
       Swal.fire({
@@ -118,16 +129,22 @@ export class PatientProfileComponent implements OnInit {
       governorate: this.governorates.indexOf(this.patientForm.value.governorate) + 1,
       birthDate: this.patientForm.value.birthDate
     };
-    this.patientService.updateProfile(patient).subscribe(() => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Your profile has been updated!',
-        showConfirmButton: false,
-        timer: 1500
-      });
-    },
-      (error) => {
-        this.errorMessage = error.error.message;
-      });
+    this.patientService.updateProfile(patient).subscribe({
+      next: (response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Your profile has been updated!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      },
+      error: (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        });
+      }
+    });
   }
 }

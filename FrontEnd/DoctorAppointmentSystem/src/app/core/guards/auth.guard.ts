@@ -9,17 +9,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   // Check platform first
   if (isPlatformBrowser(platformId)) {
     const token = localStorage.getItem('userToken');
-   afterNextRender(()=>{
-  console.log("auth guard is running");
-  console.log("Token:", token);
-  
-})
-afterRender(()=>{
-  console.log("auth guard is running after render");
-  console.log("Token:", token);
-
-})
-
     if (token) {
       return true;
     } else {

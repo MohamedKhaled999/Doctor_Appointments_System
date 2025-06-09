@@ -5,7 +5,6 @@ export const headerInterceptor: HttpInterceptorFn = (req, next) => {
 //&&(req.url.includes('cart')||req.url.includes('orders')||req.url.includes('wishlist'))
 
   if (localStorage.getItem('userToken') ){
-      console.log('Adding token to request headers',req);
       // add bearer token to the request headers
       req = req.clone({
         setHeaders: {  Authorization: `Bearer ${localStorage.getItem('userToken')}`

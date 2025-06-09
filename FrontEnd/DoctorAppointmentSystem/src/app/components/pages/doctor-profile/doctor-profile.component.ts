@@ -19,6 +19,8 @@ import { ReservationDialogComponent } from '../../shared/reservation-dialog/rese
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { AccountService } from '../../../core/services/account.service';
 import Swal from 'sweetalert2';
+import { GovernoratesService } from '../../../core/services/governorates.service';
+import { NotificationsComponent } from "../../shared/notifications/notifications.component";
 
 declare var bootstrap: any;
 declare var calendarJS: any;
@@ -31,12 +33,13 @@ export enum CalendarView {
 
 @Component({
   selector: 'app-doctor-profile',
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDatepickerModule, DragDropModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDatepickerModule, DragDropModule, NotificationsComponent],
   templateUrl: './doctor-profile.component.html',
   styleUrl: './doctor-profile.component.css'
 })
 export class DoctorProfileComponent implements OnInit {
   doctor: Doctor | undefined;
+  governorates: string[] = [];
   myProfile = false;
   reviews: Rating[] | undefined;
   pagedReviews: Rating[] | undefined;
@@ -86,9 +89,10 @@ export class DoctorProfileComponent implements OnInit {
   /**
    *
   */
-  constructor(private doctorService: DoctorService, private route: ActivatedRoute, public dialog: MatDialog, private auth: AccountService) {
+  constructor(private doctorService: DoctorService, private route: ActivatedRoute, public dialog: MatDialog, private auth: AccountService, private governoratesService: GovernoratesService) {
     this.generateCalendarView(this.currentView, this.viewDate);
     this.generateTimeSlots();
+    this.governorates = this.governoratesService.getGovernorates();
   }
   generateCalendarView(view: CalendarView, date: Date): void {
     switch (view) {
@@ -259,37 +263,56 @@ export class DoctorProfileComponent implements OnInit {
       data: {
         date: this.selectedDate,
         startTime: this.selectedStartTime,
-        endTime: this.selectedStartTime,
-        maxAppointments: 1
+        endTime: this.selectedStartTime
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const reservation = {
-          date: result.date.setDate(result.date.getDate() + 1),
-          endTime: result.endTime,
-          startTime: result.startTime,
-          maxRes: result.maxAppointments,
-          doctorId: this.doctor?.id,
-        };
-        console.log('reservation', reservation);
-        
-        this.doctorService.addReservation(reservation).subscribe(() => {
-          Swal.fire({
-            title: 'Success',
-            text: 'Reservation added successfully',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          });
-          this.doctorService.getReservations(this.doctor!.id).subscribe(reservations => {
-            reservations.forEach(reservation => {
-              reservation.date = new Date(reservation.startTime.split('T')[0]);
-              reservation.time = `${reservation.startTime.split('T')[1]} - ${reservation.endTime.split('T')[1]}`;
-            });
-            if (this.doctor) {
-              this.doctor.reservations = reservations;
+    dialogRef.afterClosed().subscribe({
+      next: (result) => {
+        if (result) {
+          result.date.setDate(result.date.getDate() + 1)
+          const reservation = {
+            date: result.date,
+            endTime: result.endTime,
+            startTime: result.startTime,
+            maxRes: result.maxAppointments,
+            doctorId: this.doctor?.id,
+          };
+          this.doctorService.addReservation(reservation).subscribe({
+            next: (res) => {
+              Swal.fire({
+                title: 'Success',
+                text: 'Reservation added successfully',
+                icon: 'success',
+                confirmButtonText: 'OK'
+              });
+              this.doctorService.getReservations(this.doctor!.id).subscribe(reservations => {
+                reservations.forEach(reservation => {
+                  reservation.date = new Date(reservation.startTime.split('T')[0]);
+                  reservation.time = `${reservation.startTime.split('T')[1]} : ${reservation.endTime.split('T')[1]}`;
+                });
+                if (this.doctor) {
+                  this.doctor.reservations = reservations;
+                  this.generateCalendarView(this.currentView, this.viewDate);
+                }
+              });
+            },
+            error: (err) => {
+              Swal.fire({
+                title: 'Error',
+                text: 'There was an error adding the reservation. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
             }
           });
+        }
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'There was an error processing your request. Please try again later.',
+          icon: 'error',
+          confirmButtonText: 'OK'
         });
       }
     });
@@ -312,15 +335,20 @@ export class DoctorProfileComponent implements OnInit {
   ngOnInit(): void {
     this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe(profile => {
       this.doctor = profile;
+      this.doctor.governorate = this.governorates[parseInt(this.doctor.governorate) - 1];
       this.initMap();
-      this.doctorService.getReservations(this.doctor.id).subscribe(reservations => {
-        reservations.forEach(reservation => {
-          reservation.date = new Date(reservation.startTime.split('T')[0]);
-          reservation.time = `${reservation.startTime.split('T')[1]} - ${reservation.endTime.split('T')[1]}`;
-        });
-        if (this.doctor) {
-          this.doctor.reservations = reservations;
+      this.doctorService.getReservations(this.doctor.id).subscribe({
+        next: (reservations) => {
+          reservations.forEach(reservation => {
+            reservation.date = new Date(reservation.startTime.split('T')[0]);
+            reservation.time = `${reservation.startTime.split('T')[1]} : ${reservation.endTime.split('T')[1]}`;
+          });
+          if (this.doctor) {
+            this.doctor.reservations = reservations;
+          }
         }
+        ,
+        error: (_) => { }
       });
       // this.reviews = profile.ratings;
       // this.pageCount = Math.ceil(this.reviews!.length / this.pageSize);
@@ -484,7 +512,6 @@ export class DoctorProfileComponent implements OnInit {
     this.doctorService.uploadPhoto(event.target.files[0]).subscribe();
   }
   editReservation(reservation: Reservation, event: any): void {
-    console.log(reservation, event);
     event.preventDefault();
     const dialogRef = this.dialog.open(ReservationDialogComponent, {
       width: '400px',
@@ -492,30 +519,74 @@ export class DoctorProfileComponent implements OnInit {
       data: {
         id: reservation.id,
         date: reservation.date,
-        startTime: reservation.time?.split(' - ')[0],
-        endTime: reservation.time?.split(' - ')[1],
-        maxAppointments: 1
+        startTime: reservation.time?.split(' : ')[0],
+        endTime: reservation.time?.split(' : ')[1],
+        maxRes: reservation.maxAppoinments
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const newReservation = {
-          id: result.id,
-          date: result.date,
-          startTime: result.startTime,
-          endTime: result.endTime,
-          maxRes: result.maxAppointments,
-          doctorId: this.doctor?.id
-        };
-        // this.doctorService.editReservation(this.doctor!.id, newReservation).subscribe(() => {
-        //   Swal.fire({
-        //     title: 'Success',
-        //     text: 'Reservation added successfully',
-        //     icon: 'success',
-        //     confirmButtonText: 'OK'
-        //   });
-        // });
-        console.log('Reservation added:', newReservation);
+    dialogRef.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result?.action !== 'delete') {
+          const newReservation = {
+            id: result.id,
+            date: result.date,
+            startTime: result.startTime,
+            endTime: result.endTime,
+            maxRes: result.maxAppointments,
+            doctorId: this.doctor?.id
+          };
+          this.doctorService.editReservation(newReservation).subscribe({
+            next: () => {
+              Swal.fire({
+                title: 'Success',
+                text: 'Reservation added successfully',
+                icon: 'success',
+                confirmButtonText: 'OK'
+              });
+              this.doctor?.reservations.forEach(res => {
+                if (res.id === newReservation.id) {
+                  res.time = `${newReservation.startTime} : ${newReservation.endTime}`;
+                }
+              });
+            },
+            error: (err) => {
+              Swal.fire({
+                title: 'Error',
+                text: 'There was an error editing the reservation. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+            }
+          });
+        } else if (result?.action === 'delete') {
+          this.doctorService.deleteReservation(result.id).subscribe({
+            next: () => {
+              Swal.fire({
+                title: 'Success',
+                text: 'Reservation deleted successfully',
+                icon: 'success',
+                confirmButtonText: 'OK'
+              });
+              this.doctor!.reservations = this.doctor!.reservations?.filter(res => res.id !== result.id);
+            },
+            error: (err) => {
+              Swal.fire({
+                title: 'Error',
+                text: `You can't delete this reservation because it has less than 48 hours left.`,
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+            }
+          });
+        }
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'There was an error editing the reservation. Please try again later.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       }
     });
   }
@@ -528,13 +599,24 @@ export class DoctorProfileComponent implements OnInit {
       reservation.time = slot;
     }
     reservation.date = date;
-    // this.doctorService.updateReservation(this.doctor!.id, reservation).subscribe(() => {
+    const updatedReservation = {
+      id: reservation.id,
+      date: reservation.date,
+      startTime: reservation.time?.split(' : ')[0],
+      endTime: reservation.time?.split(' : ')[1],
+      // maxRes: reservation.maxAppoinments,
+      doctorId: this.doctor?.id
+    };
+    // this.doctorService.editReservation(updatedReservation).subscribe(() => {
     //   Swal.fire({
     //     title: 'Success',
     //     text: 'Reservation updated successfully',
     //     icon: 'success',
     //     confirmButtonText: 'OK'
     //   });
+    //   if (this.doctor) {
+    //     this.doctor.reservations = this.doctor.reservations?.map(res => res.id === reservation.id ? { ...res, date: reservation.date, time: reservation.time } : res);
+    //   }
     // });
   }
   getReservationsForDateTime(date: Date, time: string): Reservation[] {

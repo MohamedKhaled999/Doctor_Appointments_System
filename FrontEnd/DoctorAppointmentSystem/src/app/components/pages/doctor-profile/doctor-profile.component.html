@@ -1,20 +1,21 @@
+<app-notifications></app-notifications>
 <div class="container-fluid pt-5" style="padding-top: 80px;">
   <div class="row">
     <!-- Left Sidebar: Doctor Info -->
     <div class="col-md-4">
       <div class="sticky-md-top pt-5 text-center" style="padding-top:89px">
         <form (submit)="false">
-          <div class="position-relative d-inline-block" (click)="uploadInput.click()">
-            <!-- <img
-              [src]="'/uploads/images/' + doctor.image"
+          <!-- <div class="position-relative d-inline-block" (click)="uploadInput.click()"> -->
+            <img
+              [src]="'https://doc-net2.runasp.net/uploads/images/' + doctor?.image"
               alt="Doctor Image"
               class="rounded-circle img-thumbnail SP-photo"
-            /> -->
-            <input #uploadInput type="file" class="d-none SP-file" (change)="
+            />
+            <!-- <input #uploadInput type="file" class="d-none SP-file" (change)="
                 uploadPhoto($event)
               " />
-            <div class="SP-upload"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
-          </div>
+            <div class="SP-upload"><i class="fa-solid fa-arrow-up-from-bracket"></i></div> -->
+          <!-- </div> -->
         </form>
 
         <h3 class="mt-2">Dr. {{ doctor?.name }}</h3>
@@ -28,7 +29,7 @@
           <a [routerLink]="['/profile/doctor/edit']" class="btn col-12 SP-callBTN mt-3 w-100 my-1">
             <i class="fa-solid fa-pen-to-square"></i> Edit Profile
           </a>
-          <a class="btn col-12 SP-callBTN mt-3 w-100 my-1">
+          <a class="btn col-12 SP-callBTN mt-3 w-100 my-1" [routerLink]="['/change-password']">
             <i class="fa-solid fa-key"></i> Change Password
           </a>
         </ng-container>
@@ -155,7 +156,7 @@
         <!-- CALENDAR TAB (Doctors Only) -->
         <div class="tab-pane fade" [class.active]="selectedTab === 'calendar'"
           [class.show]="selectedTab === 'calendar'">
-          <form (ngSubmit)="saveSchedule()" style="color: var(--primary-color)">
+          <!-- <form (ngSubmit)="saveSchedule()" style="color: var(--primary-color)">
             <h3>Assign Default Schedule</h3>
             <div class="d-flex flex-column gap-3 justify-content-between">
               <div class="row gx-2 gap-2 gap-md-0">
@@ -200,7 +201,7 @@
 
               <h5 class="text-center">Or Customize Your Calendar</h5>
             </div>
-          </form>
+          </form> -->
 
           <div id="SP-Calendar" #calendarContainer style="height: 600px;" class="mt-3">
             <!-- FullCalendar or any JS calendar goes here -->

@@ -5,10 +5,11 @@ import Swal from 'sweetalert2';
 import { PatientService } from '../../../core/services/patient.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ReviewDialogComponent } from '../review-dialog/review-dialog.component';
+import { NotificationsComponent } from "../notifications/notifications.component";
 
 @Component({
   selector: 'app-patient-appointment',
-  imports: [CommonModule],
+  imports: [CommonModule, NotificationsComponent],
   templateUrl: './patient-appointment.component.html',
   styleUrl: './patient-appointment.component.css'
 })
@@ -18,7 +19,7 @@ export class PatientAppointmentComponent {
   selectedFiles: File[] = [];
   maxFileSize = 5 * 1024 * 1024;
   @Input() appointment: Appointment | undefined;
-  @Output() cancelAppointment = new EventEmitter<number>();
+  @Output() cancelAppointment = new EventEmitter();
   @Output() addReview = new EventEmitter<Appointment>();
   /**
    *
@@ -39,10 +40,29 @@ export class PatientAppointmentComponent {
       color: "#004085",
       confirmButtonColor: "#004085",
     }).then((result) => {
-      console.log(result)
       if (result.isConfirmed) {
         if (this.appointment) {
-          this.cancelAppointment.emit(this.appointment.id);
+          this.patientService.cancelAppoinment(this.appointment.id).subscribe({
+            next: () => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Appointment cancelled successfully',
+                color: '#004085',
+                confirmButtonColor: '#004085'
+              });
+              this.cancelAppointment.emit();
+            },
+            error: (error) => {
+              console.error('Error cancelling appointment:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error cancelling appointment',
+                text: error.error.message || 'An error occurred while cancelling the appointment.',
+                color: '#004085',
+                confirmButtonColor: '#004085'
+              });
+            }
+          });
         }
       }
     });
@@ -90,30 +110,30 @@ export class PatientAppointmentComponent {
     if (this.selectedFiles.length > 0) {
       const formData = new FormData();
       for (let i = 0; i < this.selectedFiles.length; i++) {
-        formData.append('medicalFiles', this.selectedFiles[i], this.selectedFiles[i].name);
+        formData.append('document', this.selectedFiles[i], this.selectedFiles[i].name);
       }
       if (this.appointment) {
-        // this.patientService.addFilesToAppointment(this.appointment.id, formData).subscribe({
-        //   next: (response) => {
-        //     Swal.fire({
-        //       icon: 'success',
-        //       title: 'Files added successfully',
-        //       color: '#004085',
-        //       confirmButtonColor: '#004085'
-        //     });
-        //     this.selectedFiles = [];
-        //   },
-        //   error: (error) => {
-        //     console.error('Error adding files:', error);
-        //     Swal.fire({
-        //       icon: 'error',
-        //       title: 'Error adding files',
-        //       text: error.error.message || 'An error occurred while adding files.',
-        //       color: '#004085',
-        //       confirmButtonColor: '#004085'
-        //     });
-        //   }
-        // });
+        this.patientService.addFilesToAppointment(this.appointment.id, formData).subscribe({
+          next: (response) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Files added successfully',
+              color: '#004085',
+              confirmButtonColor: '#004085'
+            });
+            this.selectedFiles = [];
+          },
+          error: (error) => {
+            console.error('Error adding files:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error adding files',
+              text: error.error.message || 'An error occurred while adding files.',
+              color: '#004085',
+              confirmButtonColor: '#004085'
+            });
+          }
+        });
     }
     }
   }

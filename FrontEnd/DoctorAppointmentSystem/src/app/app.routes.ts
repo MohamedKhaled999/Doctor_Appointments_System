@@ -99,7 +99,7 @@ export const routes: Routes = [
       ,
       {
         path: 'profile',
-        // canActivate: [authGuard],
+        canActivate: [authGuard],
         children: [
           {
             path: '',
