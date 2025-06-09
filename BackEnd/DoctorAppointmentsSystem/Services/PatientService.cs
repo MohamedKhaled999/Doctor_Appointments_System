@@ -80,7 +80,10 @@ namespace Services
                 patientDto.Id = oldPatient.Id;
                 if (oldPatient == null)
                     throw new ArgumentNullException($"Patient with ID {patientDto.Id} doesn't exist");
-                _unitOfWork.GetRepository<Patient, int>().Update(_mapper.Map(patientDto, oldPatient));
+                var email = oldPatient.Email;
+                var updatedPatient = _mapper.Map(patientDto, oldPatient);
+                updatedPatient.Email = email;
+                _unitOfWork.GetRepository<Patient, int>().Update(updatedPatient);
                 await _unitOfWork.SaveChangesAsync();
             }
             else
