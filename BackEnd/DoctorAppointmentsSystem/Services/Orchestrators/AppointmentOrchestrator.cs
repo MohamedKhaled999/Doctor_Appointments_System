@@ -136,7 +136,7 @@ namespace Services.Orchestrators
             var reservation = await _doctorReservationService.GetDoctorReservationByID(reservationId);
             if (reservation == null)
                 throw new ValidationException(["Reservation Not Found"]);
-            if (reservation.EndTime > DateTime.Now)
+            if (reservation.StartTime > DateTime.Now)
                 throw new ValidationException(["Reservation date hasn't passed yet"]);
             var doctor = await _doctorReservationService.GetDoctorByReservationId(reservationId);
             if (doctor.AppUserId != currentDoctorAppUserId)
