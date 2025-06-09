@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { tap, map, catchError, of, Observable, forkJoin, switchMap } from 'rxjs';
+import { tap, map, catchError, of, Observable } from 'rxjs';
 import { Governorate } from '../enums/governorate.enum';
 import { Doctor, DoctorResponse } from '../interfaces/doctor';
 import { reservation } from '../interfaces/reservation';
@@ -10,16 +10,11 @@ import { Specialities } from '../enums/speciality.enum';
 import { Gender } from '../enums/gender.enum';
 import { effect } from '@angular/core';
 import { DoctorListComponent } from '../../components/pages/search/doctor-list/doctor-list.component';
-import { DoctorReservationService } from '../services/doctor-reservations.service'
-
 @Injectable({ providedIn: 'root' })
-
 export class DoctorSearchService {
 
-  private reservationService  = inject(DoctorReservationService);
-  
   // Base URL for the doctor API
-  private readonly apiUrl = `${environment.apiUrl}/Doctor/search`;
+   private readonly apiUrl = `${environment.apiUrl}/Doctor/search`;
   private http = inject(HttpClient);
 
   // Signal containing all doctors
@@ -126,24 +121,6 @@ export class DoctorSearchService {
       );
   }
 
-  getAllDoctorsWithReservations(page: number = 1, pageSize: number = 6): Observable<Doctor[]> {
-  return this.getAllDoctorsWithPagination(page, pageSize).pipe(
-    switchMap(response => {
-      const doctors = response.results;
-      // For each doctor, fetch reservations and merge into doctor object
-      const requests = doctors.map(doc =>
-        this.reservationService.getReservations(doc.id).pipe(
-          map(res => ({
-            ...doc,
-            reservations: res.reservations
-          }))
-        )
-      );
-      // Wait for all requests to finish and return the array of doctors with reservations
-      return forkJoin(requests);
-    })
-  );
-  }
   // Transform API response to Doctor interface
   private transformDoctors(apiDoctors: any[]): Doctor[] {
     return apiDoctors.map(doctor => ({
@@ -164,6 +141,8 @@ export class DoctorSearchService {
     //   reservations: doctor.appointments?.map((a: any) => this.transformReservation(a)) || []
     }));
   }
+
+  
 
 //   private transformReservation(apiReservation: any): reservation {
 //     return {

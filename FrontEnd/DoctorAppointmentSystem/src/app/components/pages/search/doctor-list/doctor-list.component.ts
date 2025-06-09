@@ -29,6 +29,7 @@ export class DoctorListComponent {
   ngOnInit() {
     if(this.isBrowser) {
       // Load AOS only in the browser
+      this.DoctorSearchService.isLoading.set(false);
       Aos.init({
         duration: 1000,
         easing: 'ease-out-back',
@@ -66,15 +67,15 @@ export class DoctorListComponent {
   loadDoctors(): void {
     this.DoctorSearchService.isLoading.set(true);
     this.DoctorSearchService.doctors.set([]);
-    this.DoctorSearchService.getAllDoctorsWithReservations(this.DoctorSearchService.currentPage(), this.DoctorSearchService.pageSize()).subscribe({
-      next: (doctorsWithReservations) => {
-        this.DoctorSearchService.doctors.set(doctorsWithReservations);
+    this.DoctorSearchService.getAllDoctorsWithPagination(this.DoctorSearchService.currentPage(), this.DoctorSearchService.pageSize()).subscribe({
+      next: (response) => {
+        this.DoctorSearchService.doctors.set(response.results);
         console.log('Doctors loaded:', this.DoctorSearchService.doctors());
-        // this.DoctorSearchService.numberOfPages.set(response.total_pages);
-        // console.log('Total pages:', this.DoctorSearchService.numberOfPages());
+        this.DoctorSearchService.numberOfPages.set(response.total_pages);
+        console.log('Total pages:', this.DoctorSearchService.numberOfPages());
         this.DoctorSearchService.numberOfRecords.set(this.DoctorSearchService.numberOfPages() * this.DoctorSearchService.pageSize());
-        // this.DoctorSearchService.totalDoctors.set(response.total_results);
-        // this.DoctorSearchService.pageIndex.set(response.page); // Update the current page index
+        this.DoctorSearchService.totalDoctors.set(response.total_results);
+        this.DoctorSearchService.pageIndex.set(response.page); // Update the current page index
         // this.pageSize = response.pageSize || this.pageSize; // Ensure pageSize is set correctly
         // this.maxPages = Math.ceil(this.totalDoctors / this.pageSize);
 

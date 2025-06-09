@@ -14,12 +14,12 @@ import { DoctorListComponent } from '../../components/pages/search/doctor-list/d
 export class DoctorReservationService {
 
   // Base URL for the doctor API
-   private readonly apiUrl = `${environment.apiUrl}/doctor/reservations`;
-  private http = inject(HttpClient);
+    private readonly apiUrl = `${environment.apiUrl}/doctor/reservations`;
+    private http = inject(HttpClient);
 
   // Signal containing all doctors
 //   doctors = signal<Doctor[]>([]);
-//   isLoading = signal<boolean>(false);
+    isLoading = signal<boolean>(false);
 //   currentPage = signal<number>(1);
 //   totalDoctors = signal<number>(0);
 //   numberOfPages = signal<number>(0);

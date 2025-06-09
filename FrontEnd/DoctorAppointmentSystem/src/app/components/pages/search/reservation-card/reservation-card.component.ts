@@ -19,17 +19,30 @@ export class ReservationCardComponent {
   fromTime: string = '';
   toTime: string = '';
   Role: any;
+  isAuthenticated : boolean = false;
   constructor(private userData :DataManagementService){}
   ngOnInit() {
-    if (this.appointment && this.appointment.Time) {
-      const times = this.appointment.Time.split('|');
-      this.fromTime = times[0] || '';
-      this.toTime = times[1] || '';
+    if (this.appointment.IsAvailable) {
+      // This line extracts the time part (HH:mm) from the ISO string "2025-06-10T18:00:00"
+      // For example, "2025-06-10T18:00:00" => "18:00"
+      this.fromTime = this.appointment.StartTime.split('T')[1].slice(0,5);
+      this.fromTime = this.convertToAmPm(this.fromTime);
+      this.toTime = this.appointment.EndTime.split('T')[1].slice(0,5)//times[1] || '';
+      this.toTime = this.convertToAmPm(this.toTime);
+
     }
     
-    this.Role =   this.userData.UserRole.set(localStorage.getItem("userRole")!);
-    console.log(`Role : ${this.Role} thanks`);
+    this.Role = this.userData.UserRole();
+    console.log(`Role : ${this.Role}`);
   }
+
+  convertToAmPm(time24: string): string {
+    const [hours, minutes] = time24.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
+  }
+
   getNextDate(day: number): string {
 
     const today = new Date();
