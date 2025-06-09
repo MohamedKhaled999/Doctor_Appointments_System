@@ -23,7 +23,7 @@
 
 @if (Role === "patient")
 {
-    <button onclick="ShowModal(appointment.ResID)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</button>
+    <button onclick="book(appointment.ResID)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</button>
 }
 @else if(Role === "doctor")
 {
@@ -31,7 +31,8 @@
 }
 @else
 {
-    <a asp-controller="Account" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</a>
+    <button onclick="book(appointment.ResID)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</button>
+
 
 }
 

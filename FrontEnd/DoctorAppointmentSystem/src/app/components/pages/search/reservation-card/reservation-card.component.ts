@@ -35,7 +35,10 @@ export class ReservationCardComponent {
     this.Role = this.userData.UserRole();
     console.log(`Role : ${this.Role}`);
   }
+  book(ResId: number) : void{
 
+    
+  }
   convertToAmPm(time24: string): string {
     const [hours, minutes] = time24.split(':').map(Number);
     const period = hours >= 12 ? 'PM' : 'AM';
