@@ -25,8 +25,10 @@ nav {
 }
 
 .bg-primary-color-75 {
-    background-color: hsla(211, 100%, 26%, 0);
+
+    background-color: hsla(92, 24%, 41%, 0);
 }
+
 
 .bg-primary-color {
     background-color: var(--primary-color);
@@ -117,7 +119,7 @@ a
         }
     
         a {
-            color: #b6b8ba;
+            color: #d0dbe7;
         }
     
         .btn-primary {

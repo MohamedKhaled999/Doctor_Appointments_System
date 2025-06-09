@@ -99,6 +99,7 @@ export const routes: Routes = [
         title: 'Home - Doctor Appointments'
       }
       ,
+      
       {
         path: 'profile',
         canActivate: [authGuard],

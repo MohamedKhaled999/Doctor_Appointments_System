@@ -1,8 +1,8 @@
 <div class="rating-container d-flex align-items-center gap-2">
-    <i [class]="getFaceIcon() + ' text-primary-color'"></i>
+    <i [class]="getFaceIcon() + ' text-primary-color'" class="fa-face-smile-beam "></i>
     <div class="doctor-stars" [style.background-image]="getStarBackground()">
         ★★★★★
     </div>
-    <span class="text-muted">{{ rating | number: '1.1-1' }}</span>
+    <span  class="text-primary-color">{{ rating | number: '1.1-1' }}</span>
 </div>
   

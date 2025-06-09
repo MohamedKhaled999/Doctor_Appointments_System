@@ -6,7 +6,7 @@
     --accent-color: #F8F9FA;
     --accent-color-rgb: 248, 249, 250;
     --primary-font-color: #004085;
-        --card-text-color: black;
+        --card-text-color: #004085;
         /* Not Added to Project yet  */
         scroll-behavior: smooth;
 }
@@ -205,7 +205,7 @@ body {
     height: 100%;
     transition: all 1s;
     border-top-right-radius: 999px;
-    background-image: linear-gradient(-45deg, #004085d8 0% 20%, rgba(255, 255, 255, 0.562));
+    background-image: linear-gradient(-45deg, 0% 20%, rgba(255, 255, 255, 0.562));
 }
 
 .home .my-nav-tabs .doctor-card:hover {
@@ -217,6 +217,5 @@ body {
     left: -50%;
 }
 
-.text-primary-color {
-    color: var(--primary-font-color) !important;
-}
+
+/* style */

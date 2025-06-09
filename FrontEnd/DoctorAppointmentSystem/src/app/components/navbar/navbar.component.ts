@@ -4,6 +4,7 @@ import { Router, NavigationEnd, Event as RouterEvent, RouterLink, RouterModule }
 import { AuthService } from '../../core/services/auth.service';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { DataManagementService } from '../../core/services/data-management.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -22,27 +23,52 @@ export class NavbarComponent implements OnInit {
   public dataService = inject(DataManagementService);
   private authService = inject(AuthService);
   private platformId = inject(PLATFORM_ID);
-  private isBrowser = isPlatformBrowser(this.platformId);
 
-  constructor() {
+
+  isBrowser: boolean;
+
+  constructor(
+    @Inject(PLATFORM_ID) platformId: Object,
+  
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+
     if (this.isBrowser) {
-      window.addEventListener("scroll", function () {
-        const header = document.getElementsByTagName("header")[0];
-        const nav = document.getElementsByTagName("nav")[0];
+      
+      window.addEventListener('scroll', function () {
+        const header = document.getElementsByTagName('header')[0];
+        const nav = document.getElementsByTagName('nav')[0];
         if (!header || !nav) return;
 
         const length = header.scrollHeight - window.pageYOffset - nav.offsetHeight;
 
         if (length < 0) {
-          nav.classList.replace("py-1", "py-2");
-          nav.classList.replace("bg-primary-color-75", "bg-primary-color");
+          nav.classList.replace('py-1', 'py-2');
+          nav.classList.replace('bg-primary-color-75', 'bg-primary-color');
         } else {
-          nav.classList.replace("py-2", "py-1");
-          nav.classList.replace("bg-primary-color", "bg-primary-color-75");
+          nav.classList.replace('py-2', 'py-1');
+          nav.classList.replace('bg-primary-color', 'bg-primary-color-75');
         }
       });
+
+      this.router.events
+        .pipe(filter((event) => event instanceof NavigationEnd))
+        .subscribe((event: NavigationEnd) => {
+          const nav = document.getElementsByTagName('nav')[0];
+          if (!nav) return;
+
+          const currentUrl = event.urlAfterRedirects;
+
+        
+          if (currentUrl !== '/' && currentUrl !== '/home') {
+            nav.classList.add('bg-primary-color');
+          } else {
+            nav.classList.remove('bg-primary-color');
+          }
+        });
     }
   }
+
 
   ngOnInit(): void {
     this.router.events.subscribe((event: RouterEvent) => {

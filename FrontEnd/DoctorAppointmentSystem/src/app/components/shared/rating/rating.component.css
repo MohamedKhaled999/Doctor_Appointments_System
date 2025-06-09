@@ -1,13 +1,62 @@
+
 .rating-container {
-    font-size:2rem;
+    font-size:1.5rem;
     text-align: center;
 }
 
+
 .doctor-stars {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    font-weight: bold;
     letter-spacing: 0.2rem;
     text-align: center;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
+}
+/* Default font-awesome icon classes */
+.fa-brands::before,
+.fa-regular::before,
+.fa-solid::before,
+.fa::before,
+.fab::before,
+.far::before,
+.fas::before {
+    content: var(--fa);
+}
+
+/* Specific icon content for .fa-face-smile-beam */
+
+
+/* Additional styles for text color */
+.text-primary-color {
+   color: rgb(29, 65, 143);
+   font-weight: bold;
+   font-size: smaller;
+    /* You can customize this color */
+}
+/* Style for the smile icon with shadow */
+.fa-face-smile-beam::before,
+.fa-smile-beam::before {
+    /* content: "\f5b8"; */
+    --fa: "\f5b8";
+    /* Smile icon */
+    display: inline-block;
+    font-family: 'Font Awesome 5 Free';
+  
+    font-weight: 400;
+ 
+    font-size: 1.5rem;
+ 
+    border-radius: 50%;
+
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+
+    background-color: rgba(var(--primary-color-rgb), 0.3);
+
+
+    padding: 5px;
+
+    text-align: center;
+    line-height: 1;
 }
