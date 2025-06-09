@@ -216,3 +216,7 @@ body {
     bottom: -60%;
     left: -50%;
 }
+
+.text-primary-color {
+    color: var(--primary-font-color) !important;
+}
