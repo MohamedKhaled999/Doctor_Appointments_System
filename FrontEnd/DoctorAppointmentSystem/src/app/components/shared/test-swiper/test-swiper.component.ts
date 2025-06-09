@@ -118,16 +118,50 @@ export class TestSwiperComponent {
     // 👉 Send this token to your backend for verification
   }
 
-   
-    
-  
+  // error massage toaster fun
+
+
+
   constructor(private toster: ToastrService, private authService: SocialAuthService ,
      private userData:DataManagementService) {
     // You can initialize any properties or services here if needed
 
-   
+  //  toster.error("Something Error", "Please try again !")
     
   }
+
+
+  // Toaster exampels
+  // showSuccess() {
+  //   this.toster.success('This is a success message!', 'Success');
+  // }
+  // showError() {
+  //   this.toster.error('This is an error message!', 'Error');
+  // }
+  // showInfo() {
+  //   this.toster.info('This is an info message!', 'Info');
+  // }
+  // showWarning() {
+  //   this.toster.warning('This is a warning message!', 'Warning');
+  // }
+  // showCustom() {
+  //   this.toster.show('This is a custom message!', 'Custom', {
+  //     timeOut: 3000,
+  //     progressBar: true,
+  //     closeButton: true,
+  //     positionClass: 'toast-bottom-right'
+  //   });
+  // }
+  // showToast() {
+  //   this.toster.show('This is a toast message!', 'Toast', {
+  //     timeOut: 5000,
+  //     progressBar: true,
+  //     closeButton: true,
+  //     positionClass: 'toast-top-center'
+  //   });
+  // }
+
+
 
  
 }

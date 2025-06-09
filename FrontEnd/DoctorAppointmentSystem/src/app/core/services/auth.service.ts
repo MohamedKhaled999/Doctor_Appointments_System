@@ -35,6 +35,9 @@ export class AuthService {
       localStorage.removeItem('userRole');
       localStorage.removeItem('userName');
       localStorage.removeItem('rememberMe');
+      this.dataServsice.UserName.set('');
+      this.dataServsice.UserRole.set('');
+      this.dataServsice.isAuthenticated.set(false);
 
     }
     // this.isAuthenticatedSubject.next(false);
