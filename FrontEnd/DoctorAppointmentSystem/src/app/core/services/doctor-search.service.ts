@@ -6,6 +6,8 @@ import { Governorate } from '../enums/governorate.enum';
 import { Doctor, DoctorResponse } from '../interfaces/doctor';
 import { reservation } from '../interfaces/reservation';
 import { environment } from '../environments/environment';
+import { Specialities } from '../enums/speciality.enum';
+import { Gender } from '../enums/gender.enum';
 @Injectable({ providedIn: 'root' })
 export class DoctorSearchService {
 
@@ -15,7 +17,23 @@ export class DoctorSearchService {
 
   // Signal containing all doctors
   doctors = signal<Doctor[]>([]);
-  
+  isLoading = signal<boolean>(false);
+  currentPage = signal<number>(1);
+  totalDoctors = signal<number>(0);
+  numberOfPages = signal<number>(0);
+  numberOfRecords = signal<number>(0);
+  maxPages = signal<number>(0);
+  pageSize = signal<number>(6);
+  pageIndex = signal<number>(1);
+
+  doctorName = signal<string>('');
+  speciality = signal<Specialities>(Specialities.All);
+  governorate = signal<Governorate>(Governorate.All);
+  gender = signal<Gender>(Gender.All);
+  waitingTime = signal<number>(60);
+  minPrice = signal<number>(0);
+  maxPrice = signal<number>(1000);
+
   // Signal for loading state
   // isLoading = signal(false);
   
@@ -40,14 +58,18 @@ export class DoctorSearchService {
   //     })
   //   ).subscribe();
   // }
-  getFilteredDoctorsWithPagination(page: number = 1, pageSize: number = 6, doctorName: string = '', waitingTime: number = 0, minPrice: number = 0, maxPrice: number = 1000): Observable<DoctorResponse> {
+  getFilteredDoctorsWithPagination(page: number = 1, pageSize: number = 6, doctorName: string = '', speciality: Specialities = Specialities.All, governorate: Governorate = Governorate.All, gender : Gender = Gender.All, waitingTime: number = 0, minPrice: number = 0, maxPrice: number = 1000): Observable<DoctorResponse> {
 
     
     if( !doctorName && waitingTime === 0 && minPrice === 0 && maxPrice === 1000) {  // If no filters are applied, return all doctors with pagination
+      console.log(`getting all doctors ,PageNum=${page}&PageSize=${pageSize}&Name=${doctorName}&gender=${gender}&Speciality=${speciality}&Governorate=${governorate}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`);
+      
       return this.getAllDoctorsWithPagination(page, pageSize);
     }
     else if ( doctorName === '') {
-      return this.http.get(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`).pipe(
+      console.log(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&Speciality=${speciality}&Governorate=${governorate}&gender=${gender}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`);
+      
+      return this.http.get(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&Speciality=${speciality}&Governorate=${governorate}&gender=${gender}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`).pipe(
         map((response: any) => ({
           results: response.doctors.map((doctor: any) => this.transformDoctors([doctor])[0]),
           total_pages: response.totalPageNumber,
@@ -61,7 +83,9 @@ export class DoctorSearchService {
           );
     }
     else {
-      return this.http.get(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&DoctorName=${doctorName}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`).pipe(
+      console.log(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&Name=${doctorName}&Speciality=${speciality}&Governorate=${governorate}&gender=${gender}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`);
+
+      return this.http.get(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&Name=${doctorName}&Speciality=${speciality}&Governorate=${governorate}&gender=${gender}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`).pipe(
       map((response: any) => ({
         results: response.doctors.map((doctor: any) => this.transformDoctors([doctor])[0]),
         total_pages: response.totalPageNumber,

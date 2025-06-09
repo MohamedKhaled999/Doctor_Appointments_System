@@ -1,4 +1,6 @@
 import { Governorate } from '../../../../core/enums/governorate.enum';
+import { Specialities } from '../../../../core/enums/speciality.enum';
+import { Gender } from '../../../../core/enums/gender.enum';
 export interface Filter {
     // id: string;
     doctorName: string;
@@ -18,20 +20,20 @@ export interface Filter {
     
     }
 
-export enum Specialities {
-    All = 'All',
-    Cardiologist = 'Cardiologist',
-    Dermatologist = 'Dermatologist',
-    Neurologist = 'Neurologist',
-    Pediatrician = 'Pediatrician',
-    Orthopedic = 'Orthopedic',
-    Ophthalmologist = 'Ophthalmologist',
-    Gastroenterologist = 'Gastroenterologist',
-    Angioplastist = 'Angioplastist',
-    Endocrinologist = 'Endocrinologist',
-    Urologist = 'Urologist',
-    Dentist = 'Dentist'
-}
+// export enum Specialities {
+//     All = 'All',
+//     Cardiologist = 'Cardiologist',
+//     Dermatologist = 'Dermatologist',
+//     Neurologist = 'Neurologist',
+//     Pediatrician = 'Pediatrician',
+//     Orthopedic = 'Orthopedic',
+//     Ophthalmologist = 'Ophthalmologist',
+//     Gastroenterologist = 'Gastroenterologist',
+//     Angioplastist = 'Angioplastist',
+//     Endocrinologist = 'Endocrinologist',
+//     Urologist = 'Urologist',
+//     Dentist = 'Dentist'
+// }
 
 // export enum Governorates {
 //     All = 'All',
@@ -56,9 +58,9 @@ export enum Specialities {
 //     Damietta = 'Damietta'
 // }
 
-export enum Gender {
-    All = 'All',
-    Male = 'Male',
-    Female = 'Female'
-}
+// export enum Gender {
+//     All = 'All',
+//     Male = 'Male',
+//     Female = 'Female'
+// }
 

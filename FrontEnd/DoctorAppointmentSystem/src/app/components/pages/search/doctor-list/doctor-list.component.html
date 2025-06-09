@@ -1,6 +1,6 @@
-<h1 *ngIf="doctors.length === 0" class="SP-primaryText text-center p-3">No Doctor Exists</h1>
+<h1 *ngIf="this.DoctorSearchService.doctors().length === 0" class="SP-primaryText text-center p-3">No Doctor Exists</h1>
 
-<div *ngFor="let doc of doctors" class="SP-docCard flex-wrap align-items-center p-3 mb-2 border rounded shadow-sm " data-aos="fade-left">
+<div *ngFor="let doc of this.DoctorSearchService.doctors()" class="SP-docCard flex-wrap align-items-center p-3 mb-2 border rounded shadow-sm " data-aos="fade-left">
     <app-doctor-card [doctor]="doc"></app-doctor-card> 
 </div>
 
@@ -9,4 +9,4 @@
       1. Add the component to the parent component's template.
       2. Pass the number of records to the [numberOfRecords] input.
       3. Listen to the (pageIndexChange) output to get the current page index. -->
-<app-pagination [numberOfRecords]="numberOfRecords"  (pageIndexChange)="pageIndexParent.set($event)"></app-pagination>
+<app-pagination [numberOfRecords]="this.DoctorSearchService.numberOfRecords()"  (pageIndexChange)="DoctorSearchService.pageIndex.set($event)"></app-pagination>

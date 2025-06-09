@@ -1,5 +1,7 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Filter, Specialities, Gender } from './filter';
+import { Filter } from './filter';
+import { Specialities } from '../../../../core/enums/speciality.enum';
+import { Gender } from '../../../../core/enums/gender.enum';
 import { Governorate } from '../../../../core/enums/governorate.enum';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -38,7 +40,7 @@ export class DoctorFiltersComponent implements AfterViewInit {
     speciality: Specialities.All,
     governorate: Governorate.All,
     gender: Gender.All,
-    waitingTime: 0,
+    waitingTime: 60, // Default waiting time in minutes
     minPrice: 0,
     maxPrice: 1000,
   };
@@ -46,13 +48,13 @@ export class DoctorFiltersComponent implements AfterViewInit {
 
 
  public isBrowser: boolean;
-  loading: boolean = false;
-  doctors: any[] = [];
-  currentPage: number = 1;
-  pageSize: number = 6;
-  numberOfPages: number = 0;
-  numberOfRecords: number = 0;
-  totalDoctors: number = 0;
+  // loading: boolean = false;
+  // doctors: any[] = [];
+  // currentPage: number = 1;
+  // pageSize: number = 6;
+  // numberOfPages: number = 0;
+  // numberOfRecords: number = 0;
+  // totalDoctors: number = 0;
 
   constructor(@Inject(PLATFORM_ID) private platformId: any, private DoctorSearchService: DoctorSearchService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -114,37 +116,65 @@ ngAfterViewInit(): void {
 
   }
 
+    // doctorName: '',
+    // speciality: Specialities.All,
+    // governorate: Governorate.All,
+    // gender: Gender.All,
+    // waitingTime: 60, // Default waiting time in minutes
+    // minPrice: 0,
+    // maxPrice: 1000,
 
   onFilter(): void {
     console.log('Filters applied:', this.filters);
-    
+    this.DoctorSearchService.doctorName.set(this.filters.doctorName);
+    this.DoctorSearchService.speciality.set(this.filters.speciality);
+    this.DoctorSearchService.governorate.set(this.filters.governorate);
+    this.DoctorSearchService.gender.set(this.filters.gender);
+    this.DoctorSearchService.waitingTime.set(this.filters.waitingTime ?? 60);
+    this.DoctorSearchService.minPrice.set(this.filters.minPrice ?? 0);
+    this.DoctorSearchService.maxPrice.set(this.filters.maxPrice ?? 1000);
+    this.DoctorSearchService.currentPage.set(1);
+    this.loadDoctors();
   }
 
     loadDoctors(): void {
-    this.loading = true;
-    this.doctors = [];
-    this.DoctorSearchService.getFilteredDoctorsWithPagination(this.currentPage, this.pageSize).subscribe({
+    this.DoctorSearchService.isLoading.set(true);
+    this.DoctorSearchService.doctors.set([]);
+    this.DoctorSearchService.getFilteredDoctorsWithPagination(this.DoctorSearchService.currentPage()
+    , this.DoctorSearchService.pageSize()
+    , this.DoctorSearchService.doctorName()
+    , this.DoctorSearchService.speciality()
+    , this.DoctorSearchService.governorate()
+    , this.DoctorSearchService.gender()
+    , this.DoctorSearchService.waitingTime()
+    , this.DoctorSearchService.minPrice()
+    , this.DoctorSearchService.maxPrice()).subscribe({
       next: (response) => {
-        this.doctors = response.results;
-        console.log('Doctors loaded:', this.doctors);
-        this.numberOfPages = response.total_pages;
-        console.log('Total pages:', this.numberOfPages);
-        this.numberOfRecords = this.numberOfPages * this.pageSize;
-        this.totalDoctors = response.total_results;
-        // this.pageIndexParent.set(response.page); // Update the current page index  555555555555555555555555555555555555
+        this.DoctorSearchService.doctors.set(response.results);
+        console.log('Doctors loaded:', this.DoctorSearchService.doctors());
+        this.DoctorSearchService.numberOfPages.set(response.total_pages);
+        console.log('Total pages:', this.DoctorSearchService.numberOfPages());
+        this.DoctorSearchService.numberOfRecords.set(this.DoctorSearchService.numberOfPages() * this.DoctorSearchService.pageSize());
+        this.DoctorSearchService.totalDoctors.set(response.total_results);
+        this.DoctorSearchService.pageIndex.set(response.page); // Update the current page index  555555555555555555555555555555555555
         // this.pageSize = response.pageSize || this.pageSize; // Ensure pageSize is set correctly
         // this.maxPages = Math.ceil(this.totalDoctors / this.pageSize);
 
         // After loading doctors, fetch their details to get durations
         // this.loadDoctorDetails();
 
-        this.loading = false;
+        this.DoctorSearchService.isLoading.set(false);
+        console.log("Tracing: Doctors loaded:", this.DoctorSearchService.doctors());
+        console.log("Tracing: Total pages:", this.DoctorSearchService.numberOfPages());
+        console.log("Tracing: Number of records:", this.DoctorSearchService.numberOfRecords());
+        console.log("Tracing: Total doctors:", this.DoctorSearchService.totalDoctors());
+        console.log("Tracing: Current page index:", this.DoctorSearchService.pageIndex());
+
       },
       error: (error) => {
         console.error('Error fetching movies:', error);
-        this.loading = false;
+        this.DoctorSearchService.isLoading.set(false);
       }
-      
     });
   }
   onReset(): void {

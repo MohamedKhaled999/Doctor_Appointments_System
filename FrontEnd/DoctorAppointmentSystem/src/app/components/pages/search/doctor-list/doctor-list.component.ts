@@ -23,7 +23,7 @@ import { signal, effect } from '@angular/core';
 
 export class DoctorListComponent {
   public isBrowser: boolean;
-  constructor(@Inject(PLATFORM_ID) private platformId: any, private DoctorSearchService: DoctorSearchService) {
+  constructor(@Inject(PLATFORM_ID) private platformId: any, protected DoctorSearchService: DoctorSearchService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
   ngOnInit() {
@@ -40,50 +40,50 @@ export class DoctorListComponent {
   }
 
 
-  pageSize: number = 6;
-  pageIndexParent = signal(1);
+  // pageSize: number = 6;
+  // pageIndexParent = signal(1);
 
-  pageIndexParentEffect = effect(() => {
-    const pageIndex = this.pageIndexParent();
-    if (typeof pageIndex === 'number' && pageIndex !== this.currentPage) {
-      this.currentPage = pageIndex;
+  pageIndexEffect = effect(() => {
+    const pageIndex = this.DoctorSearchService.pageIndex();
+    if (typeof pageIndex === 'number' && pageIndex !== this.DoctorSearchService.currentPage()) {
+      this.DoctorSearchService.currentPage.set(pageIndex);
       this.loadDoctors();
       // console.log('Page index changed:', pageIndex);
       // console.log('Current page:', this.currentPage);
     }
   });
 
-  currentPage: number = 1;
-  totalDoctors: number = 0;
-  numberOfPages: number = 0;
-  numberOfRecords: number = 0;
-  maxPages: number = 0;
-  loading: boolean = false;
-  doctors: Doctor[] = [];
+  // currentPage: number = 1;
+  // totalDoctors: number = 0;
+  // numberOfPages: number = 0;
+  // numberOfRecords: number = 0;
+  // maxPages: number = 0;
+  // loading: boolean = false;
+  // doctors: Doctor[] = [];
 
   loadDoctors(): void {
-    this.loading = true;
-    this.doctors = [];
-    this.DoctorSearchService.getAllDoctorsWithPagination(this.currentPage, this.pageSize).subscribe({
+    this.DoctorSearchService.isLoading.set(true);
+    this.DoctorSearchService.doctors.set([]);
+    this.DoctorSearchService.getAllDoctorsWithPagination(this.DoctorSearchService.currentPage(), this.DoctorSearchService.pageSize()).subscribe({
       next: (response) => {
-        this.doctors = response.results;
-        console.log('Doctors loaded:', this.doctors);
-        this.numberOfPages = response.total_pages;
-        console.log('Total pages:', this.numberOfPages);
-        this.numberOfRecords = this.numberOfPages * this.pageSize;
-        this.totalDoctors = response.total_results;
-        this.pageIndexParent.set(response.page); // Update the current page index
+        this.DoctorSearchService.doctors.set(response.results);
+        console.log('Doctors loaded:', this.DoctorSearchService.doctors());
+        this.DoctorSearchService.numberOfPages.set(response.total_pages);
+        console.log('Total pages:', this.DoctorSearchService.numberOfPages());
+        this.DoctorSearchService.numberOfRecords.set(this.DoctorSearchService.numberOfPages() * this.DoctorSearchService.pageSize());
+        this.DoctorSearchService.totalDoctors.set(response.total_results);
+        this.DoctorSearchService.pageIndex.set(response.page); // Update the current page index
         // this.pageSize = response.pageSize || this.pageSize; // Ensure pageSize is set correctly
         // this.maxPages = Math.ceil(this.totalDoctors / this.pageSize);
 
         // After loading doctors, fetch their details to get durations
         // this.loadDoctorDetails();
 
-        this.loading = false;
+        this.DoctorSearchService.isLoading.set(false);
       },
       error: (error) => {
         console.error('Error fetching movies:', error);
-        this.loading = false;
+        this.DoctorSearchService.isLoading.set(false);
       }
       
     });
