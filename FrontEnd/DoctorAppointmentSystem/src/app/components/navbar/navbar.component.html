@@ -43,7 +43,7 @@
             >Doctors</a
           >
         </li>
-    
+
         <li class="nav-item">
           <a class="nav-link" routerLink="/contact" routerLinkActive="active"
             >Contact</a
@@ -51,7 +51,7 @@
         </li>
       </ul>
       <ul class="navbar-nav gap-md-2">
-        @if (!dataService.isAuthenticated()) {
+        @if (dataService.isAuthenticated()===false) {
         <li class="nav-item">
           <a class="nav-link" routerLink="/login">Login</a>
         </li>
@@ -63,7 +63,7 @@
             >Join us</a
           >
         </li>
-        } @if (dataService.isAuthenticated()) {
+        } @if (dataService.isAuthenticated()===true) {
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/', userRole, 'profile']"
             >Profile</a

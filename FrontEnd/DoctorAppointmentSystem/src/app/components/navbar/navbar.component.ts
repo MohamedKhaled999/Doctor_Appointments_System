@@ -71,6 +71,9 @@ export class NavbarComponent implements OnInit {
 
 
   ngOnInit(): void {
+    console.log("navbar",this.dataService.UserRole());
+    console.log("auth",this.dataService.isAuthenticated());
+    
     this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {
         this.isHome = event.url === '/';
