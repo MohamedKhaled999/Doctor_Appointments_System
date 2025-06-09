@@ -1,21 +1,23 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { DataManagementService } from './data-management.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
   private token: string | null = null;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private router: Router) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private router: Router,
+  private dataServsice: DataManagementService
+) {
 
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('userToken');
-      this.isAuthenticatedSubject.next(!!token);
+      // const token = localStorage.getItem('userToken');
+      // this.isAuthenticatedSubject.next(!!token);
     }
   }
 
@@ -31,8 +33,12 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('userToken');
       localStorage.removeItem('userRole');
+      localStorage.removeItem('userName');
+      localStorage.removeItem('rememberMe');
+
     }
-    this.isAuthenticatedSubject.next(false);
+    // this.isAuthenticatedSubject.next(false);
+    this.dataServsice.isAuthenticated.set(false);
     this.router.navigate(['/']);
   }
 

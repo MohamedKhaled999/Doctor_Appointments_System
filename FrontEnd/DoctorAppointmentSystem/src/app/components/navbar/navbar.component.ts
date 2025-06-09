@@ -3,6 +3,7 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { Router, NavigationEnd, Event as RouterEvent, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
+import { DataManagementService } from '../../core/services/data-management.service';
 
 @Component({
   selector: 'app-navbar',
@@ -18,6 +19,7 @@ export class NavbarComponent implements OnInit {
   userRole = '';
 
   private router = inject(Router);
+  public dataService = inject(DataManagementService);
   private authService = inject(AuthService);
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
@@ -49,14 +51,14 @@ export class NavbarComponent implements OnInit {
       }
     });
 
-    this.authService.isAuthenticated$?.subscribe(auth => {
-      if (auth !== undefined) {
-        this.isAuthenticated = auth;
-        if (auth) {
-          this.userRole = this.authService.getUserRole();
-        }
-      }
-    });
+    // this.authService.isAuthenticated$?.subscribe(auth => {
+    //   if (auth !== undefined) {
+    //     this.isAuthenticated = auth;
+    //     if (auth) {
+    //       this.userRole = this.authService.getUserRole();
+    //     }
+    //   }
+    // });
   }
 
   toggleNavbar(): void {

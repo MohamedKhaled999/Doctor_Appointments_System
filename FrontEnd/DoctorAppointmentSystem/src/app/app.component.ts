@@ -18,7 +18,7 @@ export class AppComponent {
   title = 'DoctorAppointmentSystem';
   isBrowser: boolean;
   
-  constructor(private userData:DataManagementService, @Inject(PLATFORM_ID) private platformId: any) {
+  constructor(private dataService:DataManagementService, @Inject(PLATFORM_ID) private platformId: any) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -32,11 +32,9 @@ export class AppComponent {
     });
      AOS.refresh();
 
-  //     console.log('AppComponent initialized');
-
-  //  this.userData.UserRole.set(localStorage.getItem("userRole")!);
-
-
+    this. dataService.UserName.set(localStorage.getItem('userName') || '');
+    this.dataService.UserRole.set(localStorage.getItem('userRole') || '');
+    this.dataService.isAuthenticated.set(localStorage.getItem('userToken') !== null);
 
     }
 
