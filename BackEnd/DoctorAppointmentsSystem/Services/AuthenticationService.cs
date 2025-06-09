@@ -157,10 +157,10 @@ namespace Services
             }
             else
             {
-                transaction.Execute(async () =>
+                transaction.Execute( () =>
                 {
-                    await patientService.AddAsync(registerDto);
-                    await userManager.AddToRoleAsync(user, "patient");
+                    patientService.AddAsync(registerDto).Wait();
+                    userManager.AddToRoleAsync(user, "patient").Wait();
                 }, async () =>
                 {
                     SpecificationsBase<Patient> specifications = new SpecificationsBase<Patient>(p => p.AppUserID == user.Id);
