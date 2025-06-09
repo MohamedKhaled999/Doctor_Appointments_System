@@ -12,25 +12,24 @@ export class AuthService {
   private token: string | null = null;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private router: Router) {
-    // Only run this code in the browser
+
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('userToken');
       this.isAuthenticatedSubject.next(!!token);
     }
   }
 
-  // Retrieve user role from localStorage or any other source
+
   getUserRole(): string {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('userRole') || '';
     }
-    return '';  // Return empty string if it's not in the browser
+    return '';  
   }
 
-  // Logout the user and clear the token and role from localStorage
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('authToken');
+      localStorage.removeItem('userToken');
       localStorage.removeItem('userRole');
     }
     this.isAuthenticatedSubject.next(false);
