@@ -52,6 +52,8 @@ namespace Services
             SpecificationsBase<Domain.Models.Review> specifications = new SpecificationsBase<Domain.Models.Review>(x => x.DoctorID == doctorId);
             specifications.ApplyPagination(pageIndex, pageSize);
             var reviews = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetAllAsync(specifications);
+            if (reviews.Count == 0)
+                return new List<ReviewDTO>();
             return _mapper.Map<ICollection<ReviewDTO>>(reviews);
         }
         public async Task<float> GetDoctorAverageRating(int docId)

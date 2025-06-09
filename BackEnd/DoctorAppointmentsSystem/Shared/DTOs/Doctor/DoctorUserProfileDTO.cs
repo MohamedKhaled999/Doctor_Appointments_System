@@ -12,10 +12,11 @@ namespace Shared.DTOs.Doctor
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public string Title { get; set; }
+        //public string Title { get; set; }
         public Gender Gender { get; set; }
         public string Image { get; set; }
-        public string Qualifications { get; set; }
+        public string About { get; set; }
+        //public string Qualifications { get; set; }
         public int Fees { get; set; }
         public string Speciality { get; set; }
         public float Rating { get; set; }
