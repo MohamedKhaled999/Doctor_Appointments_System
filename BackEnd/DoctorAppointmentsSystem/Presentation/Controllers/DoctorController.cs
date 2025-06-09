@@ -27,7 +27,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> GetDoctorProfile()
         {
-            var doctorProfile = await _serviceManager.DoctorService.GetByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            var doctorProfile = await _serviceManager.DoctorService.GetUserProfileByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Ok(doctorProfile);
         }
         [HttpPut]
@@ -48,5 +48,11 @@ namespace Presentation.Controllers
             var doctors = await _serviceManager.DoctorService.SearchPageDTO(searchDTO);
             return Ok(doctors);
         }
+        //[HttpGet("Reviews")]
+        //public async Task<IActionResult> GetDoctorReviews(int page = 1, int pageSize = 5)
+        //{
+        //    var reviews = await _serviceManager.DoctorOrchestrator.GetDoctorReviews(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), page, pageSize);
+        //    return Ok(reviews);
+        //}
     }
 }

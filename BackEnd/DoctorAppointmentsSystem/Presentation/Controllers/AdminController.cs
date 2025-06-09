@@ -29,6 +29,7 @@ namespace Presentation.Controllers
         [HttpPost("AddSpeciality")]
         public async Task<IActionResult> AddSpeciality(SpecialtyDTO specialtyDTO)
         {
+            // Remember to add a new dto
             await _serviceManager.SpecialtyService.AddSpecialty(specialtyDTO);
             return Created("", new { success = true });
         }
