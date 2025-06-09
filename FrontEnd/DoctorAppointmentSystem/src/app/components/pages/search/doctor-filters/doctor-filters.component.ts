@@ -9,6 +9,9 @@ import { NgModule } from '@angular/core';
 import { NouisliderModule } from 'ng2-nouislider';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
+import { filter } from 'rxjs';
+import { DoctorSearchService } from '../../../../core/services/doctor-search.service';
+
 @Component({
   selector: 'app-doctor-filters',
   imports: [CommonModule, FormsModule, NouisliderModule],
@@ -35,16 +38,23 @@ export class DoctorFiltersComponent implements AfterViewInit {
     speciality: Specialities.All,
     governorate: Governorate.All,
     gender: Gender.All,
-    waitingTime: undefined,
-    minPrice: undefined,
-    maxPrice: undefined,
+    waitingTime: 0,
+    minPrice: 0,
+    maxPrice: 1000,
   };
  sliderConfig:any = {};
 
 
  public isBrowser: boolean;
+  loading: boolean = false;
+  doctors: any[] = [];
+  currentPage: number = 1;
+  pageSize: number = 6;
+  numberOfPages: number = 0;
+  numberOfRecords: number = 0;
+  totalDoctors: number = 0;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {
+  constructor(@Inject(PLATFORM_ID) private platformId: any, private DoctorSearchService: DoctorSearchService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -104,16 +114,48 @@ ngAfterViewInit(): void {
 
   }
 
+
   onFilter(): void {
     console.log('Filters applied:', this.filters);
+    
   }
 
+    loadDoctors(): void {
+    this.loading = true;
+    this.doctors = [];
+    this.DoctorSearchService.getFilteredDoctorsWithPagination(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.doctors = response.results;
+        console.log('Doctors loaded:', this.doctors);
+        this.numberOfPages = response.total_pages;
+        console.log('Total pages:', this.numberOfPages);
+        this.numberOfRecords = this.numberOfPages * this.pageSize;
+        this.totalDoctors = response.total_results;
+        // this.pageIndexParent.set(response.page); // Update the current page index  555555555555555555555555555555555555
+        // this.pageSize = response.pageSize || this.pageSize; // Ensure pageSize is set correctly
+        // this.maxPages = Math.ceil(this.totalDoctors / this.pageSize);
+
+        // After loading doctors, fetch their details to get durations
+        // this.loadDoctorDetails();
+
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching movies:', error);
+        this.loading = false;
+      }
+      
+    });
+  }
   onReset(): void {
     this.filters = {
       doctorName: '',
       speciality: Specialities.All,
       governorate: Governorate.All,
       gender: Gender.All,
+      waitingTime: 0,
+      minPrice: 0,
+      maxPrice: 1000
     };
   }
 }

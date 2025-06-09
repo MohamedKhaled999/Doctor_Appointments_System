@@ -17,10 +17,10 @@ export class DoctorSearchService {
   doctors = signal<Doctor[]>([]);
   
   // Signal for loading state
-  isLoading = signal(false);
+  // isLoading = signal(false);
   
   // Signal for error state
-  error = signal<string | null>(null);
+  // error = signal<string | null>(null);
 
   // // Fetch all doctors
   // fetchDoctors() {
@@ -40,6 +40,43 @@ export class DoctorSearchService {
   //     })
   //   ).subscribe();
   // }
+  getFilteredDoctorsWithPagination(page: number = 1, pageSize: number = 6, doctorName: string = '', waitingTime: number = 0, minPrice: number = 0, maxPrice: number = 1000): Observable<DoctorResponse> {
+
+    
+    if( !doctorName && waitingTime === 0 && minPrice === 0 && maxPrice === 1000) {  // If no filters are applied, return all doctors with pagination
+      return this.getAllDoctorsWithPagination(page, pageSize);
+    }
+    else if ( doctorName === '') {
+      return this.http.get(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`).pipe(
+        map((response: any) => ({
+          results: response.doctors.map((doctor: any) => this.transformDoctors([doctor])[0]),
+          total_pages: response.totalPageNumber,
+          total_results: response.total_results,
+          page: response.page
+        })),
+        catchError(error => {
+          console.error('Error fetching doctors:', error);
+            throw error;
+            })
+          );
+    }
+    else {
+      return this.http.get(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&DoctorName=${doctorName}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`).pipe(
+      map((response: any) => ({
+        results: response.doctors.map((doctor: any) => this.transformDoctors([doctor])[0]),
+        total_pages: response.totalPageNumber,
+        total_results: response.total_results,
+        page: response.page
+      })),
+      catchError(error => {
+        console.error('Error fetching doctors:', error);
+          throw error;
+          })
+        );
+      }
+    }
+  
+
   getAllDoctorsWithPagination(page: number = 1, pageSize: number = 6): Observable<DoctorResponse> {
     return this.http.get(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}`).pipe(
       map((response: any) => ({
