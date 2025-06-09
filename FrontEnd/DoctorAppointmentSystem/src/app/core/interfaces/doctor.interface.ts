@@ -20,7 +20,7 @@ interface Doctor {
   reservations: Reservation[];
   latitude: number;
   longitude: number;
-  schedule: Schedule;
+  schedule?: Schedule;
   birthDate?: Date;
   email?: string;
 }

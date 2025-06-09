@@ -18,10 +18,11 @@ import { AdminDashboardComponent } from './components/pages/admin-dashboard/admi
 import { authGuard } from './core/guards/auth.guard';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { profile } from 'console';
+
 import { PatientProfileComponent } from './components/pages/patient-profile/patient-profile.component';
 import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.component';
-
-// export const routes: Routes = [
+import { Doctor } from './core/models/Doctor';
+// rt const routes: Routes = [
 //   {
 //     path: 'test',
 //     component: TestSwiperComponent,
@@ -71,7 +72,7 @@ import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.
 //   {
 //     path: 'change-password',
 //     component: ChangePasswordComponent
-  
+
 //   },
 //   { 
 //     path: 'doctor-register', 
@@ -88,7 +89,7 @@ import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.
 export const routes: Routes = [
   // blank
   {
-    path: '' ,
+    path: '',
     component: BlankLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -99,112 +100,121 @@ export const routes: Routes = [
       }
       ,
       {
-        path:'profile',
-        // canActivate:[authGuard],
-        children:[
-        {
+        path: 'profile',
+        canActivate: [authGuard],
+        children: [
+          {
             path: '',
             redirectTo: 'not-found',
             pathMatch: 'full'
-      },
-      {
-        path:'patient', //profile/patient
-        component: PatientProfileComponent
-      },
-      {
-        path:'doctor/:id',  //profile/doctor?id=1
-        component: DoctorEditComponent
-      }
-      ,{
-         
-        path:'doctor',  //profile/doctor?id=1
-        component: DoctorEditComponent,
-        canActivate: [authGuard]
-
-      }
-
+          },
+          {
+            path: 'patient',
+            loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
+          },
+          {
+            path: 'doctor',
+            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+          },
+          {
+            path: 'doctor/edit',
+            loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent)
+          },
+          {
+            path: 'doctor/:id',
+            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+          }
         ]
       },
-     
-    ]
-  },
-  {
+    {
     path: 'search',
     component: SearchComponent,
     title: 'Search'
   },
+
+    ]
+  },
+ 
   // auth 
   {
     path: '',
     component: AuthLayoutComponent,
     children: [
-  {
-    path: 'register',
-    component: RegisterComponent,
-    title: 'Register Account'
+      {
+        path: 'register',
+        component: RegisterComponent,
+        title: 'Register Account'
+      },
+      {
+        path: 'login',
+        component: LoginComponent,
+        title: 'Sign In - Doctor Appointments'
+      },
+      {
+        path: 'forgot-password',
+        component: ForgetPasswordComponent,
+        title: 'Password Recovery - Doctor Appointments'
+      },
+      {
+        path: 'need-to-confirm',
+        component: NeedToConfirmComponent,
+        title: 'Need to Confirm - Doctor Appointments'
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent
+      },
+      {
+        path: 'doctor-register',         //token ,email 
+        component: DoctorRegisterComponent // This can be a component that shows a success message after email confirmation
+      },
+      {
+        path: 'confirm-success',         //token ,email 
+        component: ConfirmEmailComponent
+      },
+      {
+        path: 'change-password',
+        component: ChangePasswordComponent,
+        canActivate: [authGuard],
+      }
+      // add doctor register route
+    ]
   },
-  { 
-    path: 'login', 
-    component: LoginComponent,
-    title: 'Sign In - Doctor Appointments'
-  },
-  {
-    path: 'forgot-password',
-    component: ForgetPasswordComponent,
-    title: 'Password Recovery - Doctor Appointments'
-  },
-  {
-    path: 'need-to-confirm',
-    component: NeedToConfirmComponent, 
-    title: 'Need to Confirm - Doctor Appointments'
-  },
-  { 
-    path: 'reset-password', 
-    component: ResetPasswordComponent 
-  },
-  { 
-    path: 'confirm-success',         //token ,email 
-    component: ConfirmEmailComponent // This can be a component that shows a success message after email confirmation
-  },
-  {
-    path: 'change-password',
-    component: ChangePasswordComponent,
-    canActivate: [authGuard],
-  }
-  // add doctor register route
-]
-  },
-  
-  
+
+
   // admin layout
-{
+  {
 
-  path:'admin',
-  component:AdminLayoutComponent,
-  canActivate:[authGuard],
-  children:[
-    {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
-    {
-      path:'dashboard',
-      title: 'Admin Dashboard - Doctor Appointments',
-      component:AdminDashboardComponent
-    }
-  ]
-},
-{
-  path: 'test',
-  component: TestSwiperComponent,
-}
-,
-{
-  path: 'extrenal-login',
-  component: ExtrenalLoginComponent,
-}
-,
-//NotFound
-{
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        title: 'Admin Dashboard - Doctor Appointments',
+        component: AdminDashboardComponent
+      }
+    ]
+  },
+  {
+    path: 'test',
+    component: TestSwiperComponent,
+  }
+  ,
+  {
+    path: 'extrenal-login',
+    component: ExtrenalLoginComponent,
+  }
+  ,
+  //NotFound
+  {
     path: '**',
-    component: NotFoundComponent , title: 'NotFound'
-}
+    component: NotFoundComponent, title: 'NotFound'
+  }
 
 ]
+// {
+//   path: 'doctors',
+//   loadComponent: () => import('./components/pages/doctor-profile').then(m => m.DoctorsComponent)
+// // }

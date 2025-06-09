@@ -49,52 +49,35 @@ export class DoctorEditComponent implements OnInit {
     this.governorates = this.governoratesService.getGovernorates();
   }
   ngOnInit(): void {
-    // this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe(profile => {
-    //   this.doctor = {
-    //     firstName: profile.name.split(' ')[0],
-    //     lastName: profile.name.split(' ')[1],
-    //     gender: profile.gender,
-    //     imageUrl: profile.image,
-    //     about: profile.qualifications,
-    //     fees: profile.fees,
-    //     specialty: profile.specialty,
-    //     waitingTime: profile.waitingTime,
-    //     governorate: profile.governorate,
-    //     address: profile.location,
-    //     phoneNumber: profile.phone,
-    //     email: profile.email!,
-    //     lat: profile.latitude,
-    //     lng: profile.longitude,
-    //     birthDate: profile.birthDate!,
-    //     image: null
-    //   };
-    // });
-    this.doctor = {
-      firstName: 'John Doe',
-      lastName: 'Smith',
-      gender: 'male',
-      imageUrl: 'https://example.com/doctor.jpg',
-      about: 'MD, PhD',
-      fees: 100,
-      specialty: 'Cardiology',
-      waitingTime: 30,
-      governorate: 'Cairo',
-      address: '123 Main St, Cairo',
-      birthDate: new Date('1980-01-01'),
-      phoneNumber: '0123456789',
-      email: 'I7eE5@example.com',
-      lat: 30.0444,
-      lng: 31.2357,
-      image: null
-    }
+    this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe(profile => {
+      this.doctor = {
+        firstName: profile.name.split(' ')[0],
+        lastName: profile.name.split(' ')[1],
+        gender: profile.gender ? 'male' : 'female',
+        imageUrl: profile.image,
+        about: profile.qualifications,
+        fees: profile.fees,
+        specialty: profile.specialty,
+        waitingTime: profile.waitingTime,
+        governorate: profile.governorate,
+        address: profile.location,
+        phoneNumber: profile.phone,
+        email: profile.email!,
+        lat: profile.latitude,
+        lng: profile.longitude,
+        birthDate: profile.birthDate ? new Date(profile.birthDate) : new Date(),
+        image: null
+      };
+      console.log('Doctor Profile:', this.doctor);
+      
     this.doctorForm.patchValue({
-      firstName: this.doctor.firstName.split(' ')[0],
-      lastName: this.doctor.lastName.split(' ')[1],
+      firstName: this.doctor.firstName,
+      lastName: this.doctor.lastName,
       specialty: this.doctor.specialty,
       fees: this.doctor.fees,
       waitingTime: this.doctor.waitingTime,
       about: this.doctor.about,
-      governorate: this.doctor.governorate,
+      governorate: this.governorates[parseInt(this.doctor.governorate) - 1],
       address: this.doctor.address,
       latitude: this.doctor.lat,
       longitude: this.doctor.lng,
@@ -103,6 +86,25 @@ export class DoctorEditComponent implements OnInit {
       birthDate: this.formatDate(this.doctor.birthDate),
       email: this.doctor.email
     });
+  });
+  // this.doctor = {
+  //     firstName: 'John Doe',
+  //     lastName: 'Smith',
+  //     gender: 'male',
+  //     imageUrl: 'https://example.com/doctor.jpg',
+  //     about: 'MD, PhD',
+  //     fees: 100,
+  //     specialty: 'Cardiology',
+  //     waitingTime: 30,
+  //     governorate: 'Cairo',
+  //     address: '123 Main St, Cairo',
+  //     birthDate: new Date('1980-01-01'),
+  //     phoneNumber: '0123456789',
+  //     email: 'I7eE5@example.com',
+  //     lat: 30.0444,
+  //     lng: 31.2357,
+  //     image: null
+  //   }
   }
   formatDate(birthDate: Date): any {
     const month = (birthDate.getMonth() + 1).toString().padStart(2, '0');

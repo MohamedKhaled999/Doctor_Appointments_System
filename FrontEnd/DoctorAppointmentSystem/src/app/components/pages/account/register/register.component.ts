@@ -12,6 +12,7 @@ import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { log } from 'console';
 
+
 import {Register  } from "../../../../core/interfaces/register";
 @Component({
   selector: 'app-register',
@@ -172,7 +173,7 @@ export class RegisterComponent implements OnInit {
       phoneNumber: formValue.phoneNumber,
       governorate: Number(formValue.governorate),
 
-      birthDate: new Date(formValue.dateOfBirth).toISOString().split('T')[0]// "yyyy-MM-dd"
+      birthDate: new Date(formValue.dateOfBirth).toISOString().split('T')[0]
     };
     
     

@@ -1,12 +1,14 @@
+<app-notifications></app-notifications>
 <div style="padding-top:80px">
-    <div class="col-12 pt-3 d-flex justify-content-center gap-3 list-unstyled p-0">
+    <div class="col-12 pt-3 d-flex justify-content-center gap-3 list-unstyled p-0 mb-3">
         <button class="btn" [ngClass]="{'active-tab patient-tab-active': activeTab === 'details'}"
             (click)="switchTab('details')"><span>Details</span></button>
         <button class="btn" [ngClass]="{'active-tab patient-tab-active': activeTab === 'appointments'}"
             (click)="switchTab('appointments')"><span>My Appointments</span></button>
     </div>
     <!-- Details Tab -->
-    <div id="patient-tab-1" class="row w-75 patient-profile-container mx-auto p-3 shadow-sm rounded-4" *ngIf="activeTab === 'details'">
+    <div id="patient-tab-1" class="row w-75 patient-profile-container mx-auto p-3 shadow-sm rounded-4"
+        *ngIf="activeTab === 'details'">
         <div class="col-12 col-md-2 text-center">
             <!-- <img id="patient-profile-image" src="/images/default.png" alt="patient image"
                 class="rounded-circle w-100" /> -->
@@ -30,17 +32,19 @@
                 <div class="row justify-content-between">
                     <div class="col-12 col-md-6">
                         <label for="email" class="form-label my-1">Email</label>
-                        <input name="email" formControlName="email" id="email" class="login-form-input rounded-1" readonly />
+                        <input name="email" formControlName="email" id="email" class="login-form-input rounded-1"
+                            readonly />
                     </div>
                     <div class="col-12 col-md-6">
                         <label for="phoneNumber" class="form-label my-1">Phone Number</label>
                         <input name="phoneNumber" formControlName="phoneNumber" id="phoneNumber"
-                        class="login-form-input rounded-1" />
+                            class="login-form-input rounded-1" />
                         <span class="text-danger"
-                        *ngIf="patientForm.get('phoneNumber')?.invalid && (patientForm.get('phoneNumber')?.touched || patientForm.get('phoneNumber')?.dirty)">
-                        <span *ngIf="patientForm.get('phoneNumber')?.errors?.['required']">Phone Number is required.</span>
-                        <span *ngIf="patientForm.get('phoneNumber')?.errors?.['pattern']">Invalid phone number
-                            format.</span>
+                            *ngIf="patientForm.get('phoneNumber')?.invalid && (patientForm.get('phoneNumber')?.touched || patientForm.get('phoneNumber')?.dirty)">
+                            <span *ngIf="patientForm.get('phoneNumber')?.errors?.['required']">Phone Number is
+                                required.</span>
+                            <span *ngIf="patientForm.get('phoneNumber')?.errors?.['pattern']">Invalid phone number
+                                format.</span>
                         </span>
                     </div>
                 </div>
@@ -48,11 +52,11 @@
             <div class="accordion" id="accordionExample">
                 <div class="accordion-item" id="patient-more-information">
                     <h2 class="accordion-header">
-                        <button class="accordion-button position-relative" id="patient-more-information-button" (click)="toggleAccordion()"
-                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
-                            aria-controls="collapseOne">
-                            <span class="px-1 mx-auto">More Information <i id="patient-arrow-icon" [ngClass]="{'up': isAccordionOpen}"
-                                    class="fa-solid fa-arrow-down ms-1"></i></span>
+                        <button class="accordion-button position-relative" id="patient-more-information-button"
+                            (click)="toggleAccordion()" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <span class="px-1 mx-auto">More Information <i id="patient-arrow-icon"
+                                    [ngClass]="{'up': isAccordionOpen}" class="fa-solid fa-arrow-down ms-1"></i></span>
                         </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
@@ -84,17 +88,19 @@
     </div>
 
     <!-- Appointments Tab -->
-    <div id="patient-tab-2" class="row w-75 patient-appointments-container mx-auto shadow-sm rounded-4" *ngIf="activeTab === 'appointments'">
+    <div id="patient-tab-2" class="row w-75 patient-appointments-container mx-auto shadow-sm rounded-4"
+        *ngIf="activeTab === 'appointments'">
         <swiper-container class="w-100 h-100 p-3 mx-auto position-relative" pagination="true"
             pagination-clickable="true" slides-per-view="1" grid-rows="2" space-between="40">
             @if (patient?.appointments != null && patient?.appointments?.length != 0)
             {
             @for(appointment of patient?.appointments; track $index)
             {
-            <swiper-slide
-                class="patient-appointment-card p-3 shadow overflow-hidden d-flex gap-3 bg-white rounded-3 align-items-center position-relative"
-                data-aos="fade-left">
-                <app-patient-appointment [appointment]="appointment"></app-patient-appointment>
+            <swiper-slide class="patient-appointment-card bg-white rounded-3" data-aos="fade-left">
+                <!-- patient-appointment-card p-3 shadow overflow-hidden d-flex gap-3 bg-white rounded-3 align-items-center position-relative -->
+                <app-patient-appointment [appointment]="appointment" 
+                (cancelAppointment)="refreshAppointments()"
+                    class="w-100 h-100 overflow-hidden d-flex gap-3 align-items-center position-relative p-3 shadow rounded-3"></app-patient-appointment>
             </swiper-slide>
             }
             }

@@ -1,0 +1,35 @@
+<div class="notifications-wrapper" 
+>
+  <!-- Bell button with unread count badge -->
+  <button
+  class="notif-toggle-btn"
+  (click)="toggle()"
+    aria-label="Notifications"
+  >
+    <i class="fa fa-bell"></i>
+    <span *ngIf="newNotificationsCount > 0" class="badge">{{ newNotificationsCount }}</span>
+  </button>
+
+  <!-- Dropdown panel -->
+  <div class="notif-panel" *ngIf="panelOpen">
+    <div class="panel-header">
+      Notifications
+    </div>
+    <ul class="panel-list">
+      <li
+        *ngFor="let notif of displayedNotifications"
+        [class.unread]="!notif.isRead"
+      >
+        <div class="notif-item">
+        </div>
+        <div class="notif-body">{{ notif.message }}</div>
+      </li>
+    </ul>
+    <button class="show-more-btn" 
+    (click)="loadMore()"
+    >
+      Show more
+    </button>
+  </div>
+</div>
+

@@ -1,0 +1,222 @@
+:root {
+    --primary-color: #004085;
+    --primary-color-rgb: 0, 64, 133;
+    --secondary-color: #B3E5FC;
+    --secondary-color-rgb: 179, 229, 252;
+    --accent-color: #F8F9FA;
+    --accent-color-rgb: 248, 249, 250;
+    --primary-font-color: #004085;
+        --card-text-color: black;
+        /* Not Added to Project yet  */
+        scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+}
+
+.home .swiper {
+    width: 600px;
+    height: 300px;
+}
+
+.home .swiper-slide img {
+    opacity: 0;
+    transform: scale(1.5);
+    transition: transform 2s ease-in, opacity 1s ease-in;
+}
+
+.home .swiper-slide-active img {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.home .bg-header {
+    position: absolute;
+    inset: 0;
+    bottom: 50px;
+    height: 100%;
+    z-index: 10;
+    opacity: 0.75;
+    width: 100%;
+    background-color: var(--primary-color);
+}
+
+.home #words,
+.home #words+span {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.home .services .card {
+    --bg-icon-opacity: 0.025;
+
+    height: 100%
+}
+
+
+.home .services .card {
+    background-color: var(--accent-color) !important;
+    transition: all 0.3s ease-in;
+}
+
+.home .services .card * {
+    transition: all 0.3s ease-in;
+}
+
+.home .services .card::after {
+    content: '\f061';
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 24px;
+    color: var(--primary-font-color);
+    position: absolute;
+    right: 0px;
+    bottom: 5px;
+    width: 45px;
+    height: 45px;
+    transform: rotate(-45deg);
+    transition: all 1s;
+}
+
+.home .services .card::before {
+    content: "";
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    background-color: var(--secondary-color);
+    width: 45px;
+    height: 45px;
+    border-radius: 30px;
+}
+
+
+
+
+
+
+.home .services .card:hover {
+    --primary-color: #b3e5fc;
+    --secondary-color: #004085;
+    --accent-color: #B3E5FC;
+    --accent-color: #01BDE0;
+    --primary-font-color: rgb(255, 255, 255);
+    --bg-icon-opacity: 0.08;
+    --card-text-color: white;
+    scale: 1.04;
+    color: white !important;
+}
+
+.home .services .card:hover::after {
+    transform: rotate(-45deg) translate(30px, 0px)
+}
+
+.home .doctors {
+    
+        /* url("../images/home/ser_bg.jpg" */
+    background-image: linear-gradient(to top, rgba(186, 178, 178, 0.626) 10%, #004085d4);
+    padding-block: 70px;
+    background-attachment: fixed;
+}
+.home .doctors .swiper-slide:not(.my-slide-btn){}
+.my-slide-btn {width: fit-content !important;
+    margin-left: 20px;
+}
+
+.home .doctor-button-prev {
+    left: 8%;
+    /* Move left arrow further left */
+}
+
+.home .doctor-button-next {
+    right: 8%;
+    /* Move right arrow further right */
+}
+
+.home .doctor-button-prev,
+.home .doctor-button-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007bff;
+    z-index: 12;
+}
+
+.home .my-slide-btn {
+    width: fit-content !important;
+}
+
+.home .my-controls {
+    border-radius: 10px;
+    /* background-color: var(--accent-color); */
+    padding-block: 8px;
+    width: 75%;
+    overflow: hidden;
+    padding-inline: 10px;
+    margin: auto;
+    /* box-shadow: 0 0 3px 1px var(--primary-color) inset; */
+}
+
+.home .my-controls .my-slide-btn .my-btn {
+    background-color: white;
+    color: #004085;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    font-weight: 600 !important;
+}
+
+.home .my-controls .my-slide-btn .my-btn:hover {
+    /* border: #004085; */
+    outline: 3px solid #004085a5;
+    /* box-shadow:  0 0 2px 1px var(--primary-color) ; */
+    scale: 1.05;
+}
+
+.home .my-controls .my-slide-btn .my-btn.mixitup-control-active {
+    background-color: #004085 !important;
+    color: white;
+}
+
+.home .doctor-stars {
+    background-clip: text !important;
+    color: transparent !important;
+    font-size: 1.5rem;
+}
+
+.home .my-nav-tabs .swiper-slide img {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.home .my-nav-tabs .doctor-card {
+    box-shadow: 0 0 2px 3px #00408588;
+    margin-block: 15px;
+    position: relative;
+    transition: all 1s;
+    overflow: hidden;
+}
+
+.home .my-nav-tabs .doctor-card::after {
+    content: "";
+    position: absolute;
+    bottom: -100%;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    transition: all 1s;
+    border-top-right-radius: 999px;
+    background-image: linear-gradient(-45deg, #004085d8 0% 20%, rgba(255, 255, 255, 0.562));
+}
+
+.home .my-nav-tabs .doctor-card:hover {
+    transform: scale(1.0083) translateY(-10px);
+}
+
+.home .my-nav-tabs .doctor-card:hover::after {
+    bottom: -60%;
+    left: -50%;
+}
+
+.text-primary-color {
+    color: var(--primary-font-color) !important;
+}

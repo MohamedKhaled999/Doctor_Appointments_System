@@ -8,7 +8,7 @@ interface Patient {
   phoneNumber: string;
   governorate: string;
   birthDate: Date;
-  appointments: Appointment[];
+  appointments?: Appointment[];
 }
 
 export type { Patient };

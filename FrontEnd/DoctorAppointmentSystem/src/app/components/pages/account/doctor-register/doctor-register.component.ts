@@ -149,10 +149,13 @@ export class DoctorRegisterComponent implements AfterViewInit {
 
   loadGovernorates() {
     console.log('Loading governorates');
-    this.governorateOptions = Object.keys(Governorate).map(key => ({
+    this.governorateOptions = Object.keys(Governorate)
+    .filter(key => isNaN(Number(key)))
+    .map(key => ({
       value: Governorate[key as keyof typeof Governorate],
       label: key
     }));
+  
     console.log('Governorates loaded:', this.governorateOptions);
   }
 
@@ -279,13 +282,7 @@ export class DoctorRegisterComponent implements AfterViewInit {
     this.accountService.registerDoctor(formData).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
-        Swal.fire({
-          title: "Success!",
-          text: "Doctor registered successfully",
-          icon: "success"
-        }).then(() => {
-          this.router.navigate(['/login']);
-        });
+      
       },
       error: (err: HttpErrorResponse) => {
         console.error('Registration failed:', err);

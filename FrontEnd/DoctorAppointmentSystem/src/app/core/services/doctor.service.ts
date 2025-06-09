@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
+import { ApiService } from './api.service';
 import { Doctor } from '../interfaces/doctor.interface';
 import { Schedule } from '../interfaces/Schedule.interface';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorService {
-
-  constructor(private http: HttpClient) { }
-
-  getProfile(id: number): Observable<Doctor> {
-    return this.http.get<Doctor>('');
+  constructor( private http: HttpClient,private api: ApiService) { }
+  getDoctors(): Observable<Doctor[]> {
+    return this.api.getDoctors();
+  }
+  getProfile(id?: number): Observable<Doctor> {
+    return this.http.get<Doctor>(`${environment.apiUrl}/Doctor/${id? `?id=${id}` : 'UserProfile'}`);
   }
   uploadPhoto(file: File): Observable<Doctor> {
     const formData = new FormData();
@@ -24,5 +27,23 @@ export class DoctorService {
   }
   updateProfile(formData: FormData): Observable<Doctor> {
     return this.http.put<Doctor>(``, formData);
+  }
+  addReservation(reservation: any): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/Doctor/reservations`, reservation);
+  }
+  getReservations(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/Doctor/reservations?doctorId=${id}`);
+  }
+  editReservation(reservation: any): Observable<void> {
+    return this.http.put<void>(`${environment.apiUrl}/Doctor/reservations`, reservation);
+  }
+  deleteReservation(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/Doctor/reservations?id=${id}`).pipe(
+      catchError(error => {
+        return throwError(() => {
+          return new Error(error.error || 'An error occurred while deleting the reservation.');
+        });
+      })
+    )
   }
 }

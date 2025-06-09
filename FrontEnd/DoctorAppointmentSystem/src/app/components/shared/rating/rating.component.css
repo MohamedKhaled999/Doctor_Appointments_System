@@ -1,0 +1,13 @@
+.rating-container {
+    font-size:2rem;
+    text-align: center;
+}
+
+.doctor-stars {
+    font-size: 1.4rem;
+    letter-spacing: 0.2rem;
+    text-align: center;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}

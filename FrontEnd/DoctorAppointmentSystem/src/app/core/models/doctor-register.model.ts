@@ -16,10 +16,9 @@ export interface DoctorRegisterVM {
     waitingTime: number;
     about: string;
   }
-  
   export enum Gender {
-    Male = 0,
-    Female = 1
+    Male = 'Male',
+    Female = 'Female'
   }
   
   

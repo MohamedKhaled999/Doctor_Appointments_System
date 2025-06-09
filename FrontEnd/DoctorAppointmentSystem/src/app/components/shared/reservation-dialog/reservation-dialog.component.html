@@ -1,6 +1,7 @@
 <div class="dialog-content" id="reservationModal" tabindex="-1">
   <h5 mat-dialog-title *ngIf="!data.id" class="fs-5" id="reservationModalLabel">Add Reservation</h5>
   <h5 mat-dialog-title *ngIf="data.id" class="fs-5" id="reservationModalLabel">Edit Reservation</h5>
+  <button type="button" *ngIf="data.id" mat-flat-button class="SP-bookBTN col-12 SP-CalSubmit w-100 mb-3" (click)="openDialog()">Show Appointments</button>
   <div [formGroup]="reservationForm">
     <div mat-dialog-content>
       <mat-form-field class="form-field">
@@ -25,14 +26,14 @@
     </div>
     <div mat-dialog-actions>
       <button type="submit" mat-flat-button (click)="onSaveClick()" class="SP-bookBTN col-12 SP-CalSubmit w-100">
-        <span *ngIf="data.uuid">Edit Appointment</span>
-        <span *ngIf="!data.uuid">Add Appointment</span>
+        <span *ngIf="data.id">Edit Appointment</span>
+        <span *ngIf="!data.id">Add Appointment</span>
       </button>
-      <button (click)="onCancelClick()" *ngIf="data.uuid" style="margin-left: 10px" mat-stroked-button
-        class="SP-deleteBTN col-12 btn btn-danger w-100">
+      <button (click)="onDeleteClick()" *ngIf="data.id" mat-stroked-button
+        class="SP-deleteBTN col-12 btn btn-danger w-100 mt-3">
         Delete
       </button>
-      <button style="margin-left: 10px" mat-stroked-button (click)="onNoClick()" class="SP-bookBTN col-12 w-100 btn">
+      <button mat-stroked-button (click)="onNoClick()" class="SP-bookBTN col-12 w-100 btn my-3">
         Cancel
       </button>
     </div>

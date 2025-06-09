@@ -1,13 +1,16 @@
 import { Component, Inject, PLATFORM_ID,OnInit  } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TestSwiperComponent } from "./components/shared/test-swiper/test-swiper.component";
-import AOS from 'aos'; 
-import { isPlatformBrowser } from '@angular/common';
-import { DataManagementService } from './core/services/data-management.service';
 
+import { DataManagementService } from './core/services/data-management.service';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { isPlatformBrowser } from '@angular/common';
+import AOS from 'aos'; 
+
+
+import { NgxSpinnerComponent } from 'ngx-spinner';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet , NgxSpinnerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -15,7 +18,7 @@ export class AppComponent {
   title = 'DoctorAppointmentSystem';
   isBrowser: boolean;
   
-  constructor(private userData:DataManagementService, @Inject(PLATFORM_ID) private platformId: any) {
+  constructor(private dataService:DataManagementService, @Inject(PLATFORM_ID) private platformId: any) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -29,11 +32,9 @@ export class AppComponent {
     });
      AOS.refresh();
 
-  //     console.log('AppComponent initialized');
-
-  //  this.userData.UserRole.set(localStorage.getItem("userRole")!);
-
-
+    this. dataService.UserName.set(localStorage.getItem('userName') || '');
+    this.dataService.UserRole.set(localStorage.getItem('userRole') || '');
+    this.dataService.isAuthenticated.set(localStorage.getItem('userToken') !== null);
 
     }
 

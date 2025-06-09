@@ -13,7 +13,7 @@ export class DataManagementService {
   // public UserData = signal<UserManagementData>({} as UserManagementData);
   public UserRole = signal<string>("");
   public UserName = signal<string>("");
-
+  public isAuthenticated =signal<boolean>(false);
 
   // you can save what you want in here in  signal
 

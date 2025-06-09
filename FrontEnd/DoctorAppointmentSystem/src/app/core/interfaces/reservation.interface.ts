@@ -4,6 +4,7 @@ interface Reservation {
   id: number;
   isAvailable: boolean;
   date: Date;
+  maxAppoinments?: number;
 }
 
 export type { Reservation };
