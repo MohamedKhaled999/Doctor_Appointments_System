@@ -53,7 +53,8 @@ export class ReservationCardComponent {
     
   }
   book(ResId: number) : void{
-
+    console.log("Book button clicked for reservation ID:", ResId);
+    
     
   }
   convertToAmPm(time24: string): string {
