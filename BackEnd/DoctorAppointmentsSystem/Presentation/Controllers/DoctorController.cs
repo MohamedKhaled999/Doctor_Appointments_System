@@ -19,17 +19,11 @@ namespace Presentation.Controllers
                 return NotFound();
             return Ok(doctorProfile);
         }
-        //[HttpPost("Register")]
-        //public async Task<IActionResult> RegisterDoctor(DoctorRegisterDto doctorDTO)
-        //{
-        //    await _serviceManager.DoctorOrchestrator.RegisterDoctor(doctorDTO);
-        //    return Created();
-        //}
         [HttpGet("UserProfile")]
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> GetDoctorProfile()
         {
-            var doctorProfile = await _serviceManager.DoctorService.GetByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            var doctorProfile = await _serviceManager.DoctorOrchestrator.GetUserProfileByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             if (doctorProfile == null)
                 return NotFound();
             return Ok(doctorProfile);
@@ -42,21 +36,16 @@ namespace Presentation.Controllers
             return Ok(new { success = true });
         }
         [HttpGet("search")]
-        //public async Task<IActionResult> SearchDoctors([FromQuery] FilterSearchDTO searchDTO)
-        //{
-        //    var doctors = await _serviceManager.DoctorService.SearchDoctor(searchDTO);
-        //    return Ok(doctors);
-        //}
         public async Task<IActionResult> SearchDoctors([FromQuery] FilterSearchDTO searchDTO)
         {
             var doctors = await _serviceManager.DoctorService.SearchPageDTO(searchDTO);
             return Ok(doctors);
         }
-        //[HttpGet("Reviews")]
-        //public async Task<IActionResult> GetDoctorReviews(int page = 1, int pageSize = 5)
-        //{
-        //    var reviews = await _serviceManager.DoctorOrchestrator.GetDoctorReviews(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), page, pageSize);
-        //    return Ok(reviews);
-        //}
+        [HttpGet("Reviews")]
+        public async Task<IActionResult> GetDoctorReviews(int page = 1, int pageSize = 5)
+        {
+            var reviews = await _serviceManager.DoctorOrchestrator.GetDoctorReviews(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), page, pageSize);
+            return Ok(reviews);
+        }
     }
 }

@@ -28,5 +28,13 @@ namespace Services.Orchestrators
             var reviews = await _serviceManger.ReviewService.GetDoctorReviews(doctor.ID, pageNumber, pageSize);
             return reviews;
         }
+        public async Task<DoctorUserProfileDTO?> GetUserProfileByAppUserIdAsync(int appUserId)
+        {
+            var doctorProfile = await doctorService.GetUserProfileByAppUserIdAsync(appUserId);
+            if (doctorProfile == null)
+                return null;
+            doctorProfile.Rating = await _serviceManger.ReviewService.GetDoctorAverageRating(doctorProfile.ID);
+            return doctorProfile;
+        }
     }
 }
