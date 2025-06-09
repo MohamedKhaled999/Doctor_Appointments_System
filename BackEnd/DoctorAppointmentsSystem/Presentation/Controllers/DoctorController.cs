@@ -52,5 +52,11 @@ namespace Presentation.Controllers
             var doctors = await _serviceManager.DoctorService.SearchPageDTO(searchDTO);
             return Ok(doctors);
         }
+        //[HttpGet("Reviews")]
+        //public async Task<IActionResult> GetDoctorReviews(int page = 1, int pageSize = 5)
+        //{
+        //    var reviews = await _serviceManager.DoctorOrchestrator.GetDoctorReviews(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), page, pageSize);
+        //    return Ok(reviews);
+        //}
     }
 }

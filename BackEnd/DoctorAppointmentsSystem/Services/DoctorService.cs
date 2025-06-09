@@ -70,10 +70,20 @@ namespace Services
         public async Task<DoctorProfileDTO?> GetByAppUserIdAsync(int appUserId)
         {
             var specs = new SpecificationsBase<Doctor>(d => d.AppUserID == appUserId);
+            specs.AddInclude(d => d.Specialty);
             var doctor = (await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specs)).FirstOrDefault();
             if (doctor == null)
                 return null;
             return _mapper.Map<DoctorProfileDTO>(doctor);
+        }
+        public async Task<DoctorUserProfileDTO?> GetUserProfileByAppUserIdAsync(int appUserId)
+        {
+            var specs = new SpecificationsBase<Doctor>(d => d.AppUserID == appUserId);
+            specs.AddInclude(d => d.Specialty);
+            var doctor = (await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specs)).FirstOrDefault();
+            if (doctor == null)
+                return null;
+            return _mapper.Map<DoctorUserProfileDTO>(doctor);
         }
         public async Task<List<DoctorSearchDTO>> SearchDoctor(FilterSearchDTO filter)
         {
@@ -95,17 +105,14 @@ namespace Services
             return doctors.ToList();
 
         }
-        private async Task<int> GetTotalPageCout(int pageSize)
-        {
-            var totalCount = _unitOfWork.GetRepository<Doctor, int>().GetCount();
-            return (int)Math.Ceiling((double)totalCount / pageSize);
-        }
+        
         public async Task<SearchPageDTO> SearchPageDTO(FilterSearchDTO filter)
         {
+            var doctors = await SearchDoctor(filter);
             return new SearchPageDTO
             {
-                TotalPageNumber = await GetTotalPageCout(filter.PageSize),
-                Doctors = await SearchDoctor(filter)
+                TotalPageNumber = (int)Math.Ceiling((double)doctors.Count() / filter.PageSize),
+                Doctors = doctors
             };
         }
     }
