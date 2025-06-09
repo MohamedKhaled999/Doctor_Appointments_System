@@ -106,12 +106,24 @@ namespace Services
 
         }
         
+        
         public async Task<SearchPageDTO> SearchPageDTO(FilterSearchDTO filter)
         {
             var doctors = await SearchDoctor(filter);
+            filter.Name = filter.Name?.Trim().ToLower() ?? "";
+
+            Expression<Func<Doctor, bool>> condition = doc =>
+                    (filter.Name == "" || (doc.FirstName + " " + doc.LastName).ToLower().Trim().Contains(filter.Name)) &&
+                    (filter.Specialty == 0 || doc.SpecialtyID == filter.Specialty) &&
+                    (filter.Gender == Shared.Enums.Gender.All || doc.Gender == (Domain.Models.Enums.Gender)filter.Gender) &&
+                    (filter.Governorate == Shared.Enums.Governorate.All || doc.Governorate == (Domain.Models.Enums.Governorate)filter.Governorate) &&
+                    doc.Fees >= filter.MinPrice && doc.Fees <= filter.MaxPrice && doc.WaitingTime <= filter.WaitingTime;
+
+            SpecificationsBase<Doctor> spec = new SpecificationsBase<Doctor>(condition);
+            var filtereddoctors = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(spec);
             return new SearchPageDTO
             {
-                TotalPageNumber = (int)Math.Ceiling((double)doctors.Count() / filter.PageSize),
+                TotalPageNumber = (int)Math.Ceiling((double)filtereddoctors.Count() / filter.PageSize),
                 Doctors = doctors
             };
         }
