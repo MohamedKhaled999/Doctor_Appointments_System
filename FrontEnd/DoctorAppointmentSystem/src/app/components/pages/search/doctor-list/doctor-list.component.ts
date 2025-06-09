@@ -35,6 +35,7 @@ export class DoctorListComponent {
         offset: 75,
         once: false
       });
+      this.DoctorSearchService.pageIndexSource.set('list');
       this.loadDoctors();
     }
   }
@@ -45,7 +46,7 @@ export class DoctorListComponent {
 
   pageIndexEffect = effect(() => {
     const pageIndex = this.DoctorSearchService.pageIndex();
-    if (typeof pageIndex === 'number' && pageIndex !== this.DoctorSearchService.currentPage()) {
+    if (typeof pageIndex === 'number' && pageIndex !== this.DoctorSearchService.currentPage() && this.DoctorSearchService.pageIndexSource() == 'list') {
       this.DoctorSearchService.currentPage.set(pageIndex);
       this.loadDoctors();
       // console.log('Page index changed:', pageIndex);

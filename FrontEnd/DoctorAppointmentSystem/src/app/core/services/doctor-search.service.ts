@@ -8,6 +8,8 @@ import { reservation } from '../interfaces/reservation';
 import { environment } from '../environments/environment';
 import { Specialities } from '../enums/speciality.enum';
 import { Gender } from '../enums/gender.enum';
+import { effect } from '@angular/core';
+import { DoctorListComponent } from '../../components/pages/search/doctor-list/doctor-list.component';
 @Injectable({ providedIn: 'root' })
 export class DoctorSearchService {
 
@@ -33,6 +35,7 @@ export class DoctorSearchService {
   waitingTime = signal<number>(60);
   minPrice = signal<number>(0);
   maxPrice = signal<number>(1000);
+  pageIndexSource = signal<string>(''); // 'list', 'filter', etc.
 
   // Signal for loading state
   // isLoading = signal(false);
@@ -58,6 +61,8 @@ export class DoctorSearchService {
   //     })
   //   ).subscribe();
   // }
+
+
   getFilteredDoctorsWithPagination(page: number = 1, pageSize: number = 6, doctorName: string = '', speciality: Specialities = Specialities.All, governorate: Governorate = Governorate.All, gender : Gender = Gender.All, waitingTime: number = 0, minPrice: number = 0, maxPrice: number = 1000): Observable<DoctorResponse> {
 
     

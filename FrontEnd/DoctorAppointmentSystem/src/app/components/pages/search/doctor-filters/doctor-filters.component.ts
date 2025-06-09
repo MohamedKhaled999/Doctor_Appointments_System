@@ -13,7 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { filter } from 'rxjs';
 import { DoctorSearchService } from '../../../../core/services/doctor-search.service';
-
+import { effect } from '@angular/core';
 @Component({
   selector: 'app-doctor-filters',
   imports: [CommonModule, FormsModule, NouisliderModule],
@@ -60,6 +60,15 @@ export class DoctorFiltersComponent implements AfterViewInit {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
+  pageIndexEffect = effect(() => {
+    const pageIndex = this.DoctorSearchService.pageIndex();
+    if (typeof pageIndex === 'number' && pageIndex !== this.DoctorSearchService.currentPage() && this.DoctorSearchService.pageIndexSource() == 'filter') {
+      this.DoctorSearchService.currentPage.set(pageIndex);
+      this.loadDoctors();
+      // console.log('Page index changed:', pageIndex);
+      // console.log('Current page:', this.currentPage);
+    }
+  });
  
 
 ngAfterViewInit(): void {
@@ -134,6 +143,7 @@ ngAfterViewInit(): void {
     this.DoctorSearchService.minPrice.set(this.filters.minPrice ?? 0);
     this.DoctorSearchService.maxPrice.set(this.filters.maxPrice ?? 1000);
     this.DoctorSearchService.currentPage.set(1);
+    this.DoctorSearchService.pageIndexSource.set('filter');
     this.loadDoctors();
   }
 
