@@ -17,10 +17,9 @@ namespace Services
 
         public async Task<List<AppointmentDTO>?> GetAppointmentsByReservationId(int id)
         {
-            var reservation = (await _unitOfWork.GetRepository<DoctorReservation, int>().GetAllAsync(new AppointmentReservationSpecifications(r => r.Id == id))).FirstOrDefault();
-            if (reservation == null)
-                throw new Exception("Reservation not found");
-            return _mapper.Map<List<AppointmentDTO>?>(reservation.Appointments);
+            var specs = new SpecificationsBase<Appointment>(a => a.DoctorReservationID == id);
+            var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(specs);
+            return _mapper.Map<List<AppointmentDTO>?>(appointments);
         }
 
         public async Task<DoctorFeesDTO> GetDoctorByReservationId(int id)
