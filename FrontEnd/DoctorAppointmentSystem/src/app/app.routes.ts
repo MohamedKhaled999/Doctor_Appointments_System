@@ -126,14 +126,15 @@ export const routes: Routes = [
           }
         ]
       },
-
-    ]
-  },
-  {
+    {
     path: 'search',
     component: SearchComponent,
     title: 'Search'
   },
+
+    ]
+  },
+ 
   // auth 
   {
     path: '',
