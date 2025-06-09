@@ -21,19 +21,19 @@
     }
 </div>
 
-@if (Role === "patient")
+@if (this.userData.UserRole() === "patient")
 {
     <button onclick="book(appointment.ResID)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</button>
 }
-@else if(Role === "doctor")
+@else if(this.userData.UserRole() === "doctor")
 {
     <a class="card-footer btn disabled SP-bookBTN p-1" style="width: 100%;">Doctors can't book in this release</a>
 }
 @else
 {
-    <button onclick="book(appointment.ResID)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</button>
-
-
+    <a 
+    routerLink="/login" 
+     class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</a>
 }
 
 

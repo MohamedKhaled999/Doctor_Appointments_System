@@ -1,13 +1,15 @@
+import { reservation } from './../../../../core/interfaces/reservation';
 import { Component , Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { reservation } from '../../../../core/interfaces/reservation';
 import { DataManagementService } from '../../../../core/services/data-management.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-reservation-card',
   imports: [
     CommonModule,
+    RouterLink
   ],
   templateUrl: './reservation-card.component.html',
   styleUrl: './reservation-card.component.css'
@@ -20,7 +22,7 @@ export class ReservationCardComponent {
   toTime: string = '';
   Role: any;
   isAuthenticated : boolean = false;
-  constructor(private userData :DataManagementService){}
+  constructor(public userData :DataManagementService){}
   ngOnInit() {
     if (this.appointment.IsAvailable) {
       // This line extracts the time part (HH:mm) from the ISO string "2025-06-10T18:00:00"
@@ -29,11 +31,26 @@ export class ReservationCardComponent {
       this.fromTime = this.convertToAmPm(this.fromTime);
       this.toTime = this.appointment.EndTime.split('T')[1].slice(0,5)//times[1] || '';
       this.toTime = this.convertToAmPm(this.toTime);
+      console.log("ngOnInit","reservation-card.component.ts");
+      console.log(Date.now());
+      
 
     }
     
-    this.Role = this.userData.UserRole();
-    console.log(`Role : ${this.Role}`);
+    // // this.Role = this.userData.UserRole();
+    // console.log(`Role : ${this.Role}`);
+  }
+
+
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+         console.log("reservation-card.component.ts", Date.now());
+    console.log("ngAfterViewInit called",this.userData.UserRole());
+    
+      
+    
   }
   book(ResId: number) : void{
 
