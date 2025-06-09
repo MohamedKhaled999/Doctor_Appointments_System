@@ -36,7 +36,7 @@ namespace Services.MappingProfiles
             CreateMap<DoctorEditDTO, Doctor>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(src => src.Id))
                 .ForMember(dest => dest.SpecialtyID, src => src.Ignore())
-                .ForMember(dest => dest.ImageURL, src => src.MapFrom(src => src.Image))
+                .ForMember(dest => dest.ImageURL, src => src.Ignore())
                 .ForMember(dest => dest.OverallRating, src => src.Ignore())
                 .ForMember(dest => dest.Location, src => src.MapFrom(src => src.Address));
 

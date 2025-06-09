@@ -14,8 +14,7 @@ namespace Shared.DTOs.Doctor
         [Display(Name = "Last Name")]
         [RegularExpression("^[a-zA-Z0-9](?:[a-zA-Z0-9_ -]*[a-zA-Z0-9])?$", ErrorMessage = "Invalid Name Format")]
         public string LastName { get; set; }
-        [RegularExpression(@"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.com$", ErrorMessage = "Email must match the following pattern: test@test.com")]
-        public string Email { get; set; }
+        
         [Display(Name = "Phone Number")]
         [RegularExpression("^0\\d{10}$", ErrorMessage = "Invalid Phone Number")]
         public string PhoneNumber { get; set; }
@@ -31,7 +30,6 @@ namespace Shared.DTOs.Doctor
         [Display(Name = "Waiting Time")]
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Waiting Time must be a number")]
         public int WaitingTime { get; set; }
-        public string ImageURL { get; set; }
         [Display(Name = "Profile Image")]
         [MaxSize(2, ErrorMessage = "Maximum allowed size is 2 MB")]
         [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".svg" })]
