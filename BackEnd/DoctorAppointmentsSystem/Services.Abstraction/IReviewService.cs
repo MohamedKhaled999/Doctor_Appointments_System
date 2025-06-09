@@ -6,14 +6,13 @@ namespace Services.Abstraction
 {
     public interface IReviewService
     {
-        Task AddReview(AddReviewDTO review);
+        Task AddReview(AddReviewDTO review, int patientId);
+        Task<int?> GetReviewByPatientAndDoctor(int patientId, int doctorId);
         Task DeleteReview(int ReviewId);
         Task UpdateReview(ReviewDTO review);
         Task<ReviewDTO> GetReviewByID(int id);
         Task<ICollection<ReviewDTO>> GetDoctorReviews(int doctorId, int pageIndex = 1, int pageSize = 5);
         Task<float> GetDoctorAverageRating(int docId);
         Task<decimal> GetAvgRatings();
-
-
     }
 }

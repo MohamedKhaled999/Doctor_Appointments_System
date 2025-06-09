@@ -2,6 +2,7 @@
 {
     public class DoctorReservationDTO
     {
+        public int DoctorID { get; set; }
         public int Id { get; set; }
         public int Day { get; set; }
         public DateTime StartTime { get; set; }

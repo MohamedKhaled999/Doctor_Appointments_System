@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Domain.Contracts;
 using Services.Abstraction;
 using Shared.DTOs.Doctor;
@@ -15,11 +16,20 @@ namespace Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task AddReview(AddReviewDTO review)
+        public async Task AddReview(AddReviewDTO review, int patientId)
         {
             var newReview = _mapper.Map<Domain.Models.Review>(review);
+            newReview.PatientID = patientId;
             await _unitOfWork.GetRepository<Domain.Models.Review, int>().AddAsync(newReview);
             await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task<int?> GetReviewByPatientAndDoctor(int patientId, int doctorId)
+        {
+            var specs = new SpecificationsBase<Domain.Models.Review>(r => r.PatientID == patientId && r.DoctorID == doctorId);
+            var review = (await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetAllAsync(specs)).FirstOrDefault();
+            if (review == null)
+                return null;
+            return review.Id;
         }
         public async Task UpdateReview(ReviewDTO review)
         {
@@ -65,7 +75,6 @@ namespace Services
                 totalRating += review.Rate;
             return totalRating / reviews.Count;
         }
-
         public async Task DeleteReview(int ReviewId)
         {
             var review = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetByIdAsync(ReviewId);
@@ -74,8 +83,5 @@ namespace Services
             _unitOfWork.GetRepository<Domain.Models.Review, int>().Delete(review);
             await _unitOfWork.SaveChangesAsync();
         }
-
-
-
     }
 }

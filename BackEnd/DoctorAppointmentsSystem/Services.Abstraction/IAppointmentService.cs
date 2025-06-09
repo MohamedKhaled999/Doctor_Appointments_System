@@ -1,4 +1,6 @@
-﻿using Shared.DTOs.Appointment;
+﻿using System.Linq.Expressions;
+using System.Reflection.Metadata;
+using Shared.DTOs.Appointment;
 using Shared.DTOs.Patient;
 
 namespace Services.Abstraction
@@ -6,6 +8,7 @@ namespace Services.Abstraction
     public interface IAppointmentService
     {
         Task<AppointmentDTO?> GetByIdAsync(int id);
+        Task<List<AppointmentDTO>?> GetByPatientAndDoctorAsync(int patientId, int doctorId);
         Task<AppointmentDTO?> GetWithDoctorAsync(int id);
         Task<AppointmentDTO?> GetLastAppointmentByPatientAsync(int patientId);
         Task<int> GetTransactionId(int appointmentId);

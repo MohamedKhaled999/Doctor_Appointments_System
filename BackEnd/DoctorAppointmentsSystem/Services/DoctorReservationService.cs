@@ -62,10 +62,8 @@ namespace Services
             var reservation = await _unitOfWork.GetRepository<DoctorReservation, int>().GetByIdAsync(res.ResID);
             if (reservation == null)
                 throw new Exception("Reservation not found");
-            var updatedReservation = _mapper.Map<DoctorReservation>(res);
-            _unitOfWork.GetRepository<DoctorReservation, int>().Update(updatedReservation);
+            _unitOfWork.GetRepository<DoctorReservation, int>().Update(_mapper.Map(res, reservation));
             await _unitOfWork.SaveChangesAsync();
-
         }
         public async Task DeleteDoctorReservation(int resId)
         {
