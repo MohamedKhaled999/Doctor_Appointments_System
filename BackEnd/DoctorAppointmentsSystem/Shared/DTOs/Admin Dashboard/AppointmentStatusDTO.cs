@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared.DTOs.Admin_Dashboard
 {
-    public class AppointmentStatus
+    public class AppointmentStatusDTO
     {
         public string Status { get; set; } = string.Empty;
         public int Count { get; set; }

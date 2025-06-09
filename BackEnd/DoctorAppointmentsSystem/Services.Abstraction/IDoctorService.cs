@@ -1,4 +1,5 @@
 ﻿using Shared.Authentication;
+using Shared.DTOs.Admin_Dashboard;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Search;
 
@@ -13,6 +14,9 @@ namespace Services.Abstraction
         public Task<DoctorUserProfileDTO?> GetUserProfileByAppUserIdAsync(int appUserId);
         public Task<List<DoctorSearchDTO>> SearchDoctor(FilterSearchDTO filter);
         public Task<SearchPageDTO> SearchPageDTO(FilterSearchDTO filter);
+        public Task ApproveDoctor(int docID);
+        public  Task<List<UnApprovedDoctorDTO>> GetUnApprovedDoctors();
+
         //Task<Doctor?> GetDoctorInfo(int doctorID);
         //Task<List<Doctor>> GetDoctorsOrderedByRating();
         //Task<List<Doctor>> GetAllDoctors();

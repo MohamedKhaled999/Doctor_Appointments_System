@@ -4,6 +4,7 @@ using Domain.Models;
 using Services.Abstraction;
 using Services.Validators;
 using Shared.Authentication;
+using Shared.DTOs.Admin_Dashboard;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Search;
 using System.ComponentModel.DataAnnotations;
@@ -126,6 +127,25 @@ namespace Services
                 TotalPageNumber = (int)Math.Ceiling((double)filtereddoctors.Count() / filter.PageSize),
                 Doctors = doctors
             };
+        }
+        public async Task ApproveDoctor(int docID)
+        {
+            var doc = await _unitOfWork.GetRepository<Doctor,int>().GetByIdAsync(docID);
+            if (doc == null)
+                throw new ValidationException("No doctor with this id");
+            doc.IsApproved = true;
+            _unitOfWork.GetRepository<Doctor, int>().Update(doc);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task<List<UnApprovedDoctorDTO>> GetUnApprovedDoctors()
+        {
+            var specs = new SpecificationsBase<Doctor>(r => r.IsApproved == false);
+            specs.AddInclude(d => d.Specialty);
+            var unApprovedDoctors = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specs);
+            if (unApprovedDoctors == null || unApprovedDoctors.Count == 0)
+                return new List<UnApprovedDoctorDTO>();
+            var unApprovedDoctorsDTO = _mapper.Map<List<UnApprovedDoctorDTO>>(unApprovedDoctors);
+            return unApprovedDoctorsDTO;
         }
     }
 }

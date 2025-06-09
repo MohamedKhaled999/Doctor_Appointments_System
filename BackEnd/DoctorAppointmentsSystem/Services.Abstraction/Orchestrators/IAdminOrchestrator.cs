@@ -9,12 +9,12 @@ namespace Services.Abstraction.Orchestrators
 {
     public interface IAdminOrchestrator
     {
-        Task<DashboardOverview> GetDashboardOverviewAsync();
-        Task<List<MonthlyStats>> GetMonthlyStatsAsync();
-        Task<List<SpecialtyDistribution>> GetSpecialtyDistributionAsync();
-        Task<List<AppointmentStatus>> GetAppointmentStatusAsync();
-        Task<List<TopDoctor>> GetTopDoctorsAsync();
-        Task<List<RecentAppointment>> GetRecentAppointmentsAsync();
+        Task<DashboardOverviewDTO> GetDashboardOverviewAsync();
+        Task<List<MonthlyStatsDTO>> GetMonthlyStatsAsync();
+        Task<List<SpecialtyDistributionDTO>> GetSpecialtyDistributionAsync();
+        Task<List<AppointmentStatusDTO>> GetAppointmentStatusAsync();
+        Task<List<TopDoctorDTO>> GetTopDoctorsAsync();
+        Task<List<RecentAppointmentDTO>> GetRecentAppointmentsAsync();
         Task<DashboardDataDTO> GetDashboardDataAsync();
 
     }

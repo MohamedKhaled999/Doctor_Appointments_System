@@ -8,11 +8,12 @@ namespace Shared.DTOs.Admin_Dashboard
 {
     public class DashboardDataDTO
     {
-        public DashboardOverview Overview { get; set; } = new DashboardOverview();
-        public List<MonthlyStats> MonthlyStats { get; set; } = new List<MonthlyStats>();
-        public List<SpecialtyDistribution> SpecialtyDistribution { get; set; } = new List<SpecialtyDistribution>();
-        public List<AppointmentStatus> AppointmentStatus { get; set; } = new List<AppointmentStatus>();
-        public List<TopDoctor> TopDoctors { get; set; } = new List<TopDoctor>();
-        public List<RecentAppointment> RecentAppointments { get; set; } = new List<RecentAppointment>();
+        public DashboardOverviewDTO Overview { get; set; } = new DashboardOverviewDTO();
+        public List<MonthlyStatsDTO> MonthlyStats { get; set; } = new List<MonthlyStatsDTO>();
+        public List<SpecialtyDistributionDTO> SpecialtyDistribution { get; set; } = new List<SpecialtyDistributionDTO>();
+        public List<AppointmentStatusDTO> AppointmentStatus { get; set; } = new List<AppointmentStatusDTO>();
+        public List<TopDoctorDTO> TopDoctors { get; set; } = new List<TopDoctorDTO>();
+        public List<UnApprovedDoctorDTO> UnApprovedDoctors { get; set; } = new List<UnApprovedDoctorDTO>();
+        public List<RecentAppointmentDTO> RecentAppointments { get; set; } = new List<RecentAppointmentDTO>();
     }
 }

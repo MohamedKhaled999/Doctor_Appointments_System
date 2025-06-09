@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Models;
 using Shared.Authentication;
+using Shared.DTOs.Admin_Dashboard;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Home;
 using Shared.DTOs.Search;
@@ -65,6 +66,11 @@ namespace Services.MappingProfiles
                 .ForMember(dest => dest.Image, src => src.MapFrom(src => src.ImageURL))
                 .ForMember(dest => dest.Rating, src => src.MapFrom(src => src.OverallRating))
                 .ForMember(dest => dest.Phone, src => src.MapFrom(src => src.PhoneNumber));
+
+            CreateMap<Doctor, UnApprovedDoctorDTO>()
+                .ForMember(dest => dest.Specialty, src => src.MapFrom(src => src.Specialty.Name))
+                .ForMember(dest => dest.Name, src => src.MapFrom(src => $"{src.FirstName} {src.LastName}"));
+                
         }
     }
 }
