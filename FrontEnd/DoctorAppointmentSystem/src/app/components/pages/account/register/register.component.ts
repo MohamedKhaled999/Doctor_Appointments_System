@@ -198,23 +198,60 @@ export class RegisterComponent implements OnInit {
     dateOfBirth?: Date; 
     */
     console.log('Payload to send:', registerRequest);
+    //   this.accountService.register(registerRequest).subscribe({
+    //     next: () => {
+    //       console.log('Registration successful from component');
+    //     },
+    //     error: (error: any) => {
+    //       this.isLoading = false;
+    //       if (Array.isArray(error.error)) {
+    //         this.validationErrors = error.error;
+    //       } else {
+    //         this.validationErrors = [
+    //           error.error || 'Registration failed. Please try again',
+    //         ];
+    //       }
+    //     },
+    //   });
     this.accountService.register(registerRequest).subscribe({
       next: () => {
         console.log('Registration successful from component');
+        this.isLoading = false;
+        // You might want to add navigation or other success logic here
       },
       error: (error: any) => {
         this.isLoading = false;
-        if (Array.isArray(error.error)) {
-          this.validationErrors = error.error;
-        } else {
-          this.validationErrors = [
-            error.error || 'Registration failed. Please try again',
-          ];
-        }
-      },
+        this.handleRegistrationError(error);
+      }
     });
     
   }
+    
+    private handleRegistrationError(error: any): void {
+   
+      let errorMessages = ['Registration failed. Please try again'];
+      
+      if (error.error instanceof ErrorEvent) {
+       
+        errorMessages = ['A network error occurred. Please check your connection.'];
+      } else if (Array.isArray(error.error)) {
+        // Server-side validation errors (array of messages)
+        errorMessages = error.error;
+      } else if (error.error?.message) {
+        // Single error message from server
+        errorMessages = [error.error.message];
+      } else if (error.message) {
+        // Error object with message property
+        errorMessages = [error.message];
+      } else if (typeof error.error === 'string') {
+        // String error response
+        errorMessages = [error.error];
+      }
+    
+      this.validationErrors = errorMessages;
+    }
+    
+
     
 
   togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
