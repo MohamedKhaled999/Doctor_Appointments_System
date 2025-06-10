@@ -7,9 +7,9 @@ export const serverRoutes: ServerRoute[] = [
   },
   
   
-  //   {
-  //   path: 'profile/doctor/:id',
-  //   renderMode:RenderMode.Server
-  // },
+    {
+    path: 'profile/doctor/:id',
+    renderMode:RenderMode.Server
+  },
   
 ];
