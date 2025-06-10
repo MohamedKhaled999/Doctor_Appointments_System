@@ -45,7 +45,7 @@ export class DoctorReservationService {
                 reservations: response.map(res => ({
                     ResId: res.id,
                     DoctorId: res.doctorID,
-                    Day: res.day,
+                    Day: res?.day,
                     StartTime: res.startTime,
                     EndTime: res.endTime,
                     IsAvailable: res?.isAvailable
