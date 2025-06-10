@@ -28,6 +28,7 @@ namespace Services
                 specialtiesDTO.Add(
                     new HomeSpecialtyDTO()
                     {
+                        Id = specialty.Id,
                         Name = specialty.Name,
                         Description = specialty.Description,
                         Image = specialty.ImageURL,
