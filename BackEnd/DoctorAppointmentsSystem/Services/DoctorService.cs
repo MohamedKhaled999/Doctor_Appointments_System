@@ -138,6 +138,16 @@ namespace Services
             _unitOfWork.GetRepository<Doctor, int>().Update(doc);
             await _unitOfWork.SaveChangesAsync();
         }
+        public async Task<bool> IsDoctorUserApproved(int appUserId)
+        {
+            var specs = new SpecificationsBase<Doctor>(d => d.AppUserID == appUserId);
+            specs.AddInclude(d => d.Specialty);
+            var doctor = (await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specs)).FirstOrDefault();
+            if (doctor == null)
+                return false;
+            return doctor.IsApproved;
+
+        }
         public async Task<List<UnApprovedDoctorDTO>> GetUnApprovedDoctors()
         {
             var specs = new SpecificationsBase<Doctor>(r => r.IsApproved == false);
