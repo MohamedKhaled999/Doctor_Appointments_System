@@ -4,6 +4,7 @@ import * as signalR from '@microsoft/signalr';
 import { catchError, of, Subject } from 'rxjs';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
+import { Notification } from '../interfaces/notification.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,14 @@ export class NotificationService implements OnDestroy {
       .catch(err => console.error('Error establishing SignalR connection:', err));
 
     this.hubConnection.on('newNotification', (notification: string) => {
-      let notificationObj: Notification = JSON.parse(notification);
+      let notificationObj = JSON.parse(notification);
+      notificationObj = {
+        id: notificationObj.Id,
+        message: notificationObj.Message,
+        isRead: notificationObj.IsRead,
+        eventType: notificationObj.EventType,
+        timeStamp: notificationObj.TimeStamp
+      }
       this.notificationSubject.next(notificationObj);
     });
   }

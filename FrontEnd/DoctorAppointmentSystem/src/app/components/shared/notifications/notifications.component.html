@@ -21,8 +21,10 @@
         [class.unread]="!notif.isRead"
       >
         <div class="notif-item">
+          <div class="notif-title">{{ getNotificationEentType(notif.eventType) }}</div>
+          <div class="notif-time">{{ getNotificationTimeAgo(notif.timeStamp) }}</div>
         </div>
-        <div class="notif-body">{{ notif.message }}</div>
+          <div class="notif-body">{{ notif.message }}</div>
       </li>
     </ul>
     <button class="show-more-btn" 

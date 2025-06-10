@@ -8,13 +8,13 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const spinner: NgxSpinnerService =inject(NgxSpinnerService);
 
   spinner.show()
-  console.log('Loading interceptor triggered');
+  // console.log('Loading interceptor triggered');
 
   // The interceptor is used to show a loading spinner
   // while HTTP requests are being processed.
   // It uses the NgxSpinnerService to control the spinner's visibility.
   // The interceptor intercepts HTTP requests and
-  console.log('Intercepting request:', req);
+  // console.log('Intercepting request:', req);
   
   
   // Show the spinner before the request is sent
