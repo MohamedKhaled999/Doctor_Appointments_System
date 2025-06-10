@@ -2,7 +2,7 @@ import { Rating } from "./rating.interface";
 import { Reservation } from "./reservation.interface";
 import { Schedule } from "./Schedule.interface";
 
-interface Doctor {
+export interface Doctor {
   id: number;
   name: string;
   title: string;
@@ -26,4 +26,4 @@ interface Doctor {
   email?: string;
 }
 
-export type { Doctor };
+// export type { Doctor };
