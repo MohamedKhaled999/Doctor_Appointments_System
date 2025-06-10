@@ -23,68 +23,6 @@ import { PatientProfileComponent } from './components/pages/patient-profile/pati
 import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.component';
 import { Doctor } from './core/models/Doctor';
 import { ContactComponent } from './components/contact/contact.component';
-// rt const routes: Routes = [
-//   {
-//     path: 'test',
-//     component: TestSwiperComponent,
-//     title: 'Test Swiper',
-//   },
-//   {
-//     path: 'patient-profile',
-//     loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
-//   },
-//   {
-//     path: 'doctor-profile/:id',
-//     loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
-//   },
-//   {
-//     path: 'doctor-edit',
-//     loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
-//   },
-//   {
-//     path: 'register',
-//     component: RegisterComponent,
-//     title: 'Register Account'
-//   },
-//   { 
-//     path: 'login', 
-//     component: LoginComponent,
-//     title: 'Sign In - Doctor Appointments'
-//   },
-//   {
-//     path: 'forgot-password',
-//     component: ForgetPasswordComponent,
-//     title: 'Password Recovery - Doctor Appointments'
-//   },
-//   {
-//     path: 'need-to-confirm',
-//     component: NeedToConfirmComponent, 
-//     title: 'Need to Confirm - Doctor Appointments'
-//   },
-//   {
-//     path: 'home',
-//     component: HomeComponent,
-//     title: 'Home - Doctor Appointments'
-//   },
-//   { 
-//     path: 'reset-password', 
-//     component: ResetPasswordComponent 
-//   },
-//   {
-//     path: 'change-password',
-//     component: ChangePasswordComponent
-
-//   },
-//   { 
-//     path: 'doctor-register', 
-//     component: DoctorRegisterComponent 
-//   },
-//   { 
-//     path: 'ConfirmEmail', 
-//     component: ConfirmEmailComponent
-
-//   }
-// ];
 
 
 export const routes: Routes = [
@@ -107,33 +45,33 @@ export const routes: Routes = [
         }
       ,
       
-      {
-        path: 'profile',
-        canActivate: [authGuard],
-        children: [
-          {
-            path: '',
-            redirectTo: 'not-found',
-            pathMatch: 'full'
-          },
-          {
-            path: 'patient',
-            loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
-          },
-          // {
-          //   path: 'doctor',
-          //   loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
-          // },
-          // {
-          //   path: 'doctor/edit',
-          //   loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent)
-          // },
-          // {
-          //   path: 'doctor/:id',
-          //   loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
-          // }
-        ]
-      },
+      // {
+      //   path: 'profile',
+      //   canActivate: [authGuard],
+      //   children: [
+      //     {
+      //       path: '',
+      //       redirectTo: 'not-found',
+      //       pathMatch: 'full'
+      //     },
+      //     {
+      //       path: 'patient',
+      //       loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
+      //     },
+      //     {
+      //       path: 'doctor',
+      //       loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+      //     },
+      //     {
+      //       path: 'doctor/edit',
+      //       loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent)
+      //     },
+      //     {
+      //       path: 'doctor/:id',
+      //       loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+      //     }
+      //   ]
+      // },
     {
     path: 'search',
     component: SearchComponent,
