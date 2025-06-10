@@ -88,17 +88,17 @@
             </div>
 
             <div class="mb-3 col-12 col-md-6">
-              <label for="imageFile" class="form-label">Profile Image</label>
+              <label for="image" class="form-label">Profile Image</label>
               <input
-                id="imageFile"
+                id="image"
                 type="file"
                 class="form-control login-form-input rounded-1"
                 (change)="onFileChange($event)"
               />
               <div
                 *ngIf="
-                  doctorForm.get('imageFile')!.invalid &&
-                  doctorForm.get('imageFile')!.touched
+                  doctorForm.get('image')!.invalid &&
+                  doctorForm.get('image')!.touched
                 "
                 class="text-danger"
               >

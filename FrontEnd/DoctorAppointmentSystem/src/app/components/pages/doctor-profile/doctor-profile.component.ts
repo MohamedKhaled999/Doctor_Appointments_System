@@ -33,7 +33,7 @@ export enum CalendarView {
 
 @Component({
   selector: 'app-doctor-profile',
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDatepickerModule, DragDropModule, NotificationsComponent],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDatepickerModule, DragDropModule],
   templateUrl: './doctor-profile.component.html',
   styleUrl: './doctor-profile.component.css'
 })
@@ -93,6 +93,7 @@ export class DoctorProfileComponent implements OnInit {
     this.generateCalendarView(this.currentView, this.viewDate);
     this.generateTimeSlots();
     this.governorates = this.governoratesService.getGovernorates();
+    this.myProfile = this.route.snapshot.params['id'] === undefined;
   }
   generateCalendarView(view: CalendarView, date: Date): void {
     switch (view) {

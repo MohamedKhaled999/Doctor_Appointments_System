@@ -1,4 +1,3 @@
-<app-notifications></app-notifications>
 <div style="padding-top:80px">
     <div class="col-12 pt-3 d-flex justify-content-center gap-3 list-unstyled p-0 mb-3">
         <button class="btn" [ngClass]="{'active-tab patient-tab-active': activeTab === 'details'}"
@@ -81,7 +80,7 @@
                 </div>
             </div>
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-                <button routerLink="/account/change-password" class="btn login-submit">Change Password</button>
+                <button [routerLink]='["/change-password"]' class="btn login-submit">Change Password</button>
                 <input type="submit" class="btn login-submit" [disabled]="patientForm.invalid" value="Save Changes" />
             </div>
         </form>

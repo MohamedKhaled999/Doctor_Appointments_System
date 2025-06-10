@@ -11,6 +11,7 @@
 .patient-appointments-container {
   color: var(--primary-color);
   border: 1px solid var(--secondary-color);
+  height: 600px;
 }
 
 input[readonly] {
@@ -58,9 +59,6 @@ input[readonly] {
   background-color: var(--primary-color);
 }
 
-.patient-appointments-container {
-  height: 600px;
-}
 
 .patient-appointment-card {
   background-image: linear-gradient(to right, #a2d9ff, #e0f7ff) !important;

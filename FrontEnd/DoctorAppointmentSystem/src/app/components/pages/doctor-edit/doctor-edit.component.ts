@@ -30,17 +30,18 @@ export class DoctorEditComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router) {
     this.doctorForm = this.fb.group({
+      id: [{value: '', disabled: true}],
       firstName: [{value: '', disabled: true}],
       lastName: [{value: '', disabled: true}],
       gender: [{value: '', disabled: true}],
       birthDate: [{value: '', disabled: true}],
-      imageFile: [null],
+      image: [null],
       email: [{value: '', disabled: true}],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
       governorate: ['', Validators.required],
       address: ['', Validators.required],
-      latitude: [''],
-      longitude: [''],
+      lat: [''],
+      lng: [''],
       specialty: [{value: '', disabled: true}],
       fees: ['', [Validators.required, Validators.min(0)]],
       waitingTime: ['', [Validators.required, Validators.min(0)]],
@@ -49,15 +50,16 @@ export class DoctorEditComponent implements OnInit {
     this.governorates = this.governoratesService.getGovernorates();
   }
   ngOnInit(): void {
-    this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe(profile => {
+    this.doctorService.getProfile().subscribe(profile => {
       this.doctor = {
+        id: profile.id,
         firstName: profile.name.split(' ')[0],
         lastName: profile.name.split(' ')[1],
         gender: profile.gender ? 'male' : 'female',
         imageUrl: profile.image,
-        about: profile.qualifications,
+        about: profile.about,
         fees: profile.fees,
-        specialty: profile.specialty,
+        specialty: profile.speciality? profile.speciality : profile.specialty,
         waitingTime: profile.waitingTime,
         governorate: profile.governorate,
         address: profile.location,
@@ -68,9 +70,9 @@ export class DoctorEditComponent implements OnInit {
         birthDate: profile.birthDate ? new Date(profile.birthDate) : new Date(),
         image: null
       };
-      console.log('Doctor Profile:', this.doctor);
       
     this.doctorForm.patchValue({
+      id: this.doctor.id,
       firstName: this.doctor.firstName,
       lastName: this.doctor.lastName,
       specialty: this.doctor.specialty,
@@ -79,8 +81,8 @@ export class DoctorEditComponent implements OnInit {
       about: this.doctor.about,
       governorate: this.governorates[parseInt(this.doctor.governorate) - 1],
       address: this.doctor.address,
-      latitude: this.doctor.lat,
-      longitude: this.doctor.lng,
+      lat: this.doctor.lat,
+      lng: this.doctor.lng,
       phoneNumber: this.doctor.phoneNumber,
       gender: this.doctor.gender,
       birthDate: this.formatDate(this.doctor.birthDate),
@@ -124,16 +126,16 @@ export class DoctorEditComponent implements OnInit {
       marker.on('dragend', (event: any) => {
         const position = event.target.getLatLng();
         this.doctorForm.patchValue({
-          latitude: position.lat,
-          longitude: position.lng
+          lat: position.lat,
+          lng: position.lng
         });
       });
       map.on('click', (event: any) => {
         const position = event.latlng;
         marker.setLatLng(position);
         this.doctorForm.patchValue({
-          latitude: position.lat,
-          longitude: position.lng
+          lat: position.lat,
+          lng: position.lng
         });
       });
       this.map = map;
@@ -146,8 +148,8 @@ export class DoctorEditComponent implements OnInit {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         this.doctorForm.patchValue({
-          latitude,
-          longitude
+          lat: latitude,
+          lng: longitude,
         });
         this.map.setView([latitude, longitude], 13);
         this.marker.setLatLng([latitude, longitude]);
@@ -164,29 +166,40 @@ export class DoctorEditComponent implements OnInit {
   onFileChange(event: any): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      this.doctorForm.patchValue({
-        imageFile: file
-      });
+      if (file) {
+        this.doctorForm.patchValue({
+          image: file
+        });
+      }
     }
   }
   save() {
-    if (this.doctorForm.invalid) {
+    if (this.doctorForm?.invalid) {
       this.doctorForm.markAllAsTouched();
       return;
     }
-    const formData = new FormData();
+    this.doctorForm.patchValue({
+      governorate: this.governorates.indexOf(this.doctorForm.value.governorate) + 1,
+      id: this.doctor?.id
+    });
+    // const formData = new FormData();
     const raw = this.doctorForm.getRawValue();
-    if (raw.imageFile) {
-      formData.append('image', raw.imageFile);
-    }
-    formData.append('phoneNumber', raw.phoneNumber);
-    formData.append('governorate', raw.governorate);
-    formData.append('address', raw.address);
-    formData.append('lat', raw.latitude);
-    formData.append('lng', raw.longitude);
-    formData.append('fees', raw.fees);
-    formData.append('waitingTime', raw.waitingTime);
-    formData.append('about', raw.about);
+    console.log('Raw Form Data:', raw);
+    
+    // if (raw.image) {
+    //   formData.append('image', raw.image);
+    // }
+    // formData.append('id', this.doctor?.id.toString() || '');
+    // formData.append('phoneNumber', raw.phoneNumber);
+    // formData.append('governorate', raw.governorate);
+    // formData.append('address', raw.address);
+    // formData.append('lat', raw.latitude);
+    // formData.append('lng', raw.longitude);
+    // formData.append('fees', raw.fees);
+    // formData.append('waitingTime', raw.waitingTime);
+    // formData.append('about', raw.about);
+    // console.log('Form Data:', formData);
+    
     // this.doctorService.updateProfile(formData).subscribe({
     //   next: (res) =>
     //     {
@@ -196,10 +209,12 @@ export class DoctorEditComponent implements OnInit {
     //         icon: 'success',
     //         confirmButtonText: 'OK'
     //       }).then(() => {
-    //         this.router.navigate(['/doctor-profile/' + this.doctor!.id]);
+    //         this.router.navigate(['/profile/doctor/']);
     //       });
     //       },
     //   error: (err) => {
+    //     console.log('Error updating profile:', err);
+        
     //     Swal.fire({
     //       title: 'Error',
     //       text: 'There was an error updating your profile. Please try again later.',
