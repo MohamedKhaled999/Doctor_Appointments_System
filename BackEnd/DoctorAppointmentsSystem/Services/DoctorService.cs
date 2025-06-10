@@ -107,8 +107,8 @@ namespace Services
             return doctors.ToList();
 
         }
-        
-        
+
+
         public async Task<SearchPageDTO> SearchPageDTO(FilterSearchDTO filter)
         {
             var doctors = await SearchDoctor(filter);
@@ -120,7 +120,7 @@ namespace Services
                     (filter.Gender == Shared.Enums.Gender.All || doc.Gender == (Domain.Models.Enums.Gender)filter.Gender) &&
                     (filter.Governorate == Shared.Enums.Governorate.All || doc.Governorate == (Domain.Models.Enums.Governorate)filter.Governorate) &&
                     doc.Fees >= filter.MinPrice && doc.Fees <= filter.MaxPrice && doc.WaitingTime <= filter.WaitingTime;
-            
+
             SpecificationsBase<Doctor> spec = new SpecificationsBase<Doctor>(condition);
             var filtereddoctors = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(spec);
             return new SearchPageDTO
@@ -131,7 +131,7 @@ namespace Services
         }
         public async Task ApproveDoctor(int docID)
         {
-            var doc = await _unitOfWork.GetRepository<Doctor,int>().GetByIdAsync(docID);
+            var doc = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(docID);
             if (doc == null)
                 throw new ValidationException("No doctor with this id");
             doc.IsApproved = true;
@@ -148,7 +148,7 @@ namespace Services
             var unApprovedDoctorsDTO = _mapper.Map<List<UnApprovedDoctorDTO>>(unApprovedDoctors);
             return unApprovedDoctorsDTO;
         }
-        public async Task ChangeImageUrl(int docId,string url)
+        public async Task ChangeImageUrl(int docId, string url)
         {
             var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(docId);
             if (doctor == null)
@@ -156,7 +156,6 @@ namespace Services
             doctor.ImageURL = url;
             _unitOfWork.GetRepository<Doctor, int>().Update(doctor);
             await _unitOfWork.SaveChangesAsync();
-
         }
     }
 }
