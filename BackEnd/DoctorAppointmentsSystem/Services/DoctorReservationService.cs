@@ -3,6 +3,7 @@ using Domain.Contracts;
 using Domain.Models;
 using Domain.Models.Enums;
 using Services.Abstraction;
+using Services.Specifications.Appointment;
 using Services.Specifications.DoctorReservation;
 using Shared.DTOs.Appointment;
 using Shared.DTOs.Doctor;
@@ -15,11 +16,11 @@ namespace Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public async Task<List<AppointmentDTO>?> GetAppointmentsByReservationId(int id)
+        public async Task<List<AppointmentReservationDTO>?> GetAppointmentsByReservationId(int id)
         {
-            var specs = new SpecificationsBase<Appointment>(a => a.DoctorReservationID == id);
+            var specs = new AppointmentPatientDoctorSpecifications(a => a.DoctorReservationID == id && a.Canceled == false);
             var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(specs);
-            return _mapper.Map<List<AppointmentDTO>?>(appointments);
+            return _mapper.Map<List<AppointmentReservationDTO>?>(appointments);
         }
 
         public async Task<DoctorFeesDTO> GetDoctorByReservationId(int id)

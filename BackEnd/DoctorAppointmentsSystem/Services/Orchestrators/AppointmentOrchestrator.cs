@@ -80,7 +80,7 @@ namespace Services.Orchestrators
             return _appointmentService.GetCount(patient.Id);
         }
 
-        public async Task<List<AppointmentDTO>?> GetAppointmentsByReservationId(int reservationId, int appUserId)
+        public async Task<List<AppointmentReservationDTO>?> GetAppointmentsByReservationId(int reservationId, int appUserId)
         {
             var reservation = await _doctorReservationService.GetDoctorReservationByID(reservationId);
             var doctor = await _doctorService.GetByAppUserIdAsync(appUserId);

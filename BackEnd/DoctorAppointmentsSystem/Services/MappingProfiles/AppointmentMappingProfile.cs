@@ -15,6 +15,9 @@ namespace Services.MappingProfiles
                 .ForMember(dest => dest.Location, src => src.MapFrom(src => src.DoctorReservation.Doctor.Location + ", " + src.DoctorReservation.Doctor.Governorate))
                 .ForMember(dest => dest.Specialty, src => src.MapFrom(src => src.DoctorReservation.Doctor.Specialty.Name))
                 .ForMember(dest => dest.DoctorImagePath, src => src.MapFrom(src => src.DoctorReservation.Doctor.ImageURL));
+
+            CreateMap<Appointment, AppointmentReservationDTO>()
+                .ForMember(dest => dest.Patient, src => src.MapFrom(src => src.Patient.FirstName + " " + src.Patient.LastName));
         }
     }
 }

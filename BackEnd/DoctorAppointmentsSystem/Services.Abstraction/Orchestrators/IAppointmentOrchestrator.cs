@@ -11,7 +11,7 @@ namespace Services.Abstraction.Orchestrators
         Task<List<AppointmentDTO>?> GetAppointmentsByAppUserIdAsync(int appUserId, int pageIndex, int pageSize);
         Task<string[]?> GetAppointmentDocuments(int appointmentId, int currentPatientAppUserId);
         Task<int> GetAppointmentCountByPatient(int appUserId);
-        Task<List<AppointmentDTO>?> GetAppointmentsByReservationId(int reservationId, int appUserId);
+        Task<List<AppointmentReservationDTO>?> GetAppointmentsByReservationId(int reservationId, int appUserId);
         Task<string> CreatePaymentSessionAsync(int patientAppUserId, int doctorReservationId);
         Task AddAppointmentDocuments(int appointmentId, IFormFile document, int currentPatientAppUserId);
         Task AddAppointmentPrescription(int reservationId, int appointmentId, IFormFile document, int currentDoctorAppUserId);

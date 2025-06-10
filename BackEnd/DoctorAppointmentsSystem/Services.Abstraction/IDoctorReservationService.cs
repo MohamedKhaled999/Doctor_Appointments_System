@@ -6,7 +6,7 @@ namespace Services.Abstraction
 {
     public interface IDoctorReservationService
     {
-        Task<List<AppointmentDTO>?> GetAppointmentsByReservationId(int id);
+        Task<List<AppointmentReservationDTO>?> GetAppointmentsByReservationId(int id);
         Task<DoctorFeesDTO> GetDoctorByReservationId(int id);
         Task EditDoctorReservation(NewResDTO res);
         Task DeleteDoctorReservation(int resId);
