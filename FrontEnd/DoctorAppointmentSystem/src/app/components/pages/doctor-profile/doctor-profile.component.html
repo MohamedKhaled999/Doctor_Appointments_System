@@ -1,5 +1,4 @@
-<app-notifications></app-notifications>
-<div class="container-fluid pt-5" style="padding-top: 80px;">
+<div class="container-fluid" style="padding-top: 80px;">
   <div class="row">
     <!-- Left Sidebar: Doctor Info -->
     <div class="col-md-4">
@@ -20,12 +19,12 @@
 
         <h3 class="mt-2">Dr. {{ doctor?.name }}</h3>
         <p class="fw-bold">{{ doctor?.title }}</p>
-        <p class="mb-2">{{ doctor?.qualifications }}</p>
+        <p class="mb-2">{{ doctor?.about }}</p>
         <a [href]="'tel:' + doctor?.phone" class="btn w-100 my-2 col-12 SP-callBTN">
           <i class="fa-solid fa-phone-volume me-2"></i> {{ doctor?.phone }}
         </a>
 
-        <ng-container>
+        <ng-container *ngIf="myProfile">
           <a [routerLink]="['/profile/doctor/edit']" class="btn col-12 SP-callBTN mt-3 w-100 my-1">
             <i class="fa-solid fa-pen-to-square"></i> Edit Profile
           </a>
@@ -47,7 +46,7 @@
           <a class="nav-link SP-primaryText" [class.active]="selectedTab === 'reviews'"
             (click)="setTab('reviews')">Reviews</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="myProfile">
           <a class="nav-link SP-primaryText" [class.active]="selectedTab === 'calendar'"
             (click)="setTab('calendar')">Calendar</a>
         </li>
@@ -154,7 +153,7 @@
         </div>
 
         <!-- CALENDAR TAB (Doctors Only) -->
-        <div class="tab-pane fade" [class.active]="selectedTab === 'calendar'"
+        <div class="tab-pane fade" [class.active]="selectedTab === 'calendar'" *ngIf="myProfile"
           [class.show]="selectedTab === 'calendar'">
           <!-- <form (ngSubmit)="saveSchedule()" style="color: var(--primary-color)">
             <h3>Assign Default Schedule</h3>

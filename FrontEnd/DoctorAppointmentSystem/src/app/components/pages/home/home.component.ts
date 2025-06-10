@@ -9,7 +9,7 @@ import { Specialty } from '../../../core/interfaces/specialty.interface';
 import { CommonModule } from '@angular/common';
 import 'swiper/css';
 import { Navigation } from 'swiper/modules';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RatingComponent } from '../../shared/rating/rating.component';
 
 import { isPlatformBrowser } from '@angular/common';
@@ -24,6 +24,7 @@ import { ChangeDetectorRef } from '@angular/core';
     RouterLink,
     RatingComponent, 
   ],
+  
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -49,12 +50,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
+   
     @Inject(PLATFORM_ID) private platformId: Object,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+
+
     this.loadHomeData();
+    console.log('Specialties:', this.specialties);
     console.log(this.filteredDoctors);
     if (isPlatformBrowser(this.platformId)) {
       AOS.init();
