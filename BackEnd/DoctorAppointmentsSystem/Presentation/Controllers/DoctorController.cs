@@ -50,9 +50,10 @@ namespace Presentation.Controllers
             return Ok(doctors);
         }
         [HttpGet("Reviews")]
-        public async Task<IActionResult> GetDoctorReviews(int page = 1, int pageSize = 5)
+        public async Task<IActionResult> GetDoctorReviews(int docID,int page = 1, int pageSize = 5)
         {
-            var reviews = await _serviceManager.DoctorOrchestrator.GetDoctorReviews(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), page, pageSize);
+            var reviews = await _serviceManager.DoctorOrchestrator.GetDoctorReviews(docID, page, pageSize);
+            
             return Ok(reviews);
         }
     }

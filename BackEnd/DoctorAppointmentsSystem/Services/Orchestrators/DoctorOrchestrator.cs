@@ -31,10 +31,10 @@ namespace Services.Orchestrators
             var ImgUrl = await uploadService.UploadFile(image);
             await doctorService.ChangeImageUrl(doctor.ID,ImgUrl);
         }
-        public async Task<ICollection<ReviewDTO>> GetDoctorReviews(int appuserid, int pageNumber = 1, int pageSize = 10)
+        public async Task<ICollection<ReviewDTO>> GetDoctorReviews(int docID, int pageNumber = 1, int pageSize = 10)
         {
-            var doctor = await doctorService.GetByAppUserIdAsync(appuserid);
-            var reviews = await _serviceManger.ReviewService.GetDoctorReviews(doctor.ID, pageNumber, pageSize);
+            //var doctor = await doctorService.GetByAppUserIdAsync(appuserid);
+            var reviews = await _serviceManger.ReviewService.GetDoctorReviews(docID, pageNumber, pageSize);
             return reviews;
         }
         public async Task<DoctorUserProfileDTO?> GetUserProfileByAppUserIdAsync(int appUserId)
