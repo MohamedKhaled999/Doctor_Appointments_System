@@ -15,7 +15,7 @@ import { RatingComponent } from '../../shared/rating/rating.component';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-
+import { DoctorSearchService } from '../../../core/services/doctor-search.service';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -50,9 +50,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
-   
     @Inject(PLATFORM_ID) private platformId: Object,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public DoctorSearchService: DoctorSearchService
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.loadHomeData();
     console.log('Specialties:', this.specialties);
+    console.log('doctors:',this.doctors) ;
     console.log(this.filteredDoctors);
     if (isPlatformBrowser(this.platformId)) {
       AOS.init();

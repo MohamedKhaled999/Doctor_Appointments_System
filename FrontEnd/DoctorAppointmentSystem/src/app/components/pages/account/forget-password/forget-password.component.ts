@@ -134,47 +134,50 @@ export class ForgetPasswordComponent {
       
           this.accountService.forgetPassword(forgetPasswordData).subscribe({
             next: (response) => {
-              if (response && response.token) {
-           
+              if (response?.token) {
                 console.log('Token received:', response.token);
-            
-                Swal.fire({
-                  title: 'Success!',
-                  text: 'Password reset link has been sent to your email.',
-                  icon: 'success',
-                  confirmButtonText: 'OK'
-                }).then(() => {
-                  this.router.navigate(['/login']);
-                });
-              } else {
-                // If there's no token, just show the success message
-                Swal.fire({
-                  title: 'Success!',
-                  text: 'Password reset link has been sent to your email.',
-                  icon: 'success',
-                  confirmButtonText: 'OK'
-                }).then(() => {
-                  this.router.navigate(['/login']);
-                });
               }
-            },
-            error: (err) => {
-              this.isSubmitting = false;
-              let errorMessage = 'Failed to process your request';
-      
-              if (err.status === 404) {
-                errorMessage = 'User not found with this email.';
-              } else if (err.error?.message) {
-                errorMessage = err.error.message;
-              }
-      
+              
               Swal.fire({
-                title: 'Error',
-                text: errorMessage,
+                title: 'Success!',
+                text: 'Password reset link has been sent to your email.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+              }).then(() => {
+                this.router.navigate(['/login']);
+              });
+            },
+            // error: (httpError) => {
+            //   this.isSubmitting = false;
+              
+            
+            //   console.error('Forgot password error:', {
+            //     status: httpError.status,
+            //     statusText: httpError.statusText,
+            //     url: httpError.url,
+            //     error: httpError.error 
+            //   });
+          
+            //   const errorMessage = httpError.error?.ErrorMessage 
+            //                       || httpError.error?.message 
+            //                       || 'Failed to send password reset link. Please try again.';
+          
+            //   Swal.fire({
+            //     icon: 'error',
+            //     title: 'Request Failed',
+            //     text: errorMessage,
+            //     confirmButtonText: 'OK'
+            //   });
+            // }
+            error: (error) => {
+              Swal.fire({
                 icon: 'error',
+                title: 'Error',
+                text: error.message || 'An error occurred', 
                 confirmButtonText: 'OK'
               });
             }
+      
           });
         }
       }

@@ -18,7 +18,7 @@ const customEmailPattern = /^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.com$/;
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink,ExtrenalLoginComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ExtrenalLoginComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -35,7 +35,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private accountService: AccountService,
     private socialAuthService: SocialauthService,
-    private dataService:DataManagementService,
+    private dataService: DataManagementService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
@@ -64,30 +64,30 @@ export class LoginComponent {
     this.isLoading = true;
     const { email, password, rememberMe } = this.loginForm.value;
 
-      console.log('Login attempt:', { email, password, rememberMe });
+    console.log('Login attempt:', { email, password, rememberMe });
+
     this.accountService.login(email, password).subscribe({
       next: (response) => {
         this.storeAuthData(response, rememberMe);
         console.log('Login successful:', response);
-        
         this.router.navigate(['/home']);
       },
-      error: (error) =>{
-        error=error.error;
-        console.log(error);
-        if (error.StatusCode === 401 ) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Email',
-            text: error.ErrorMessage,
-            confirmButtonText: 'OK'
-          });
-        } else {
-          this.handleLoginError(error);
-        }
-      }    });
-  }
-
+      error: (httpError) => {
+   
+        const errorObj = httpError.error; 
+        const errorMessage = errorObj?.ErrorMessage || "Login failed. Please try again.";
+    
+        console.error('Login error:', httpError);
+        
+        Swal.fire({
+          icon: 'warning',
+          title: 'Login Error',
+          text: errorMessage,
+          confirmButtonText: 'OK'
+        });
+      }
+    });
+}
   private storeAuthData(response: AuthResponse, remember: boolean): void {
  
     localStorage.setItem('userToken', response.token);

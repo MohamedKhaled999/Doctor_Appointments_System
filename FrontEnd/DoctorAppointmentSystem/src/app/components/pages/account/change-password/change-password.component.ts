@@ -72,16 +72,15 @@ export class ChangePasswordComponent {
           this.changePasswordForm.reset();
           this.isSubmitting = false;
         },
-        error: (err) => {
+        error: (httpError) => {
           this.isSubmitting = false;
-          let errorMessage = 'Failed to change password';
           
-          if (err.error?.message) {
-            errorMessage = err.error.message;
-          } else if (err.error) {
-            errorMessage = err.error;
-          }
-
+         
+          const errorObj = httpError.error; 
+          const errorMessage = errorObj?.ErrorMessage || 'Failed to change password';
+      
+          console.error('Password change error:', httpError);
+      
           Swal.fire({
             toast: true,
             position: 'top-end',
