@@ -1,14 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Services.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Presentation.ActionFilters
 {
@@ -23,13 +15,8 @@ namespace Presentation.ActionFilters
         {
             if (!IsDoctorApproved(context).Result)
             {
-                context.HttpContext.Response.StatusCode = 403; 
-                context.HttpContext.Response.ContentType = "application/json";
-                context.HttpContext.Response.WriteAsync("You are not an approved doctor. Please contact support for assistance.");
-                context.Result = new ForbidResult();
-                return;
+                throw new UnauthorizedAccessException("This doctor is not approved yet. Please contact support for assistance.");
             }
-            //context.Result = new OkResult(); 
         }
         public void OnActionExecuted(ActionExecutedContext context)
         {
@@ -38,8 +25,8 @@ namespace Presentation.ActionFilters
         private async Task<bool> IsDoctorApproved(ActionExecutingContext context)
         {
             var AppId = int.Parse(context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return await _serviceManager.DoctorService.IsDoctorUserApproved(AppId); 
+            return await _serviceManager.DoctorService.IsDoctorUserApproved(AppId);
         }
     }
-    
+
 }
