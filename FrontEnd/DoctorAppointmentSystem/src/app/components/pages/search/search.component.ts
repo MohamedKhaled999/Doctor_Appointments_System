@@ -24,15 +24,15 @@ export class SearchComponent implements OnInit {
 
     
     });
-    this.currentUrl = this.getCurrentUrl;
-    if (this.currentUrl.includes('payment-success')) 
-      {
-      this.showSuccess();
-    }
-    else if(this.currentUrl.includes('payment-failed')) // Just check what it returns when failing
-    {
-      this.showError();
-    }
+    // this.currentUrl = this.getCurrentUrl;
+    // if (this.currentUrl.includes('payment-success')) 
+    //   {
+    //   this.showSuccess();
+    // }
+    // else if(this.currentUrl.includes('payment-failed')) // Just check what it returns when failing
+    // {
+    //   this.showError();
+    // }
   }
 
   showSuccess() {

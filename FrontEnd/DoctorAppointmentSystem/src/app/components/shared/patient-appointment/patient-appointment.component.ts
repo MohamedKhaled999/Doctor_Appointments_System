@@ -25,7 +25,6 @@ export class PatientAppointmentComponent {
    *
    */
   constructor(private patientService: PatientService, private matDialog: MatDialog) {
-    console.log('PatientAppointmentComponent initialized with appointment:', this.appointment);
   }
   get isPast() {
     return this.appointment ? new Date(this.appointment.endTime) < new Date() : false;
@@ -42,6 +41,8 @@ export class PatientAppointmentComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         if (this.appointment) {
+          console.log('Cancelling appointment:', this.appointment.id);
+          
           this.patientService.cancelAppoinment(this.appointment.id).subscribe({
             next: () => {
               Swal.fire({

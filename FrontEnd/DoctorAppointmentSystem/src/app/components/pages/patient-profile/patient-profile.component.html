@@ -6,7 +6,7 @@
             (click)="switchTab('appointments')"><span>My Appointments</span></button>
     </div>
     <!-- Details Tab -->
-    <div id="patient-tab-1" class="row w-75 patient-profile-container mx-auto p-3 shadow-sm rounded-4"
+    <div id="patient-tab-1" class="row w-75 patient-profile-container mx-auto p-3 shadow-sm rounded-4" style="margin-bottom: 16px;"
         *ngIf="activeTab === 'details'">
         <div class="col-12 col-md-2 text-center">
             <!-- <img id="patient-profile-image" src="/images/default.png" alt="patient image"
@@ -80,14 +80,14 @@
                 </div>
             </div>
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-                <button [routerLink]='["/change-password"]' class="btn login-submit">Change Password</button>
+                <a [routerLink]='["/change-password"]' class="btn login-submit">Change Password</a>
                 <input type="submit" class="btn login-submit" [disabled]="patientForm.invalid" value="Save Changes" />
             </div>
         </form>
     </div>
 
     <!-- Appointments Tab -->
-    <div id="patient-tab-2" class="row w-75 patient-appointments-container mx-auto shadow-sm rounded-4"
+    <div id="patient-tab-2" class="row w-75 patient-appointments-container mx-auto shadow-sm rounded-4"  style="margin-bottom: 16px;"
         *ngIf="activeTab === 'appointments'">
         <swiper-container class="w-100 h-100 p-3 mx-auto position-relative" pagination="true"
             pagination-clickable="true" slides-per-view="1" grid-rows="2" space-between="40">

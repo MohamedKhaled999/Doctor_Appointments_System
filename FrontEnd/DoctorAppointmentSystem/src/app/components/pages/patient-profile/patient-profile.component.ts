@@ -42,16 +42,19 @@ export class PatientProfileComponent implements OnInit {
   refreshAppointments() {
     this.patientService.getAppoinments(1, 500).subscribe((appointments: Appointment[]) => {
       if (!this.patient) return;
+      console.log(appointments);
+      
       this.patient.appointments = appointments;
     });
   }
   ngOnInit(): void {
     this.patientService.getProfile().subscribe((response: Patient) => {
       this.patient = response;
-      // this.patientService.getAppoinments(1, 500).subscribe((appointments: Appointment[]) => {
-      //   if (!this.patient) return;
-      //   this.patient.appointments = appointments;
-      // });
+      this.patientService.getAppoinments(1, 500).subscribe((appointments: Appointment[]) => {
+        if (!this.patient) return;
+        appointments.reverse();
+        this.patient.appointments = appointments;
+      });
       this.patientForm.patchValue({
         firstName: this.patient.firstName,
         lastName: this.patient.lastName,

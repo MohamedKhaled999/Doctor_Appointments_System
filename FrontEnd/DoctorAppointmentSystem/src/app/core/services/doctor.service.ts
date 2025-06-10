@@ -52,4 +52,5 @@ export class DoctorService {
       })
     )
   }
+  // getReviews(doctorId: number)
 }
