@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReservationCardComponent } from '../reservation-card/reservation-card.component';
 import { DoctorReservationService } from '../../../../core/services/doctor-reservations.service';
+import { DataManagementService } from '../../../../core/services/data-management.service';
 @Component({
   selector: 'app-doctor-card',
   imports: [
@@ -24,7 +25,7 @@ export class DoctorCardComponent implements OnInit {
   authService : any;
   showModal: any;
   getNextDate:any;
-  constructor(private DoctorReservationService: DoctorReservationService) {
+  constructor(private DoctorReservationService: DoctorReservationService, public userData :DataManagementService ) {
 
   }
   ngOnInit() {

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DataManagementService } from '../../../../core/services/data-management.service';
 import { RouterLink } from '@angular/router';
+import { DoctorReservationService } from '../../../../core/services/doctor-reservations.service';
 
 @Component({
   selector: 'app-reservation-card',
@@ -22,19 +23,16 @@ export class ReservationCardComponent {
   toTime: string = '';
   Role: any;
   isAuthenticated : boolean = false;
-  constructor(public userData :DataManagementService){}
+
+  constructor(public userData :DataManagementService, private DoctorReservationService : DoctorReservationService){}
   ngOnInit() {
     if (this.appointment.IsAvailable) {
-      // This line extracts the time part (HH:mm) from the ISO string "2025-06-10T18:00:00"
-      // For example, "2025-06-10T18:00:00" => "18:00"
       this.fromTime = this.appointment.StartTime.split('T')[1].slice(0,5);
       this.fromTime = this.convertToAmPm(this.fromTime);
       this.toTime = this.appointment.EndTime.split('T')[1].slice(0,5)//times[1] || '';
       this.toTime = this.convertToAmPm(this.toTime);
       console.log("ngOnInit","reservation-card.component.ts");
       console.log(Date.now());
-      
-
     }
     
     // // this.Role = this.userData.UserRole();
@@ -53,8 +51,21 @@ export class ReservationCardComponent {
     
   }
   book(ResId: number) : void{
+
     console.log("Book button clicked for reservation ID:", ResId);
-    
+    this.DoctorReservationService.isLoading.set(true);
+    this.DoctorReservationService.bookAnAppointment(ResId,localStorage.getItem('userToken')??'').subscribe({
+      next: (response) => {
+        this.DoctorReservationService.paymentPageLink.set(response);
+        this.DoctorReservationService.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error booking an appointment:', error);
+        this.DoctorReservationService.isLoading.set(false);
+      }
+      
+    });
+
     
   }
   convertToAmPm(time24: string): string {

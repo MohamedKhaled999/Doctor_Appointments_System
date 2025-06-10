@@ -48,14 +48,6 @@ export class DoctorFiltersComponent implements AfterViewInit {
 
 
  public isBrowser: boolean;
-  // loading: boolean = false;
-  // doctors: any[] = [];
-  // currentPage: number = 1;
-  // pageSize: number = 6;
-  // numberOfPages: number = 0;
-  // numberOfRecords: number = 0;
-  // totalDoctors: number = 0;
-
   constructor(@Inject(PLATFORM_ID) private platformId: any, private DoctorSearchService: DoctorSearchService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
@@ -125,14 +117,6 @@ ngAfterViewInit(): void {
 
   }
 
-    // doctorName: '',
-    // speciality: Specialities.All,
-    // governorate: Governorate.All,
-    // gender: Gender.All,
-    // waitingTime: 60, // Default waiting time in minutes
-    // minPrice: 0,
-    // maxPrice: 1000,
-
   onFilter(): void {
     console.log('Filters applied:', this.filters);
     this.DoctorSearchService.doctorName.set(this.filters.doctorName);
@@ -166,13 +150,7 @@ ngAfterViewInit(): void {
         console.log('Total pages:', this.DoctorSearchService.numberOfPages());
         this.DoctorSearchService.numberOfRecords.set(this.DoctorSearchService.numberOfPages() * this.DoctorSearchService.pageSize());
         this.DoctorSearchService.totalDoctors.set(response.total_results);
-        this.DoctorSearchService.pageIndex.set(response.page); // Update the current page index  555555555555555555555555555555555555
-        // this.pageSize = response.pageSize || this.pageSize; // Ensure pageSize is set correctly
-        // this.maxPages = Math.ceil(this.totalDoctors / this.pageSize);
-
-        // After loading doctors, fetch their details to get durations
-        // this.loadDoctorDetails();
-
+        this.DoctorSearchService.pageIndex.set(response.page);
         this.DoctorSearchService.isLoading.set(false);
         console.log("Tracing: Doctors loaded:", this.DoctorSearchService.doctors());
         console.log("Tracing: Total pages:", this.DoctorSearchService.numberOfPages());
@@ -187,15 +165,41 @@ ngAfterViewInit(): void {
       }
     });
   }
-  onReset(): void {
-    this.filters = {
+  isDefaultFilters(): boolean {
+    const defaultFilters: Filter = {
       doctorName: '',
       speciality: Specialities.All,
       governorate: Governorate.All,
       gender: Gender.All,
-      waitingTime: 0,
+      waitingTime: 60,
       minPrice: 0,
       maxPrice: 1000
     };
+    return (
+      this.filters.doctorName === defaultFilters.doctorName &&
+      this.filters.speciality === defaultFilters.speciality &&
+      this.filters.governorate === defaultFilters.governorate &&
+      this.filters.gender === defaultFilters.gender &&
+      this.filters.waitingTime === defaultFilters.waitingTime &&
+      this.filters.minPrice === defaultFilters.minPrice &&
+      this.filters.maxPrice === defaultFilters.maxPrice
+    );
+  }
+
+  onReset(): void {
+    const defaultFilters: Filter = {
+      doctorName: '',
+      speciality: Specialities.All,
+      governorate: Governorate.All,
+      gender: Gender.All,
+      waitingTime: 60,
+      minPrice: 0,
+      maxPrice: 1000
+    };
+
+    if (!this.isDefaultFilters()) {
+      this.filters = { ...defaultFilters };
+      this.onFilter();
+    }
   }
 }

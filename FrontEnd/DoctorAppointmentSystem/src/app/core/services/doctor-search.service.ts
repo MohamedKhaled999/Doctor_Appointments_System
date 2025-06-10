@@ -142,8 +142,6 @@ export class DoctorSearchService {
     }));
   }
 
-  
-
 //   private transformReservation(apiReservation: any): reservation {
 //     return {
 //       // Map reservation fields according to your reservation interface

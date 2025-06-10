@@ -10,9 +10,11 @@ import { Specialities } from '../enums/speciality.enum';
 import { Gender } from '../enums/gender.enum';
 import { effect } from '@angular/core';
 import { DoctorListComponent } from '../../components/pages/search/doctor-list/doctor-list.component';
+import { DataManagementService } from './data-management.service';
 @Injectable({ providedIn: 'root' })
 export class DoctorReservationService {
 
+    constructor(private userData: DataManagementService){}
   // Base URL for the doctor API
     private readonly apiUrl = `${environment.apiUrl}/doctor/reservations`;
     private http = inject(HttpClient);
@@ -20,6 +22,7 @@ export class DoctorReservationService {
   // Signal containing all doctors
 //   doctors = signal<Doctor[]>([]);
     isLoading = signal<boolean>(false);
+    paymentPageLink = signal<string>('');
 //   currentPage = signal<number>(1);
 //   totalDoctors = signal<number>(0);
 //   numberOfPages = signal<number>(0);
@@ -27,7 +30,6 @@ export class DoctorReservationService {
 //   maxPages = signal<number>(0);
 //   pageSize = signal<number>(6);
 //   pageIndex = signal<number>(1);
-
 //   doctorName = signal<string>('');
 //   speciality = signal<Specialities>(Specialities.All);
 //   governorate = signal<Governorate>(Governorate.All);
@@ -38,23 +40,30 @@ export class DoctorReservationService {
 //   pageIndexSource = signal<string>(''); // 'list', 'filter', etc.
 
 
-getReservations(doctorId: number = 1): Observable<ReservationResponse> {
-    return this.http.get<any[]>(`${this.apiUrl}?doctorId=${doctorId}`).pipe(
-        map((response: any[]) => ({
-            reservations: response.map(res => ({
-                ResId: res.id,
-                DoctorId: res.doctorID,
-                Day: res.day,
-                StartTime: res.startTime,
-                EndTime: res.endTime,
-                IsAvailable: res.isAvailable
-            }))
-        })),
-        catchError(error => {
-            console.error('Error fetching reservations:', error);
-            throw error;
-        })
-    );
-}
-
+    getReservations(doctorId: number = 1): Observable<ReservationResponse> {
+        return this.http.get<any[]>(`${this.apiUrl}?doctorId=${doctorId}`).pipe(
+            map((response: any[]) => ({
+                reservations: response.map(res => ({
+                    ResId: res.id,
+                    DoctorId: res.doctorID,
+                    Day: res.day,
+                    StartTime: res.startTime,
+                    EndTime: res.endTime,
+                    IsAvailable: res.isAvailable
+                }))
+            })),
+            catchError(error => {
+                console.error('Error fetching reservations:', error);
+                throw error;
+            })
+        );
+    }
+    bookAnAppointment(ResId: number, token: string): Observable<any> {
+        return this.http.post<any>(
+            `${environment.apiUrl}/patient/appointments?doctorReservationId=${ResId}`,
+            {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+        );
+    }
 }

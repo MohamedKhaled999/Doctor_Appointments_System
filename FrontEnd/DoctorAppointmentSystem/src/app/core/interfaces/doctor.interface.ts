@@ -8,9 +8,10 @@ interface Doctor {
   title: string;
   gender: string;
   image: string;
-  qualifications: string;
+  about: string;
   fees: number;
   specialty: string;
+  speciality?: string; // Optional for backward compatibility
   rating: number;
   waitingTime: number;
   governorate: string;

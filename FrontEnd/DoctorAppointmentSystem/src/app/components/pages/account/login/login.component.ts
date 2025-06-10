@@ -73,12 +73,13 @@ export class LoginComponent {
         this.router.navigate(['/home']);
       },
       error: (error) =>{
-      
-        if (error.status === 401 ) {
+        error=error.error;
+        console.log(error);
+        if (error.StatusCode === 401 ) {
           Swal.fire({
             icon: 'warning',
-            title: 'Email Not Confirmed',
-            text: 'Please confirm your email address before logging in.',
+            title: 'Email',
+            text: error.ErrorMessage,
             confirmButtonText: 'OK'
           });
         } else {

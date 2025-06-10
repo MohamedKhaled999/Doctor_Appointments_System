@@ -22,7 +22,6 @@ import {Register  } from "../../../../core/interfaces/register";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RecaptchaDirective,
     RouterLink
   ],
   

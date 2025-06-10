@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, signal } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { catchError, of, Subject } from 'rxjs';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
+import { Notification } from '../interfaces/notification.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class NotificationService implements OnDestroy {
   constructor(private http: HttpClient) { 
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('https://doc-net2.runasp.net/hub', {
-        accessTokenFactory: () => localStorage.getItem('token') || ''
+        accessTokenFactory: () => localStorage.getItem('userToken') || ''
       })
       .withAutomaticReconnect()
       .build();
@@ -23,8 +24,16 @@ export class NotificationService implements OnDestroy {
     this.hubConnection.start()
       .catch(err => console.error('Error establishing SignalR connection:', err));
 
-    this.hubConnection.on('newNotification', (notification: Notification) => {
-      this.notificationSubject.next(notification);
+    this.hubConnection.on('newNotification', (notification: string) => {
+      let notificationObj = JSON.parse(notification);
+      notificationObj = {
+        id: notificationObj.Id,
+        message: notificationObj.Message,
+        isRead: notificationObj.IsRead,
+        eventType: notificationObj.EventType,
+        timeStamp: notificationObj.TimeStamp
+      }
+      this.notificationSubject.next(notificationObj);
     });
   }
   ngOnDestroy(): void {
@@ -39,7 +48,7 @@ export class NotificationService implements OnDestroy {
     );
   }
   public markAsRead(notificationId: number): Observable<void> {
-    return this.http.post<void>(`${environment.apiUrl}/api/notifications/mark-as-read?notificationId=${notificationId}`, {}).pipe(
+    return this.http.post<void>(`${environment.apiUrl}/notifications/mark-as-read?notificationId=${notificationId}`, {}).pipe(
       catchError((error) => {
         console.error('Error marking notification as read:', error);
         return of();
