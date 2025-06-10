@@ -63,19 +63,29 @@ export class AccountService {
         }
         return { token: response }; 
       }),
-      catchError((error) => {
-        let errorMessage = 'An unknown error occurred';
-        if (error.error instanceof ErrorEvent) {
-       
-          errorMessage = error.error.message;
-        } else {
-          errorMessage = error.message || error.statusText;
-        }
-        console.error('Error occurred:', errorMessage);
-        return throwError(() => new Error(errorMessage));
+      catchError((error: HttpErrorResponse) => {
+     
+        const apiErrorMessage = error.status === 404 
+        ? 'User Not Found!'
+        : error.status === 0
+          ? 'Network Error: Could not connect to server'
+          : error.error?.ErrorMessage || 'Failed to process your request';
+        
+        console.error('API Error:', {
+          status: error.status,
+          message: apiErrorMessage,
+          fullError: error
+        });
+
+        return throwError(() => ({
+          message: apiErrorMessage,
+          status: error.status
+        }));
       })
     );
-  }
+}
+
+  
   
   // resetPassword(resetData: ResetPasswordVM): Observable<any> {
   //   return this.http.post(`${this.apiUrl}/reset-password`, resetData);

@@ -72,13 +72,32 @@
                                 </div>
                             </div>
                             <div class="mb-3 col-12 col-md-6">
-                                <label>Profile Image</label>
-                                <!-- <input type="file" (change)="onFileChange($event)"
-                                    class="login-form-input rounded-1 form-control" /> -->
-                       
-                            <input type="file" name="Image" (change)="onFileChange($event)" class="login-form-input rounded-1 form-control"
-                                accept=".jpg,.jpeg,.png,.gif,.bmp,.webp,.svg" />
-                            </div>
+                                <label class="form-label">Profile Image</label>
+                                <input type="file" name="Image" (change)="onFileChange($event)" class="login-form-input rounded-1 form-control"
+                                    accept=".jpg,.jpeg,.png,.gif,.bmp,.webp,.svg" />
+                            
+                                <!-- Selected file info -->
+                                <div *ngIf="selectedFileName" class="mt-2 small text-muted">
+                                    Selected: {{ selectedFileName }} ({{ selectedFileSize }})
+                                </div>
+                            
+                                <!-- Validation Error Messages -->
+                                <div *ngIf="registerForm.get('Image')?.invalid && (registerForm.get('Image')?.touched || registerForm.get('Image')?.dirty)"
+                                    class="text-danger mt-2 small">
+                            
+                                    <div *ngIf="registerForm.get('Image')?.errors?.['required']">
+                                        Profile image is required
+                                    </div>
+                            
+                                    <div *ngIf="registerForm.get('Image')?.errors?.['maxFileSize']">
+                                        Image size must be less than {{ registerForm.get('Image')?.errors?.['maxFileSize'].requiredSize }}.
+                                        Current size is {{ registerForm.get('Image')?.errors?.['maxFileSize'].actualSize }}
+                                    </div>
+                            
+                                    <div *ngIf="registerForm.get('Image')?.errors?.['fileType']">
+                                        Only JPG, JPEG, PNG, GIF, BMP, WEBP, SVG files are allowed
+                                    </div>
+                                </div>                        </div>
                         </div>
                     </div>
                 </div>

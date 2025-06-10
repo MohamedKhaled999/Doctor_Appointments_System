@@ -14,6 +14,7 @@ import { log } from 'console';
 
 
 import {Register  } from "../../../../core/interfaces/register";
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -213,46 +214,33 @@ export class RegisterComponent implements OnInit {
     //       }
     //     },
     //   });
-    this.accountService.register(registerRequest).subscribe({
-      next: () => {
-        console.log('Registration successful from component');
-        this.isLoading = false;
-        // You might want to add navigation or other success logic here
-      },
-      error: (error: any) => {
-        this.isLoading = false;
-        this.handleRegistrationError(error);
-      }
-    });
-    
-  }
-    
-    private handleRegistrationError(error: any): void {
-   
-      let errorMessages = ['Registration failed. Please try again'];
-      
-      if (error.error instanceof ErrorEvent) {
+  
+  this.accountService.register(registerRequest).subscribe({
+    next: () => {
+      console.log('Registration successful from component');
+      Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful!',
+        text: 'Your account has been created successfully',
+        confirmButtonText: 'OK'
+    })
        
-        errorMessages = ['A network error occurred. Please check your connection.'];
-      } else if (Array.isArray(error.error)) {
-        // Server-side validation errors (array of messages)
-        errorMessages = error.error;
-      } else if (error.error?.message) {
-        // Single error message from server
-        errorMessages = [error.error.message];
-      } else if (error.message) {
-        // Error object with message property
-        errorMessages = [error.message];
-      } else if (typeof error.error === 'string') {
-        // String error response
-        errorMessages = [error.error];
-      }
-    
-      this.validationErrors = errorMessages;
+    },
+    error: (error) => {
+        this.isLoading = false;
+        const errorMessage = error.error?.Errors || 
+                           error.error?.message || 
+                           (Array.isArray(error.error) ? error.error.join(', ') : 
+                           'Registration failed. Please try again');
+        
+        Swal.fire({
+            icon: 'warning',
+            title: 'Registration Error',
+            text: errorMessage,
+            confirmButtonText: 'OK'
+        });
     }
-    
-
-    
+  });}
 
   togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
     if (field === 'password') {

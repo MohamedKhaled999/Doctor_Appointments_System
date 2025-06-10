@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.loadHomeData();
     console.log('Specialties:', this.specialties);
+    console.log('doctors:',this.doctors) ;
     console.log(this.filteredDoctors);
     if (isPlatformBrowser(this.platformId)) {
       AOS.init();

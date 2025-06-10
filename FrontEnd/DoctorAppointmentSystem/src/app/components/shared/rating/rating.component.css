@@ -2,6 +2,7 @@
 .rating-container {
     font-size:1.5rem;
     text-align: center;
+    padding-left: 20px ;
 }
 
 
@@ -10,6 +11,7 @@
     font-weight: bold;
     letter-spacing: 0.2rem;
     text-align: center;
+    margin-left: 10px ;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
@@ -36,11 +38,10 @@
     /* You can customize this color */
 }
 /* Style for the smile icon with shadow */
-.fa-face-smile-beam::before,
-.fa-smile-beam::before {
-    /* content: "\f5b8"; */
-    --fa: "\f5b8";
-    /* Smile icon */
+.hover::before,
+.hover::before
+{
+  
     display: inline-block;
     font-family: 'Font Awesome 5 Free';
   

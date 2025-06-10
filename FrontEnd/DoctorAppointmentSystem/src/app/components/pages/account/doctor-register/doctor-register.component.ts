@@ -9,6 +9,10 @@ import { RegisterDoctor } from '../../../../core/interfaces/register-doctor';
 import { CommonModule } from '@angular/common';
 
 
+import {
+  maxFileSize
+  ,allowedFileTypes 
+ } from '../../../../core/validators/file-validators';
 import { Governorate } from '../../../../core/enums/governorate.enum';
 import { Gender } from '../../../../core/models/doctor-register.model';
 
@@ -41,7 +45,10 @@ export class DoctorRegisterComponent implements AfterViewInit {
   genderOptions: { value: Gender, label: string }[] = [];
   private map: any;
   private marker: any;
-
+  MAX_FILE_SIZE = 2 * 1024 * 1024; 
+  ALLOWED_FILE_TYPES = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
+  selectedFileName: string = '';
+  selectedFileSize: string = '';
   // Gender = Gender;
   constructor(
     private fb: FormBuilder,
@@ -65,7 +72,12 @@ export class DoctorRegisterComponent implements AfterViewInit {
       gender: ['', Validators.required],
       
       birthDate: ['', Validators.required],
-      Image: [null],
+      Image: [null, [
+        Validators.required,
+        maxFileSize(this.MAX_FILE_SIZE),
+        allowedFileTypes(this.ALLOWED_FILE_TYPES)
+        
+      ]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]],
       governorate: ['', Validators.required],
@@ -172,23 +184,48 @@ export class DoctorRegisterComponent implements AfterViewInit {
     this.showPassword[field] = !this.showPassword[field];
   }
 
+  // onFileChange(event: any) {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     console.log('File selected:', file.name, 'Size:', file.size);
+  //     if (file.size > 2 * 1024 * 1024) {
+  //       console.warn('File size exceeds limit');
+  //       Swal.fire({
+  //         title: "Error",
+  //         text: "Maximum allowed size is 2 MB",
+  //         icon: "error"
+  //       });
+  //       return;
+  //     }
+  //     this.registerForm.patchValue({ Image: file });
+  //   }
+  // }
+
   onFileChange(event: any) {
     const file = event.target.files[0];
+    
     if (file) {
-      console.log('File selected:', file.name, 'Size:', file.size);
-      if (file.size > 2 * 1024 * 1024) {
-        console.warn('File size exceeds limit');
-        Swal.fire({
-          title: "Error",
-          text: "Maximum allowed size is 2 MB",
-          icon: "error"
-        });
-        return;
-      }
-      this.registerForm.patchValue({ Image: file });
+      this.selectedFileName = file.name;
+      this.selectedFileSize = this.formatFileSize(file.size);
+      
+      this.registerForm.patchValue({
+        Image: file
+      });
+      
+      this.registerForm.get('Image')?.updateValueAndValidity();
+    } else {
+      this.selectedFileName = '';
+      this.selectedFileSize = '';
     }
   }
 
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
   updateLocation(lat: number, lng: number): void {
     console.log('Updating location to:', lat, lng);
     if (!this.map) {
@@ -282,27 +319,49 @@ export class DoctorRegisterComponent implements AfterViewInit {
     this.accountService.registerDoctor(formData).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
+            Swal.fire({
+                icon: 'success',
+                title: 'Registration Successful!',
+                text: 'Your account has been created successfully',
+                confirmButtonText: 'OK'
+            })
+               
+            },
+            error: (error) => {
+             
+                const errorMessage = error.error?.Errors || 
+                                   error.error?.message || 
+                                   (Array.isArray(error.error) ? error.error.join(', ') : 
+                                   'Registration failed. Please try again');
+                
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Registration Error',
+                    text: errorMessage,
+                    confirmButtonText: 'OK'
+                });
+            }
+          });
       
-      },
-      error: (err: HttpErrorResponse) => {
-        console.error('Registration failed:', err);
-        let errorMessage = "Registration failed";
-        if (err.error && typeof err.error === 'string') {
-          errorMessage = err.error;
-        } else if (err.error && Array.isArray(err.error)) {
-          errorMessage = err.error.join('\n');
-        } else if (err.error && err.error.errors) {
-          errorMessage = Object.values(err.error.errors).join('\n');
-        }
+      // },
+      // error: (err: HttpErrorResponse) => {
+      //   console.error('Registration failed:', err);
+      //   let errorMessage = "Registration failed";
+      //   if (err.error && typeof err.error === 'string') {
+      //     errorMessage = err.error;
+      //   } else if (err.error && Array.isArray(err.error)) {
+      //     errorMessage = err.error.join('\n');
+      //   } else if (err.error && err.error.errors) {
+      //     errorMessage = Object.values(err.error.errors).join('\n');
+      //   }
 
-        Swal.fire({
-          title: "Error",
-          text: errorMessage,
-          icon: "error"
-        });
+      //   Swal.fire({
+      //     title: "Error",
+      //     text: errorMessage,
+      //     icon: "error"
+      //   });
       }
-    });
-  }
+ 
 
   private markFormGroupTouched(formGroup: FormGroup) {
     console.log('Marking form group as touched');
