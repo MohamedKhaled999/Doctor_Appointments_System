@@ -113,7 +113,7 @@ namespace Services
                     var errors = result.Errors.Select(e => e.Description).ToList();
                     throw new ValidationException(errors);
                 }
-            }, async () =>
+            },  () =>
             {
                 var todelete = userManager.FindByEmailAsync(user.Email).Result;
                 if (todelete != null)
@@ -139,14 +139,14 @@ namespace Services
             registerDto.AppUserID = user.Id;
             if (registerDto is DoctorRegisterDto doctor)
             {
-                transaction.Execute(async () =>
+                transaction.Execute( () =>
                 {
-                    await doctorOrchestrator.RegisterDoctor(doctor);
-                    await userManager.AddToRoleAsync(user, "doctor");
-                }, async () =>
+                    doctorOrchestrator.RegisterDoctor(doctor).Wait();
+                    userManager.AddToRoleAsync(user, "doctor").Wait();
+                }, () =>
                 {
                     SpecificationsBase<Doctor> specifications = new SpecificationsBase<Doctor>(d => d.AppUserID == user.Id);
-                    var todelete = await unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specifications);
+                    var todelete = unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specifications).Result;
                     if (todelete != null)
                     {
                         unitOfWork.GetRepository<Doctor, int>().Delete(todelete[0]);
@@ -161,10 +161,10 @@ namespace Services
                 {
                     patientService.AddAsync(registerDto).Wait();
                     userManager.AddToRoleAsync(user, "patient").Wait();
-                }, async () =>
+                }, () =>
                 {
                     SpecificationsBase<Patient> specifications = new SpecificationsBase<Patient>(p => p.AppUserID == user.Id);
-                    var todelete = await unitOfWork.GetRepository<Patient, int>().GetAllAsync(specifications);
+                    var todelete = unitOfWork.GetRepository<Patient, int>().GetAllAsync(specifications).Result;
                     if (todelete != null)
                     {
                         unitOfWork.GetRepository<Patient, int>().Delete(todelete[0]);
