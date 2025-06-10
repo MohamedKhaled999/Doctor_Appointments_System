@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DataManagementService } from '../../../../core/services/data-management.service';
 import { RouterLink } from '@angular/router';
+import { DoctorReservationService } from '../../../../core/services/doctor-reservations.service';
 
 @Component({
   selector: 'app-reservation-card',
@@ -22,7 +23,8 @@ export class ReservationCardComponent {
   toTime: string = '';
   Role: any;
   isAuthenticated : boolean = false;
-  constructor(public userData :DataManagementService){}
+
+  constructor(public userData :DataManagementService, private DoctorReservationService : DoctorReservationService){}
   ngOnInit() {
     if (this.appointment.IsAvailable) {
       this.fromTime = this.appointment.StartTime.split('T')[1].slice(0,5);
@@ -31,8 +33,6 @@ export class ReservationCardComponent {
       this.toTime = this.convertToAmPm(this.toTime);
       console.log("ngOnInit","reservation-card.component.ts");
       console.log(Date.now());
-      
-
     }
     
     // // this.Role = this.userData.UserRole();
@@ -51,8 +51,21 @@ export class ReservationCardComponent {
     
   }
   book(ResId: number) : void{
+
     console.log("Book button clicked for reservation ID:", ResId);
-    
+    this.DoctorReservationService.isLoading.set(true);
+    this.DoctorReservationService.bookAnAppointment(ResId,localStorage.getItem('userToken')??'').subscribe({
+      next: (response) => {
+        this.DoctorReservationService.paymentPageLink.set(response);
+        this.DoctorReservationService.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error booking an appointment:', error);
+        this.DoctorReservationService.isLoading.set(false);
+      }
+      
+    });
+
     
   }
   convertToAmPm(time24: string): string {
