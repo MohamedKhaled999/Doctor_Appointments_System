@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models;
 using Domain.Models.Enums;
 using Services.Abstraction;
@@ -23,6 +24,13 @@ namespace Services
             return _mapper.Map<List<AppointmentReservationDTO>?>(appointments);
         }
 
+        public bool IsVacantDay(DateOnly day)
+        {
+            var specs = new SpecificationsBase<DoctorReservation>(d => DateOnly.FromDateTime(d.StartTime) == day);
+            var reservationCount = _unitOfWork.GetRepository<DoctorReservation, int>().GetCount(specs);
+            return reservationCount == 0;
+        }
+
         public async Task<DoctorFeesDTO> GetDoctorByReservationId(int id)
         {
             var reservation = (await _unitOfWork.GetRepository<DoctorReservation, int>().GetAllAsync(new DoctorReservationSpecifications(r => r.Id == id))).FirstOrDefault();
@@ -37,32 +45,46 @@ namespace Services
         }
         public async Task AddDoctorReservation(NewResDTO res)
         {
+            if (!IsVacantDay(DateOnly.FromDateTime(res.Date)))
+                throw new ValidationException(["Can't have more than one reservation per day"]);
             DoctorReservation newReservation = _mapper.Map<DoctorReservation>(res);
-            if (!IsInCalendar(newReservation).Result)
-            {
-                await _unitOfWork.GetRepository<DoctorReservation, int>().AddAsync(newReservation);
-            }
-            else
-            {
-                Console.WriteLine("Reservation Already Exist");
-                var oldReservation = (await _unitOfWork.GetRepository<DoctorReservation, int>().GetAllAsync(new SpecificationsBase<DoctorReservation>(x => x.DoctorID == newReservation.DoctorID
-                && x.StartTime.Day == newReservation.StartTime.Day
-                && x.StartTime.Month == newReservation.StartTime.Month
-                && x.StartTime.Year == newReservation.StartTime.Year))).FirstOrDefault();
-                oldReservation.StartTime = newReservation.StartTime;
-                oldReservation.EndTime = newReservation.EndTime;
-                oldReservation.MaxReservation = newReservation.MaxReservation;
-                _unitOfWork.GetRepository<DoctorReservation, int>().Update(oldReservation);
-            }
+            await _unitOfWork.GetRepository<DoctorReservation, int>().AddAsync(newReservation);
             await _unitOfWork.SaveChangesAsync();
-
+            // if (!IsInCalendar(newReservation).Result)
+            // {
+            //     await _unitOfWork.GetRepository<DoctorReservation, int>().AddAsync(newReservation);
+            // }
+            // else
+            // {
+            //     Console.WriteLine("Reservation Already Exist");
+            //     var oldReservation = (await _unitOfWork.GetRepository<DoctorReservation, int>().GetAllAsync(new SpecificationsBase<DoctorReservation>(x => x.DoctorID == newReservation.DoctorID
+            //     && x.StartTime.Day == newReservation.StartTime.Day
+            //     && x.StartTime.Month == newReservation.StartTime.Month
+            //     && x.StartTime.Year == newReservation.StartTime.Year))).FirstOrDefault();
+            //     oldReservation.StartTime = newReservation.StartTime;
+            //     oldReservation.EndTime = newReservation.EndTime;
+            //     oldReservation.MaxReservation = newReservation.MaxReservation;
+            //     _unitOfWork.GetRepository<DoctorReservation, int>().Update(oldReservation);
+            // }
         }
-        public async Task EditDoctorReservation(NewResDTO res)
+        public async Task EditDoctorReservation(NewResDTO newReservation)
         {
-            var reservation = await _unitOfWork.GetRepository<DoctorReservation, int>().GetByIdAsync(res.ResID);
+            var reservation = await _unitOfWork.GetRepository<DoctorReservation, int>().GetByIdAsync(newReservation.ResID);
             if (reservation == null)
-                throw new Exception("Reservation not found");
-            _unitOfWork.GetRepository<DoctorReservation, int>().Update(_mapper.Map(res, reservation));
+                throw new NotFoundException("Reservation not found");
+            if (DateOnly.FromDateTime(reservation.StartTime) == DateOnly.FromDateTime(DateTime.Now))
+                throw new ValidationException(["Can't edit today's reservation"]);
+            if (DateOnly.FromDateTime(newReservation.Date) != DateOnly.FromDateTime(reservation.StartTime)
+                && !IsVacantDay(DateOnly.FromDateTime(newReservation.Date)))
+                throw new ValidationException(["Can't have more than one reservation per day"]);
+            if (newReservation.MaxRes < reservation.MaxReservation)
+            {
+                var appointmentCount = (await GetAppointmentsByReservationId(reservation.Id))?.Count() ?? 0;
+                if (appointmentCount < newReservation.MaxRes)
+                    throw new ValidationException([$"Can't decrease maximum appointments to {newReservation.MaxRes} (there is already {appointmentCount} appointments booked)"]);
+            }
+
+            _unitOfWork.GetRepository<DoctorReservation, int>().Update(_mapper.Map(newReservation, reservation));
             await _unitOfWork.SaveChangesAsync();
         }
         public async Task DeleteDoctorReservation(int resId)
@@ -80,13 +102,13 @@ namespace Services
                 throw new Exception("Reservation not found");
             var reservationDTO = _mapper.Map<DoctorReservationDTO>(reservation);
             reservationDTO.IsAvailable = reservation.MaxReservation > _unitOfWork.GetRepository<Appointment, int>()
-                .GetCount(new SpecificationsBase<Appointment>(x => x.DoctorReservationID == id));
+                .GetCount(new SpecificationsBase<Appointment>(x => x.DoctorReservationID == id)) && reservation.StartTime > DateTime.Now;
             return reservationDTO;
         }
         public async Task<List<DoctorReservationDTO>?> GetReservationsByDocID(int id)
         {
-            var reservations = await _unitOfWork.GetRepository<DoctorReservation, int>()
-                .GetAllAsync(new SpecificationsBase<DoctorReservation>(x => x.DoctorID == id && x.StartTime > DateTime.Now));
+            var reservations = (await _unitOfWork.GetRepository<DoctorReservation, int>()
+                .GetAllAsync(new SpecificationsBase<DoctorReservation>(x => x.DoctorID == id))).Where(x => x.StartTime > DateTime.Now || DateTime.Now - x.StartTime <= TimeSpan.FromDays(7)).ToList();
             if (reservations == null || reservations.Count == 0)
                 return null;
             var reservationDTOs = _mapper.Map<List<DoctorReservationDTO>>(reservations);

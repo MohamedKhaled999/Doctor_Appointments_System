@@ -31,7 +31,7 @@ namespace Presentation.Controllers
         }
         [HttpPut]
         [Authorize(Roles = "doctor")]
-        public async Task<IActionResult> UpdateDoctor([FromBody]DoctorEditDTO doctorDTO)
+        public async Task<IActionResult> UpdateDoctor([FromBody] DoctorEditDTO doctorDTO)
         {
             await _serviceManager.DoctorService.UpdateDoctor(doctorDTO, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return Ok(new { success = true });
@@ -40,7 +40,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> UpdateDoctorImage(IFormFile Image)
         {
-            await _serviceManager.DoctorOrchestrator.ChangeProfileImage(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),Image);
+            await _serviceManager.DoctorOrchestrator.ChangeProfileImage(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), Image);
             return Ok(new { success = true });
         }
         [HttpGet("search")]
@@ -50,10 +50,9 @@ namespace Presentation.Controllers
             return Ok(doctors);
         }
         [HttpGet("Reviews")]
-        public async Task<IActionResult> GetDoctorReviews(int docID,int page = 1, int pageSize = 5)
+        public async Task<IActionResult> GetDoctorReviews(int docID, int page = 1, int pageSize = 5)
         {
             var reviews = await _serviceManager.DoctorOrchestrator.GetDoctorReviews(docID, page, pageSize);
-            
             return Ok(reviews);
         }
     }

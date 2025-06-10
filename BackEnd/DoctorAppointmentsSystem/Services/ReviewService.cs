@@ -16,10 +16,11 @@ namespace Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task AddReview(AddReviewDTO review, int patientId)
+        public async Task AddReview(AddReviewDTO review, int patientId, int doctorId)
         {
             var newReview = _mapper.Map<Domain.Models.Review>(review);
             newReview.PatientID = patientId;
+            newReview.DoctorID = doctorId;
             await _unitOfWork.GetRepository<Domain.Models.Review, int>().AddAsync(newReview);
             await _unitOfWork.SaveChangesAsync();
         }
@@ -51,6 +52,7 @@ namespace Services
         {
             SpecificationsBase<Domain.Models.Review> specifications = new SpecificationsBase<Domain.Models.Review>(x => x.DoctorID == doctorId);
             specifications.ApplyPagination(pageIndex, pageSize);
+            specifications.AddInclude(r => r.Patient);
             var reviews = await _unitOfWork.GetRepository<Domain.Models.Review, int>().GetAllAsync(specifications);
             if (reviews.Count == 0)
                 return new List<ReviewDTO>();

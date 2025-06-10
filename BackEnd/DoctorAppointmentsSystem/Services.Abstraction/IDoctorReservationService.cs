@@ -7,6 +7,7 @@ namespace Services.Abstraction
     public interface IDoctorReservationService
     {
         Task<List<AppointmentReservationDTO>?> GetAppointmentsByReservationId(int id);
+        bool IsVacantDay(DateOnly day);
         Task<DoctorFeesDTO> GetDoctorByReservationId(int id);
         Task EditDoctorReservation(NewResDTO res);
         Task DeleteDoctorReservation(int resId);

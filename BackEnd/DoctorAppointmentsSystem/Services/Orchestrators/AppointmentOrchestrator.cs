@@ -207,7 +207,7 @@ namespace Services.Orchestrators
             if (existingReviewId != null)
                 await _reviewService.DeleteReview(existingReviewId.Value);
 
-            await _reviewService.AddReview(review, patient.Id);
+            await _reviewService.AddReview(review, patient.Id, doctor.Id);
         }
 
         public async Task SaveAppointmentAsync(int patientId, int doctorReservationId, string paymentId)
@@ -274,6 +274,11 @@ namespace Services.Orchestrators
             {
                 await _doctorReservationService.EditDoctorReservation(reservation);
                 newReservation = await _doctorReservationService.GetDoctorReservationByID(reservation.ResID);
+
+                var appointments = await _doctorReservationService.GetAppointmentsByReservationId(newReservation.Id);
+                if (appointments != null)
+                    foreach (var appointment in appointments)
+                        await RescheduleAppointment(appointment.Id);
             }
 
             return newReservation;
@@ -389,6 +394,37 @@ namespace Services.Orchestrators
                 await _transactionService.UpdateAsync(transactionId, transaction.Amount * percent);
                 await _appointmentService.SetCanceledAsync(appointmentId);
             }
+        }
+
+        private async Task RescheduleAppointment(int appointmentId)
+        {
+            var patient = await _appointmentService.GetPatientByAppointmentId(appointmentId);
+            var appointment = await _appointmentService.GetWithDoctorAsync(appointmentId);
+
+            var patientNotification = new NotificationMessage()
+            {
+                EventType = NotificationEvents.Patient_AppointmentRescheduled,
+                Message = $"Appointment with Dr. {appointment.Doctor} has been rescheduled to {appointment.StartTime}."
+            };
+            await _notificationService.SendNotification(patient.AppUserId, patientNotification);
+
+            var email = new EmailDTO()
+            {
+                To = patient.Email,
+                Template = MailTemplates.CancelAppointmentTemplate,
+                Subject = "Appointment Rescheduled",
+                Link = _configuration["FrontEnd:Url"],
+            };
+            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime.Date);
+
+            var jobId = await _appointmentService.GetJobIdAsync(appointmentId);
+            if (jobId != null)
+                BackgroundJob.Delete(jobId);
+            jobId = BackgroundJob.Schedule(
+            () => AppointmentReminderJob(patient.AppUserId, appointment.Doctor),
+                appointment.StartTime.AddHours(-3) - DateTime.Now
+            );
+            await _appointmentService.AddJobIdAsync(appointment.Id, jobId);
         }
     }
 }

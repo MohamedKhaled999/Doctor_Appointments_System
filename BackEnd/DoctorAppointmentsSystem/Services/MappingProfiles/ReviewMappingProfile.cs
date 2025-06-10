@@ -12,9 +12,8 @@ namespace Services.MappingProfiles
             CreateMap<Review, ReviewDTO>()
                 .ForMember(dest => dest.ID, src => src.MapFrom(src => src.Id))
                 .ForMember(dest => dest.PatientName, src => src.MapFrom(src => $"{src.Patient.FirstName} {src.Patient.LastName}"))
-                .ForMember(dest => dest.Date, src => src.MapFrom(src => src.Date.Date.ToString()))
+                .ForMember(dest => dest.Date, src => src.MapFrom(src => src.Date.ToString()))
                 .ForMember(dest => dest.Review, src => src.MapFrom(src => src.Description))
-                .ForMember(dest => dest.Rate, src => src.MapFrom(src => src.Rate)) // int to float?
                 .ForMember(dest => dest.DocID, src => src.MapFrom(src => src.DoctorID));
 
             CreateMap<ReviewDTO, Review>()
@@ -29,11 +28,7 @@ namespace Services.MappingProfiles
 
             CreateMap<AddReviewDTO, Review>()
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Review))
-                .ForMember(dest => dest.Rate, opt => opt.MapFrom(src => (int)src.Rate))
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.Now));
-                
-
-
         }
     }
 }

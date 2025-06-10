@@ -6,7 +6,7 @@ namespace Services.Abstraction
 {
     public interface IReviewService
     {
-        Task AddReview(AddReviewDTO review, int patientId);
+        Task AddReview(AddReviewDTO review, int patientId, int doctorId);
         Task<int?> GetReviewByPatientAndDoctor(int patientId, int doctorId);
         Task DeleteReview(int ReviewId);
         Task UpdateReview(ReviewDTO review);
