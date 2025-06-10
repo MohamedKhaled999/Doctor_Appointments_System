@@ -22,7 +22,6 @@ export class DoctorReservationService {
   // Signal containing all doctors
 //   doctors = signal<Doctor[]>([]);
     isLoading = signal<boolean>(false);
-    paymentPageLink = signal<string>('');
 //   currentPage = signal<number>(1);
 //   totalDoctors = signal<number>(0);
 //   numberOfPages = signal<number>(0);

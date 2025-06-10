@@ -57,12 +57,8 @@ export class ReservationCardComponent {
     this.DoctorReservationService.isLoading.set(true);
     this.DoctorReservationService.bookAnAppointment(ResId,localStorage.getItem('userToken')??'').subscribe({
       next: (response) => {
-        console.log( `response ${response}`)
-        this.DoctorReservationService.paymentPageLink.set(response.paymentUrl);
         this.DoctorReservationService.isLoading.set(false);
         window.open(response.paymentUrl, '_blank');
-        console.log( `response ${response.paymentUrl}`)
-
       },
       error: (error) => {
         console.error('Error booking an appointment:', error);
