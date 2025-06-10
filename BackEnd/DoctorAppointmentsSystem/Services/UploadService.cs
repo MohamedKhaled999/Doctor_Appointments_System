@@ -33,7 +33,6 @@ namespace Services
             if (DocumentRegex.IsMatch(file.FileName) && file.Length > DocumentMaxSize)
                 throw new ValidationException(["Document Exceeds Max Size (10 MBs)"]);
 
-
             string folderName = string.Empty;
             if (IsImage(file.FileName))
                 folderName = "images";
@@ -45,13 +44,12 @@ namespace Services
                 Directory.CreateDirectory(folderPath);
             }
 
-            string fileName = string.Empty;
             if (oldFilename != null)
             {
                 File.Delete(Path.Combine(folderPath, oldFilename));
             }
 
-            fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            string fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
             string filePath = Path.Combine(folderPath, fileName);
 
