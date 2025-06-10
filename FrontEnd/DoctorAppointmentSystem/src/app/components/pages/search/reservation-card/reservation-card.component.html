@@ -23,7 +23,7 @@
 
 @if (this.userData.UserRole() === "patient")
 {
-    <button onclick="book(appointment.ResID)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;" >Book</button>
+    <button (click)="book(appointment.ResId)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;" >Book</button>
 }
 @else if(this.userData.UserRole() === "doctor")
 {
@@ -35,24 +35,3 @@
     routerLink="/login" 
      class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</a>
 }
-
-
-<!-- Angular version -->
-<!-- <button 
-    *ngIf="Role !== 'doctor'" 
-    (click)="showModal(appointment.ResID)" 
-    class="card-footer btn SP-bookBTN p-1" 
-    [class.disabled]="appointment.Time == null || !appointment.IsAvailable">
-    Book
-</button>
-<a 
-    *ngIf="!isAuthenticated" 
-    routerLink="/account/login" 
-    class="card-footer btn SP-bookBTN p-1">
-    Book
-</a>
-<a 
-    *ngIf="Role === 'doctor' && isAuthenticated" 
-    class="card-footer btn disabled SP-bookBTN p-1">
-    Doctors can't book in this release
-</a> -->

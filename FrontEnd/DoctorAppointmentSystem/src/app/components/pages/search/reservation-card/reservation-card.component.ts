@@ -26,6 +26,7 @@ export class ReservationCardComponent {
 
   constructor(public userData :DataManagementService, private DoctorReservationService : DoctorReservationService){}
   ngOnInit() {
+    console.log(this.appointment)
     if (this.appointment.IsAvailable) {
       this.fromTime = this.appointment.StartTime.split('T')[1].slice(0,5);
       this.fromTime = this.convertToAmPm(this.fromTime);
@@ -44,7 +45,7 @@ export class ReservationCardComponent {
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-         console.log("reservation-card.component.ts", Date.now());
+    console.log("reservation-card.component.ts", Date.now());
     console.log("ngAfterViewInit called",this.userData.UserRole());
     
       
@@ -56,8 +57,12 @@ export class ReservationCardComponent {
     this.DoctorReservationService.isLoading.set(true);
     this.DoctorReservationService.bookAnAppointment(ResId,localStorage.getItem('userToken')??'').subscribe({
       next: (response) => {
-        this.DoctorReservationService.paymentPageLink.set(response);
+        console.log( `response ${response}`)
+        this.DoctorReservationService.paymentPageLink.set(response.paymentUrl);
         this.DoctorReservationService.isLoading.set(false);
+        window.open(response.paymentUrl, '_blank');
+        console.log( `response ${response.paymentUrl}`)
+
       },
       error: (error) => {
         console.error('Error booking an appointment:', error);

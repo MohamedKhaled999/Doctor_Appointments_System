@@ -62,7 +62,7 @@ export class DoctorReservationService {
         return this.http.post<any>(
             `${environment.apiUrl}/patient/appointments?doctorReservationId=${ResId}`,
             {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer Token ${token}` }
             }
         );
     }
