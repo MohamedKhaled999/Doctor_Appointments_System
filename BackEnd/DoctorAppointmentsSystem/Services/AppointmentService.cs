@@ -143,7 +143,7 @@ namespace Services
 
         public async Task<List<AppointmentDTO>?> GetByPatientAsync(int patientId, int pageIndex = 1, int pageSize = 20)
         {
-            var specs = new AppointmentPaginationSpecifications(a => a.PatientId == patientId, pageIndex, pageSize);
+            var specs = new AppointmentPaginationSpecifications(a => a.PatientId == patientId &&a.Canceled == false, pageIndex, pageSize);
             var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(specs);
             if (appointments == null)
                 return null;
@@ -152,12 +152,12 @@ namespace Services
 
         public int GetCount(int patientId)
         {
-            var specs = new SpecificationsBase<Appointment>(a => a.PatientId == patientId);
+            var specs = new SpecificationsBase<Appointment>(a => a.PatientId == patientId && a.Canceled == false);
             return _unitOfWork.GetRepository<Appointment, int>().GetCount(specs);
         }
         public int GetDoctorAppointmentsCount(int doctorId)
         {
-            var specs = new SpecificationsBase<Appointment>(a => a.DoctorReservation.DoctorID == doctorId);
+            var specs = new SpecificationsBase<Appointment>(a => a.DoctorReservation.DoctorID == doctorId && a.Canceled == false);
             return _unitOfWork.GetRepository<Appointment, int>().GetCount(specs);
         }
 
