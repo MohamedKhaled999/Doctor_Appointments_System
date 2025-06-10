@@ -19,7 +19,7 @@ namespace Services
             rootFolderPath = $@"{environment.WebRootPath}\uploads";
         }
 
-        public async Task<string> UploadFile(IFormFile file, string oldFilename = null)
+        public async Task<string> UploadFile(IFormFile file, string? oldFilename = null)
         {
             if (file == null)
                 throw new ArgumentNullException("File is Null");
