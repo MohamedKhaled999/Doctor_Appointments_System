@@ -7,15 +7,15 @@
             </div>
             <form method="post" (ngSubmit)="onSubmit()" [formGroup]="reviewForm">
                 <div mat-dialog-content>
-                    <input type="hidden" class="SP-appID" name="appID" />
+                    <input type="hidden" class="SP-appID" name="doctorReservationId" />
                     <mat-form-field class="mb-3 SP-review form-field">
                         <mat-label for="review" class="form-label">Your thoughts on the appointment with ?</mat-label>
-                        <textarea matInput formControlName="comment" class="form-control SP-reviewText" id="review" name="review" required
+                        <textarea matInput formControlName="review" class="form-control SP-reviewText" id="review" name="review" required
                             rows="3"></textarea>
                     </mat-form-field>
                     <mat-form-field class="mb-3 orm-field">
                         <mat-label for="rate" class="form-label">Rating</mat-label>
-                        <input matInput formControlName="rating" class="form-control" id="rate" name="rate" required type="number" min="1" max="5"
+                        <input matInput formControlName="rate" class="form-control" id="rate" name="rate" required type="number" min="1" max="5"
                             value="5">
                     </mat-form-field>
                 </div>
@@ -23,7 +23,7 @@
                 <p class="text-danger error" *ngIf="reviewForm.errors?.['min'] || reviewForm.errors?.['max']">Rating must be between 1 and 5.</p>
                 <div mat-dialog-actions>
                     <button type="submit" mat-flat-button class="btn SP-bookBTN col-12 SP-CalSubmit w-100" (click)="onSubmit()">Add</button>
-                    <button type="button" mat-stroked-button class="btn SP-bookBTN col-12 w-100" style="margin-left: 10px" (click)="onCancelClick()">Close</button>
+                    <button type="button" mat-stroked-button class="btn SP-bookBTN col-12 w-100" (click)="onCancelClick()">Close</button>
                 </div>
             </form>
         </div>

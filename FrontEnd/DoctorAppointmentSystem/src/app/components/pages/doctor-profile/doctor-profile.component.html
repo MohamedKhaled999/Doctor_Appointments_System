@@ -4,17 +4,17 @@
     <div class="col-md-4">
       <div class="sticky-md-top pt-5 text-center" style="padding-top:89px">
         <form (submit)="false">
-          <!-- <div class="position-relative d-inline-block" (click)="uploadInput.click()"> -->
+          <div class="position-relative d-inline-block" (click)="uploadInput.click()">
             <img
               [src]="'https://doc-net2.runasp.net/uploads/images/' + doctor?.image"
               alt="Doctor Image"
               class="rounded-circle img-thumbnail SP-photo"
             />
-            <!-- <input #uploadInput type="file" class="d-none SP-file" (change)="
+            <input #uploadInput type="file" class="d-none SP-file" (change)="
                 uploadPhoto($event)
               " />
-            <div class="SP-upload"><i class="fa-solid fa-arrow-up-from-bracket"></i></div> -->
-          <!-- </div> -->
+            <div class="SP-upload"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+          </div>
         </form>
 
         <h3 class="mt-2">Dr. {{ doctor?.name }}</h3>

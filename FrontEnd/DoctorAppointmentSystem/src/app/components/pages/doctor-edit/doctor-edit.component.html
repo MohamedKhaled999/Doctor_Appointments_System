@@ -1,11 +1,6 @@
 <div class="container py-5" style="color: var(--primary-color)">
-  <form
-    [formGroup]="doctorForm"
-    (ngSubmit)="save()"
-    class="d-flex flex-column gap-2 col-10 col-md-6 mx-auto"
-    enctype="multipart/form-data"
-    style="padding: 100px 20px 20px; color: var(--primary-color)"
-  >
+  <form [formGroup]="doctorForm" (ngSubmit)="save()" class="d-flex flex-column gap-2 col-10 col-md-6 mx-auto"
+    style="padding: 100px 20px 20px; color: var(--primary-color)">
     <h2>Enter Your Information</h2>
     <div *ngIf="doctorForm.invalid && doctorForm.touched" class="text-danger">
       Please fix validation errors.
@@ -15,79 +10,47 @@
       <!-- Personal Information -->
       <div class="accordion-item doctor-register-div">
         <h2 class="accordion-header" id="headingPersonal">
-          <button
-            class="accordion-button"
-            type="button"
-            data-bs-target="#collapsePersonal"
-            data-bs-toggle="collapse"
-            aria-expanded="true"
-          >
+          <button class="accordion-button" type="button" data-bs-target="#collapsePersonal" data-bs-toggle="collapse"
+            aria-expanded="true">
             Personal Information
           </button>
         </h2>
-        <div
-          id="collapsePersonal"
-          class="accordion-collapse collapse show"
-          aria-labelledby="headingPersonal"
-          data-bs-parent="#doctorRegisterAccordion"
-        >
+        <div id="collapsePersonal" class="accordion-collapse collapse show" aria-labelledby="headingPersonal"
+          data-bs-parent="#doctorRegisterAccordion">
           <div class="accordion-body d-flex flex-column gap-3 register-input-group justify-content-between">
             <div class="row gap-1 gap-md-0">
               <div class="col-md-6 col-sm-12">
                 <label for="firstName" class="form-label my-1">First Name</label>
-                <input
-                  id="firstName"
-                  type="text"
-                  class="form-control login-form-input rounded-1"
-                  formControlName="firstName"
-                  readonly
-                />
+                <input id="firstName" type="text" class="form-control login-form-input rounded-1"
+                  formControlName="firstName" readonly />
               </div>
               <div class="col-md-6 col-sm-12">
                 <label for="lastName" class="form-label my-1">Last Name</label>
-                <input
-                  id="lastName"
-                  type="text"
-                  class="form-control login-form-input rounded-1"
-                  formControlName="lastName"
-                  readonly
-                />
+                <input id="lastName" type="text" class="form-control login-form-input rounded-1"
+                  formControlName="lastName" readonly />
               </div>
             </div>
 
             <div class="row gap-1 gap-md-0">
               <div class="col-md-6 col-sm-12">
                 <label for="gender" class="form-label">Gender</label>
-                <input
-                  id="gender"
-                  type="text"
-                  class="form-control login-form-input rounded-1"
-                  formControlName="gender"
-                  readonly
-                />
+                <input id="gender" type="text" class="form-control login-form-input rounded-1" formControlName="gender"
+                  readonly />
               </div>
               <div class="col-md-6 col-sm-12">
                 <label for="birthDate" class="form-label">Birth Date</label>
-                <input
-                  id="birthDate"
-                  type="date"
-                  class="form-control login-form-input rounded-1"
-                  formControlName="birthDate"
-                  readonly
-                />
-                <div
-                  *ngIf="
+                <input id="birthDate" type="date" class="form-control login-form-input rounded-1"
+                  formControlName="birthDate" readonly />
+                <div *ngIf="
                     doctorForm.get('birthDate')!.invalid &&
                     doctorForm.get('birthDate')!.touched
-                  "
-                  class="text-danger"
-                >
+                  " class="text-danger">
                   Invalid birth date
                 </div>
               </div>
             </div>
 
-            <div class="mb-3 col-12 col-md-6">
+            <!-- <div class="mb-3 col-12 col-md-6">
               <label for="image" class="form-label">Profile Image</label>
               <input
                 id="image"
@@ -104,7 +67,7 @@
               >
                 Invalid file
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -112,50 +75,28 @@
       <!-- Contact Information -->
       <div class="accordion-item doctor-register-div">
         <h2 class="accordion-header" id="headingContact">
-          <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-target="#collapseContact"
-            data-bs-toggle="collapse"
-            aria-expanded="false"
-            (click)="initMap()"
-          >
+          <button class="accordion-button collapsed" type="button" data-bs-target="#collapseContact"
+            data-bs-toggle="collapse" aria-expanded="false" (click)="initMap()">
             Contact Information
           </button>
         </h2>
-        <div
-          id="collapseContact"
-          class="accordion-collapse collapse"
-          aria-labelledby="headingContact"
-          data-bs-parent="#doctorRegisterAccordion"
-        >
+        <div id="collapseContact" class="accordion-collapse collapse" aria-labelledby="headingContact"
+          data-bs-parent="#doctorRegisterAccordion">
           <div class="accordion-body d-flex flex-column gap-3 register-input-group justify-content-between">
             <div class="row gap-1 gap-md-0">
               <div class="col-md-6 col-sm-12">
                 <label for="email" class="form-label">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  class="form-control login-form-input rounded-1"
-                  formControlName="email"
-                  readonly
-                />
+                <input id="email" type="email" class="form-control login-form-input rounded-1" formControlName="email"
+                  readonly />
               </div>
               <div class="col-md-6 col-sm-12">
                 <label for="phoneNumber" class="form-label">Phone Number</label>
-                <input
-                  id="phoneNumber login-form-input rounded-1"
-                  type="text"
-                  class="form-control"
-                  formControlName="phoneNumber"
-                />
-                <div
-                  *ngIf="
+                <input id="phoneNumber login-form-input rounded-1" type="text" class="form-control"
+                  formControlName="phoneNumber" />
+                <div *ngIf="
                     doctorForm.get('phoneNumber')!.invalid &&
                     doctorForm.get('phoneNumber')!.touched
-                  "
-                  class="text-danger"
-                >
+                  " class="text-danger">
                   Invalid phone number
                 </div>
               </div>
@@ -164,43 +105,28 @@
             <div class="row gap-1 gap-md-0">
               <div class="col-md-6 col-sm-12">
                 <label for="governorate" class="form-label">Governorate</label>
-                <select
-                  id="governorate"
-                  class="form-select"
-                  formControlName="governorate"
-                >
-                  <option
-                    *ngFor="let g of governorates"
-                    [value]="g"
-                  >
-                    {{ g }}
-                  </option>
+                <select id="governorate" class="form-select" formControlName="governorate">
+                  <option value="0" selected disabled>Select Governorate</option>
+                  @for(governorate of governorates; track $index)
+                  {
+                  <option value="{{governorate}}">{{governorate}}</option>
+                  }
                 </select>
-                <div
-                  *ngIf="
+                <div *ngIf="
                     doctorForm.get('governorate')!.invalid &&
                     doctorForm.get('governorate')!.touched
-                  "
-                  class="text-danger"
-                >
+                  " class="text-danger">
                   Please select a governorate
                 </div>
               </div>
               <div class="col-md-6 col-sm-12">
                 <label for="address" class="form-label">Address</label>
-                <input
-                  id="address"
-                  type="text"
-                  class="form-control login-form-input rounded-1"
-                  formControlName="address"
-                />
-                <div
-                  *ngIf="
+                <input id="address" type="text" class="form-control login-form-input rounded-1"
+                  formControlName="address" />
+                <div *ngIf="
                     doctorForm.get('address')!.invalid &&
                     doctorForm.get('address')!.touched
-                  "
-                  class="text-danger"
-                >
+                  " class="text-danger">
                   Address is required
                 </div>
               </div>
@@ -208,18 +134,10 @@
 
             <div class="d-flex flex-column align-items-center justify-content-evenly">
               <p class="align-self-start">Pick Your Location</p>
-              <button
-                type="button"
-                class="btn btn-primary mb-3login-submit "
-                (click)="pickLocation()"
-              >
+              <button type="button" class="btn btn-primary mb-3login-submit " (click)="pickLocation()">
                 Pick Automatically (Permission Needed)
               </button>
-              <div
-                #mapContainer
-                id="map"
-                style="height: 300px; width: 100%;"
-              ></div>
+              <div #mapContainer id="map" style="height: 300px; width: 100%;"></div>
             </div>
           </div>
         </div>
@@ -228,79 +146,43 @@
       <!-- Professional Details -->
       <div class="accordion-item  doctor-register-div">
         <h2 class="accordion-header" id="headingProfessional">
-          <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-target="#collapseProfessional"
-            data-bs-toggle="collapse"
-            aria-expanded="false"
-          >
+          <button class="accordion-button collapsed" type="button" data-bs-target="#collapseProfessional"
+            data-bs-toggle="collapse" aria-expanded="false">
             Professional Details
           </button>
         </h2>
-        <div
-          id="collapseProfessional"
-          class="accordion-collapse collapse"
-          aria-labelledby="headingProfessional"
-          data-bs-parent="#doctorRegisterAccordion"
-        >
+        <div id="collapseProfessional" class="accordion-collapse collapse" aria-labelledby="headingProfessional"
+          data-bs-parent="#doctorRegisterAccordion">
           <div class="accordion-body d-flex flex-column gap-3 register-input-group justify-content-between">
             <div class="mb-3">
               <label for="specialty" class="form-label">Specialty</label>
-              <input
-                id="specialty"
-                type="text"
-                class="form-control login-form-input rounded-1"
-                formControlName="specialty"
-                readonly
-              />
+              <input id="specialty" type="text" class="form-control login-form-input rounded-1"
+                formControlName="specialty" readonly />
             </div>
             <div class="row gap-2 gap-md-0">
               <div class="col-md-6 col-sm-12">
                 <label for="fees" class="form-label">Fees</label>
-                <input
-                  id="fees"
-                  type="number"
-                  class="form-control login-form-input rounded-1"
-                  formControlName="fees"
-                />
-                <div
-                  *ngIf="doctorForm.get('fees')!.invalid && doctorForm.get('fees')!.touched"
-                  class="text-danger"
-                >
+                <input id="fees" type="number" class="form-control login-form-input rounded-1" formControlName="fees" />
+                <div *ngIf="doctorForm.get('fees')!.invalid && doctorForm.get('fees')!.touched" class="text-danger">
                   Invalid fee amount
                 </div>
               </div>
               <div class="col-md-6 col-sm-12">
                 <label for="waitingTime" class="form-label">Waiting Time</label>
-                <input
-                  id="waitingTime"
-                  type="number"
-                  class="form-control login-form-input rounded-1"
-                  formControlName="waitingTime"
-                />
-                <div
-                  *ngIf="
+                <input id="waitingTime" type="number" class="form-control login-form-input rounded-1"
+                  formControlName="waitingTime" />
+                <div *ngIf="
                     doctorForm.get('waitingTime')!.invalid &&
                     doctorForm.get('waitingTime')!.touched
-                  "
-                  class="text-danger"
-                >
+                  " class="text-danger">
                   Invalid waiting time
                 </div>
               </div>
             </div>
             <div class="mb-3">
               <label for="about" class="form-label">About</label>
-              <textarea
-                id="about"
-                class="form-control  login-form-input rounded-1"
-                formControlName="about"
-              ></textarea>
-              <div
-                *ngIf="doctorForm.get('about')!.invalid && doctorForm.get('about')!.touched"
-                class="text-danger"
-              >
+              <textarea id="about" class="form-control  login-form-input rounded-1" formControlName="about"></textarea>
+              <div *ngIf="doctorForm.get('about')!.invalid && doctorForm.get('about')!.touched" class="text-danger">
                 About is required
               </div>
             </div>
@@ -309,13 +191,7 @@
       </div>
     </div>
     <div class="d-flex justify-content-center mt-3">
-      <button
-        type="submit"
-        class="btn w-50 login-submit mb-3"
-        [disabled]="doctorForm.invalid"
-      >
-        Edit
-      </button>
+      <input type="submit" class="btn w-50 login-submit mb-3" [disabled]="doctorForm.invalid" value="Save Changes" />
     </div>
   </form>
 </div>

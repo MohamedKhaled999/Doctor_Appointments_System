@@ -20,9 +20,9 @@ export class ReviewDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.reviewForm = new FormGroup({
-      appId: new FormControl(data.appId),
-      rating: new FormControl('', [Validators.required, Validators.min(1), Validators.max(5)]),
-      comment: new FormControl('', Validators.required)
+      doctorReservationId: new FormControl(data.doctorReservationId),
+      rate: new FormControl('', [Validators.required, Validators.min(1), Validators.max(5)]),
+      review: new FormControl('', Validators.required)
     });
   }
 

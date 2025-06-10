@@ -7,9 +7,9 @@ interface Appointment {
   location: string;
   doctor: string;
   doctorImagePath: string;
-  isExist: boolean;
   files?: string[];
   prescriptionUrl?: string;
+  doctorReservationID?: number;
 }
 
 export type { Appointment };

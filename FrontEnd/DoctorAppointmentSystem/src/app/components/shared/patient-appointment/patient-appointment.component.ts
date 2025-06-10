@@ -77,13 +77,43 @@ export class PatientAppointmentComponent {
       height: '400px',
       panelClass: 'dialog-container',
       data: {
-        appId: this.appointment?.id,
+        doctorReservationId: this.appointment?.doctorReservationID,
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('Dialog closed with result:', result);
-        
+    dialogRef.afterClosed().subscribe({
+      next: (result) => {
+        if (result) {
+          console.log(result);
+          this.patientService.addReview(result).subscribe({
+            next: () =>
+              Swal.fire({
+                icon: 'success',
+                title: 'Review added successfully',
+                color: '#004085',
+                confirmButtonColor: '#004085'
+              }),
+            error: (error) => {
+              console.error('Error adding review:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error adding review',
+                text: error.error.message || 'An error occurred while adding the review.',
+                color: '#004085',
+                confirmButtonColor: '#004085'
+              });
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error adding review:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error adding review',
+          text: error.error.message || 'An error occurred while adding the review.',
+          color: '#004085',
+          confirmButtonColor: '#004085'
+        });
       }
     });
   }
@@ -92,6 +122,10 @@ export class PatientAppointmentComponent {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const files = Array.from(input.files);
+      if (files.length > 3) {
+        this.fileErrors = ['You can only upload a maximum of 3 files.'];
+        return;
+      }
       const invalidFiles = files.filter(file => !this.acceptedFileTypes.includes(file.type) || file.size > this.maxFileSize);
       if (invalidFiles.length > 0) {
         this.fileErrors = invalidFiles.map(file => {
@@ -137,5 +171,8 @@ export class PatientAppointmentComponent {
         });
     }
     }
+  }
+  getPath(str: any): string {
+    return str?.prescriptionUrl.split('.')[1] === 'pdf' ? 'documents' : 'images';
   }
 }

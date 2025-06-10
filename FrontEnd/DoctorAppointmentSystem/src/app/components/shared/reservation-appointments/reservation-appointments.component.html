@@ -1,1 +1,42 @@
-<p>reservation-appointments works!</p>
+<div id="patient-tab-2" class="row w-75 patient-appointments-container mx-auto shadow-sm rounded-4"
+  style="margin-bottom: 16px;">
+  <swiper-container class="w-100 h-100 p-3 mx-auto position-relative" pagination="true" pagination-clickable="true"
+    slides-per-view="1" grid-rows="2" space-between="40">
+    @if (appointments != null && appointments.length != 0)
+    {
+    @for(appointment of appointments; track $index)
+    {
+    <swiper-slide class="patient-appointment-card bg-white rounded-3" data-aos="fade-left">
+      <div class="w-100 h-100 overflow-hidden d-flex gap-3 align-items-center position-relative p-3 shadow rounded-3">
+        <div class="w-75 patient-appointment-card-content d-flex flex-wrap justify-content-between">
+          <div class="d-flex flex-column">
+            <h5 class="mb-1">{{ appointment?.patient}}</h5>
+          </div>
+          <ul class="list-unstyled list-group d-flex flex-wrap justify-content-between mt-2"
+            *ngIf="appointment.documentUrls !== null && appointment.documentUrls">
+            <li *ngFor="let file of appointment.documentUrls.split('||')"
+              class="mb-2 list-group-item d-flex justify-content-between align-items-center">
+              <i class="fas fa-file-alt me-1"></i> <a [href]="`https://doc-net2.runasp.net/uploads/${file.split('.')[1] === 'pdf' ? 'documents' : 'images'}/` + file" target="_blank">{{ file }}</a>
+            </li>
+          </ul>
+          <div class="col-12">
+            <label for="medicalFiles" class="form-label mb-2">Attach Medical Files (PDF, JPG, PNG, JPEG &lt;
+              5MB)</label>
+            <input id="medicalFiles" type="file" class="form-control mb-2"
+              (change)="onFileSelected($event, appointment)" multiple [accept]="acceptedFileTypes" />
+            <small class="form-text text-muted mb-2">You can attach multiple files.</small>
+            <div *ngIf="fileErrors" class="text-danger mb-2 mt-1">
+              <p *ngFor="let error of fileErrors">{{ error }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </swiper-slide>
+    }
+    }
+    @else if (loading == false)
+    {
+    <h2 class="text-center mt-5">No Appointment has been booked so far</h2>
+    }
+  </swiper-container>
+</div>

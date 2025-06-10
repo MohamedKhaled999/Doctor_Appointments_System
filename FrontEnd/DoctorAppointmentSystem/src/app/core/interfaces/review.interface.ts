@@ -1,7 +1,7 @@
 interface Review {
-  appointmentId: number;
+  doctorReservationId: number;
   rate: number;
-  description: string;
+  review: string;
 }
 
 export type { Review };

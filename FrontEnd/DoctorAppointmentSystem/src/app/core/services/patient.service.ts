@@ -25,4 +25,7 @@ export class PatientService {
   cancelAppoinment(appointmentId: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/Patient/Appointments?id=${appointmentId}`);
   }
+  addReview(review: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/Patient/appointments/Review`, review);
+  }
 }
