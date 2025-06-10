@@ -99,6 +99,7 @@ namespace Services
 
             SpecificationsBase<Doctor> spec = new SpecificationsBase<Doctor>(condition);
             spec.ApplyPagination(filter.PageNum, filter.PageSize);
+            spec.AddInclude(d => d.Specialty);
             var doctorsTask = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(spec);
             var doctors = _mapper.Map<ICollection<DoctorSearchDTO>>(doctorsTask);
 
@@ -119,7 +120,7 @@ namespace Services
                     (filter.Gender == Shared.Enums.Gender.All || doc.Gender == (Domain.Models.Enums.Gender)filter.Gender) &&
                     (filter.Governorate == Shared.Enums.Governorate.All || doc.Governorate == (Domain.Models.Enums.Governorate)filter.Governorate) &&
                     doc.Fees >= filter.MinPrice && doc.Fees <= filter.MaxPrice && doc.WaitingTime <= filter.WaitingTime;
-
+            
             SpecificationsBase<Doctor> spec = new SpecificationsBase<Doctor>(condition);
             var filtereddoctors = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(spec);
             return new SearchPageDTO
