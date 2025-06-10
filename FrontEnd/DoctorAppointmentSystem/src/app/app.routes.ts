@@ -22,6 +22,7 @@ import { profile } from 'console';
 import { PatientProfileComponent } from './components/pages/patient-profile/patient-profile.component';
 import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.component';
 import { Doctor } from './core/models/Doctor';
+import { ContactComponent } from './components/contact/contact.component';
 // rt const routes: Routes = [
 //   {
 //     path: 'test',
@@ -98,6 +99,12 @@ export const routes: Routes = [
         component: HomeComponent,
         title: 'Home - Doctor Appointments'
       }
+      , 
+        {
+          path: 'contact',
+          component: ContactComponent,
+          title: 'Home - Contact us '
+        }
       ,
       
       {
