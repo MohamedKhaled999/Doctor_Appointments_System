@@ -25,8 +25,6 @@ export class ReservationCardComponent {
   constructor(public userData :DataManagementService){}
   ngOnInit() {
     if (this.appointment.IsAvailable) {
-      // This line extracts the time part (HH:mm) from the ISO string "2025-06-10T18:00:00"
-      // For example, "2025-06-10T18:00:00" => "18:00"
       this.fromTime = this.appointment.StartTime.split('T')[1].slice(0,5);
       this.fromTime = this.convertToAmPm(this.fromTime);
       this.toTime = this.appointment.EndTime.split('T')[1].slice(0,5)//times[1] || '';

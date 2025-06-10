@@ -1,6 +1,5 @@
 
-<h1 *ngIf="this.DoctorSearchService.isLoading()" class="SP-primaryText text-center p-3">Loading...</h1>
-<h1 *ngIf="!this.DoctorSearchService.isLoading() && this.DoctorSearchService.doctors().length === 0" class="SP-primaryText text-center p-3">No Doctor Exists</h1>
+<h1 *ngIf="!DoctorSearchService.isLoading() && DoctorSearchService.doctors().length === 0" class="SP-primaryText text-center p-3">No Doctor Exists</h1>
 
 <div *ngFor="let doc of this.DoctorSearchService.doctors()" class="SP-docCard flex-wrap align-items-center p-3 mb-2 border rounded shadow-sm " data-aos="fade-left">
     <app-doctor-card [doctor]="doc"></app-doctor-card> 

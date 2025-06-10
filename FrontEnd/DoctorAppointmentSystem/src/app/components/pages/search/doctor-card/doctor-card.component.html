@@ -24,14 +24,14 @@
                             <p class="mb-1">No Available</p>
                             <p class="mb-1">Appointments</p>
                         </div>
-                        <!-- @if (!User.IsInRole("doctor"))                    for later
+                        @if (userData.UserRole() !== "doctor")                    
                         {
-                            <a id="" class="card-footer btn disabled SP-bookBTN p-1">Book</a>
+                            <a class="card-footer btn disabled SP-bookBTN p-1">Book</a>
                         }
                         @else
                         {
                             <a class="card-footer btn disabled SP-bookBTN p-1">Doctors can't book in this release</a>
-                        } -->
+                        }
                     </div>
                 }
                 @else {
