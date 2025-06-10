@@ -22,7 +22,6 @@ export class DoctorReservationService {
   // Signal containing all doctors
 //   doctors = signal<Doctor[]>([]);
     isLoading = signal<boolean>(false);
-    paymentPageLink = signal<string>('');
 //   currentPage = signal<number>(1);
 //   totalDoctors = signal<number>(0);
 //   numberOfPages = signal<number>(0);
@@ -62,7 +61,7 @@ export class DoctorReservationService {
         return this.http.post<any>(
             `${environment.apiUrl}/patient/appointments?doctorReservationId=${ResId}`,
             {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer Token ${token}` }
             }
         );
     }
