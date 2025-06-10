@@ -4,6 +4,7 @@
     {
         ConfirmEmailTemplate,
         ForgotPasswordTemplate,
-        CancelAppointmentTemplate
+        CancelAppointmentTemplate,
+        RescheduleAppointmentTemplate
     }
 }

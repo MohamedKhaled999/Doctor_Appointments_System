@@ -156,16 +156,14 @@ namespace DoctorAppointmentsSystem.Web
 
             app.UseCors("allow");
 
-            app.MapStaticAssets();
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapControllers();
             app.MapHub<NotificationHub>("/hub");
 
-            app.MapControllers();
-
             app.Run();
-
         }
         private static async Task InitializeDbAsync(WebApplication app)
         {

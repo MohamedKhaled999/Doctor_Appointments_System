@@ -7,6 +7,7 @@
         Doctor_ReservationCanceled,
         Patient_AppointmentAdded,
         Patient_AppointmentCanceled,
-        Patient_AppointmentReminder
+        Patient_AppointmentReminder,
+        Patient_AppointmentRescheduled
     }
 }

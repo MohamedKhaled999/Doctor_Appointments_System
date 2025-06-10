@@ -30,7 +30,7 @@ namespace Services
         }
 
         public void SetItem(string key, string value)
-            => _database.StringSet(key, value, TimeSpan.FromDays(3));
+            => _database.StringSet(key, value, TimeSpan.FromHours(3));
 
         public string? GetItem(string key)
             => _database.StringGet(key);
