@@ -27,10 +27,9 @@ namespace Presentation.Controllers
             return Ok(dashboard);
         }
         [HttpPost("AddSpeciality")]
-        public async Task<IActionResult> AddSpeciality(SpecialtyDTO specialtyDTO)
+        public async Task<IActionResult> AddSpeciality(NewSpecialtyDTO specialtyDTO)
         {
-            // Remember to add a new dto
-            await _serviceManager.SpecialtyService.AddSpecialty(specialtyDTO);
+            await _serviceManager.AdminOrchestrator.AddSpecialty(specialtyDTO);
             return Created("", new { success = true });
         }
         [HttpPost("ApproveDoctor")]

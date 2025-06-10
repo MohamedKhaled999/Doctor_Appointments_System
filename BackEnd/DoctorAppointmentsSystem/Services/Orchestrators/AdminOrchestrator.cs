@@ -3,6 +3,7 @@ using Domain.Models;
 using Services.Abstraction;
 using Services.Abstraction.Orchestrators;
 using Shared.DTOs.Admin_Dashboard;
+using Shared.DTOs.Doctor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Services.Orchestrators
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IServiceManager _serviceManager;
-        public AdminOrchestrator(IUnitOfWork unitOfWork, IServiceManager serviceManager)
+        public AdminOrchestrator(IUnitOfWork unitOfWork, IServiceManager serviceManager )
         {
             _unitOfWork = unitOfWork;
             _serviceManager = serviceManager;
@@ -158,6 +159,12 @@ namespace Services.Orchestrators
                 UnApprovedDoctors = await GetUnApprovedDoctors(),
                 RecentAppointments = await GetRecentAppointmentsAsync()
             };
+        }
+        public async Task AddSpecialty(NewSpecialtyDTO newSpecialty)
+        {
+            var Url = await _serviceManager.UploadService.UploadFile(newSpecialty.Image);
+            await _serviceManager.SpecialtyService.AddSpecialty(newSpecialty, Url);
+
         }
 
         private async Task<List<Appointment>> GetMonthAppoiments(int Month)

@@ -31,9 +31,10 @@ namespace Services
             var specialtyDTO = _mapper.Map<SpecialtyDTO>(specialty);
             return specialtyDTO;
         }
-        public async Task AddSpecialty(SpecialtyDTO specialty)
+        public async Task AddSpecialty(NewSpecialtyDTO specialty,string url)
         {
             var specialtyEntity = _mapper.Map<Specialty>(specialty);
+            specialtyEntity.ImageURL = url;
             await _unitOfWork.GetRepository<Specialty, int>().AddAsync(specialtyEntity);
             await _unitOfWork.SaveChangesAsync();
         }

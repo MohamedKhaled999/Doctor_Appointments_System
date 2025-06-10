@@ -6,7 +6,7 @@ namespace Services.Abstraction
     {
         Task<List<SpecialtyDTO>> GetAllSpecialties();
         Task<SpecialtyDTO> GetSpecialtyById(int id);
-        Task AddSpecialty(SpecialtyDTO specialty);
+        Task AddSpecialty(NewSpecialtyDTO specialty, string url);
         Task UpdateSpecialty(SpecialtyDTO specialty);
         Task DeleteSpecialty(int id);
     }

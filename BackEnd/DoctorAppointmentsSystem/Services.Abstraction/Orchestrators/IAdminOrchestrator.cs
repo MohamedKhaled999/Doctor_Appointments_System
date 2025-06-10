@@ -1,4 +1,5 @@
 ﻿using Shared.DTOs.Admin_Dashboard;
+using Shared.DTOs.Doctor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace Services.Abstraction.Orchestrators
         Task<List<TopDoctorDTO>> GetTopDoctorsAsync();
         Task<List<RecentAppointmentDTO>> GetRecentAppointmentsAsync();
         Task<DashboardDataDTO> GetDashboardDataAsync();
+        Task AddSpecialty(NewSpecialtyDTO newSpecialty);
 
     }
 }

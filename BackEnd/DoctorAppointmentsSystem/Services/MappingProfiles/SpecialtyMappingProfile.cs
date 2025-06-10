@@ -11,6 +11,8 @@ namespace Services.MappingProfiles
             CreateMap<Specialty, SpecialtyDTO>()
                 .ForMember(dest => dest.ID, src => src.MapFrom(src => src.Id))
                 .ReverseMap();
+            CreateMap<NewSpecialtyDTO, Specialty>();
+                
         }
     }
 }
