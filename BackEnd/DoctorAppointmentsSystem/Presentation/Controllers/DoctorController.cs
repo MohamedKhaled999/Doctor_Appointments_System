@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Shared.DTOs.Doctor;
@@ -33,6 +34,13 @@ namespace Presentation.Controllers
         public async Task<IActionResult> UpdateDoctor([FromBody]DoctorEditDTO doctorDTO)
         {
             await _serviceManager.DoctorService.UpdateDoctor(doctorDTO, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return Ok(new { success = true });
+        }
+        [HttpPut("ChangePhoto")]
+        [Authorize(Roles = "doctor")]
+        public async Task<IActionResult> UpdateDoctorImage(IFormFile Image)
+        {
+            await _serviceManager.DoctorOrchestrator.ChangeProfileImage(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),Image);
             return Ok(new { success = true });
         }
         [HttpGet("search")]

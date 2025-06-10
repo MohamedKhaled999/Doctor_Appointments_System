@@ -16,6 +16,7 @@ namespace Services.Abstraction
         public Task<SearchPageDTO> SearchPageDTO(FilterSearchDTO filter);
         public Task ApproveDoctor(int docID);
         public  Task<List<UnApprovedDoctorDTO>> GetUnApprovedDoctors();
+        public  Task ChangeImageUrl(int docId, string url);
 
         //Task<Doctor?> GetDoctorInfo(int doctorID);
         //Task<List<Doctor>> GetDoctorsOrderedByRating();

@@ -34,12 +34,13 @@ namespace Services.MappingProfiles
                 .ForMember(dest => dest.DefaultMaxReservations, src => src.MapFrom(src => 10))
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
 
-            CreateMap<DoctorEditDTO, Doctor>()
+            CreateMap<Shared.DTOs.Doctor.DoctorEditDTO, Doctor>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(src => src.Id))
                 .ForMember(dest => dest.SpecialtyID, src => src.Ignore())
                 .ForMember(dest => dest.ImageURL, src => src.Ignore())
                 .ForMember(dest => dest.OverallRating, src => src.Ignore())
-                .ForMember(dest => dest.Location, src => src.MapFrom(src => src.Address));
+                .ForMember(dest => dest.Location, src => src.MapFrom(src => src.Address))
+                .ForMember(dest => dest.BirthDate, src => src.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
 
             CreateMap<Doctor, DoctorProfileDTO>()
                 .ForMember(dest => dest.Speciality, src => src.MapFrom(src => src.Specialty.Name))

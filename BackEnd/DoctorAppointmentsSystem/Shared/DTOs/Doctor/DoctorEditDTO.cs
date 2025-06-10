@@ -22,7 +22,7 @@ namespace Shared.DTOs.Doctor
         [Display(Name = "Birth Date")]
         //[ValidDate]
         public DateOnly BirthDate { get; set; } = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
-        public string Specialty { get; set; }
+        
         [Range(0, double.MaxValue)]
         public int Fees { get; set; }
         [Range(0, 60)]
@@ -30,10 +30,10 @@ namespace Shared.DTOs.Doctor
         [Display(Name = "Waiting Time")]
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Waiting Time must be a number")]
         public int WaitingTime { get; set; }
-        [Display(Name = "Profile Image")]
-        [MaxSize(2, ErrorMessage = "Maximum allowed size is 2 MB")]
-        [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".svg" })]
-        public IFormFile? Image { get; set; }
+        //[Display(Name = "Profile Image")]
+        //[MaxSize(2, ErrorMessage = "Maximum allowed size is 2 MB")]
+        //[AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".svg" })]
+        //public IFormFile? Image { get; set; }
         [DataType(DataType.MultilineText)]
         [StringLength(500, ErrorMessage = "About Doctor must be less than 500 characters")]
         public string About { get; set; }

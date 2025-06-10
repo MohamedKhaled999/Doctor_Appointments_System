@@ -147,5 +147,15 @@ namespace Services
             var unApprovedDoctorsDTO = _mapper.Map<List<UnApprovedDoctorDTO>>(unApprovedDoctors);
             return unApprovedDoctorsDTO;
         }
+        public async Task ChangeImageUrl(int docId,string url)
+        {
+            var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(docId);
+            if (doctor == null)
+                throw new Exception("Doctor not found");
+            doctor.ImageURL = url;
+            _unitOfWork.GetRepository<Doctor, int>().Update(doctor);
+            await _unitOfWork.SaveChangesAsync();
+
+        }
     }
 }
