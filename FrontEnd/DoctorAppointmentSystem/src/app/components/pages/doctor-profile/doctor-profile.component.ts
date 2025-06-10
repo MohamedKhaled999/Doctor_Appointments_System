@@ -91,7 +91,7 @@ export class DoctorProfileComponent implements OnInit {
   */
   constructor(private doctorService: DoctorService, private route: ActivatedRoute, public dialog: MatDialog, private auth: AccountService, private governoratesService: GovernoratesService) {
     this.generateCalendarView(this.currentView, this.viewDate);
-    this.generateTimeSlots();
+    // this.generateTimeSlots();
     this.governorates = this.governoratesService.getGovernorates();
     this.myProfile = this.route.snapshot.params['id'] === undefined;
   }
@@ -100,12 +100,12 @@ export class DoctorProfileComponent implements OnInit {
       case CalendarView.Month:
         this.generateMonthView(date);
         break;
-      case CalendarView.Week:
-        this.generateWeekView(date);
-        break;
-      case CalendarView.Day:
-        this.generateDayView(date);
-        break;
+      // case CalendarView.Week:
+      //   this.generateWeekView(date);
+      //   break;
+      // case CalendarView.Day:
+      //   this.generateDayView(date);
+      //   break;
     }
   }
   generateMonthView(date: Date): void {
@@ -148,26 +148,26 @@ export class DoctorProfileComponent implements OnInit {
       this.weeks.push(week);
     }
   }
-  generateWeekView(date: Date) {
-    const startOfWeek = this.startOfWeek(date);
-    this.monthDays = [];
+  // generateWeekView(date: Date) {
+  //   const startOfWeek = this.startOfWeek(date);
+  //   this.monthDays = [];
 
-    for (let day = 0; day < 7; day++) {
-      const weekDate = new Date(startOfWeek);
-      weekDate.setDate(startOfWeek.getDate() + day);
-      this.monthDays.push(weekDate);
-    }
-  }
+  //   for (let day = 0; day < 7; day++) {
+  //     const weekDate = new Date(startOfWeek);
+  //     weekDate.setDate(startOfWeek.getDate() + day);
+  //     this.monthDays.push(weekDate);
+  //   }
+  // }
 
-  generateDayView(date: Date) {
-    this.monthDays = [date];
-  }
-  generateTimeSlots() {
-    for (let hour = 0; hour <= 24; hour++) {
-      const time = hour < 10 ? `0${hour}:00` : `${hour}:00`;
-      this.timeSlots.push(time);
-    }
-  }
+  // generateDayView(date: Date) {
+  //   this.monthDays = [date];
+  // }
+  // generateTimeSlots() {
+  //   for (let hour = 0; hour <= 24; hour++) {
+  //     const time = hour < 10 ? `0${hour}:00` : `${hour}:00`;
+  //     this.timeSlots.push(time);
+  //   }
+  // }
 
   switchToView(view: CalendarView) {
     this.currentView = view;
@@ -185,17 +185,18 @@ export class DoctorProfileComponent implements OnInit {
         this.viewDate.setMonth(this.viewDate.getMonth() - 1)
       );
       this.generateMonthView(this.viewDate);
-    } else if (this.currentView === 'week') {
-      this.viewDate = new Date(
-        this.viewDate.setDate(this.viewDate.getDate() - 7)
-      );
-      this.generateWeekView(this.viewDate);
-    } else {
-      this.viewDate = new Date(
-        this.viewDate.setDate(this.viewDate.getDate() - 1)
-      );
-      this.generateDayView(this.viewDate);
-    }
+    } 
+    // else if (this.currentView === 'week') {
+    //   this.viewDate = new Date(
+    //     this.viewDate.setDate(this.viewDate.getDate() - 7)
+    //   );
+    //   this.generateWeekView(this.viewDate);
+    // } else {
+    //   this.viewDate = new Date(
+    //     this.viewDate.setDate(this.viewDate.getDate() - 1)
+    //   );
+    //   this.generateDayView(this.viewDate);
+    // }
   }
 
   next() {
@@ -204,17 +205,18 @@ export class DoctorProfileComponent implements OnInit {
         this.viewDate.setMonth(this.viewDate.getMonth() + 1)
       );
       this.generateMonthView(this.viewDate);
-    } else if (this.currentView === 'week') {
-      this.viewDate = new Date(
-        this.viewDate.setDate(this.viewDate.getDate() + 7)
-      );
-      this.generateWeekView(this.viewDate);
-    } else {
-      this.viewDate = new Date(
-        this.viewDate.setDate(this.viewDate.getDate() + 1)
-      );
-      this.generateDayView(this.viewDate);
-    }
+    } 
+    // else if (this.currentView === 'week') {
+    //   this.viewDate = new Date(
+    //     this.viewDate.setDate(this.viewDate.getDate() + 7)
+    //   );
+    //   this.generateWeekView(this.viewDate);
+    // } else {
+    //   this.viewDate = new Date(
+    //     this.viewDate.setDate(this.viewDate.getDate() + 1)
+    //   );
+    //   this.generateDayView(this.viewDate);
+    // }
   }
   isToday(date: Date): boolean {
     const today = new Date();
@@ -259,7 +261,7 @@ export class DoctorProfileComponent implements OnInit {
     const m = minutes < 10 ? `0${minutes}` : minutes;
     const dialogRef = this.dialog.open(ReservationDialogComponent, {
       width: '400px',
-      height: '400px',
+      height: 'auto',
       panelClass: 'dialog-container',
       data: {
         date: this.selectedDate,
@@ -290,10 +292,11 @@ export class DoctorProfileComponent implements OnInit {
                 reservations.forEach(reservation => {
                   reservation.date = new Date(reservation.startTime.split('T')[0]);
                   reservation.time = `${reservation.startTime.split('T')[1]} : ${reservation.endTime.split('T')[1]}`;
+                  reservation.maxAppoinments = reservation.maxReservation;
                 });
                 if (this.doctor) {
                   this.doctor.reservations = reservations;
-                  this.generateCalendarView(this.currentView, this.viewDate);
+                  this.doctor.reservations = this.sortReservationsByTime(this.doctor.reservations!);
                 }
               });
             },
@@ -317,6 +320,7 @@ export class DoctorProfileComponent implements OnInit {
         });
       }
     });
+    this.generateCalendarView(this.currentView, this.viewDate);
   }
   isCurrentMonth(date: Date): boolean {
     return (
@@ -343,9 +347,11 @@ export class DoctorProfileComponent implements OnInit {
           reservations.forEach(reservation => {
             reservation.date = new Date(reservation.startTime.split('T')[0]);
             reservation.time = `${reservation.startTime.split('T')[1]} : ${reservation.endTime.split('T')[1]}`;
+            reservation.maxAppoinments = reservation.maxReservation;
           });
           if (this.doctor) {
             this.doctor.reservations = reservations;
+            this.doctor.reservations = this.sortReservationsByTime(this.doctor.reservations!);
           }
         }
         ,
@@ -546,7 +552,7 @@ export class DoctorProfileComponent implements OnInit {
               });
               this.doctor?.reservations.forEach(res => {
                 if (res.id === newReservation.id) {
-                  res.time = `${newReservation.startTime} : ${newReservation.endTime}`;
+                  res.time = `${newReservation.startTime}:00 : ${newReservation.endTime}:00`;
                 }
               });
             },
@@ -569,6 +575,8 @@ export class DoctorProfileComponent implements OnInit {
                 confirmButtonText: 'OK'
               });
               this.doctor!.reservations = this.doctor!.reservations?.filter(res => res.id !== result.id);
+              this.doctor!.reservations = this.sortReservationsByTime(this.doctor!.reservations!);
+              // this.generateCalendarView(this.currentView, this.viewDate);
             },
             error: (err) => {
               Swal.fire({
@@ -590,40 +598,52 @@ export class DoctorProfileComponent implements OnInit {
         });
       }
     });
+    this.generateCalendarView(this.currentView, this.viewDate);
   }
   onDeleteReservation() {
   }
   drop(event: CdkDragDrop<Reservation[] | undefined>, date: Date, slot?: string): void {
     const reservation = event.item.data as Reservation;
-    reservation.date = date;
+    reservation.date = date
     if (slot) {
       reservation.time = slot;
     }
-    reservation.date = date;
     const updatedReservation = {
-      id: reservation.id,
+      resID: reservation.id,
       date: reservation.date,
       startTime: reservation.time?.split(' : ')[0],
       endTime: reservation.time?.split(' : ')[1],
-      // maxRes: reservation.maxAppoinments,
+      maxRes: reservation.maxAppoinments,
       doctorId: this.doctor?.id
     };
-    // this.doctorService.editReservation(updatedReservation).subscribe(() => {
-    //   Swal.fire({
-    //     title: 'Success',
-    //     text: 'Reservation updated successfully',
-    //     icon: 'success',
-    //     confirmButtonText: 'OK'
-    //   });
-    //   if (this.doctor) {
-    //     this.doctor.reservations = this.doctor.reservations?.map(res => res.id === reservation.id ? { ...res, date: reservation.date, time: reservation.time } : res);
-    //   }
-    // });
+    updatedReservation.date.setDate(updatedReservation.date.getDate() + 1);
+    this.doctorService.editReservation(updatedReservation).subscribe(() => {
+      Swal.fire({
+        title: 'Success',
+        text: 'Reservation updated successfully',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+      if (this.doctor) {
+        updatedReservation.date.setDate(updatedReservation.date.getDate() - 1);
+        this.doctor.reservations = this.doctor.reservations?.map(res => res.id === reservation.id ? { ...res, date: updatedReservation.date, time: reservation.time } : res);
+        this.doctor.reservations = this.sortReservationsByTime(this.doctor.reservations!);
+      }
+    });
+        this.generateCalendarView(this.currentView, this.viewDate);
   }
   getReservationsForDateTime(date: Date, time: string): Reservation[] {
     if (!this.doctor || !this.doctor.reservations) return [];
-    return this.doctor.reservations.filter(reservation =>
+    const reservations = this.doctor.reservations.filter(reservation =>
       this.isSameDate(reservation.date, date) && reservation.time?.startsWith(time)
     );
+    return reservations;
+  }
+  sortReservationsByTime(reservations: any[]): any[] {
+    return reservations.sort((a, b) => {
+      const timeA = a.time?.split(' : ')[0] || '';
+      const timeB = b.time?.split(' : ')[0] || '';
+      return timeA.localeCompare(timeB);
+    });
   }
 }

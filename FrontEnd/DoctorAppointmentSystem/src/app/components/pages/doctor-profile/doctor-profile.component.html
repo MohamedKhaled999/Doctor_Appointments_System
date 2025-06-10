@@ -96,7 +96,7 @@
           </p>
 
           <h4>Map</h4>
-          <div #mapContainer class="w-100 col-12" style="height: 400px;"></div>
+          <div #mapContainer id="SP-Map" class="w-100 col-12" style="height: 400px;"></div>
         </div>
 
         <!-- REVIEWS TAB -->
@@ -220,12 +220,12 @@
                       {{ viewDate | date : "EEEE" }}
                     </span>
                   </div>
-                  <mat-button-toggle-group class="calendar-view-toggle" name="currentView"
+                  <!-- <mat-button-toggle-group class="calendar-view-toggle" name="currentView"
                     (change)="switchToView($event.value)" aria-label="Calendar-View">
                     <mat-button-toggle checked="{{ true }}" value="{{ CalendarView.Month }}">Month</mat-button-toggle>
                     <mat-button-toggle value="{{ CalendarView.Week }}">Week</mat-button-toggle>
                     <mat-button-toggle value="{{ CalendarView.Day }}">Day</mat-button-toggle>
-                  </mat-button-toggle-group>
+                  </mat-button-toggle-group> -->
                   <div class="calendar-controls">
                     <button mat-icon-button (click)="previous()" (keydown.enter)="previous()"
                       (keydown.space)="previous()">
