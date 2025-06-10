@@ -27,7 +27,6 @@ export class DoctorReservationService {
 //   maxPages = signal<number>(0);
 //   pageSize = signal<number>(6);
 //   pageIndex = signal<number>(1);
-
 //   doctorName = signal<string>('');
 //   speciality = signal<Specialities>(Specialities.All);
 //   governorate = signal<Governorate>(Governorate.All);

@@ -125,14 +125,6 @@ ngAfterViewInit(): void {
 
   }
 
-    // doctorName: '',
-    // speciality: Specialities.All,
-    // governorate: Governorate.All,
-    // gender: Gender.All,
-    // waitingTime: 60, // Default waiting time in minutes
-    // minPrice: 0,
-    // maxPrice: 1000,
-
   onFilter(): void {
     console.log('Filters applied:', this.filters);
     this.DoctorSearchService.doctorName.set(this.filters.doctorName);
@@ -193,7 +185,7 @@ ngAfterViewInit(): void {
       speciality: Specialities.All,
       governorate: Governorate.All,
       gender: Gender.All,
-      waitingTime: 0,
+      waitingTime: 60,
       minPrice: 0,
       maxPrice: 1000
     };
