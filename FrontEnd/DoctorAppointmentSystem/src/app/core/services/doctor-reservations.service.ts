@@ -48,7 +48,7 @@ export class DoctorReservationService {
                     Day: res.day,
                     StartTime: res.startTime,
                     EndTime: res.endTime,
-                    IsAvailable: res.isAvailable
+                    IsAvailable: res?.isAvailable
                 }))
             })),
             catchError(error => {

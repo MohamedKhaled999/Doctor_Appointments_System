@@ -135,7 +135,7 @@ export const routes: Routes = [
           {
             path: 'doctor/:id',
             // loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
-          component : PatientProfileComponent
+          component : DoctorProfileComponent
           }
         ]
       },
