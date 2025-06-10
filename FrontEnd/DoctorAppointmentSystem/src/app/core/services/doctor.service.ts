@@ -30,9 +30,7 @@ export class DoctorService {
     
     return this.http.put<Doctor>(`${environment.apiUrl}/Doctor`, data).pipe(
       catchError(error => {
-        return throwError(() => {
-          return new Error(error.error || 'An error occurred while updating the profile.');
-        });
+        throw error;
       })
     );
   }
@@ -50,9 +48,7 @@ export class DoctorService {
   deleteReservation(id: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/Doctor/reservations?id=${id}`).pipe(
       catchError(error => {
-        return throwError(() => {
-          return new Error(error.error || 'An error occurred while deleting the reservation.');
-        });
+        throw error;
       })
     )
   }

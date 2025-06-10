@@ -533,11 +533,11 @@ export class DoctorProfileComponent implements OnInit {
       });
       return;
     }
+    const oldpath = this.doctor?.image;
+    let count = 0;
     this.doctorService.uploadPhoto(event.target.files[0]).subscribe({
       next: () => {
-        
-    this.getDoctorProfile();
-      },
+      this.getDoctorProfile();},
       error: (err) =>{
         console.error(err);
       }
@@ -547,6 +547,8 @@ export class DoctorProfileComponent implements OnInit {
     this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe({
       next: (profile) => {
         this.doctor = profile;
+        console.log(this.doctor);
+        
       },
       error: (error) =>
       {
@@ -569,8 +571,6 @@ export class DoctorProfileComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe({
       next: (result) => {
-        console.log(result);
-        
         if (result && result?.action !== 'delete') {
           const newReservation = {
             resID: result.id,
@@ -619,7 +619,7 @@ export class DoctorProfileComponent implements OnInit {
             error: (err) => {
               Swal.fire({
                 title: 'Error',
-                text: `You can't delete this reservation because it has less than 48 hours left.`,
+                text: `There was an error deleting the reservation: ${err.error.Errors[0] || 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });

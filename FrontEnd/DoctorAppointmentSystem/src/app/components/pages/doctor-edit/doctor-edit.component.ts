@@ -120,7 +120,7 @@ export class DoctorEditComponent implements OnInit {
       const map = new L.Map(this.mapContanier.nativeElement).setView([lat, lng], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
       const marker = new L.Marker([lat, lng], { draggable: true }).addTo(map);
-      marker.bindPopup(`<b>${this.doctor.firstName} ${this.doctor.lastName}</b><br>${this.doctor.governorate}`).openPopup();
+      marker.bindPopup(`<b>${this.doctor.firstName} ${this.doctor.lastName}</b><br>${this.governorates[parseInt(this.doctor.governorate) - 1]}`).openPopup();
       marker.on('dragend', (event: any) => {
         const position = event.target.getLatLng();
         this.doctorForm.patchValue({
@@ -198,11 +198,9 @@ export class DoctorEditComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.log('Error updating profile:', err);
-
         Swal.fire({
           title: 'Error',
-          text: 'There was an error updating your profile. Please try again later.',
+          text: `An error occurred while updating your profile: ${err.error.Errors[0] || 'Please try again later.'}`,
           icon: 'error',
           confirmButtonText: 'OK'
         });
