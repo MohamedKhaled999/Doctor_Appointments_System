@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared.DTOs.Admin_Dashboard
 {
-    public class RecentAppointment
+    public class RecentAppointmentDTO
     {
         public int Id { get; set; }
         public string Patient { get; set; } = string.Empty;

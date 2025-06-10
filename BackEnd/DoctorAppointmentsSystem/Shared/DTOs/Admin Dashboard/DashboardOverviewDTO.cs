@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared.DTOs.Admin_Dashboard
 {
-    public class DashboardOverview
+    public class DashboardOverviewDTO
     {
         public int TotalDoctors { get; set; }
         public int TotalPatients { get; set; }

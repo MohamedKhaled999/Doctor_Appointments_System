@@ -33,6 +33,12 @@ namespace Presentation.Controllers
             await _serviceManager.SpecialtyService.AddSpecialty(specialtyDTO);
             return Created("", new { success = true });
         }
+        [HttpPost("ApproveDoctor")]
+        public async Task<IActionResult> ApproveDoctor(int doctorId)
+        {
+            await _serviceManager.DoctorService.ApproveDoctor(doctorId);
+            return Ok(new { success = true });
+        }
 
     }
 }

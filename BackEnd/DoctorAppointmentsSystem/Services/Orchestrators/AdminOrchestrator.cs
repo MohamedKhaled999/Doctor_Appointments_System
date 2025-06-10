@@ -20,10 +20,10 @@ namespace Services.Orchestrators
             _unitOfWork = unitOfWork;
             _serviceManager = serviceManager;
         }
-        public async Task<DashboardOverview> GetDashboardOverviewAsync()
+        public async Task<DashboardOverviewDTO> GetDashboardOverviewAsync()
         {
 
-            return new DashboardOverview
+            return new DashboardOverviewDTO
             {
                 TotalDoctors = _unitOfWork.GetRepository<Doctor, int>().GetCount(),
                 TotalPatients = _unitOfWork.GetRepository<Patient, int>().GetCount(),
@@ -34,12 +34,12 @@ namespace Services.Orchestrators
             };
 
         }
-        public async Task<List<MonthlyStats>> GetMonthlyStatsAsync()
+        public async Task<List<MonthlyStatsDTO>> GetMonthlyStatsAsync()
         {
-            var MSList = new List<MonthlyStats>();
+            var MSList = new List<MonthlyStatsDTO>();
             for (int i = DateTime.MinValue.Month; i <= DateTime.Now.Month; i++)
             {
-                var monthlyStats = new MonthlyStats
+                var monthlyStats = new MonthlyStatsDTO
                 {
                     Month = new DateTime(DateTime.Now.Year, i, 1).ToString("MMMM"),
                     Appointments = (await GetMonthAppoiments(i)).Count,
@@ -51,59 +51,59 @@ namespace Services.Orchestrators
 
             return MSList;
         }
-        public async Task<List<SpecialtyDistribution>> GetSpecialtyDistributionAsync()
+        public async Task<List<SpecialtyDistributionDTO>> GetSpecialtyDistributionAsync()
         {
-            return (await _serviceManager.HomeService.GetHomeData()).Specialties.Select(s => new SpecialtyDistribution
+            return (await _serviceManager.HomeService.GetHomeData()).Specialties.Select(s => new SpecialtyDistributionDTO
             {
                 Name = s.Name,
                 Value = s.NumberOfDoctors
             }).ToList();
         }
-        public async Task<List<AppointmentStatus>> GetAppointmentStatusAsync()
+        public async Task<List<AppointmentStatusDTO>> GetAppointmentStatusAsync()
         {
-            var AppointmentStatusList = new List<AppointmentStatus>();
+            var AppointmentStatusList = new List<AppointmentStatusDTO>();
             SpecificationsBase<Appointment> spec = new SpecificationsBase<Appointment>(null);
             spec.AddInclude(a => a.DoctorReservation);
             var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(spec);
             if (appointments == null || !appointments.Any())
-                return new List<AppointmentStatus>();
+                return new List<AppointmentStatusDTO>();
             var totalAppointments = appointments.Count();
             var completedAppointments = appointments.Count(a => a.DoctorReservation.EndTime < DateTime.Now && a.Canceled == false);
             var pendingAppointments = appointments.Count(a => a.DoctorReservation.StartTime > DateTime.Now && a.Canceled == false);
             var cancelledAppointments = appointments.Count(a => a.Canceled == true);
-            AppointmentStatusList.Add(new AppointmentStatus()
+            AppointmentStatusList.Add(new AppointmentStatusDTO()
             {
                 Status = "Completed",
                 Count = completedAppointments,
             });
-            AppointmentStatusList.Add(new AppointmentStatus()
+            AppointmentStatusList.Add(new AppointmentStatusDTO()
             {
                 Status = "Pending",
                 Count = pendingAppointments,
             });
-            AppointmentStatusList.Add(new AppointmentStatus()
+            AppointmentStatusList.Add(new AppointmentStatusDTO()
             {
                 Status = "Cancelled",
                 Count = cancelledAppointments,
             });
-            AppointmentStatusList.Add(new AppointmentStatus()
+            AppointmentStatusList.Add(new AppointmentStatusDTO()
             {
                 Status = "Total",
                 Count = totalAppointments,
             });
             return AppointmentStatusList;
         }
-        public async Task<List<TopDoctor>> GetTopDoctorsAsync()
+        public async Task<List<TopDoctorDTO>> GetTopDoctorsAsync()
         {
-            var topDoctors = new List<TopDoctor>();
+            var topDoctors = new List<TopDoctorDTO>();
             SpecificationsBase<Doctor> spec = new SpecificationsBase<Doctor>(null);
             spec.AddInclude(d => d.Specialty);
             var doctors = await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(spec);
             if (doctors == null || !doctors.Any())
-                return new List<TopDoctor>();
+                return new List<TopDoctorDTO>();
             foreach (var doctor in doctors)
             {
-                topDoctors.Add(new TopDoctor
+                topDoctors.Add(new TopDoctorDTO
                 {
                     Id = doctor.Id,
                     Name = $"{doctor.FirstName} {doctor.LastName}",
@@ -115,9 +115,15 @@ namespace Services.Orchestrators
             }
             return topDoctors.OrderByDescending(d => d.Revenue).Take(10).ToList();
         }
-        public async Task<List<RecentAppointment>> GetRecentAppointmentsAsync()
+        public async Task<List<UnApprovedDoctorDTO>> GetUnApprovedDoctors()
         {
-            var recentAppointments = new List<RecentAppointment>();
+            var unApprovedDoctors = await _serviceManager.DoctorService.GetUnApprovedDoctors();
+            return unApprovedDoctors;
+            
+        }
+        public async Task<List<RecentAppointmentDTO>> GetRecentAppointmentsAsync()
+        {
+            var recentAppointments = new List<RecentAppointmentDTO>();
             SpecificationsBase<Appointment> spec = new SpecificationsBase<Appointment>(null);
             spec.AddInclude(a => a.Patient);
             spec.AddInclude(a => a.DoctorReservation.Doctor);
@@ -125,10 +131,10 @@ namespace Services.Orchestrators
             spec.ApplyPagination(1, 10);
             var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(spec);
             if (appointments == null || !appointments.Any())
-                return new List<RecentAppointment>();
+                return new List<RecentAppointmentDTO>();
             foreach (var appointment in appointments)
             {
-                recentAppointments.Add(new RecentAppointment
+                recentAppointments.Add(new RecentAppointmentDTO
                 {
                     Id = appointment.Id,
                     Patient = $"{appointment.Patient.FirstName} {appointment.Patient.LastName}",
@@ -149,6 +155,7 @@ namespace Services.Orchestrators
                 SpecialtyDistribution = await GetSpecialtyDistributionAsync(),
                 AppointmentStatus = await GetAppointmentStatusAsync(),
                 TopDoctors = await GetTopDoctorsAsync(),
+                UnApprovedDoctors = await GetUnApprovedDoctors(),
                 RecentAppointments = await GetRecentAppointmentsAsync()
             };
         }
