@@ -120,10 +120,10 @@ export const routes: Routes = [
             path: 'patient',
             loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
           },
-          {
-            path: 'doctor',
-            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
-          },
+          // {
+          //   path: 'doctor',
+          //   loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+          // },
           {
             path: 'doctor/edit',
             loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent)
