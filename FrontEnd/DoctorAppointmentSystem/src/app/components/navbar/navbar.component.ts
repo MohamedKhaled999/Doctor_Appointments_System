@@ -5,11 +5,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { DataManagementService } from '../../core/services/data-management.service';
 import { filter } from 'rxjs/operators';
+import { NotificationsComponent } from '../shared/notifications/notifications.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [NgbCollapse, CommonModule, RouterLink, RouterModule],
+  imports: [NgbCollapse, CommonModule, RouterLink, RouterModule, NotificationsComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -71,9 +72,6 @@ export class NavbarComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log("navbar",this.dataService.UserRole());
-    console.log("auth",this.dataService.isAuthenticated());
-    
     this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {
         this.isHome = event.url === '/';

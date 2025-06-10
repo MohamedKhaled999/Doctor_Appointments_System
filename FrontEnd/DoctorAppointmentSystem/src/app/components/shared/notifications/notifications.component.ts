@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Notification } from '../../../core/interfaces/notification.interface';
 import { CommonModule } from '@angular/common';
+import { NotificationEvents } from '../../../core/enums/notificationEvents.enum';
 
 @Component({
   selector: 'app-notifications',
@@ -30,12 +31,13 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         this.notifications.reverse();
         this.newNotificationsCount = this.notifications.filter(notification => !notification.isRead).length;
         this.displayedNotifications = this.notifications.slice(0, 5);
-        console.log('Initial notifications:', this.notifications, this.displayedNotifications);
         this.subscription.add(
           this.notificationService.notifications$.subscribe({
             next: (data) => {
               if (data !== null) {
                 this.notifications.unshift(data);
+                this.newNotificationsCount++;
+                this.displayedNotifications = this.notifications.slice(0, 5);
               }
             },
             error: (error) => {
@@ -73,5 +75,37 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   loadMore(): void {
     this.displayedNotifications = this.notifications.slice(0, this.displayedNotifications.length + 5);
     this.markAsRead();
+  }
+  getNotificationEentType(eventType: number): string {
+    switch (eventType) {
+      case NotificationEvents.Doctor_MaximumAppointmentsReached:
+        return 'Maximum Appointments Reached';
+      case NotificationEvents.Doctor_ReservationAdded:
+        return 'Reservation Added';
+      case NotificationEvents.Doctor_ReservationCanceled:
+        return 'Reservation Canceled';
+      case NotificationEvents.Patient_AppointmentAdded:
+        return 'Appointment Added';
+      case NotificationEvents.Patient_AppointmentCanceled:
+        return 'Appointment Canceled';
+      case NotificationEvents.Patient_AppointmentReminder:
+        return 'Appointment Reminder';
+      default:
+        return 'Unknown Event';
+    }
+  }
+  getNotificationTimeAgo(timeStamp: string): string {
+    const now = new Date();
+    const notificationDate = new Date(timeStamp);
+    const diffInSeconds = Math.floor((now.getTime() - notificationDate.getTime()) / 1000);
+    if (diffInSeconds < 60) {
+      return `${diffInSeconds} seconds ago`;
+    } else if (diffInSeconds < 3600) {
+      return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    } else if (diffInSeconds < 86400) {
+      return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    } else {
+      return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    }
   }
 }
