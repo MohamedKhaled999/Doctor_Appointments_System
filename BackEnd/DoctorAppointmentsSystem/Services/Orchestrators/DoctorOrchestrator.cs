@@ -23,13 +23,14 @@ namespace Services.Orchestrators
             dto.ImageURL = ImgUrl;
             await doctorService.AddAsync(dto);
         }
-        public async Task ChangeProfileImage(int appUserId, IFormFile image)
+        public async Task<string> ChangeProfileImage(int appUserId, IFormFile image)
         {
             var doctor = await doctorService.GetByAppUserIdAsync(appUserId);
             if (doctor == null)
                 throw new Exception("Doctor not found");
-            var ImgUrl = await uploadService.UploadFile(image, doctor.Image);
-            await doctorService.ChangeImageUrl(doctor.ID, ImgUrl);
+            var ImgUrl = await uploadService.UploadFile(image,doctor.Image);
+            await doctorService.ChangeImageUrl(doctor.ID,ImgUrl);
+            return ImgUrl;
         }
         public async Task<ICollection<ReviewDTO>> GetDoctorReviews(int docID, int pageNumber = 1, int pageSize = 10)
         {

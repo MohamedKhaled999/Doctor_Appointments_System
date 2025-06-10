@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.ActionFilters;
 using Services.Abstraction;
 using Shared.DTOs.DoctorReservation;
 using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
-    [Route("api/doctor/reservations")]
+    [Route("api/doctor/reservations")]   
     public class ReservationController : ApiController
     {
         private readonly IServiceManager _serviceManager;
@@ -39,6 +40,7 @@ namespace Presentation.Controllers
 
         [HttpPost]
         [Authorize(Roles = "doctor")]
+        [TypeFilter(typeof(ApprovedDoctorFilter))]
         public async Task<IActionResult> NewReservation(NewResDTO reservation)
         {
             reservation.ResID = 0;
@@ -48,6 +50,7 @@ namespace Presentation.Controllers
 
         [HttpPut]
         [Authorize(Roles = "doctor")]
+        [TypeFilter(typeof(ApprovedDoctorFilter))]
         public async Task<IActionResult> EditReservation(NewResDTO reservation)
         {
             var newReservation = await _serviceManager.AppointmentOrchestrator.AddDoctorReservationAsync(reservation, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
@@ -56,6 +59,7 @@ namespace Presentation.Controllers
 
         [HttpPost("prescription")]
         [Authorize(Roles = "doctor")]
+        [TypeFilter(typeof(ApprovedDoctorFilter))]
         public async Task<IActionResult> AddPrescription(int reservationId, int appointmentId, IFormFile document)
         {
             await _serviceManager.AppointmentOrchestrator.AddAppointmentPrescription(reservationId, appointmentId, document, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
@@ -64,6 +68,7 @@ namespace Presentation.Controllers
 
         [HttpDelete]
         [Authorize(Roles = "doctor")]
+        [TypeFilter(typeof(ApprovedDoctorFilter))]
         public async Task<IActionResult> CancelReservation(int id)
         {
             await _serviceManager.AppointmentOrchestrator.CancelReservationAsync(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
@@ -72,6 +77,7 @@ namespace Presentation.Controllers
 
         [HttpDelete("prescription")]
         [Authorize(Roles = "doctor")]
+        [TypeFilter(typeof(ApprovedDoctorFilter))]
         public async Task<IActionResult> DeletePrescription(int reservationId, int appointmentId)
         {
             await _serviceManager.AppointmentOrchestrator.DeleteAppointmentPrescription(reservationId, appointmentId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
