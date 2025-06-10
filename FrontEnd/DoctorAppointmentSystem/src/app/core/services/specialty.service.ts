@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
 
@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class SpecialtyService {
   constructor(private api: ApiService) { }
+
+  isLoading = signal<boolean>(false);
 
   getSpecialties(): Observable<any[]> {
     return this.api.getSpecialties();

@@ -10,6 +10,7 @@ import { Specialities } from '../enums/speciality.enum';
 import { Gender } from '../enums/gender.enum';
 import { effect } from '@angular/core';
 import { DoctorListComponent } from '../../components/pages/search/doctor-list/doctor-list.component';
+import { Specialty } from '../interfaces/specialty.interface';
 @Injectable({ providedIn: 'root' })
 export class DoctorSearchService {
 
@@ -29,7 +30,7 @@ export class DoctorSearchService {
   pageIndex = signal<number>(1);
 
   doctorName = signal<string>('');
-  speciality = signal<Specialities>(Specialities.All);
+  speciality = signal<Specialty[]>([]);
   governorate = signal<Governorate>(Governorate.All);
   gender = signal<Gender>(Gender.All);
   waitingTime = signal<number>(60);
@@ -63,47 +64,64 @@ export class DoctorSearchService {
   // }
 
 
-  getFilteredDoctorsWithPagination(page: number = 1, pageSize: number = 6, doctorName: string = '', speciality: Specialities = Specialities.All, governorate: Governorate = Governorate.All, gender : Gender = Gender.All, waitingTime: number = 0, minPrice: number = 0, maxPrice: number = 1000): Observable<DoctorResponse> {
+  getFilteredDoctorsWithPagination(page: number = 1, pageSize: number = 6, doctorName: string = '', speciality: Specialty[] = [], governorate: Governorate = Governorate.All, gender : Gender = Gender.All, waitingTime: number = 0, minPrice: number = 0, maxPrice: number = 1000): Observable<DoctorResponse> {
 
     
     if( !doctorName && waitingTime === 0 && minPrice === 0 && maxPrice === 1000) {  // If no filters are applied, return all doctors with pagination
-      console.log(`getting all doctors ,PageNum=${page}&PageSize=${pageSize}&Name=${doctorName}&gender=${gender}&Speciality=${speciality}&Governorate=${governorate}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`);
+      console.log(`getting all doctors ,PageNum=${page}&PageSize=${pageSize}&Name=${doctorName}&gender=${gender}&Governorate=${governorate}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`);
       
       return this.getAllDoctorsWithPagination(page, pageSize);
     }
-    else if ( doctorName === '') {
-      console.log(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&Speciality=${speciality}&Governorate=${governorate}&gender=${gender}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`);
-      
-      return this.http.get(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&Speciality=${speciality}&Governorate=${governorate}&gender=${gender}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`).pipe(
-        map((response: any) => ({
-          results: response.doctors.map((doctor: any) => this.transformDoctors([doctor])[0]),
-          total_pages: response.totalPageNumber,
-          total_results: response.total_results,
-          page: response.page
-        })),
-        catchError(error => {
-          console.error('Error fetching doctors:', error);
-            throw error;
-            })
-          );
-    }
-    else {
-      console.log(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&Name=${doctorName}&Speciality=${speciality}&Governorate=${governorate}&gender=${gender}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`);
+  let specialtyArray: any[] = [];
+  if (Array.isArray(speciality)) {
+    specialtyArray = speciality;
+  } else if (speciality !== undefined && speciality !== null && speciality !== '') {
+    specialtyArray = [speciality];
+  }
 
-      return this.http.get(`${this.apiUrl}?PageNum=${page}&PageSize=${pageSize}&Name=${doctorName}&Speciality=${speciality}&Governorate=${governorate}&gender=${gender}&WaitingTime=${waitingTime}&MinPrice=${minPrice}&MaxPrice=${maxPrice}`).pipe(
-      map((response: any) => ({
-        results: response.doctors.map((doctor: any) => this.transformDoctors([doctor])[0]),
-        total_pages: response.totalPageNumber,
-        total_results: response.total_results,
-        page: response.page
-      })),
-      catchError(error => {
-        console.error('Error fetching doctors:', error);
-          throw error;
-          })
-        );
-      }
-    }
+  // Build query params dynamically
+  const params: any = {
+    PageNum: page,
+    PageSize: pageSize,
+    Name: doctorName,
+    Specialty: specialtyArray.map(s => typeof s === 'object' ? s.id : s),
+    Governorate: governorate,
+    gender: gender,
+    WaitingTime: waitingTime,
+    MinPrice: minPrice,
+    MaxPrice: maxPrice
+  };
+
+  // Remove empty or default params to keep the URL clean
+  if (!doctorName) delete params.Name;
+  if (!speciality || speciality.length === 0) delete params.Specialty;
+  if (governorate === Governorate.All) delete params.Governorate;
+  if (gender === Gender.All) delete params.gender;
+  if (!waitingTime) delete params.WaitingTime;
+  if (!minPrice) delete params.MinPrice;
+  if (maxPrice === 1000) delete params.MaxPrice;
+
+  // Build query string
+  const queryString = Object.entries(params)
+    .map(([key, value]) => `${key}=${encodeURIComponent(Array.isArray(value) ? value.join(',') : String(value))}`)
+    .join('&');
+
+  console.log(`${this.apiUrl}?${queryString}`);
+
+  return this.http.get(`${this.apiUrl}?${queryString}`).pipe(
+    map((response: any) => ({
+      results: response.doctors.map((doctor: any) => this.transformDoctors([doctor])[0]),
+      total_pages: response.totalPageNumber,
+      total_results: response.total_results,
+      page: response.page
+    })),
+    catchError(error => {
+      console.error('Error fetching doctors:', error);
+      throw error;
+    })
+  );
+  
+}
   
 
   getAllDoctorsWithPagination(page: number = 1, pageSize: number = 6): Observable<DoctorResponse> {
@@ -142,23 +160,38 @@ export class DoctorSearchService {
     }));
   }
 
-//   private transformReservation(apiReservation: any): reservation {
-//     return {
-//       // Map reservation fields according to your reservation interface
-//       id: apiReservation.id,
-//       date: new Date(apiReservation.dateTime),
-//       status: apiReservation.status,
-//       // ... other reservation fields
-//     };
-//   }
+loadDoctors(): void {
+    this.isLoading.set(true);
+    this.doctors.set([]);
+    this.getFilteredDoctorsWithPagination(this.currentPage()
+    , this.pageSize()
+    , this.doctorName()
+    , this.speciality()
+    , this.governorate()
+    , this.gender()
+    , this.waitingTime()
+    , this.minPrice()
+    , this.maxPrice()).subscribe({
+      next: (response) => {
+        this.doctors.set(response.results);
+        console.log('Doctors loaded:', this.doctors());
+        this.numberOfPages.set(response.total_pages);
+        console.log('Total pages:', this.numberOfPages());
+        this.numberOfRecords.set(this.numberOfPages() * this.pageSize());
+        this.totalDoctors.set(response.total_results);
+        this.pageIndex.set(response.page);
+        this.isLoading.set(false);
+        console.log("Tracing: Doctors loaded:", this.doctors());
+        console.log("Tracing: Total pages:", this.numberOfPages());
+        console.log("Tracing: Number of records:", this.numberOfRecords());
+        console.log("Tracing: Total doctors:", this.totalDoctors());
+        console.log("Tracing: Current page index:", this.pageIndex());
 
-//   // Get single doctor by ID (using toSignal for reactive approach)
-//   getDoctorById(id: number) {
-//     return toSignal(
-//       this.http.get<any>(`/api/doctors/${id}`).pipe(
-//         map(doctor => this.transformDoctors([doctor])[0])
-//       ),
-//       { initialValue: null }
-//     );
-//   }
+      },
+      error: (error) => {
+        console.error('Error fetching doctors:', error);
+        this.isLoading.set(false);
+      }
+    });
+  }
 }

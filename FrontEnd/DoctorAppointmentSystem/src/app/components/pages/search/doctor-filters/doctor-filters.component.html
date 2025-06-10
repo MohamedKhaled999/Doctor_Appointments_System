@@ -13,7 +13,8 @@
         <div class="input-group mb-3">
             <label class="input-group-text"><i class="fa-solid fa-user-doctor"></i></label>
             <select class="form-select SP-select SP-specialitySelect" name="Speciality" [(ngModel)]="filters.speciality">
-                <option *ngFor="let s of SpecialitiesList" [value]="s">{{ s }}</option>
+                <option value="" [selected]="!filters.speciality">Select Speciality</option>
+                <option *ngFor="let s of SpecialitiesList" [value]="s.id">{{ s.name }}</option>
             </select>
         </div>
 

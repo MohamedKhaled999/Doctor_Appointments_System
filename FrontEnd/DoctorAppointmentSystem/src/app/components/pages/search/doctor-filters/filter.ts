@@ -1,10 +1,11 @@
 import { Governorate } from '../../../../core/enums/governorate.enum';
 import { Specialities } from '../../../../core/enums/speciality.enum';
 import { Gender } from '../../../../core/enums/gender.enum';
+import { Specialty } from '../../../../core/interfaces/specialty.interface';
 export interface Filter {
     // id: string;
     doctorName: string;
-    speciality : Specialities;
+    speciality : Specialty[];
     governorate : Governorate;
     gender : Gender;
     waitingTime?: number;
