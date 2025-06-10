@@ -90,6 +90,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         return 'Appointment Canceled';
       case NotificationEvents.Patient_AppointmentReminder:
         return 'Appointment Reminder';
+      case NotificationEvents.Patient_AppointmentRescheduled:
+        return 'Appointment Rescheduled';
       default:
         return 'Unknown Event';
     }

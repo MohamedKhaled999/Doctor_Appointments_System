@@ -96,7 +96,6 @@
             @for(appointment of patient?.appointments; track $index)
             {
             <swiper-slide class="patient-appointment-card bg-white rounded-3" data-aos="fade-left">
-                <!-- patient-appointment-card p-3 shadow overflow-hidden d-flex gap-3 bg-white rounded-3 align-items-center position-relative -->
                 <app-patient-appointment [appointment]="appointment" 
                 (cancelAppointment)="refreshAppointments()"
                     class="w-100 h-100 overflow-hidden d-flex gap-3 align-items-center position-relative p-3 shadow rounded-3"></app-patient-appointment>

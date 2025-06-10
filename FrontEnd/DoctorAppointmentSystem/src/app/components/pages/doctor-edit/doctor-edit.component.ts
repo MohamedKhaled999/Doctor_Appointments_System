@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { DoctorService } from '../../../core/services/doctor.service';
@@ -9,15 +9,15 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-doctor-edit',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './doctor-edit.component.html',
   styleUrl: './doctor-edit.component.css'
 })
 export class DoctorEditComponent implements OnInit {
   @ViewChild('mapContainer', { static: false }) mapContanier!: ElementRef;
-  doctorForm!: FormGroup;
+  doctorForm: FormGroup;
   doctor: DoctorEdit | undefined;
-  governorates: any[] = [];
+  governorates: string[];
   map: any;
   marker: any;
   isMapInitialized = false;
@@ -25,24 +25,23 @@ export class DoctorEditComponent implements OnInit {
    *
    */
   constructor(private fb: FormBuilder,
-              private doctorService: DoctorService,
-              private governoratesService: GovernoratesService,
-              private route: ActivatedRoute,
-              private router: Router) {
+    private doctorService: DoctorService,
+    private governoratesService: GovernoratesService,
+    private route: ActivatedRoute,
+    private router: Router) {
     this.doctorForm = this.fb.group({
-      id: [{value: '', disabled: true}],
-      firstName: [{value: '', disabled: true}],
-      lastName: [{value: '', disabled: true}],
-      gender: [{value: '', disabled: true}],
-      birthDate: [{value: '', disabled: true}],
-      image: [null],
-      email: [{value: '', disabled: true}],
+      id: [{ value: '', disabled: true }],
+      firstName: [{ value: '', disabled: true }],
+      lastName: [{ value: '', disabled: true }],
+      gender: [{ value: '', disabled: true }],
+      birthDate: [{ value: '', disabled: true }],
+      email: [{ value: '', disabled: true }],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
-      governorate: ['', Validators.required],
-      address: ['', Validators.required],
-      lat: [''],
-      lng: [''],
-      specialty: [{value: '', disabled: true}],
+      governorate: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      lat: ['', []],
+      lng: ['', []],
+      specialty: [{ value: '', disabled: true }],
       fees: ['', [Validators.required, Validators.min(0)]],
       waitingTime: ['', [Validators.required, Validators.min(0)]],
       about: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]]
@@ -59,7 +58,7 @@ export class DoctorEditComponent implements OnInit {
         imageUrl: profile.image,
         about: profile.about,
         fees: profile.fees,
-        specialty: profile.speciality? profile.speciality : profile.specialty,
+        specialty: profile.speciality ? profile.speciality : profile.specialty,
         waitingTime: profile.waitingTime,
         governorate: profile.governorate,
         address: profile.location,
@@ -70,43 +69,42 @@ export class DoctorEditComponent implements OnInit {
         birthDate: profile.birthDate ? new Date(profile.birthDate) : new Date(),
         image: null
       };
-      
-    this.doctorForm.patchValue({
-      id: this.doctor.id,
-      firstName: this.doctor.firstName,
-      lastName: this.doctor.lastName,
-      specialty: this.doctor.specialty,
-      fees: this.doctor.fees,
-      waitingTime: this.doctor.waitingTime,
-      about: this.doctor.about,
-      governorate: this.governorates[parseInt(this.doctor.governorate) - 1],
-      address: this.doctor.address,
-      lat: this.doctor.lat,
-      lng: this.doctor.lng,
-      phoneNumber: this.doctor.phoneNumber,
-      gender: this.doctor.gender,
-      birthDate: this.formatDate(this.doctor.birthDate),
-      email: this.doctor.email
+      this.doctorForm.patchValue({
+        id: this.doctor.id,
+        firstName: this.doctor.firstName,
+        lastName: this.doctor.lastName,
+        specialty: this.doctor.specialty,
+        fees: this.doctor.fees,
+        waitingTime: this.doctor.waitingTime,
+        about: this.doctor.about,
+        governorate: this.governorates[parseInt(this.doctor.governorate) - 1],
+        address: this.doctor.address,
+        lat: this.doctor.lat,
+        lng: this.doctor.lng,
+        phoneNumber: this.doctor.phoneNumber,
+        gender: this.doctor.gender,
+        birthDate: this.formatDate(this.doctor.birthDate),
+        email: this.doctor.email
+      });
     });
-  });
-  // this.doctor = {
-  //     firstName: 'John Doe',
-  //     lastName: 'Smith',
-  //     gender: 'male',
-  //     imageUrl: 'https://example.com/doctor.jpg',
-  //     about: 'MD, PhD',
-  //     fees: 100,
-  //     specialty: 'Cardiology',
-  //     waitingTime: 30,
-  //     governorate: 'Cairo',
-  //     address: '123 Main St, Cairo',
-  //     birthDate: new Date('1980-01-01'),
-  //     phoneNumber: '0123456789',
-  //     email: 'I7eE5@example.com',
-  //     lat: 30.0444,
-  //     lng: 31.2357,
-  //     image: null
-  //   }
+    // this.doctor = {
+    //     firstName: 'John Doe',
+    //     lastName: 'Smith',
+    //     gender: 'male',
+    //     imageUrl: 'https://example.com/doctor.jpg',
+    //     about: 'MD, PhD',
+    //     fees: 100,
+    //     specialty: 'Cardiology',
+    //     waitingTime: 30,
+    //     governorate: 'Cairo',
+    //     address: '123 Main St, Cairo',
+    //     birthDate: new Date('1980-01-01'),
+    //     phoneNumber: '0123456789',
+    //     email: 'I7eE5@example.com',
+    //     lat: 30.0444,
+    //     lng: 31.2357,
+    //     image: null
+    //   }
   }
   formatDate(birthDate: Date): any {
     const month = (birthDate.getMonth() + 1).toString().padStart(2, '0');
@@ -122,7 +120,7 @@ export class DoctorEditComponent implements OnInit {
       const map = new L.Map(this.mapContanier.nativeElement).setView([lat, lng], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
       const marker = new L.Marker([lat, lng], { draggable: true }).addTo(map);
-      marker.bindPopup(`<b>${this.doctor.firstName} ${this.doctor.lastName}</b><br>${this.doctor.governorate}`).openPopup();
+      marker.bindPopup(`<b>${this.doctor.firstName} ${this.doctor.lastName}</b><br>${this.governorates[parseInt(this.doctor.governorate) - 1]}`).openPopup();
       marker.on('dragend', (event: any) => {
         const position = event.target.getLatLng();
         this.doctorForm.patchValue({
@@ -148,6 +146,7 @@ export class DoctorEditComponent implements OnInit {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         this.doctorForm.patchValue({
+          ...this.doctorForm.value,
           lat: latitude,
           lng: longitude,
         });
@@ -178,50 +177,34 @@ export class DoctorEditComponent implements OnInit {
       this.doctorForm.markAllAsTouched();
       return;
     }
-    this.doctorForm.patchValue({
+    this.doctor?.birthDate.setDate(this.doctor?.birthDate.getDate() + 1)
+    const data = {
+      ...this.doctorForm.value,
       governorate: this.governorates.indexOf(this.doctorForm.value.governorate) + 1,
-      id: this.doctor?.id
+      id: this.doctor?.id,
+      firstName: this.doctor?.firstName,
+      lastName: this.doctor?.lastName,
+      birthDate: this.doctor?.birthDate.toISOString().split('T')[0]
+    };
+    this.doctorService.updateProfile(data).subscribe({
+      next: (res) => {
+        Swal.fire({
+          title: 'Success',
+          text: 'Your profile has been updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.router.navigate(['/profile/doctor/']);
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          title: 'Error',
+          text: `An error occurred while updating your profile: ${err.error.Errors[0] || 'Please try again later.'}`,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
     });
-    // const formData = new FormData();
-    const raw = this.doctorForm.getRawValue();
-    console.log('Raw Form Data:', raw);
-    
-    // if (raw.image) {
-    //   formData.append('image', raw.image);
-    // }
-    // formData.append('id', this.doctor?.id.toString() || '');
-    // formData.append('phoneNumber', raw.phoneNumber);
-    // formData.append('governorate', raw.governorate);
-    // formData.append('address', raw.address);
-    // formData.append('lat', raw.latitude);
-    // formData.append('lng', raw.longitude);
-    // formData.append('fees', raw.fees);
-    // formData.append('waitingTime', raw.waitingTime);
-    // formData.append('about', raw.about);
-    // console.log('Form Data:', formData);
-    
-    // this.doctorService.updateProfile(formData).subscribe({
-    //   next: (res) =>
-    //     {
-    //       Swal.fire({
-    //         title: 'Success',
-    //         text: 'Your profile has been updated successfully.',
-    //         icon: 'success',
-    //         confirmButtonText: 'OK'
-    //       }).then(() => {
-    //         this.router.navigate(['/profile/doctor/']);
-    //       });
-    //       },
-    //   error: (err) => {
-    //     console.log('Error updating profile:', err);
-        
-    //     Swal.fire({
-    //       title: 'Error',
-    //       text: 'There was an error updating your profile. Please try again later.',
-    //       icon: 'error',
-    //       confirmButtonText: 'OK'
-    //     });
-    //   }
-    // });
   }
 }

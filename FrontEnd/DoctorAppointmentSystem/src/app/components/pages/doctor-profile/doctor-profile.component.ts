@@ -303,7 +303,7 @@ export class DoctorProfileComponent implements OnInit {
             error: (err) => {
               Swal.fire({
                 title: 'Error',
-                text: 'There was an error adding the reservation. Please try again later.',
+                text: `An error occurred while adding the reservation: ${err.error.Errors[0] || 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
@@ -357,9 +357,17 @@ export class DoctorProfileComponent implements OnInit {
         ,
         error: (_) => { }
       });
-      // this.reviews = profile.ratings;
-      // this.pageCount = Math.ceil(this.reviews!.length / this.pageSize);
-      // this.setPage(1);
+      this.doctorService.getReviews(this.doctor.id).subscribe({
+        next: (reviews) => {
+          this.doctor!.ratings = reviews;
+          this.reviews = reviews;
+          this.pageCount = Math.ceil(this.reviews!.length / this.pageSize);
+          this.setPage(1);
+        },
+        error: (_) => {
+          console.error('Error fetching reviews');
+        }
+      });
     });
     // this.doctor = {
     //   id: 1,
@@ -516,7 +524,37 @@ export class DoctorProfileComponent implements OnInit {
     });
   }
   uploadPhoto(event: any): void {
-    this.doctorService.uploadPhoto(event.target.files[0]).subscribe();
+    if (event.target.files[0].size > 5 * 1024 * 1024 || !['image/jpeg', 'image/png', 'image/jpg'].includes(event.target.files[0].type)) {
+      Swal.fire({
+        title: 'Error',
+        text: 'File size must be less than 5MB and type must be JPEG or PNG.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+    const oldpath = this.doctor?.image;
+    let count = 0;
+    this.doctorService.uploadPhoto(event.target.files[0]).subscribe({
+      next: () => {
+      this.getDoctorProfile();},
+      error: (err) =>{
+        console.error(err);
+      }
+    });
+  }
+  getDoctorProfile(): void {
+    this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe({
+      next: (profile) => {
+        this.doctor = profile;
+        console.log(this.doctor);
+        
+      },
+      error: (error) =>
+      {
+        console.error(error);
+      }
+    });
   }
   editReservation(reservation: Reservation, event: any): void {
     event.preventDefault();
@@ -535,12 +573,12 @@ export class DoctorProfileComponent implements OnInit {
       next: (result) => {
         if (result && result?.action !== 'delete') {
           const newReservation = {
-            id: result.id,
+            resID: result.id,
             date: result.date,
             startTime: result.startTime,
             endTime: result.endTime,
             maxRes: result.maxAppointments,
-            doctorId: this.doctor?.id
+            doctorID: this.doctor?.id
           };
           this.doctorService.editReservation(newReservation).subscribe({
             next: () => {
@@ -551,7 +589,7 @@ export class DoctorProfileComponent implements OnInit {
                 confirmButtonText: 'OK'
               });
               this.doctor?.reservations.forEach(res => {
-                if (res.id === newReservation.id) {
+                if (res.id === newReservation.resID) {
                   res.time = `${newReservation.startTime}:00 : ${newReservation.endTime}:00`;
                 }
               });
@@ -581,7 +619,7 @@ export class DoctorProfileComponent implements OnInit {
             error: (err) => {
               Swal.fire({
                 title: 'Error',
-                text: `You can't delete this reservation because it has less than 48 hours left.`,
+                text: `There was an error deleting the reservation: ${err.error.Errors[0] || 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
@@ -603,33 +641,43 @@ export class DoctorProfileComponent implements OnInit {
   onDeleteReservation() {
   }
   drop(event: CdkDragDrop<Reservation[] | undefined>, date: Date, slot?: string): void {
-    const reservation = event.item.data as Reservation;
-    reservation.date = date
-    if (slot) {
-      reservation.time = slot;
-    }
-    const updatedReservation = {
-      resID: reservation.id,
-      date: reservation.date,
-      startTime: reservation.time?.split(' : ')[0],
-      endTime: reservation.time?.split(' : ')[1],
-      maxRes: reservation.maxAppoinments,
-      doctorId: this.doctor?.id
-    };
-    updatedReservation.date.setDate(updatedReservation.date.getDate() + 1);
-    this.doctorService.editReservation(updatedReservation).subscribe(() => {
+    if (this.doctor?.reservations.some(res => res.date.getDate() === date.getDate())) {
       Swal.fire({
-        title: 'Success',
-        text: 'Reservation updated successfully',
-        icon: 'success',
+        title: 'Error',
+        text: 'You can only have one reservation per day',
+        icon: 'error',
         confirmButtonText: 'OK'
       });
-      if (this.doctor) {
-        updatedReservation.date.setDate(updatedReservation.date.getDate() - 1);
-        this.doctor.reservations = this.doctor.reservations?.map(res => res.id === reservation.id ? { ...res, date: updatedReservation.date, time: reservation.time } : res);
-        this.doctor.reservations = this.sortReservationsByTime(this.doctor.reservations!);
+    }
+    else {
+      const reservation = event.item.data as Reservation;
+      reservation.date = date
+      if (slot) {
+        reservation.time = slot;
       }
+      const updatedReservation = {
+        resID: reservation.id,
+        date: reservation.date,
+        startTime: reservation.time?.split(' : ')[0],
+        endTime: reservation.time?.split(' : ')[1],
+        maxRes: reservation.maxAppoinments,
+        doctorId: this.doctor?.id
+      };
+      updatedReservation.date.setDate(updatedReservation.date.getDate() + 1);
+      this.doctorService.editReservation(updatedReservation).subscribe(() => {
+        Swal.fire({
+          title: 'Success',
+          text: 'Reservation updated successfully',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        if (this.doctor) {
+          updatedReservation.date.setDate(updatedReservation.date.getDate() - 1);
+          this.doctor.reservations = this.doctor.reservations?.map(res => res.id === reservation.id ? { ...res, date: updatedReservation.date, time: reservation.time } : res);
+          this.doctor.reservations = this.sortReservationsByTime(this.doctor.reservations!);
+        }
     });
+    }
         this.generateCalendarView(this.currentView, this.viewDate);
   }
   getReservationsForDateTime(date: Date, time: string): Reservation[] {
