@@ -69,7 +69,8 @@ export class AccountService {
         ? 'User Not Found!'
         : error.status === 0
           ? 'Network Error: Could not connect to server'
-          : error.error?.ErrorMessage || 'Failed to process your request';
+            : error.error?.ErrorMessage || 'Failed to process your request';
+        
         
         console.error('API Error:', {
           status: error.status,
