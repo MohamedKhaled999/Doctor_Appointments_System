@@ -15,7 +15,7 @@ export class DoctorService {
     return this.api.getDoctors();
   }
   getProfile(id?: number): Observable<Doctor> {
-    return this.http.get<Doctor>(`${environment.apiUrl}/Doctor/${id? `?id=${id}` : 'UserProfile'}`);
+    return this.http.get<Doctor>(`${environment.apiUrl}/Doctor/${id? `Profile/${id}` : 'UserProfile'}`);
   }
   uploadPhoto(file: File): Observable<Doctor> {
     const formData = new FormData();
@@ -25,8 +25,14 @@ export class DoctorService {
   updateSchedule(schedule: Schedule): Observable<Doctor> {
     return this.http.put<Doctor>('', schedule);
   }
-  updateProfile(formData: FormData): Observable<Doctor> {
-    return this.http.put<Doctor>(``, formData);
+  updateProfile(data: any): Observable<Doctor> {
+    return this.http.put<Doctor>(`${environment.apiUrl}/Doctor`, data).pipe(
+      catchError(error => {
+        return throwError(() => {
+          return new Error(error.error || 'An error occurred while updating the profile.');
+        });
+      })
+    );
   }
   addReservation(reservation: any): Observable<void> {
     return this.http.post<void>(`${environment.apiUrl}/Doctor/reservations`, reservation);

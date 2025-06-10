@@ -7,6 +7,11 @@
   --accent-color-rgb: 248, 249, 250;
 }
 
+.tab-content {
+  padding: 1rem;
+  height: 1000px;
+}
+
 .container-fluid {
   padding-top: 80px;
 

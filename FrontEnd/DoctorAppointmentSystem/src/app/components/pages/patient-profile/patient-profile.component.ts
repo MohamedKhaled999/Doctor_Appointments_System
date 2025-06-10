@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PatientService } from '../../../core/services/patient.service';
 import { GovernoratesService } from '../../../core/services/governorates.service';
@@ -12,7 +12,7 @@ import { NotificationsComponent } from "../../shared/notifications/notifications
 
 @Component({
   selector: 'app-patient-profile',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PatientAppointmentComponent, NotificationsComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, PatientAppointmentComponent, RouterModule],
   templateUrl: './patient-profile.component.html',
   styleUrl: './patient-profile.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
