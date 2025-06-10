@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Models;
 using Shared.DTOs.Doctor;
+using Shared.DTOs.Patient;
 
 namespace Services.MappingProfiles
 {
@@ -25,6 +26,12 @@ namespace Services.MappingProfiles
                 .ForMember(dest => dest.PatientID, opt => opt.Ignore())
                 .ForMember(dest => dest.Doctor, opt => opt.Ignore())
                 .ForMember(dest => dest.Patient, opt => opt.Ignore());
+
+            CreateMap<AddReviewDTO, Review>()
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Review))
+                .ForMember(dest => dest.Rate, opt => opt.MapFrom(src => (int)src.Rate))
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.Now));
+                
 
 
         }
