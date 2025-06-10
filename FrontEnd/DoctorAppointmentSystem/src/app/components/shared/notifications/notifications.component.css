@@ -1,6 +1,4 @@
 .notifications-wrapper {
-  position: fixed;
-  right: 20px;
   z-index: 1050;
   display: inline-block;
 
@@ -10,7 +8,7 @@
     border: none;
     cursor: pointer;
     font-size: 1.5rem;
-    color: var(--primary-color);
+    color: #fff;
     padding: 0.5rem;
 
     .badge {
@@ -34,10 +32,12 @@
     top: 2.5rem;
     width: 300px;
     max-height: 400px;
+    max-width: 500px;
+    margin: auto;
     background: white;
     border: 1px solid #ccc;
-    border-radius: 0.25rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -45,6 +45,7 @@
 
     .panel-header {
       padding: 0.75rem 1rem;
+      font-size: 18px;
       font-weight: bold;
       border-bottom: 1px solid #eee;
       background: #f7f7f7;
@@ -74,33 +75,43 @@
 
         .notif-item {
           display: flex;
-          justify-content: space-between;
+          flex-direction: column;
           align-items: center;
+          padding: 16px;
+          border-bottom: 1px solid #e0e0e0;
+          :last-child {
+            border-bottom: none;
+          }
 
           .notif-title {
-            font-weight: 600;
+            font-weight: bold;
+            font-size: 15px;
+            color: #222;
           }
+
           .notif-time {
             font-size: 0.75rem;
-            color: #777;
+            color: #999;
           }
         }
+
         .notif-body {
-          margin-top: 0.25rem;
+          margin-top: 5px;
           font-size: 0.9rem;
-          color: #555;
+          color: #333;
         }
       }
     }
 
     .show-more-btn {
-      padding: 0.5rem;
+      padding: 12px;
       border: none;
       background: #007bff;
       color: white;
       cursor: pointer;
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 14px;
+      font-weight: bold;
       transition: background 0.2s;
 
       &:hover {
