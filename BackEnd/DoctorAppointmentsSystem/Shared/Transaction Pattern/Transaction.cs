@@ -17,10 +17,10 @@ namespace Shared.Transaction_Pattern
                 operation();
                 _compensations.Push(compensation);
             }
-            catch
+            catch(Exception e)
             {
-                Compensate();
-                throw;
+                Compensate();        
+                throw e.InnerException;
             }
         }
 
@@ -31,7 +31,14 @@ namespace Shared.Transaction_Pattern
             while (_compensations.Count > 0)
             {
                 var compensate = _compensations.Pop();
-                compensate();
+                try
+                {
+                    compensate();
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
             }
         }
 
