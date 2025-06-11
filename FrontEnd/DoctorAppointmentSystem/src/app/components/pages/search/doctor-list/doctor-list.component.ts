@@ -33,7 +33,7 @@ export class DoctorListComponent {
       Aos.init({
         duration: 1000,
         easing: 'ease-out-back',
-        offset: 50,
+        offset: 30,
         once: false
       });
 
