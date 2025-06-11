@@ -1,6 +1,7 @@
 ﻿using Domain.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Services.Abstraction;
 using System.Text.RegularExpressions;
 
@@ -44,18 +45,22 @@ namespace Services
                 Directory.CreateDirectory(folderPath);
             }
 
+            string fileName = string.Empty;
             if (oldFilename != null)
             {
-                File.Delete(Path.Combine(folderPath, oldFilename));
+                try
+                {
+                    File.Delete(Path.Combine(folderPath, oldFilename));
+                }
+                catch { }
+                fileName = oldFilename;
             }
-
-            string fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            else
+                fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
             string filePath = Path.Combine(folderPath, fileName);
-
             using FileStream fileStream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(fileStream);
-
             return fileName;
         }
 

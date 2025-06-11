@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
-    [Route("api/doctor/reservations")]   
+    [Route("api/doctor/reservations")]
     public class ReservationController : ApiController
     {
         private readonly IServiceManager _serviceManager;
@@ -31,6 +31,7 @@ namespace Presentation.Controllers
 
         [HttpGet("appointments")]
         [Authorize(Roles = "doctor")]
+        [TypeFilter(typeof(ApprovedDoctorFilter))]
         public async Task<IActionResult> GetAppointments(int reservationId)
         {
             var appointments = await _serviceManager.AppointmentOrchestrator.GetAppointmentsByReservationId(reservationId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));

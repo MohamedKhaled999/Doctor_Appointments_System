@@ -124,6 +124,6 @@ namespace Services
 
         public INotificationService NotificationService => _notificationService.Value;
 
-        public IAdminOrchestrator AdminOrchestrator => _adminOrchestrator.Value; 
+        public IAdminOrchestrator AdminOrchestrator => _adminOrchestrator.Value;
     }
 }
