@@ -28,8 +28,8 @@
 
   .notif-panel {
     position: absolute;
-    right: 0;
-    top: 2.5rem;
+    right: 1rem;
+    top: 3.5rem;
     width: 300px;
     max-height: 400px;
     max-width: 500px;

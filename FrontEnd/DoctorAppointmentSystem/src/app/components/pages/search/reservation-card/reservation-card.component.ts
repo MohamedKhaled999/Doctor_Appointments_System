@@ -61,7 +61,7 @@ export class ReservationCardComponent {
         window.open(response.paymentUrl, '_blank');
       },
       error: (error) => {
-        console.error('Error booking an appointment:', error);
+        // console.error('Error booking an appointment:', error);
         this.DoctorReservationService.isLoading.set(false);
       }
       

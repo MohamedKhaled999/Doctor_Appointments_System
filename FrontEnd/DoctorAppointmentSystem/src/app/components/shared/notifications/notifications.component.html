@@ -1,4 +1,4 @@
-<div class="notifications-wrapper" 
+<div class="notifications-wrapper"
 >
   <!-- Bell button with unread count badge -->
   <button
@@ -28,7 +28,7 @@
       </li>
     </ul>
     <button class="show-more-btn" 
-    (click)="loadMore()"
+    (click)="loadMore()" *ngIf="showShowMoreButton"
     >
       Show more
     </button>

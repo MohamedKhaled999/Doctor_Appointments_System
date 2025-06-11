@@ -181,11 +181,20 @@ export class DoctorProfileComponent implements OnInit {
   }
   previous() {
     if (this.currentView === 'month') {
+      if (this.viewDate.getMonth() === new Date().getMonth() - 1 && this.viewDate.getFullYear() === new Date().getFullYear() || this.viewDate.getMonth() === 11 && this.viewDate.getFullYear() === new Date().getFullYear() - 1) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'You cannot go back more than one month from the current month.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        return;
+      }
       this.viewDate = new Date(
         this.viewDate.setMonth(this.viewDate.getMonth() - 1)
       );
       this.generateMonthView(this.viewDate);
-    } 
+    }
     // else if (this.currentView === 'week') {
     //   this.viewDate = new Date(
     //     this.viewDate.setDate(this.viewDate.getDate() - 7)
@@ -201,11 +210,22 @@ export class DoctorProfileComponent implements OnInit {
 
   next() {
     if (this.currentView === 'month') {
+      if (
+        this.viewDate.getMonth() === new Date().getMonth() + 1 && this.viewDate.getFullYear() === new Date().getFullYear() || this.viewDate.getMonth() === 0 && this.viewDate.getFullYear() === new Date().getFullYear() + 1) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'You cannot go forward more than one month from the current month.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        return;
+
+      }
       this.viewDate = new Date(
         this.viewDate.setMonth(this.viewDate.getMonth() + 1)
       );
       this.generateMonthView(this.viewDate);
-    } 
+    }
     // else if (this.currentView === 'week') {
     //   this.viewDate = new Date(
     //     this.viewDate.setDate(this.viewDate.getDate() + 7)
@@ -376,7 +396,7 @@ export class DoctorProfileComponent implements OnInit {
     //   title: 'Cardiologist',
     //   gender: 'male',
     //   image: 'https://example.com/doctor.jpg',
-    //   qualifications: 'MD, PhD',
+    //   about: 'MD, PhD',
     //   fees: 100,
     //   specialty: 'Cardiology',
     //   rating: 4.5,
@@ -538,8 +558,9 @@ export class DoctorProfileComponent implements OnInit {
     let count = 0;
     this.doctorService.uploadPhoto(event.target.files[0]).subscribe({
       next: () => {
-      this.getDoctorProfile();},
-      error: (err) =>{
+        this.getDoctorProfile();
+      },
+      error: (err) => {
         console.error(err);
       }
     });
@@ -549,10 +570,9 @@ export class DoctorProfileComponent implements OnInit {
       next: (profile) => {
         this.doctor = profile;
         console.log(this.doctor);
-        
+
       },
-      error: (error) =>
-      {
+      error: (error) => {
         console.error(error);
       }
     });
@@ -677,9 +697,9 @@ export class DoctorProfileComponent implements OnInit {
           this.doctor.reservations = this.doctor.reservations?.map(res => res.id === reservation.id ? { ...res, date: updatedReservation.date, time: reservation.time } : res);
           this.doctor.reservations = this.sortReservationsByTime(this.doctor.reservations!);
         }
-    });
+      });
     }
-        this.generateCalendarView(this.currentView, this.viewDate);
+    this.generateCalendarView(this.currentView, this.viewDate);
   }
   getReservationsForDateTime(date: Date, time: string): Reservation[] {
     if (!this.doctor || !this.doctor.reservations) return [];

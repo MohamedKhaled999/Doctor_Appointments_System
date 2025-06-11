@@ -50,13 +50,19 @@ export class DoctorReservationService {
                     EndTime: res.endTime,
                     IsAvailable: res?.isAvailable
                 }))
-            })),
-            catchError(error => {
-                console.error('Error fetching reservations:', error);
-                throw error;
+            }))
+            // ,catchError(error => {
+            //     console.error('Error fetching reservations:', error);
+            //     throw error;
+            // })
+            ,catchError(error => {
+                // console.error('Error fetching reservations:', error);
+                return of({ reservations: [] }); // Safe fallback
             })
         );
     }
+
+
     bookAnAppointment(ResId: number, token: string): Observable<any> {
         return this.http.post<any>(
             `${environment.apiUrl}/patient/appointments?doctorReservationId=${ResId}`,
