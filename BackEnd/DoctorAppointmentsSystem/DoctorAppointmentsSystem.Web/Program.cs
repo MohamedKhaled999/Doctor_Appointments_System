@@ -32,7 +32,17 @@ namespace DoctorAppointmentsSystem.Web
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddCors(op => op.AddPolicy("allow",
-                op => op.WithOrigins(builder.Configuration["FrontEnd:Url"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
+                op =>
+                {
+                    op.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                })
+            );
+            builder.Services.AddCors(op => op.AddPolicy("signalR",
+                op =>
+                {
+                    op.WithOrigins(builder.Configuration["FrontEnd:Url"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                })
+            );
 
             builder.Services.AddSignalR();
 
@@ -41,7 +51,6 @@ namespace DoctorAppointmentsSystem.Web
             {
                 op.InvalidModelStateResponseFactory = ApiResponseFactory.CustomValidationErrors;
             });
-
 
             #region Identity
             builder.Services.AddIdentity<AppUser, IdentityRole<int>>(op =>
@@ -161,7 +170,7 @@ namespace DoctorAppointmentsSystem.Web
             app.UseAuthorization();
 
             app.MapControllers();
-            app.MapHub<NotificationHub>("/hub");
+            app.MapHub<NotificationHub>("/hub").RequireCors("signalR");
 
             app.Run();
         }

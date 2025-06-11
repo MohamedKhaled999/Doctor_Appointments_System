@@ -65,7 +65,6 @@ namespace Services
             else
             {
                 var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
-
                 throw new ValidationException(errors);
             }
         }
