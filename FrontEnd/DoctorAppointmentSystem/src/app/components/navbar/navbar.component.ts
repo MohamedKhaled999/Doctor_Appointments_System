@@ -30,12 +30,12 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) platformId: Object,
-  
+
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
 
     if (this.isBrowser) {
-      
+
       window.addEventListener('scroll', function () {
         const header = document.getElementsByTagName('header')[0];
         const nav = document.getElementsByTagName('nav')[0];
@@ -49,30 +49,17 @@ export class NavbarComponent implements OnInit {
           nav.classList.replace('py-2', 'py-1');
         }
       });
-      
-
-
-        
-       
     }
   }
-
 
   ngOnInit(): void {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {
         this.isHome = event.url === '/';
       }
+      if (isPlatformBrowser(this.platformId))
+        this.isAuthenticated = localStorage.getItem("userToken") ? true : false;
     });
-
-    // this.authService.isAuthenticated$?.subscribe(auth => {
-    //   if (auth !== undefined) {
-    //     this.isAuthenticated = auth;
-    //     if (auth) {
-    //       this.userRole = this.authService.getUserRole();
-    //     }
-    //   }
-    // });
   }
 
   toggleNavbar(): void {
