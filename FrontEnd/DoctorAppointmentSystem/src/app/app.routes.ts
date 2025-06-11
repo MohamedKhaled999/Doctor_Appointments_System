@@ -1,7 +1,5 @@
 import { SearchComponent } from './components/pages/search/search.component';
-import { ExtrenalLoginComponent } from './components/shared/extrenal-login/extrenal-login.component';
 import { Routes } from '@angular/router';
-import { TestSwiperComponent } from './components/shared/test-swiper/test-swiper.component';
 import { RegisterComponent } from './components/pages/account/register/register.component';
 import { LoginComponent } from './components/pages/account/login/login.component';
 import { NeedToConfirmComponent } from './components/pages/account/need-to-confirm/need-to-confirm.component';
@@ -41,7 +39,6 @@ export const routes: Routes = [
 
       {
         path: 'profile',
-
         children: [
           {
             path: '',
@@ -63,7 +60,7 @@ export const routes: Routes = [
           {
             path: 'doctor/edit',
             loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
-            title: 'Edit Doctor Profile',
+            title: 'Edit Profile',
             canActivate: [authGuard]
           },
           {
@@ -156,13 +153,9 @@ export const routes: Routes = [
       }
     ]
   }
-
   ,
   {
     path: '**',
     component: NotFoundComponent, title: 'Page Not Found'
   }
-
-
-
 ]
