@@ -11,17 +11,21 @@ html {
     scrollbar-color: var(--primary-color) var(--accent-color);
 }
 .custom-container {
-    max-width: 1200px;
-        width: 100%;
+margin-top: 100px;
     }
-    
+    .custom-containerr{
+        margin-top:25px ;
+    }
     
 /* Card Styling */
 .SP-card {
     max-width: 1000px;
     width: 100%;
+
     border-radius: 10px;
     background: var(--accent-color);
+   
+
 }
 
 /* Text Styling */
