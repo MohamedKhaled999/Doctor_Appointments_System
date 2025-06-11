@@ -46,7 +46,7 @@ export class DoctorCardComponent implements OnInit {
         this.DoctorReservationService.isLoading.set(false);
       },
       error: (error) => {
-        console.error('Error fetching reservations:', error);
+        // console.error('Error fetching reservations:', error);
         this.doctor.reservations =[];
         this.DoctorReservationService.isLoading.set(false);
       }

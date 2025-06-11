@@ -17,75 +17,7 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { AdminDashboardComponent } from './components/pages/admin-dashboard/admin-dashboard.component';
 import { authGuard } from './core/guards/auth.guard';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
-import { profile } from 'console';
-
-import { PatientProfileComponent } from './components/pages/patient-profile/patient-profile.component';
-import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.component';
-import { Doctor } from './core/models/Doctor';
 import { ContactComponent } from './components/contact/contact.component';
-// rt const routes: Routes = [
-//   {
-//     path: 'test',
-//     component: TestSwiperComponent,
-//     title: 'Test Swiper',
-//   },
-//   {
-//     path: 'patient-profile',
-//     loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
-//   },
-//   {
-//     path: 'doctor-profile/:id',
-//     loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
-//   },
-//   {
-//     path: 'doctor-edit',
-//     loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
-//   },
-//   {
-//     path: 'register',
-//     component: RegisterComponent,
-//     title: 'Register Account'
-//   },
-//   { 
-//     path: 'login', 
-//     component: LoginComponent,
-//     title: 'Sign In - Doctor Appointments'
-//   },
-//   {
-//     path: 'forgot-password',
-//     component: ForgetPasswordComponent,
-//     title: 'Password Recovery - Doctor Appointments'
-//   },
-//   {
-//     path: 'need-to-confirm',
-//     component: NeedToConfirmComponent, 
-//     title: 'Need to Confirm - Doctor Appointments'
-//   },
-//   {
-//     path: 'home',
-//     component: HomeComponent,
-//     title: 'Home - Doctor Appointments'
-//   },
-//   { 
-//     path: 'reset-password', 
-//     component: ResetPasswordComponent 
-//   },
-//   {
-//     path: 'change-password',
-//     component: ChangePasswordComponent
-
-//   },
-//   { 
-//     path: 'doctor-register', 
-//     component: DoctorRegisterComponent 
-//   },
-//   { 
-//     path: 'ConfirmEmail', 
-//     component: ConfirmEmailComponent
-
-//   }
-// ];
-
 
 export const routes: Routes = [
   // blank
@@ -97,19 +29,19 @@ export const routes: Routes = [
       {
         path: 'home',
         component: HomeComponent,
-        title: 'Home - Doctor Appointments'
+        title: 'Home - DocNet'
       }
-      , 
-        {
-          path: 'contact',
-          component: ContactComponent,
-          title: 'Home - Contact us '
-        }
       ,
-      
+      {
+        path: 'contact',
+        component: ContactComponent,
+        title: 'Contact Us - DocNet'
+      }
+      ,
+
       {
         path: 'profile',
-       
+
         children: [
           {
             path: '',
@@ -126,40 +58,39 @@ export const routes: Routes = [
             path: 'doctor',
             loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
             title: 'Doctor Profile',
-           canActivate: [authGuard]
+            canActivate: [authGuard]
           },
           {
             path: 'doctor/edit',
             loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
             title: 'Edit Doctor Profile',
-           canActivate: [authGuard]
+            canActivate: [authGuard]
           },
           {
             path: 'doctor/:id',
             loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
-            title: 'Doctor Profile Details',
+            title: 'Doctor Profile',
           }
         ]
       },
-    {
-      path: 'search/payment-success',
-      component: SearchComponent,
-      title: 'Search - Payment Success'
-    },
-    {
-      path: 'search/payment-failed',
-      component: SearchComponent,
-      title: 'Search - Payment Failed'
-    },
-    {
-    path: 'search',
-    component: SearchComponent,
-    title: 'Search'
-  },
-
+      {
+        path: 'search/payment-success',
+        component: SearchComponent,
+        title: 'Search - DocNet'
+      },
+      {
+        path: 'search/payment-failed',
+        component: SearchComponent,
+        title: 'Search - DocNet'
+      },
+      {
+        path: 'search',
+        component: SearchComponent,
+        title: 'Search - DocNet'
+      },
     ]
   },
- 
+
   // auth 
   {
     path: '',
@@ -168,39 +99,43 @@ export const routes: Routes = [
       {
         path: 'register',
         component: RegisterComponent,
-        title: 'Register Account'
+        title: 'Register - DocNet'
       },
       {
         path: 'login',
         component: LoginComponent,
-        title: 'Sign In - Doctor Appointments'
+        title: 'Login - DocNet'
       },
       {
         path: 'forgot-password',
         component: ForgetPasswordComponent,
-        title: 'Password Recovery - Doctor Appointments'
+        title: 'Password Recovery - DocNet'
       },
       {
         path: 'need-to-confirm',
         component: NeedToConfirmComponent,
-        title: 'Need to Confirm - Doctor Appointments'
+        title: 'Need to Confirm - DocNet'
       },
       {
         path: 'reset-password',
-        component: ResetPasswordComponent
+        component: ResetPasswordComponent,
+        title: "Reset Password - DocNet"
       },
       {
-        path: 'doctor-register',         //token ,email 
-        component: DoctorRegisterComponent // This can be a component that shows a success message after email confirmation
+        path: 'doctor-register',
+        component: DoctorRegisterComponent,
+        title: "Join Us - DocNet"
       },
       {
-        path: 'confirm-success',         //token ,email 
-        component: ConfirmEmailComponent
+        path: 'confirm-success',
+        component: ConfirmEmailComponent,
+        title: "Confirm Email - DocNet"
       },
       {
         path: 'change-password',
         component: ChangePasswordComponent,
         canActivate: [authGuard],
+        title: "Change Password - DocNet"
       }
       // add doctor register route
     ]
@@ -209,7 +144,6 @@ export const routes: Routes = [
 
   // admin layout
   {
-
     path: 'admin',
     component: AdminLayoutComponent,
     canActivate: [authGuard],
@@ -217,16 +151,16 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        title: 'Admin Dashboard - Doctor Appointments',
+        title: 'Admin Dashboard - DocNet',
         component: AdminDashboardComponent
       }
     ]
   }
 
-,
+  ,
   {
     path: '**',
-    component: NotFoundComponent, title: 'NotFound'
+    component: NotFoundComponent, title: 'Page Not Found'
   }
 
 
