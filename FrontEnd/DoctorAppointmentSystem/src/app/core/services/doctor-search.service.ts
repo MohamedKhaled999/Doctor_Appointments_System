@@ -38,6 +38,8 @@ export class DoctorSearchService {
   maxPrice = signal<number>(1000);
   pageIndexSource = signal<string>(''); // 'list', 'filter', etc.
 
+
+  
   // Signal for loading state
   // isLoading = signal(false);
   
