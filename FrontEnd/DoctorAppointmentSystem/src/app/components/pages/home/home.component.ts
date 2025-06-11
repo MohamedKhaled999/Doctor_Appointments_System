@@ -104,6 +104,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngAfterViewInit(): void {
+
+     if (isPlatformBrowser(this.platformId)) {
     if (this.doctors.length > 0 && this.specialties.length > 0) {
       this.initSwipers();
     } else {
@@ -113,9 +115,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         subscription.unsubscribe();
       });
     }
+    this.initMixItUp();
+  }
     // this.initTyped();
    
-    this.initMixItUp();
   }
   
   private initSwipers(): void {
@@ -234,6 +237,7 @@ this.doctorAosValues = this.filteredDoctors.map(() => this.getRandomAosAnimation
     }
   }
   initSwiper1(): void {
+     if (isPlatformBrowser(this.platformId)) {
     this.swiper = new Swiper('.swiper', {
       effect: 'fade',
       loop: true,
@@ -251,8 +255,11 @@ this.doctorAosValues = this.filteredDoctors.map(() => this.getRandomAosAnimation
       }
     });
   }
+  }
   
   initSwiper2(): void {
+         if (isPlatformBrowser(this.platformId)) {
+
     this.swiper2 = new Swiper('.swiper-container', {
       modules: [Navigation],
       navigation: {
@@ -278,8 +285,11 @@ this.doctorAosValues = this.filteredDoctors.map(() => this.getRandomAosAnimation
   
     this.swiper2.slideTo(0);
   }
+  }
   
   initSwiper3(): void {
+         if (isPlatformBrowser(this.platformId)) {
+
     this.swiper3 = new Swiper(".swiper-container-btns", {
       navigation: {
         nextEl: ".swiper-button-next",
@@ -295,6 +305,7 @@ this.doctorAosValues = this.filteredDoctors.map(() => this.getRandomAosAnimation
     });
   
     this.swiper3.slideTo(0);
+  }
   }
   
   ngOnDestroy(): void {

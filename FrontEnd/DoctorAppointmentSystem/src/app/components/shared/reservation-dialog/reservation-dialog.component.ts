@@ -49,7 +49,7 @@ export class ReservationDialogComponent {
   openDialog(): void {
     const dialogRef = this.dialog.open(ReservationAppointmentsComponent, {
       width: '600px',
-      height: '600px',
+      height: 'auto',
       panelClass: 'dialog-container',
       data: this.data.id
     });
