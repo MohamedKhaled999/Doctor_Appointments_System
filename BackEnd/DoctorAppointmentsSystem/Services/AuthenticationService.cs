@@ -248,7 +248,7 @@ namespace Services
         public async Task<string> ForgetPasswordAsync(ForgotPasswordDto forgetPasswordDTO)
         {
             var user = await userManager.FindByEmailAsync(forgetPasswordDTO.Email) ?? throw new NotFoundException("User Not Found!");
-            if (user.UserName == $"{forgetPasswordDTO.FirstName}DocNet{forgetPasswordDTO.LastName}DocNet{user.Email}")
+            if (user.UserName != $"{forgetPasswordDTO.FirstName}DocNet{forgetPasswordDTO.LastName}DocNet{user.Email}")
                 throw new ValidationException(["Invalid User Data"]);
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
             byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
