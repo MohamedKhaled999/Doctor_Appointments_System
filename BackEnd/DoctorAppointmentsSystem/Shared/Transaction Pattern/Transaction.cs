@@ -17,10 +17,10 @@ namespace Shared.Transaction_Pattern
                 operation();          
                 _compensations.Push(compensation);  
             }
-            catch
+            catch(Exception e)
             {
                 Compensate();        
-                throw;
+                throw e;
             }
         }
 
