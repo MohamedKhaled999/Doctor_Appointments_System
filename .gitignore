@@ -2,3 +2,4 @@
 **/obj
 **/.vs
 /BackEnd/DoctorAppointmentsSystem/.vs/
+/BackEnd/DoctorAppointmentsSystem/DoctorAppointmentsSystem.Web/appsettings.json
