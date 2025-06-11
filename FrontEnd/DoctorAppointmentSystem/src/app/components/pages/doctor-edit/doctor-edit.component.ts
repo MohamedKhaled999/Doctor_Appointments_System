@@ -1,15 +1,17 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { DoctorService } from '../../../core/services/doctor.service';
 import { GovernoratesService } from '../../../core/services/governorates.service';
 import { DoctorEdit } from '../../../core/interfaces/doctorEdit.interface';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import { Icon, icon, latLng, marker, tileLayer } from 'leaflet';
 
 @Component({
   selector: 'app-doctor-edit',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, LeafletModule],
   templateUrl: './doctor-edit.component.html',
   styleUrl: './doctor-edit.component.css'
 })
@@ -28,7 +30,8 @@ export class DoctorEditComponent implements OnInit {
     private doctorService: DoctorService,
     private governoratesService: GovernoratesService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+  @Inject(PLATFORM_ID) private platformId: Object) {
     this.doctorForm = this.fb.group({
       id: [{ value: '', disabled: true }],
       firstName: [{ value: '', disabled: true }],
@@ -112,33 +115,88 @@ export class DoctorEditComponent implements OnInit {
     return `${birthDate.getFullYear()}-${month}-${day}`;
   }
   initMap(): void {
-    if (this.isMapInitialized) return;
-    import('leaflet').then(L => {
-      if (!this.mapContanier) return;
-      if (!this.doctor) return;
-      const { lat, lng } = this.doctor;
-      const map = new L.Map(this.mapContanier.nativeElement).setView([lat, lng], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
-      const marker = new L.Marker([lat, lng], { draggable: true }).addTo(map);
-      marker.bindPopup(`<b>${this.doctor.firstName} ${this.doctor.lastName}</b><br>${this.governorates[parseInt(this.doctor.governorate) - 1]}`).openPopup();
-      marker.on('dragend', (event: any) => {
+    // if (this.isMapInitialized) return;
+    // import('leaflet').then(L => {
+    //   if (!this.mapContanier) return;
+    //   if (!this.doctor) return;
+    //   const { lat, lng } = this.doctor;
+    //   const map = new L.Map(this.mapContanier.nativeElement).setView([lat, lng], 13);
+    //   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+    //   const marker = new L.Marker([lat, lng], { draggable: true }).addTo(map);
+    //   marker.bindPopup(`<b>${this.doctor.firstName} ${this.doctor.lastName}</b><br>${this.governorates[parseInt(this.doctor.governorate) - 1]}`).openPopup();
+    //   marker.on('dragend', (event: any) => {
+    //     const position = event.target.getLatLng();
+    //     this.doctorForm.patchValue({
+    //       lat: position.lat,
+    //       lng: position.lng
+    //     });
+    //   });
+    //   map.on('click', (event: any) => {
+    //     const position = event.latlng;
+    //     marker.setLatLng(position);
+    //     this.doctorForm.patchValue({
+    //       lat: position.lat,
+    //       lng: position.lng
+    //     });
+    //   });
+    //   this.map = map;
+    //   this.marker = marker;
+    //   this.isMapInitialized = true;
+    // });
+    if(isPlatformBrowser(this.platformId)){
+      this.options.center = latLng(this.doctor!.lat, this.doctor!.lng);
+      let layer = marker([this.doctor!.lat, this.doctor!.lng], {
+        title: this.doctor!.firstName + ' ' + this.doctor!.lastName,
+        alt: this.doctor!.firstName + ' ' + this.doctor!.lastName,
+        draggable: true,
+        icon: icon({
+          className: 'leaflet-marker-icon',
+          ...Icon.Default.prototype.options,
+          iconUrl: 'assets/marker-icon.png', // 'https://cdn-icons-png.flaticon.com/512/149/149061.png',
+          iconRetinaUrl: 'assets/marker-icon-2x.png',
+          shadowUrl: 'assets/marker-shadow.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41]
+        })
+      });
+      this.marker = layer;
+      layer.on('dragend', (event: any) => {
         const position = event.target.getLatLng();
         this.doctorForm.patchValue({
           lat: position.lat,
           lng: position.lng
         });
       });
-      map.on('click', (event: any) => {
-        const position = event.latlng;
-        marker.setLatLng(position);
-        this.doctorForm.patchValue({
-          lat: position.lat,
-          lng: position.lng
-        });
-      });
-      this.map = map;
-      this.marker = marker;
       this.isMapInitialized = true;
+      this.options.layers.push(layer);
+      console.log(this.options.layers);
+      
+    }
+  }
+  options: any = {
+    layers: [
+      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        minZoom: 10,
+        noWrap: true,
+        detectRetina: true
+      })
+    ],
+    zoom: 13,
+    center: latLng(30.0444, 31.2357)
+  }
+  onMapReady(map: any) {
+    this.map = map;
+    this.map.on('click', (event: any) => {
+      const position = event.latlng;
+      this.marker.setLatLng(position);
+      this.doctorForm.patchValue({
+        lat: position.lat,
+        lng: position.lng
+      });
     });
   }
   pickLocation(): void {

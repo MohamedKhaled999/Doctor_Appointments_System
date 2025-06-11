@@ -1,10 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Inject, signal } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Inject, signal, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DoctorService } from '../../../core/services/doctor.service';
 import { Doctor } from '../../../core/interfaces/doctor.interface';
 import { Rating } from '../../../core/interfaces/rating.interface';
 import { Schedule } from '../../../core/interfaces/Schedule.interface';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators, AbstractControl, FormBuilder, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Reservation } from '../../../core/interfaces/reservation.interface';
 import { CalendarReservation } from '../../../core/interfaces/calendarReservation.interface';
@@ -21,6 +21,9 @@ import { AccountService } from '../../../core/services/account.service';
 import Swal from 'sweetalert2';
 import { GovernoratesService } from '../../../core/services/governorates.service';
 import { NotificationsComponent } from "../../shared/notifications/notifications.component";
+// import * as L from 'leaflet';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import { Icon, icon, latLng, marker, tileLayer } from 'leaflet';
 
 declare var bootstrap: any;
 declare var calendarJS: any;
@@ -30,14 +33,14 @@ export enum CalendarView {
   Week = 'week',
   Day = 'day'
 }
-interface doctorImage{
-  image:string;
-  check :number;
+interface doctorImage {
+  image: string;
+  check: number;
 }
 
 @Component({
   selector: 'app-doctor-profile',
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDatepickerModule, DragDropModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDatepickerModule, DragDropModule, LeafletModule],
   templateUrl: './doctor-profile.component.html',
   styleUrl: './doctor-profile.component.css'
 })
@@ -58,7 +61,8 @@ export class DoctorProfileComponent implements OnInit {
     reservationQuota: 1
   }
   selectedTab: 'details' | 'reviews' | 'calendar' = 'details';
-  DoctorImage =signal<doctorImage>({image:"",check:-1} )
+  DoctorImage = signal<doctorImage>({ image: "", check: -1 })
+  isMapInitialized = false;
 
   @ViewChild('mapContainer', { static: false }) mapContainer: ElementRef | undefined;
   @ViewChild('calendarContainer', { static: false }) calendarContainer: ElementRef | undefined;
@@ -95,7 +99,7 @@ export class DoctorProfileComponent implements OnInit {
   /**
    *
   */
-  constructor(private doctorService: DoctorService, private route: ActivatedRoute, public dialog: MatDialog, private auth: AccountService, private governoratesService: GovernoratesService) {
+  constructor(private doctorService: DoctorService, private route: ActivatedRoute, public dialog: MatDialog, private auth: AccountService, private governoratesService: GovernoratesService, @Inject(PLATFORM_ID) private platformId: Object) {
     this.generateCalendarView(this.currentView, this.viewDate);
     // this.generateTimeSlots();
     this.governorates = this.governoratesService.getGovernorates();
@@ -158,7 +162,7 @@ export class DoctorProfileComponent implements OnInit {
   //   const startOfWeek = this.startOfWeek(date);
   //   this.monthDays = [];
 
-  
+
   //   for (let day = 0; day < 7; day++) {
   //     const weekDate = new Date(startOfWeek);
   //     weekDate.setDate(startOfWeek.getDate() + day);
@@ -367,7 +371,7 @@ export class DoctorProfileComponent implements OnInit {
   ngOnInit(): void {
     this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe(profile => {
       this.doctor = profile;
-      this.DoctorImage.set({image:profile.image,check:-1});
+      this.DoctorImage.set({ image: profile.image, check: -1 });
       this.doctor.governorate = this.governorates[parseInt(this.doctor.governorate) - 1];
       this.initMap();
       this.doctorService.getReservations(this.doctor.id).subscribe({
@@ -541,15 +545,48 @@ export class DoctorProfileComponent implements OnInit {
     console.log('Schedule saved:', this.scheduleForm);
   }
   initMap(): void {
-    import('leaflet').then(L => {
-      if (!this.mapContainer) return;
-      if (!this.doctor) return;
-      const { latitude, longitude } = this.doctor;
-      const map = new L.Map(this.mapContainer.nativeElement).setView([latitude, longitude], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
-      const marker = new L.Marker([latitude, longitude]).addTo(map);
-      marker.bindPopup(`<b>${this.doctor!.name}</b><br>${this.doctor!.location}`).openPopup();
-    });
+    // import('leaflet').then(l => {
+    //   const L = l.default || l;
+    //   if (!this.mapContainer) return;
+    //   if (!this.doctor) return;
+    //   const { latitude, longitude } = this.doctor;
+    if (isPlatformBrowser(this.platformId)) {
+      //   const map = new L.Map(this.mapContainer.nativeElement).setView([latitude, longitude], 13);
+      //   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+      //   const marker = new L.Marker([latitude, longitude]).addTo(map);
+      //   marker.bindPopup(`<b>${this.doctor!.name}</b><br>${this.doctor!.location}`).openPopup();
+      this.options.center = latLng(this.doctor!.latitude, this.doctor!.longitude);
+      let layer = marker([this.doctor!.latitude, this.doctor!.longitude], {
+        title: this.doctor!.name,
+        alt: this.doctor!.name,
+        draggable: false,
+        icon: icon({
+          className: 'leaflet-marker-icon',
+          ...Icon.Default.prototype.options,
+          iconUrl: 'assets/marker-icon.png', // 'https://cdn-icons-png.flaticon.com/512/149/149061.png',
+          iconRetinaUrl: 'assets/marker-icon-2x.png',
+          shadowUrl: 'assets/marker-shadow.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41]
+        })
+      });
+      this.options.layers.push(layer);
+      this.isMapInitialized = true;
+    // });
+  }
+  }
+  options: any = {
+    layers: [
+      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+        detectRetina: true
+      })
+    ],
+    zoom: 13,
+    center: latLng(30.0444, 31.2357)
   }
   uploadPhoto(event: any): void {
     if (event.target.files[0].size > 5 * 1024 * 1024 || !['image/jpeg', 'image/png', 'image/jpg'].includes(event.target.files[0].type)) {
@@ -576,7 +613,7 @@ export class DoctorProfileComponent implements OnInit {
     this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe({
       next: (profile) => {
         this.doctor = profile;
-        this.DoctorImage.set({image:profile.image,check:this.DoctorImage().check*-1})
+        this.DoctorImage.set({ image: profile.image, check: this.DoctorImage().check * -1 })
         console.log(this.DoctorImage())
         console.log(this.doctor);
 
@@ -627,7 +664,7 @@ export class DoctorProfileComponent implements OnInit {
             error: (err) => {
               Swal.fire({
                 title: 'Error',
-                text: `There was an error editing the reservation: ${err.error.Errors[0] || err.error.ErrorMessage ||  'Please try again later.'}`,
+                text: `There was an error editing the reservation: ${err.error.Errors[0] || err.error.ErrorMessage || 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });

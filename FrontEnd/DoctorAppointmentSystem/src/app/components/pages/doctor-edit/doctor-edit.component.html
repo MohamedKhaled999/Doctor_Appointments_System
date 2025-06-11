@@ -137,7 +137,8 @@
               <button type="button" class="btn btn-primary mb-3login-submit " (click)="pickLocation()">
                 Pick Automatically (Permission Needed)
               </button>
-              <div #mapContainer id="map" style="height: 300px; width: 100%;"></div>
+              <!-- <div #mapContainer id="map" style="height: 300px; width: 100%;"></div> -->
+              <div id="map" style="height: 300px; width: 100%;" leaflet [leafletOptions]="options" *ngIf="isMapInitialized" (leafletMapReady)="onMapReady($event)"></div>
             </div>
           </div>
         </div>
