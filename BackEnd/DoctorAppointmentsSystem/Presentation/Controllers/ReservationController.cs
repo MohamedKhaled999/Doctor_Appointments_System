@@ -24,7 +24,8 @@ namespace Presentation.Controllers
             else
                 reservations = await _serviceManager.DoctorReservationService.GetReservationsByDocID(doctorId);
             if (reservations == null)
-                return NotFound();
+                //return NotFound();
+                return Ok(new List<DoctorReservationDTO>());
             return Ok(reservations);
         }
 
