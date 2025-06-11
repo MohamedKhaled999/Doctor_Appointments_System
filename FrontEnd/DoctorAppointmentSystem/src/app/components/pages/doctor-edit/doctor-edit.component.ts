@@ -165,6 +165,7 @@ export class DoctorEditComponent implements OnInit {
       layer.on('dragend', (event: any) => {
         const position = event.target.getLatLng();
         this.doctorForm.patchValue({
+          ...this.doctorForm.value,
           lat: position.lat,
           lng: position.lng
         });
@@ -194,6 +195,7 @@ export class DoctorEditComponent implements OnInit {
       const position = event.latlng;
       this.marker.setLatLng(position);
       this.doctorForm.patchValue({
+        ...this.doctorForm.value,
         lat: position.lat,
         lng: position.lng
       });
