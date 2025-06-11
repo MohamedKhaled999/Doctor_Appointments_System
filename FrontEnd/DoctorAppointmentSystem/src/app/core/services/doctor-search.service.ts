@@ -112,7 +112,7 @@ export class DoctorSearchService {
 
   return this.http.get(`${this.apiUrl}?${queryString}`).pipe(
     map((response: any) => ({
-      results: response.doctors.map((doctor: any) => this.transformDoctors([doctor])[0]),
+      results: response.doctors.map((doctor: Doctor) => this.transformDoctors([doctor])[0]),
       total_pages: response.totalPageNumber,
       total_results: response.total_results,
       page: response.page
