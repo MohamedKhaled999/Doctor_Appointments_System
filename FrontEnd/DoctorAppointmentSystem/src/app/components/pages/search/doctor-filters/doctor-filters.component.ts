@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Filter } from './filter';
 // import { Specialities } from '../../../../core/enums/speciality.enum';
 import { Gender } from '../../../../core/enums/gender.enum';
@@ -23,7 +23,7 @@ import { response } from 'express';
   templateUrl: './doctor-filters.component.html',
   styleUrl: './doctor-filters.component.css'
 })
-export class DoctorFiltersComponent implements AfterViewInit {
+export class DoctorFiltersComponent implements OnInit, AfterViewInit {
 
   public isBrowser: boolean;
 
@@ -74,10 +74,19 @@ export class DoctorFiltersComponent implements AfterViewInit {
   });
  
 
+ngOnInit(): void {
+  this.loadSpecialities();
+  // Initialize filters with service values if they exist
+  if (this.DoctorSearchService.speciality().length > 0) {
+    this.filters.speciality = [...this.DoctorSearchService.speciality()];
+  }
+}
+
 ngAfterViewInit(): void {
 
   if(this.isBrowser){
     console.log(this.GovernoratesList);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     this.loadSpecialities()
     console.log(`spec doc serv state : ---------> ${JSON.stringify(this.DoctorSearchService.speciality())}`);
     // Wait Slider
@@ -133,27 +142,33 @@ ngAfterViewInit(): void {
 
 
   loadSpecialities(): void {
-  this.SpecialtyService.isLoading.set(true);
-  this.SpecialtyService.getSpecialties().subscribe({
-    next: (response) => {
+    this.SpecialtyService.isLoading.set(true);
+    this.SpecialtyService.getSpecialties().subscribe({
+      next: (response) => {
+        this.SpecialitiesList = response;
+        this.SpecialtyService.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error fetching doctors:', error);
+        this.SpecialtyService.isLoading.set(false);
+      }
+    });
+  }
 
-      this.SpecialitiesList = response;
-      console.log(`The Specialities loaded are : ${JSON.stringify(this.SpecialitiesList)}`);
-
-      // setTimeout(() => {
-      //   this.filters.speciality = [this.DoctorSearchService.speciality()[0]];// or any logic you want
-      //   console.log(`${JSON.stringify(this.filters.speciality)}`);
-      // },0);
-      this.SpecialtyService.isLoading.set(false);
-
-    },
-    error: (error) => {
-      console.error('Error fetching doctors:', error);
-      this.SpecialtyService.isLoading.set(false);
+  onSpecialtyChange(specialtyId: string): void {
+    if (!specialtyId) {
+      this.filters.speciality = [];
+    } else {
+      const specialty = this.SpecialitiesList.find(s => s.id.toString() === specialtyId);
+      if (specialty) {
+        this.filters.speciality = [specialty];
+      }
     }
-  });
+    // this.onFilter();
+    this.DoctorSearchService.speciality.set(this.filters.speciality);
 
   }
+
   onFilter(): void {
     console.log('Filters applied:', this.filters);
     this.DoctorSearchService.doctorName.set(this.filters.doctorName);

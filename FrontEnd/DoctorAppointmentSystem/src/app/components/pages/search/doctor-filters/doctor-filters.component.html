@@ -12,19 +12,13 @@
 
         <div class="input-group mb-3">
             <label class="input-group-text"><i class="fa-solid fa-user-doctor"></i></label>
-            <select class="form-select SP-select SP-specialitySelect" name="Speciality" [(ngModel)]="filters.speciality"
-            (ngModelChange)="onFilter()"
-            >
-                <option value="" [selected]="(!this.filters.speciality)">Select Speciality</option>
-                <option *ngFor="let s of SpecialitiesList" 
-                [selected]="(this.DoctorSearchService.speciality().length !== 0) && (s.id === this.DoctorSearchService.speciality()[0].id)"
-                 [value]="s.id"
-                 >{{ s.name }}</option>
+            <select class="form-select SP-select SP-specialitySelect" name="Speciality" 
+                    [ngModel]="filters.speciality[0].id || ''" 
+                    (ngModelChange)="onSpecialtyChange($event)">
+                <option value="">Select Speciality</option>
+                <option *ngFor="let s of SpecialitiesList" [value]="s.id">{{ s.name }}</option>
             </select>
         </div>
-                <!-- [selected]="(this.filters.speciality.length !== 0) && (s.id === this.filters.speciality[0].id)" -->
-        
-
         <div class="input-group mb-3">
             <label class="input-group-text"><i class="fa-solid fa-location-dot"></i></label>
             <select class="form-select SP-select SP-govSelect" name="governorate" [(ngModel)]="filters.governorate">
