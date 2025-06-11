@@ -68,7 +68,7 @@ export class ReservationAppointmentsComponent implements OnInit {
           },
           error: (error: any) => {
             console.error('Error uploading prescription:', error);
-            this.fileErrors = [`Error uploading prescription for ${file.name}. Please try again.`];
+            this.fileErrors = [`Error uploading prescription: ${error.error.Errors[0]}`];
           }
         })
       } else {
