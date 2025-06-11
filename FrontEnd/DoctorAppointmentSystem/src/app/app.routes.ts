@@ -135,6 +135,16 @@ export const routes: Routes = [
         ]
       },
     {
+      path: 'search/payment-success',
+      component: SearchComponent,
+      title: 'Search - Payment Success'
+    },
+    {
+      path: 'search/payment-failed',
+      component: SearchComponent,
+      title: 'Search - Payment Failed'
+    },
+    {
     path: 'search',
     component: SearchComponent,
     title: 'Search'
