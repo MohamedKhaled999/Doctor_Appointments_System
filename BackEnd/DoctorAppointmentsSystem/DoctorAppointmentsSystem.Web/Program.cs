@@ -31,18 +31,19 @@ namespace DoctorAppointmentsSystem.Web
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddCors(op => op.AddPolicy("allow",
-                op =>
-                {
-                    op.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-                })
-            );
-            builder.Services.AddCors(op => op.AddPolicy("signalR",
-                op =>
-                {
-                    op.WithOrigins(builder.Configuration["FrontEnd:Url"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
-                })
-            );
+            builder.Services.AddCors(op =>
+            {
+                op.AddPolicy("allow",
+                    op =>
+                    {
+                        op.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                    });
+                op.AddPolicy("signalR",
+                    op =>
+                    {
+                        op.WithOrigins(builder.Configuration["FrontEnd:Url"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                    });
+            });
 
             builder.Services.AddSignalR();
 
