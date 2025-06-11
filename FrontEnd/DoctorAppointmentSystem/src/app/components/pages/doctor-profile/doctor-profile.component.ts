@@ -58,7 +58,7 @@ export class DoctorProfileComponent implements OnInit {
     reservationQuota: 1
   }
   selectedTab: 'details' | 'reviews' | 'calendar' = 'details';
-  DoctorImage =signal<doctorImage>({} as doctorImage)
+  DoctorImage =signal<doctorImage>({image:"",check:-1} )
 
   @ViewChild('mapContainer', { static: false }) mapContainer: ElementRef | undefined;
   @ViewChild('calendarContainer', { static: false }) calendarContainer: ElementRef | undefined;
@@ -158,6 +158,7 @@ export class DoctorProfileComponent implements OnInit {
   //   const startOfWeek = this.startOfWeek(date);
   //   this.monthDays = [];
 
+  
   //   for (let day = 0; day < 7; day++) {
   //     const weekDate = new Date(startOfWeek);
   //     weekDate.setDate(startOfWeek.getDate() + day);
