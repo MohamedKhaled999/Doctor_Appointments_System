@@ -20,11 +20,10 @@
             </li>
           </ul>
           <div class="col-12">
-            <label for="medicalFiles" class="form-label mb-2">Attach Medical Files (PDF, JPG, PNG, JPEG &lt;
+            <label for="medicalFiles" class="form-label mb-2">Attach The Prescription (PDF, JPG, PNG, JPEG &lt;
               5MB)</label>
             <input id="medicalFiles" type="file" class="form-control mb-2"
-              (change)="onFileSelected($event, appointment)" multiple [accept]="acceptedFileTypes" />
-            <small class="form-text text-muted mb-2">You can attach multiple files.</small>
+              (change)="onFileSelected($event, appointment)" [accept]="acceptedFileTypes" />
             <div *ngIf="fileErrors" class="text-danger mb-2 mt-1">
               <p *ngFor="let error of fileErrors">{{ error }}</p>
             </div>
