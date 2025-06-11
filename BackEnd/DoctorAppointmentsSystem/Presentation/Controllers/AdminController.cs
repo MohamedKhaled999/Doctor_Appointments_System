@@ -22,7 +22,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("FullDashBoard")]
-        [RedisCaching]
+        // [RedisCaching]
         public async Task<IActionResult> GetFullDashboard()
         {
             var dashboard = await _serviceManager.AdminOrchestrator.GetDashboardDataAsync();

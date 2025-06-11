@@ -11,7 +11,7 @@ namespace Presentation.Controllers
         public HomeController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
         [HttpGet]
-        [RedisCaching]
+        // [RedisCaching]
         public async Task<IActionResult> Index()
         {
             var homeData = await _serviceManager.HomeService.GetHomeData();

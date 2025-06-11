@@ -17,7 +17,7 @@ namespace Presentation.Controllers
         public AppointmentController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
         [HttpGet]
-        [RedisCaching]
+        // [RedisCaching]
         public async Task<IActionResult> GetAppointments(int pageIndex, int pageSize)
         {
             var appointments = await _serviceManager.AppointmentOrchestrator.GetAppointmentsByAppUserIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), pageIndex, pageSize);
