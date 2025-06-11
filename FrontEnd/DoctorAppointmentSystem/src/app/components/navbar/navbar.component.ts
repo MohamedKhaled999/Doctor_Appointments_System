@@ -30,12 +30,12 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) platformId: Object,
-  
+
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
 
     if (this.isBrowser) {
-      
+
       window.addEventListener('scroll', function () {
         const header = document.getElementsByTagName('header')[0];
         const nav = document.getElementsByTagName('nav')[0];
@@ -51,41 +51,17 @@ export class NavbarComponent implements OnInit {
           nav.classList.replace('bg-primary-color', 'bg-primary-color-75');
         }
       });
-
-      this.router.events
-        .pipe(filter((event) => event instanceof NavigationEnd))
-        .subscribe((event: NavigationEnd) => {
-          const nav = document.getElementsByTagName('nav')[0];
-          if (!nav) return;
-
-          const currentUrl = event.urlAfterRedirects;
-
-        
-          if (currentUrl !== '/' && currentUrl !== '/home') {
-            nav.classList.add('bg-primary-color');
-          } else {
-            nav.classList.remove('bg-primary-color');
-          }
-        });
     }
   }
-
 
   ngOnInit(): void {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {
         this.isHome = event.url === '/';
       }
+      if (isPlatformBrowser(this.platformId))
+        this.isAuthenticated = localStorage.getItem("userToken") ? true : false;
     });
-
-    // this.authService.isAuthenticated$?.subscribe(auth => {
-    //   if (auth !== undefined) {
-    //     this.isAuthenticated = auth;
-    //     if (auth) {
-    //       this.userRole = this.authService.getUserRole();
-    //     }
-    //   }
-    // });
   }
 
   toggleNavbar(): void {
