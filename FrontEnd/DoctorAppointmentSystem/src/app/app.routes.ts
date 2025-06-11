@@ -119,21 +119,25 @@ export const routes: Routes = [
           {
             path: 'patient',
             loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
+            title: 'Patient Profile',
             canActivate: [authGuard]
           },
           {
             path: 'doctor',
             loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
+            title: 'Doctor Profile',
            canActivate: [authGuard]
           },
           {
             path: 'doctor/edit',
             loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
+            title: 'Edit Doctor Profile',
            canActivate: [authGuard]
           },
           {
             path: 'doctor/:id',
             loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
+            title: 'Doctor Profile Details',
           }
         ]
       },
