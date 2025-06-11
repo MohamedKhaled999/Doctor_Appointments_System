@@ -80,7 +80,7 @@ namespace Services
             if (newReservation.MaxRes < reservation.MaxReservation)
             {
                 var appointmentCount = (await GetAppointmentsByReservationId(reservation.Id))?.Count() ?? 0;
-                if (appointmentCount < newReservation.MaxRes)
+                if (appointmentCount > 0 && appointmentCount < newReservation.MaxRes)
                     throw new ValidationException([$"Can't decrease maximum appointments to {newReservation.MaxRes} (there is already {appointmentCount} appointments booked)"]);
             }
 
