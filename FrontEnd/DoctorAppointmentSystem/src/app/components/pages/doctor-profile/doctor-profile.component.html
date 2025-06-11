@@ -5,8 +5,9 @@
       <div class="sticky-md-top pt-5 text-center" style="padding-top:89px">
         <form (submit)="false">
           <div class="position-relative d-inline-block" (click)="uploadInput.click()">
+            <!-- [src]="'https://doc-net2.runasp.net/uploads/images/' + doctor?.image" -->
             <img
-              [src]="'https://doc-net2.runasp.net/uploads/images/' + doctor?.image"
+              [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage()"
               alt="Doctor Image"
               class="rounded-circle img-thumbnail SP-photo"
             />

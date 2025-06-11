@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Inject } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DoctorService } from '../../../core/services/doctor.service';
 import { Doctor } from '../../../core/interfaces/doctor.interface';
@@ -54,6 +54,8 @@ export class DoctorProfileComponent implements OnInit {
     reservationQuota: 1
   }
   selectedTab: 'details' | 'reviews' | 'calendar' = 'details';
+  DoctorImage =signal<string>("")
+
   @ViewChild('mapContainer', { static: false }) mapContainer: ElementRef | undefined;
   @ViewChild('calendarContainer', { static: false }) calendarContainer: ElementRef | undefined;
   @ViewChild('calDate', { static: false })
@@ -340,6 +342,7 @@ export class DoctorProfileComponent implements OnInit {
   ngOnInit(): void {
     this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe(profile => {
       this.doctor = profile;
+      this.DoctorImage.set(profile.image)
       this.doctor.governorate = this.governorates[parseInt(this.doctor.governorate) - 1];
       this.initMap();
       this.doctorService.getReservations(this.doctor.id).subscribe({
@@ -548,6 +551,7 @@ export class DoctorProfileComponent implements OnInit {
     this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe({
       next: (profile) => {
         this.doctor = profile;
+        this.DoctorImage.set(profile.image)
         console.log(this.doctor);
         
       },
