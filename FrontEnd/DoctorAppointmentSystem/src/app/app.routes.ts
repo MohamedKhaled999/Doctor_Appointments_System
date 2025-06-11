@@ -221,25 +221,14 @@ export const routes: Routes = [
         component: AdminDashboardComponent
       }
     ]
-  },
-  {
-    path: 'test',
-    component: TestSwiperComponent,
   }
-  ,
-  {
-    path: 'extrenal-login',
-    component: ExtrenalLoginComponent,
-  }
-  ,
-  //NotFound
+
+,
   {
     path: '**',
     component: NotFoundComponent, title: 'NotFound'
   }
 
+
+
 ]
-// {
-//   path: 'doctors',
-//   loadComponent: () => import('./components/pages/doctor-profile').then(m => m.DoctorsComponent)
-// // }
