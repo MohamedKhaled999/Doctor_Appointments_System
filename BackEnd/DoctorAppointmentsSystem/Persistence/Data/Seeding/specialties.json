@@ -1,0 +1,57 @@
+[
+  {
+    "Name": "Cardiology",
+    "ImageURL": "cardiology.jpg",
+    "Description": "Cardiology is the medical specialty dealing with disorders of the heart and blood vessels. Cardiologists diagnose and treat conditions like heart attacks, arrhythmias, and hypertension."
+  },
+  {
+    "Name": "Angioplasty",
+    "ImageURL": "angioplasty.jpg",
+    "Description": "Angioplasty is a minimally invasive procedure used to open blocked or narrowed blood vessels of the heart. It's commonly performed to restore blood flow in coronary arteries."
+  },
+  {
+    "Name": "Dermatology",
+    "ImageURL": "dermatology.jpg",
+    "Description": "Dermatology focuses on the diagnosis and treatment of skin, hair, and nail disorders. Dermatologists treat conditions like acne, eczema, psoriasis, and skin cancers."
+  },
+  {
+    "Name": "Pediatrics",
+    "ImageURL": "pediatrics.jpg",
+    "Description": "Pediatrics is the branch of medicine that involves the medical care of infants, children, and adolescents. Pediatricians manage a wide range of childhood illnesses and developmental concerns."
+  },
+  {
+    "Name": "Neurology",
+    "ImageURL": "neurology.jpg",
+    "Description": "Neurology is the specialty concerned with disorders of the nervous system, including the brain, spinal cord, and nerves. Neurologists treat conditions like epilepsy, stroke, and multiple sclerosis."
+  },
+  {
+    "Name": "Orthopedics",
+    "ImageURL": "orthopedics.jpg",
+    "Description": "Orthopedics focuses on the musculoskeletal system, including bones, joints, muscles, ligaments, and tendons. Orthopedic surgeons treat injuries and conditions such as fractures and arthritis."
+  },
+  {
+    "Name": "Ophthalmology",
+    "ImageURL": "ophthalmology.jpg",
+    "Description": "Ophthalmology deals with the diagnosis and treatment of eye diseases and vision problems. Ophthalmologists perform eye exams, prescribe lenses, and conduct eye surgeries."
+  },
+  {
+    "Name": "Gastroenterology",
+    "ImageURL": "gastroenterology.jpg",
+    "Description": "Gastroenterology is the branch of medicine focused on the digestive system and its disorders. Gastroenterologists treat conditions like ulcers, irritable bowel syndrome, and hepatitis."
+  },
+  {
+    "Name": "Endocrinology",
+    "ImageURL": "endocrinology.jpg",
+    "Description": "Endocrinology involves the study of hormone-related diseases. Endocrinologists manage conditions such as diabetes, thyroid disorders, and hormonal imbalances."
+  },
+  {
+    "Name": "Urology",
+    "ImageURL": "urology.jpg",
+    "Description": "Urology focuses on the urinary tract system and the male reproductive organs. Urologists treat conditions like kidney stones, urinary infections, and prostate issues."
+  },
+  {
+    "Name": "Dentistry",
+    "ImageURL": "dentistry.jpg",
+    "Description": "Dentistry is the branch of medicine dealing with oral health. Dentists diagnose and treat issues related to the teeth, gums, and mouth, including cavities, gum disease, and tooth alignment."
+  }
+]
