@@ -6,11 +6,20 @@
         <form (submit)="false">
           <div class="position-relative d-inline-block" (click)="uploadInput.click()">
             <!-- [src]="'https://doc-net2.runasp.net/uploads/images/' + doctor?.image" -->
-            <img
+            @if(DoctorImage().check==1){
+              <img
               [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage().image"
               alt="Doctor Image"
               class="rounded-circle img-thumbnail SP-photo"
             />
+            }
+            @else{
+                <img
+              [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage().image"
+              alt="Doctor Image"
+              class="rounded-circle img-thumbnail SP-photo border-danger-subtle border-2"
+            />
+            }
             <input #uploadInput type="file" class="d-none SP-file" (change)="
                 uploadPhoto($event)
               " />
