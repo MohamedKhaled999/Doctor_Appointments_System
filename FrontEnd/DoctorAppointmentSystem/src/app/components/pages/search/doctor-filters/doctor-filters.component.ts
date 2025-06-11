@@ -27,7 +27,9 @@ export class DoctorFiltersComponent implements AfterViewInit {
 
   public isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: any, private DoctorSearchService: DoctorSearchService, private SpecialtyService: SpecialtyService) {
+  constructor(@Inject(PLATFORM_ID) private platformId: any,
+   protected DoctorSearchService: DoctorSearchService,
+    private SpecialtyService: SpecialtyService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
   @ViewChild('waitSlider', { static: false }) waitSlider!: ElementRef;
@@ -77,6 +79,7 @@ ngAfterViewInit(): void {
   if(this.isBrowser){
     console.log(this.GovernoratesList);
     this.loadSpecialities()
+    console.log(`spec doc serv state : ---------> ${JSON.stringify(this.DoctorSearchService.speciality())}`);
     // Wait Slider
     if (this.waitSlider && this.waitSlider.nativeElement) {
       noUiSlider.create(this.waitSlider.nativeElement, {
@@ -135,7 +138,12 @@ ngAfterViewInit(): void {
     next: (response) => {
 
       this.SpecialitiesList = response;
-      console.log(`The Specialities loaded are : ${this.SpecialitiesList}`);
+      console.log(`The Specialities loaded are : ${JSON.stringify(this.SpecialitiesList)}`);
+
+      // setTimeout(() => {
+      //   this.filters.speciality = [this.DoctorSearchService.speciality()[0]];// or any logic you want
+      //   console.log(`${JSON.stringify(this.filters.speciality)}`);
+      // },0);
       this.SpecialtyService.isLoading.set(false);
 
     },
