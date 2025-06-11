@@ -25,7 +25,8 @@ export class DoctorCardComponent implements OnInit {
   authService : any;
   showModal: any;
   getNextDate:any;
-  constructor(private DoctorReservationService: DoctorReservationService, public userData :DataManagementService ) {
+  constructor(private DoctorReservationService: DoctorReservationService,
+     public userData :DataManagementService ) {
 
   }
   ngOnInit() {

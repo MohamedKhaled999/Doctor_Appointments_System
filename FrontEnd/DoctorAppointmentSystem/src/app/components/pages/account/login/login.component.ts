@@ -44,46 +44,73 @@ export class LoginComponent {
       rememberMe: [false]
     });
 
-    // this.loadExternalProviders();
+   
   }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
-  // private loadExternalProviders(): void {
-  //   this.socialAuthService.getExternalProviders().subscribe({
-  //     next: (providers) => this.externalProviders = providers,
-  //     error: () => this.handleError('Failed to load login options')
-  //   });
-  // }
+ 
 
+//   onSubmit(): void {
+//     if (this.loginForm.invalid) return;
+
+//     this.isLoading = true;
+//     const { email, password, rememberMe } = this.loginForm.value;
+
+//     console.log('Login attempt:', { email, password, rememberMe });
+
+//     this.accountService.login(email, password).subscribe({
+//       next: (response) => {
+//         this.storeAuthData(response, rememberMe);
+//         console.log('Login successful:', response);
+//         this.router.navigate(['/home']);
+//       },
+//       error: (httpError) => {
+   
+//         const errorObj = httpError.error;
+//         const errorMessage = errorObj?.ErrorMessage || "Login failed. Please try again.";
+    
+//         console.error('Login error:', httpError);
+        
+//         Swal.fire({
+//           icon: 'warning',
+//           title: 'Login Error',
+//           text: errorMessage,
+//           confirmButtonText: 'OK'
+//         });
+//       }
+//     });
+  // }
   onSubmit(): void {
     if (this.loginForm.invalid) return;
 
     this.isLoading = true;
-    const { email, password, rememberMe } = this.loginForm.value;
+    this.validationErrors = []; // Clear previous errors
+    this.emailNotConfirmed = false; // Reset email confirmation flag
 
-    console.log('Login attempt:', { email, password, rememberMe });
+    const { email, password, rememberMe } = this.loginForm.value;
 
     this.accountService.login(email, password).subscribe({
       next: (response) => {
+        this.isLoading = false;
         this.storeAuthData(response, rememberMe);
-        console.log('Login successful:', response);
         this.router.navigate(['/home']);
       },
       error: (httpError) => {
-   
+        this.isLoading = false;
         const errorObj = httpError.error; 
         const errorMessage = errorObj?.ErrorMessage || "Login failed. Please try again.";
-    
-        console.error('Login error:', httpError);
         
         Swal.fire({
           icon: 'warning',
           title: 'Login Error',
           text: errorMessage,
           confirmButtonText: 'OK'
+        }).then(() => {
+          
+          this.loginForm.updateValueAndValidity();
         });
       }
     });
@@ -104,7 +131,7 @@ export class LoginComponent {
   }
 
   private handleLoginError(error: any): void {
-    this.isLoading = false;
+    // this.isLoading = false;
     this.validationErrors = [error.error?.message || 'Login failed. Please try again.'];
 
     if (error.status === 401 && error.error?.requiresConfirmation) {
@@ -112,13 +139,7 @@ export class LoginComponent {
     }
   }
 
-  // async externalLogin(provider: string): Promise<void> {
-  //   try {
-  //     await this.socialAuthService.externalLogin(provider);
-  //   } catch {
-  //     this.handleError('External login failed');
-  //   }
-  // }
+
 
   private handleError(message: string): void {
     this.isLoading = false;

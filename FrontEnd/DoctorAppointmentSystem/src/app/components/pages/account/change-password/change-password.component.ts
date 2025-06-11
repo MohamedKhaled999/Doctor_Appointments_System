@@ -28,7 +28,7 @@ export class ChangePasswordComponent {
     private router: Router
   ) {
     this.changePasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]], 
+    
       oldPassword: ['', Validators.required],
       newPassword: ['', [
         Validators.required,
@@ -53,7 +53,7 @@ export class ChangePasswordComponent {
       this.isSubmitting = true;
       
       const formData = {
-        email: this.changePasswordForm.value.email,
+  
         oldPassword: this.changePasswordForm.value.oldPassword,
         newPassword: this.changePasswordForm.value.newPassword
       };

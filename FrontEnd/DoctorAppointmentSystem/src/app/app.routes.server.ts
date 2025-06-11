@@ -9,7 +9,7 @@ export const serverRoutes: ServerRoute[] = [
   
     {
     path: 'profile/doctor/:id',
-    renderMode:RenderMode.Server
+    renderMode:RenderMode.Client
   },
   
 ];

@@ -109,7 +109,7 @@ export const routes: Routes = [
       
       {
         path: 'profile',
-        canActivate: [authGuard],
+       
         children: [
           {
             path: '',
@@ -119,17 +119,20 @@ export const routes: Routes = [
           {
             path: 'patient',
             loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
-            title: 'Patient Profile'
+            title: 'Patient Profile',
+            canActivate: [authGuard]
           },
           {
             path: 'doctor',
             loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
-            title: 'Doctor Profile'
+            title: 'Doctor Profile',
+           canActivate: [authGuard]
           },
           {
             path: 'doctor/edit',
             loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
-            title: 'Edit Doctor Profile'
+            title: 'Edit Doctor Profile',
+           canActivate: [authGuard]
           },
           {
             path: 'doctor/:id',
@@ -218,25 +221,14 @@ export const routes: Routes = [
         component: AdminDashboardComponent
       }
     ]
-  },
-  {
-    path: 'test',
-    component: TestSwiperComponent,
   }
-  ,
-  {
-    path: 'extrenal-login',
-    component: ExtrenalLoginComponent,
-  }
-  ,
-  //NotFound
+
+,
   {
     path: '**',
     component: NotFoundComponent, title: 'NotFound'
   }
 
+
+
 ]
-// {
-//   path: 'doctors',
-//   loadComponent: () => import('./components/pages/doctor-profile').then(m => m.DoctorsComponent)
-// // }
