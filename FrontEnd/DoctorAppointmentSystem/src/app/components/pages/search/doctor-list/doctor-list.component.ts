@@ -39,10 +39,18 @@ export class DoctorListComponent {
 
       // this.DoctorSearchService.pageIndexSource.set('list');
       // this.loadDoctors();
+
       this.DoctorSearchService.loadDoctors();
     }
   }
 
+
+
+
+
+
+
+  
 
   // pageIndexEffect = effect(() => {
   //   const pageIndex = this.DoctorSearchService.pageIndex();
