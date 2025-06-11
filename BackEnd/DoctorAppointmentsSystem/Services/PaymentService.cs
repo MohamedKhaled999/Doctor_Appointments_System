@@ -61,8 +61,8 @@ namespace Services
                 },
 
                 Mode = "payment",
-                SuccessUrl = $"{domain}/payment-success",
-                CancelUrl = $"{domain}/payment-cancel",
+                SuccessUrl = $"{domain}/search/payment-success",
+                CancelUrl = $"{domain}/search/payment-cancel",
                 CustomerEmail = paymentDto.Email,
                 Metadata = new Dictionary<string, string>
                             {
