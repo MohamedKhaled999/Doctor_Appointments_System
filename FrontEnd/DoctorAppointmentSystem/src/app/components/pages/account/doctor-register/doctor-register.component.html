@@ -1,12 +1,13 @@
 <div class="container  d-flex justify-content-center align-items-center">
 
 
->
+    >
     <div class="card p-4 shadow-lg SP-card col-10 col-md-6 mx-auto"
-        style="padding: 100px 20px 20px; color: var(--primary-color) ; " >
-        
+        style="padding: 100px 20px 20px; color: var(--primary-color) ; ">
+
         <h2 class="custom-container">Enter Your Information</h2>
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="custom-containerr">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data"
+            class="custom-containerr">
             <div class="accordion form-container" id="doctorRegisterAccordion">
 
                 <!-- Personal Information -->
@@ -22,7 +23,7 @@
                             <div class="row gap-1 gap-md-0">
                                 <div class="col-md-6 col-sm-12">
                                     <label class="my-1 ">First Name</label>
-                                    <input formControlName="firstName" class="login-form-input rounded-1"  />
+                                    <input formControlName="firstName" class="login-form-input rounded-1" />
                                     @if (registerForm.get('firstName')?.invalid &&
                                     registerForm.get('firstName')?.touched) {
                                     <span class="text-danger">First name is required</span>
@@ -39,20 +40,21 @@
                             </div>
                             <div class="row gap-1 gap-md-0">
                                 <div class="col-md-6 col-sm-12">
-                                    
-                                        <label>Gender</label>
-                                        <select formControlName="gender" class="login-form-input rounded-1 form-select">
-                                            <option [ngValue]="null" disabled>Select Gender</option>
-                                            <!-- 
+
+                                    <label>Gender</label>
+                                    <select formControlName="gender" class="login-form-input rounded-1 form-select">
+                                        <option [ngValue]="null" disabled>Select Gender</option>
+                                        <!-- 
                                                                                 Renders:
                                                                                 <option value="0">Male</option>
                                                                                 <option value="1">Female</option>
                                                                               -->
-                                            <option *ngFor="let opt of genderOptions" [ngValue]="opt.value">
-                                                {{opt.label}}
-                                            </option>
-                                        </select>                                                           </div>
-                                
+                                        <option *ngFor="let opt of genderOptions" [ngValue]="opt.value">
+                                            {{opt.label}}
+                                        </option>
+                                    </select>
+                                </div>
+
                                 <!-- <div class="col-md-6 col-sm-12">
                                     <label>Gender</label>
                                     <select formControlName="gender" class="login-form-input rounded-1 form-select">
@@ -76,31 +78,35 @@
                             </div>
                             <div class="mb-3 col-12 col-md-6">
                                 <label class="form-label">Profile Image</label>
-                                <input type="file" name="Image" (change)="onFileChange($event)" class="login-form-input rounded-1 form-control"
+                                <input type="file" name="Image" (change)="onFileChange($event)"
+                                    class="login-form-input rounded-1 form-control"
                                     accept=".jpg,.jpeg,.png,.gif,.bmp,.webp,.svg" />
-                            
+
                                 <!-- Selected file info -->
                                 <div *ngIf="selectedFileName" class="mt-2 small text-muted">
                                     Selected: {{ selectedFileName }} ({{ selectedFileSize }})
                                 </div>
-                            
+
                                 <!-- Validation Error Messages -->
                                 <div *ngIf="registerForm.get('Image')?.invalid && (registerForm.get('Image')?.touched || registerForm.get('Image')?.dirty)"
                                     class="text-danger mt-2 small">
-                            
+
                                     <div *ngIf="registerForm.get('Image')?.errors?.['required']">
                                         Profile image is required
                                     </div>
-                            
+
                                     <div *ngIf="registerForm.get('Image')?.errors?.['maxFileSize']">
-                                        Image size must be less than {{ registerForm.get('Image')?.errors?.['maxFileSize'].requiredSize }}.
-                                        Current size is {{ registerForm.get('Image')?.errors?.['maxFileSize'].actualSize }}
+                                        Image size must be less than {{
+                                        registerForm.get('Image')?.errors?.['maxFileSize'].requiredSize }}.
+                                        Current size is {{ registerForm.get('Image')?.errors?.['maxFileSize'].actualSize
+                                        }}
                                     </div>
-                            
+
                                     <div *ngIf="registerForm.get('Image')?.errors?.['fileType']">
                                         Only JPG, JPEG, PNG, GIF, BMP, WEBP, SVG files are allowed
                                     </div>
-                                </div>                        </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -108,7 +114,7 @@
                 <!-- Contact Information -->
                 <div class="accordion-item doctor-register-div">
                     <h2 class="accordion-header" id="headingContact">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" (click)="initMap()"
                             data-bs-target="#collapseContact">
                             Contact Information
                         </button>
@@ -158,7 +164,9 @@
                                 <button type="button" (click)="pickLocation()" class="btn login-submit mb-3">
                                     Pick Automatically (Permission Needed)
                                 </button>
-                                <div #mapContainer id="map" style="height: 300px; width: 100%;"></div>
+                                <!-- <div #mapContainer id="map" style="height: 300px; width: 100%;"></div> -->
+                                <div id="map" style="height: 300px; width: 100%;" leaflet [leafletOptions]="options"
+                                    *ngIf="isMapInitialized" (leafletMapReady)="onMapReady($event)"></div>
                             </div>
                         </div>
                     </div>
@@ -267,23 +275,25 @@
                                         @if (registerForm.get('fees')?.errors?.['min']) {
                                         <div>Fees must be positive</div>
                                         }
-                                    </span>                                     }
+                                    </span> }
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <label>Waiting Time (minutes)</label>
                                     <input formControlName="waitingTime"
                                         class="login-form-input rounded-1 form-control" />
-                                        @if (registerForm.get('waitingTime')?.invalid && registerForm.get('waitingTime')?.touched) {
-                                        <span class="text-danger">
-                                            @if (registerForm.get('waitingTime')?.errors?.['required']) {
-                                            <div>Waiting time is required</div>
-                                            }
-                                            @if (registerForm.get('waitingTime')?.errors?.['min'] || registerForm.get('waitingTime')?.errors?.['max']) {
-                                            <div>Must be between 0-60 minutes</div>
-                                            }
-                                        </span>
+                                    @if (registerForm.get('waitingTime')?.invalid &&
+                                    registerForm.get('waitingTime')?.touched) {
+                                    <span class="text-danger">
+                                        @if (registerForm.get('waitingTime')?.errors?.['required']) {
+                                        <div>Waiting time is required</div>
                                         }
-                                          
+                                        @if (registerForm.get('waitingTime')?.errors?.['min'] ||
+                                        registerForm.get('waitingTime')?.errors?.['max']) {
+                                        <div>Must be between 0-60 minutes</div>
+                                        }
+                                    </span>
+                                    }
+
                                     <!-- @if (registerForm.get('waitingTime')?.invalid &&
                                     registerForm.get('waitingTime')?.touched) {
                                     <span class="text-danger">Must be between 0-60 minutes</span>
@@ -292,7 +302,8 @@
                             </div>
                             <div class="mb-3">
                                 <label>About</label>
-                                <textarea formControlName="about" class="login-form-input rounded-1 form-control"></textarea>
+                                <textarea formControlName="about"
+                                    class="login-form-input rounded-1 form-control"></textarea>
                                 <!-- @if (registerForm.get('about')?.invalid && registerForm.get('about')?.touched) {
                                                             <span class="text-danger">About section is required (max 500 chars)</span>
                                                             } -->
@@ -319,4 +330,4 @@
             </div>
         </form>
     </div>
-    </div>
+</div>

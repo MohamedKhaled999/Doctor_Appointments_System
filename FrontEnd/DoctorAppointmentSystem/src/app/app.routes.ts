@@ -120,7 +120,7 @@ export const routes: Routes = [
       },
       {
         path: 'doctor-register',
-        component: DoctorRegisterComponent,
+        loadComponent: () => import('./components/pages/account/doctor-register/doctor-register.component').then(m => m.DoctorRegisterComponent),
         title: "Join Us - DocNet"
       },
       {

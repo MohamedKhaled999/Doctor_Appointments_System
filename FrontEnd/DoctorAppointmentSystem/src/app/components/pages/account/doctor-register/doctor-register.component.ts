@@ -7,31 +7,33 @@ import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RegisterDoctor } from '../../../../core/interfaces/register-doctor';
 import { CommonModule } from '@angular/common';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import { Icon, icon, latLng, marker, tileLayer } from 'leaflet';
 
 
 import {
   maxFileSize
-  ,allowedFileTypes 
- } from '../../../../core/validators/file-validators';
+  , allowedFileTypes
+} from '../../../../core/validators/file-validators';
 import { Governorate } from '../../../../core/enums/governorate.enum';
 import { Gender } from '../../../../core/models/doctor-register.model';
 
 @Component({
   selector: 'app-doctor-register',
-  standalone: true,
   templateUrl: './doctor-register.component.html',
   styleUrls: ['./doctor-register.component.css'],
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    LeafletModule
   ]
 })
 export class DoctorRegisterComponent implements AfterViewInit {
   // ...
   doctorLatitude: number | null = null;
   doctorLongitude: number | null = null;
-  
+
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
   registerForm: FormGroup;
@@ -45,7 +47,8 @@ export class DoctorRegisterComponent implements AfterViewInit {
   genderOptions: { value: Gender, label: string }[] = [];
   private map: any;
   private marker: any;
-  MAX_FILE_SIZE = 2 * 1024 * 1024; 
+  isMapInitialized = false;
+  MAX_FILE_SIZE = 2 * 1024 * 1024;
   ALLOWED_FILE_TYPES = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
   selectedFileName: string = '';
   selectedFileSize: string = '';
@@ -55,12 +58,11 @@ export class DoctorRegisterComponent implements AfterViewInit {
     private accountService: AccountService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
-  )
-  {
+  ) {
     console.log('DoctorRegisterComponent constructor called');
     this.genderOptions = Object.keys(Gender).map(key => ({
       value: Gender[key as keyof typeof Gender],
-      label: key.charAt(0).toUpperCase() + key.slice(1) 
+      label: key.charAt(0).toUpperCase() + key.slice(1)
     }));
     // this.genderOptions = Object.keys(Gender).map(key => ({
     //   value: Gender[key as keyof typeof Gender],
@@ -70,13 +72,13 @@ export class DoctorRegisterComponent implements AfterViewInit {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       gender: ['', Validators.required],
-      
+
       birthDate: ['', Validators.required],
       Image: [null, [
         Validators.required,
         maxFileSize(this.MAX_FILE_SIZE),
         allowedFileTypes(this.ALLOWED_FILE_TYPES)
-        
+
       ]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]],
@@ -99,7 +101,7 @@ export class DoctorRegisterComponent implements AfterViewInit {
       console.log('Running in browser platform');
       setTimeout(async () => {
         console.log('Initializing map...');
-        await this.initMap();
+        // await this.initMap();
         console.log('Loading specialties and governorates...');
         this.loadSpecialties();
         this.loadGovernorates();
@@ -111,50 +113,45 @@ export class DoctorRegisterComponent implements AfterViewInit {
       }, 0);
     }
   }
+  initMap(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const initialLat = this.registerForm.value.lat;
+      const initialLng = this.registerForm.value.lng;
+      this.options.center = latLng(initialLat, initialLng);
+      let layer = marker([initialLat, initialLng], {
+        draggable: true,
+        icon: icon({
+          className: 'leaflet-marker-icon',
+          ...Icon.Default.prototype.options,
+          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png'
+        })
+      });
+      this.marker = layer;
+      layer.on('dragend', (event: any) => {
+        const position = event.target.getLatLng();
+        this.updateLocation(position.lat, position.lng);
+      });
+      this.isMapInitialized = true;
+      this.options.layers.push(layer);
+      console.log(this.options.layers);
 
-  private async initMap(): Promise<void> {
-    console.log('initMap called');
-    console.log('mapContainer:', this.mapContainer);
-
-    const L = await import('leaflet');
-    await import('leaflet-defaulticon-compatibility');
-
-    if (!this.mapContainer) {
-      console.error('Map container not found!');
-      return;
     }
-
-    console.log('Setting Leaflet icon paths');
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    });
-
-    const initialLat = this.registerForm.value.lat;
-    const initialLng = this.registerForm.value.lng;
-    console.log('Initial lat/lng:', initialLat, initialLng);
-
-    this.map = L.map(this.mapContainer.nativeElement).setView([initialLat, initialLng], 10);
-    console.log('Map created');
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
-
-    this.marker = L.marker([initialLat, initialLng], { draggable: true })
-      .addTo(this.map)
-      .bindPopup("Doctor's Clinic");
-
-    this.map.on('click', (e: any) => {
-      console.log('Map clicked at:', e.latlng);
-      this.updateLocation(e.latlng.lat, e.latlng.lng);
-    });
-
-    this.marker.on('dragend', () => {
-      const position = this.marker.getLatLng();
-      console.log('Marker dragged to:', position);
+  }
+  options: any = {
+    layers: [
+      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      })
+    ],
+    zoom: 13,
+    center: latLng(30.0444, 31.2357)
+  }
+  onMapReady(map: any) {
+    this.map = map;
+    this.map.on('click', (event: any) => {
+      const position = event.latlng;
       this.updateLocation(position.lat, position.lng);
     });
   }
@@ -162,12 +159,12 @@ export class DoctorRegisterComponent implements AfterViewInit {
   loadGovernorates() {
     console.log('Loading governorates');
     this.governorateOptions = Object.keys(Governorate)
-    .filter(key => isNaN(Number(key)))
-    .map(key => ({
-      value: Governorate[key as keyof typeof Governorate],
-      label: key
-    }));
-  
+      .filter(key => isNaN(Number(key)))
+      .map(key => ({
+        value: Governorate[key as keyof typeof Governorate],
+        label: key
+      }));
+
     console.log('Governorates loaded:', this.governorateOptions);
   }
 
@@ -203,15 +200,15 @@ export class DoctorRegisterComponent implements AfterViewInit {
 
   onFileChange(event: any) {
     const file = event.target.files[0];
-    
+
     if (file) {
       this.selectedFileName = file.name;
       this.selectedFileSize = this.formatFileSize(file.size);
-      
+
       this.registerForm.patchValue({
         Image: file
       });
-      
+
       this.registerForm.get('Image')?.updateValueAndValidity();
     } else {
       this.selectedFileName = '';
@@ -232,16 +229,21 @@ export class DoctorRegisterComponent implements AfterViewInit {
       console.warn('Map is not initialized');
       return;
     }
-
-    const L = (window as any).L;
-    const newLatLng = L.latLng(lat, lng);
-    this.map.setView(newLatLng, 13);
+    this.registerForm.patchValue({
+      ...this.registerForm.value,
+      lat: lat,
+      lng: lng
+    });
+    // const L = (window as any).L;
+    // const newLatLng = L.latLng(lat, lng);
+    this.map.setView([lat, lng], 13);
 
     if (this.marker) {
-      this.marker.setLatLng(newLatLng);
-    } else {
-      this.marker = L.marker(newLatLng, { draggable: true }).addTo(this.map);
+      this.marker.setLatLng([lat, lng]);
     }
+    //  else {
+    //   this.marker = L.marker(newLatLng, { draggable: true }).addTo(this.map);
+    // }
   }
 
   pickLocation() {
@@ -284,7 +286,7 @@ export class DoctorRegisterComponent implements AfterViewInit {
       },
       error: (err: HttpErrorResponse) => {
         console.error('Failed to load specialties', err);
-       
+
       }
     });
   }
@@ -319,49 +321,49 @@ export class DoctorRegisterComponent implements AfterViewInit {
     this.accountService.registerDoctor(formData).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
-            Swal.fire({
-                icon: 'success',
-                title: 'Registration Successful!',
-                text: 'Your account has been created successfully',
-                confirmButtonText: 'OK'
-            })
-               
-            },
-            error: (error) => {
-             
-                const errorMessage = error.error?.Errors || 
-                                   error.error?.message || 
-                                   (Array.isArray(error.error) ? error.error.join(', ') : 
-                                   'Registration failed. Please try again');
-                
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Registration Error',
-                    text: errorMessage,
-                    confirmButtonText: 'OK'
-                });
-            }
-          });
-      
-      // },
-      // error: (err: HttpErrorResponse) => {
-      //   console.error('Registration failed:', err);
-      //   let errorMessage = "Registration failed";
-      //   if (err.error && typeof err.error === 'string') {
-      //     errorMessage = err.error;
-      //   } else if (err.error && Array.isArray(err.error)) {
-      //     errorMessage = err.error.join('\n');
-      //   } else if (err.error && err.error.errors) {
-      //     errorMessage = Object.values(err.error.errors).join('\n');
-      //   }
+        Swal.fire({
+          icon: 'success',
+          title: 'Registration Successful!',
+          text: 'Your account has been created successfully',
+          confirmButtonText: 'OK'
+        })
 
-      //   Swal.fire({
-      //     title: "Error",
-      //     text: errorMessage,
-      //     icon: "error"
-      //   });
+      },
+      error: (error) => {
+
+        const errorMessage = error.error?.Errors ||
+          error.error?.message ||
+          (Array.isArray(error.error) ? error.error.join(', ') :
+            'Registration failed. Please try again');
+
+        Swal.fire({
+          icon: 'warning',
+          title: 'Registration Error',
+          text: errorMessage,
+          confirmButtonText: 'OK'
+        });
       }
- 
+    });
+
+    // },
+    // error: (err: HttpErrorResponse) => {
+    //   console.error('Registration failed:', err);
+    //   let errorMessage = "Registration failed";
+    //   if (err.error && typeof err.error === 'string') {
+    //     errorMessage = err.error;
+    //   } else if (err.error && Array.isArray(err.error)) {
+    //     errorMessage = err.error.join('\n');
+    //   } else if (err.error && err.error.errors) {
+    //     errorMessage = Object.values(err.error.errors).join('\n');
+    //   }
+
+    //   Swal.fire({
+    //     title: "Error",
+    //     text: errorMessage,
+    //     icon: "error"
+    //   });
+  }
+
 
   private markFormGroupTouched(formGroup: FormGroup) {
     console.log('Marking form group as touched');
