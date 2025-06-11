@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Caching;
 using Services.Abstraction;
 using Services.Abstraction.Orchestrators;
 using Shared.DTOs.Doctor;
@@ -15,12 +16,13 @@ namespace Presentation.Controllers
     public class AdminController : ApiController
     {
         private readonly IServiceManager _serviceManager;
-        public AdminController(IServiceManager serviceManager) 
+        public AdminController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
         }
 
         [HttpGet("FullDashBoard")]
+        [RedisCaching]
         public async Task<IActionResult> GetFullDashboard()
         {
             var dashboard = await _serviceManager.AdminOrchestrator.GetDashboardDataAsync();
@@ -38,6 +40,5 @@ namespace Presentation.Controllers
             await _serviceManager.DoctorService.ApproveDoctor(doctorId);
             return Ok(new { success = true });
         }
-
     }
 }
