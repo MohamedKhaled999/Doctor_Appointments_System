@@ -17,6 +17,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   newNotificationsCount: number = 0;
   private subscription: Subscription = new Subscription();
   panelOpen = false;
+  toggleOpened = false;
   showShowMoreButton = false;
 
   constructor(private notificationService: NotificationService) {}
@@ -71,8 +72,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   toggle() {
     this.panelOpen = !this.panelOpen;
     if (this.panelOpen) {
+      this.toggleOpened = true;
+    } else if (this.toggleOpened) {
+      this.toggleOpened = false;
       this.markAsRead();
-    }
+      }
   }
   loadMore(): void {
     this.displayedNotifications = this.notifications.slice(0, this.displayedNotifications.length + 5);

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Inject } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DoctorService } from '../../../core/services/doctor.service';
 import { Doctor } from '../../../core/interfaces/doctor.interface';
@@ -30,6 +30,10 @@ export enum CalendarView {
   Week = 'week',
   Day = 'day'
 }
+interface doctorImage{
+  image:string;
+  check :number;
+}
 
 @Component({
   selector: 'app-doctor-profile',
@@ -54,6 +58,8 @@ export class DoctorProfileComponent implements OnInit {
     reservationQuota: 1
   }
   selectedTab: 'details' | 'reviews' | 'calendar' = 'details';
+  DoctorImage =signal<doctorImage>({image:"",check:-1} )
+
   @ViewChild('mapContainer', { static: false }) mapContainer: ElementRef | undefined;
   @ViewChild('calendarContainer', { static: false }) calendarContainer: ElementRef | undefined;
   @ViewChild('calDate', { static: false })
@@ -152,6 +158,7 @@ export class DoctorProfileComponent implements OnInit {
   //   const startOfWeek = this.startOfWeek(date);
   //   this.monthDays = [];
 
+  
   //   for (let day = 0; day < 7; day++) {
   //     const weekDate = new Date(startOfWeek);
   //     weekDate.setDate(startOfWeek.getDate() + day);
@@ -360,6 +367,7 @@ export class DoctorProfileComponent implements OnInit {
   ngOnInit(): void {
     this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe(profile => {
       this.doctor = profile;
+      this.DoctorImage.set({image:profile.image,check:-1});
       this.doctor.governorate = this.governorates[parseInt(this.doctor.governorate) - 1];
       this.initMap();
       this.doctorService.getReservations(this.doctor.id).subscribe({
@@ -569,6 +577,8 @@ export class DoctorProfileComponent implements OnInit {
     this.doctorService.getProfile(this.route.snapshot.params['id']).subscribe({
       next: (profile) => {
         this.doctor = profile;
+        this.DoctorImage.set({image:profile.image,check:this.DoctorImage().check*-1})
+        console.log(this.DoctorImage())
         console.log(this.doctor);
 
       },
