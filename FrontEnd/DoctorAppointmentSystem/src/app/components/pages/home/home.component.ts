@@ -22,9 +22,9 @@ import { DoctorSearchService } from '../../../core/services/doctor-search.servic
   imports: [
     CommonModule,
     RouterLink,
-    RatingComponent, 
+    RatingComponent,
   ],
-  
+
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   homeData: any;
   specialties: Specialty[] = [];
   doctors: Doctor[] = [];
-  
+
   filteredDoctors: Doctor[] = [];
   activeFilter: string = 'all';
   loading = true;
@@ -53,21 +53,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     private cdr: ChangeDetectorRef,
     public DoctorSearchService: DoctorSearchService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
 
 
     this.loadHomeData();
     console.log('Specialties:', this.specialties);
-    console.log('doctors:',this.doctors) ;
+    console.log('doctors:', this.doctors);
     console.log(this.filteredDoctors);
     if (isPlatformBrowser(this.platformId)) {
       AOS.init();
     }
   }
   // ngAfterViewInit(): void {
-        
+
   //   setTimeout(() => {
   //     this.initSwiper1();
   //   }, 500);
@@ -79,13 +79,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   //   }, 500);
   //   // this.initSwiper2();
   //   //   this.initSwiper3();
-     
 
-       
+
+
   //   // }, 500); 
-        
-    // this.initTyped();
-  
+
+  // this.initTyped();
+
   //   import('mixitup').then(({ default: mixitup }) => {
   //     this.mixer = mixitup('#mixContainer', {
   //       animation: {
@@ -105,22 +105,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
 
-     if (isPlatformBrowser(this.platformId)) {
-    if (this.doctors.length > 0 && this.specialties.length > 0) {
-      this.initSwipers();
-    } else {
-      // If data isn't loaded yet, wait for it
-      const subscription = this.apiService.getHomeData().subscribe(() => {
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.doctors.length > 0 && this.specialties.length > 0) {
         this.initSwipers();
-        subscription.unsubscribe();
-      });
+      } else {
+        // If data isn't loaded yet, wait for it
+        const subscription = this.apiService.getHomeData().subscribe(() => {
+          this.initSwipers();
+          subscription.unsubscribe();
+        });
+      }
+      this.initMixItUp();
     }
-    this.initMixItUp();
-  }
     // this.initTyped();
-   
   }
-  
+
   private initSwipers(): void {
     setTimeout(() => {
       this.initSwiper1();
@@ -129,7 +128,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.initTyped();
     }, 500);
   }
-  
+
   private initMixItUp(): void {
     import('mixitup').then(({ default: mixitup }) => {
       this.mixer = mixitup('#mixContainer', {
@@ -151,17 +150,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.apiService.getHomeData().subscribe({
       next: (data) => {
         this.homeData = data;
-     
+
         this.specialties = data.specialties || [];
         this.specialtyAosValues = this.specialties.map(() => this.getRandomAosAnimation());
-      
+
         this.doctors = data.doctors || [];
-        this.filteredDoctors = [...this.doctors]; 
+        this.filteredDoctors = [...this.doctors];
         this.doctorAosValues = this.filteredDoctors.map(() => this.getRandomAosAnimation());
-        
+
         this.loading = false;
         this.cdr.detectChanges();
-    
+
         setTimeout(() => {
           this.initSwiper1();
           this.initSwiper2();
@@ -197,7 +196,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
   }
-  
+
 
   filterDoctors(filter: string): void {
     this.activeFilter = filter;
@@ -207,18 +206,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.filteredDoctors = this.doctors.filter(d => d.specialty.toString() === filter);
     }
 
-this.doctorAosValues = this.filteredDoctors.map(() => this.getRandomAosAnimation());
+    this.doctorAosValues = this.filteredDoctors.map(() => this.getRandomAosAnimation());
 
     setTimeout(() => {
       this.swiper2.update();
-      AOS.refresh();  
+      AOS.refresh();
     }, 300);
   }
 
   trackSpecialtyId(index: number, specialty: any): any {
     return specialty.id;
   }
-  
+
   getDoctorCountBySpecialtyName(specialtyName: string): number {
     return this.doctors.filter(d => d.specialty === specialtyName).length;
   }
@@ -233,81 +232,81 @@ this.doctorAosValues = this.filteredDoctors.map(() => this.getRandomAosAnimation
                   <path d="M30 5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zM30 10c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zM30 15c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/>
                 </svg>`;
       default:
-        return '';  
+        return '';
     }
   }
   initSwiper1(): void {
-     if (isPlatformBrowser(this.platformId)) {
-    this.swiper = new Swiper('.swiper', {
-      effect: 'fade',
-      loop: true,
-      autoplay: {
-        delay: 3000,
-        disableOnInteraction: false
-      },
-      speed: 1000,
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true
-      },
-      scrollbar: {
-        el: '.swiper-scrollbar'
-      }
-    });
-  }
-  }
-  
-  initSwiper2(): void {
-         if (isPlatformBrowser(this.platformId)) {
-
-    this.swiper2 = new Swiper('.swiper-container', {
-      modules: [Navigation],
-      navigation: {
-        nextEl: '.doctor-button-next',
-        prevEl: '.doctor-button-prev',
-      },
-      slidesPerView: 1,
-      spaceBetween: 15,
-      breakpoints: {
-        320: { slidesPerView: 2 },
-        768: { slidesPerView: 3 },
-        1024: { slidesPerView: 4 }
-      },
-      on: {
-        init: (swiper) => {
-          console.log('Doctors swiper initialized with navigation:', {
-            next: swiper.navigation.nextEl,
-            prev: swiper.navigation.prevEl
-          });
+    if (isPlatformBrowser(this.platformId)) {
+      this.swiper = new Swiper('.swiper', {
+        effect: 'fade',
+        loop: true,
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false
+        },
+        speed: 1000,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true
+        },
+        scrollbar: {
+          el: '.swiper-scrollbar'
         }
-      }
-    });
-  
-    this.swiper2.slideTo(0);
+      });
+    }
   }
-  }
-  
-  initSwiper3(): void {
-         if (isPlatformBrowser(this.platformId)) {
 
-    this.swiper3 = new Swiper(".swiper-container-btns", {
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-      spaceBetween: 5,
-      breakpoints: {
-        100: { slidesPerView: 2 },
-        300: { slidesPerView: 3 },
-        500: { slidesPerView: 4 },
-        1024: { slidesPerView: 10 },
-      },
-    });
-  
-    this.swiper3.slideTo(0);
+  initSwiper2(): void {
+    if (isPlatformBrowser(this.platformId)) {
+
+      this.swiper2 = new Swiper('.swiper-container', {
+        modules: [Navigation],
+        navigation: {
+          nextEl: '.doctor-button-next',
+          prevEl: '.doctor-button-prev',
+        },
+        slidesPerView: 1,
+        spaceBetween: 15,
+        breakpoints: {
+          320: { slidesPerView: 2 },
+          768: { slidesPerView: 3 },
+          1024: { slidesPerView: 4 }
+        },
+        on: {
+          init: (swiper) => {
+            console.log('Doctors swiper initialized with navigation:', {
+              next: swiper.navigation.nextEl,
+              prev: swiper.navigation.prevEl
+            });
+          }
+        }
+      });
+
+      this.swiper2.slideTo(0);
+    }
   }
+
+  initSwiper3(): void {
+    if (isPlatformBrowser(this.platformId)) {
+
+      this.swiper3 = new Swiper(".swiper-container-btns", {
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        spaceBetween: 5,
+        breakpoints: {
+          100: { slidesPerView: 2 },
+          300: { slidesPerView: 3 },
+          500: { slidesPerView: 4 },
+          1024: { slidesPerView: 10 },
+        },
+      });
+
+      this.swiper3.slideTo(0);
+    }
   }
-  
+
   ngOnDestroy(): void {
     if (this.typed) this.typed.destroy();
   }
