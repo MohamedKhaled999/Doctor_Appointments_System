@@ -4,7 +4,9 @@
       <img src="images/MainLogo.png" height="50" alt="Logo"
         style="filter: drop-shadow(1px 1px 2px var(--secondary-color))" />
     </a>
-
+    <div class="d-lg-none mobile-notif-wrapper">
+      <app-notifications></app-notifications>
+    </div>
     <button class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-controls="navbarNav"
       aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -44,8 +46,10 @@
           <a class="nav-link" (click)="logout()">Logout</a>
         </li>
         }
-        @else {
-        <app-notifications></app-notifications>
+        @else if (dataService.isAuthenticated() == true) {
+        <div class="d-none d-lg-flex align-items-center ms-auto">
+          <app-notifications></app-notifications>
+        </div>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/', 'profile', dataService.UserRole()]">Profile</a>
         </li>

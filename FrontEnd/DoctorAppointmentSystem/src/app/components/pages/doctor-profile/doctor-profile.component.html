@@ -106,7 +106,8 @@
           </p>
 
           <h4>Map</h4>
-          <div #mapContainer id="SP-Map" class="w-100 col-12" style="height: 400px;"></div>
+          <!-- <div #mapContainer id="SP-Map" class="w-100 col-12" style="height: 400px;"></div> -->
+          <div id="SP-Map" class="w-100 col-12" style="height: 300px;" leaflet [leafletOptions]="options" *ngIf="isMapInitialized"></div>
         </div>
 
         <!-- REVIEWS TAB -->
