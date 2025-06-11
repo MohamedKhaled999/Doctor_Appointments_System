@@ -344,6 +344,7 @@ export class DoctorProfileComponent implements OnInit {
       this.initMap();
       this.doctorService.getReservations(this.doctor.id).subscribe({
         next: (reservations) => {
+          console.log(reservations); 
           reservations.forEach(reservation => {
             reservation.date = new Date(reservation.startTime.split('T')[0]);
             reservation.time = `${reservation.startTime.split('T')[1]} : ${reservation.endTime.split('T')[1]}`;

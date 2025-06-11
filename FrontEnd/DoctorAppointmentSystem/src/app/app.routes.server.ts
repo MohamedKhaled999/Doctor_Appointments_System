@@ -5,7 +5,7 @@ export const serverRoutes: ServerRoute[] = [
     path: '**',
     renderMode: RenderMode.Prerender
   },
-  
+    
   
     {
     path: 'profile/doctor/:id',
