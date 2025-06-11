@@ -1,53 +1,27 @@
-<nav
-  id="MainNav"
-  class="position-fixed w-100 navbar navbar-dark navbar-expand-lg bg-primary-color-75"
->
+<nav id="MainNav" class="position-fixed w-100 navbar navbar-dark navbar-expand-lg bg-primary-color-75">
   <div class="container-fluid px-5">
     <a class="navbar-brand" routerLink="/">
-      <img
-        src="images/MainLogo.png"
-        height="50"
-        alt="Logo"
-        style="filter: drop-shadow(1px 1px 2px var(--secondary-color))"
-      />
+      <img src="images/MainLogo.png" height="50" alt="Logo"
+        style="filter: drop-shadow(1px 1px 2px var(--secondary-color))" />
     </a>
 
-    <button
-      class="navbar-toggler"
-      type="button"
-      (click)="toggleNavbar()"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-controls="navbarNav"
+      aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div
-      class="collapse navbar-collapse"
-      id="navbarNav"
-      [ngbCollapse]="isCollapsed"
-    >
+    <div class="collapse navbar-collapse" id="navbarNav" [ngbCollapse]="isCollapsed">
       <ul class="navbar-nav gap-md-5 m-auto">
         <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/home"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Home</a
-          >
+          <a class="nav-link" routerLink="/home" routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/search" routerLinkActive="active"
-            >Doctors</a
-          >
+          <a class="nav-link" routerLink="/search" routerLinkActive="active">Doctors</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/contact" routerLinkActive="active"
-            >Contact</a
-          >
+          <a class="nav-link" routerLink="/contact" routerLinkActive="active">Contact</a>
         </li>
       </ul>
       <ul class="navbar-nav gap-md-2">
@@ -59,18 +33,21 @@
           <a class="nav-link" routerLink="/register">Register</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-nowrap" routerLink="/doctor-register"
-            >Join us</a
-          >
+          <a class="nav-link text-nowrap" routerLink="/doctor-register">Join us</a>
         </li>
-        } @if (dataService.isAuthenticated()===true) {
-          <app-notifications></app-notifications>
+        }
+        @else if(dataService.isAuthenticated()===true && dataService.UserRole()=="admin") {
         <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/', 'profile', dataService.UserRole()]"
-            >Profile</a
-          >
+          <a class="nav-link" [routerLink]="['/', 'profile', dataService.UserRole()]">Dashboard</a>
+        </li>
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link" (click)="logout()">Logout</a>
+        </li>
+        }
+        @else if (dataService.isAuthenticated()===true) {
+        <app-notifications></app-notifications>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/dashboard">Profile</a>
         </li>
         <li class="nav-item" style="cursor: pointer">
           <a class="nav-link" (click)="logout()">Logout</a>
