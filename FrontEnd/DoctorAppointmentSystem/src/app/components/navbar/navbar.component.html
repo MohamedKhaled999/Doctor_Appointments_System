@@ -1,7 +1,4 @@
-<nav
-  id="MainNav"
-  class="position-fixed w-100 navbar navbar-dark navbar-expand-lg bg-primary-color"
->
+<nav id="MainNav" class="position-fixed w-100 navbar navbar-dark navbar-expand-lg bg-primary-color">
   <div class="container-fluid px-5">
     <a class="navbar-brand" routerLink="/">
       <img src="images/MainLogo.png" height="50" alt="Logo"
@@ -13,7 +10,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav" [ngbCollapse]="isCollapsed">
+    <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav gap-md-5 m-auto">
         <li class="nav-item">
           <a class="nav-link" routerLink="/home" routerLinkActive="active"
@@ -28,7 +25,7 @@
         </li>
       </ul>
       <ul class="navbar-nav gap-md-2">
-        @if (dataService.isAuthenticated() == false) {
+        @if (!dataService.isAuthenticated()) {
         <li class="nav-item">
           <a class="nav-link" routerLink="/login">Login</a>
         </li>
@@ -39,7 +36,7 @@
           <a class="nav-link text-nowrap" routerLink="/doctor-register">Join us</a>
         </li>
         }
-        @else if(dataService.isAuthenticated() == true && dataService.UserRole() == "admin") {
+        @else if(dataService.UserRole() == "admin") {
         <li class="nav-item pe-4">
           <a class="nav-link" routerLink="/admin/dashboard">Dashboard</a>
         </li>
@@ -47,7 +44,7 @@
           <a class="nav-link" (click)="logout()">Logout</a>
         </li>
         }
-        @else if (dataService.isAuthenticated() == true) {
+        @else {
         <app-notifications></app-notifications>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/', 'profile', dataService.UserRole()]">Profile</a>

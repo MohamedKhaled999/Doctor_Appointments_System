@@ -4,7 +4,7 @@ import { NavbarComponent } from "../../components/navbar/navbar.component";
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [RouterOutlet, NavbarComponent],
+  imports: [RouterOutlet],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css'
 })
