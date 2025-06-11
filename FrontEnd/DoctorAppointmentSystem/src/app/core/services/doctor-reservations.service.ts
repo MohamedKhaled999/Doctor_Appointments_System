@@ -45,18 +45,24 @@ export class DoctorReservationService {
                 reservations: response.map(res => ({
                     ResId: res.id,
                     DoctorId: res.doctorID,
-                    Day: res.day,
+                    Day: res?.day,
                     StartTime: res.startTime,
                     EndTime: res.endTime,
-                    IsAvailable: res.isAvailable
+                    IsAvailable: res?.isAvailable
                 }))
-            })),
-            catchError(error => {
-                console.error('Error fetching reservations:', error);
-                throw error;
+            }))
+            // ,catchError(error => {
+            //     console.error('Error fetching reservations:', error);
+            //     throw error;
+            // })
+            ,catchError(error => {
+                // console.error('Error fetching reservations:', error);
+                return of({ reservations: [] }); // Safe fallback
             })
         );
     }
+
+
     bookAnAppointment(ResId: number, token: string): Observable<any> {
         return this.http.post<any>(
             `${environment.apiUrl}/patient/appointments?doctorReservationId=${ResId}`,

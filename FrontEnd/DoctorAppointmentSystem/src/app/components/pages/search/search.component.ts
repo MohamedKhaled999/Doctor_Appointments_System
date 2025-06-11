@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { DoctorCardComponent } from "./doctor-card/doctor-card.component";
 import { DoctorFiltersComponent } from "./doctor-filters/doctor-filters.component";
 import { DoctorListComponent } from "./doctor-list/doctor-list.component";
 import { RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { isPlatformBrowser } from '@angular/common';
+
 @Component({
   selector: 'app-search',
   imports: [DoctorFiltersComponent, DoctorListComponent, RouterModule],
@@ -13,9 +15,17 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class SearchComponent implements OnInit {
   currentUrl : any;
-  constructor(private toaster: ToastrService,private route: ActivatedRoute) {}
+  isBrowser : boolean = false;
+  isToasterShownFirstTime : boolean = false
+  constructor( @Inject(PLATFORM_ID) private platformId: any, private toaster: ToastrService, private route: ActivatedRoute) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+  }
   getCurrentUrl(): string {
-    return window.location.href;
+    if(this.isBrowser)
+      return window.location.href;
+    else
+    return this.route.toString();
   }
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -24,32 +34,39 @@ export class SearchComponent implements OnInit {
 
     
     });
-    // this.currentUrl = this.getCurrentUrl;
-    // if (this.currentUrl.includes('payment-success')) 
-    //   {
-    //   this.showSuccess();
-    // }
-    // else if(this.currentUrl.includes('payment-failed')) // Just check what it returns when failing
-    // {
-    //   this.showError();
-    // }
+    this.currentUrl = this.getCurrentUrl()
+    if (this.isBrowser && !this.isToasterShownFirstTime) {
+      if (this.currentUrl.includes('payment-success')) {
+        this.showSuccess();
+        this.isToasterShownFirstTime = true;
+      } else if (this.currentUrl.includes('payment-failed')) {
+        this.showError();
+        this.isToasterShownFirstTime = true;
+      }
+    }
   }
 
   showSuccess() {
     // this.toaster.success('This is a success message!', 'Success');
-    this.toaster.show('Congratulations! Your payment has succeeded', 'Custom', {
-      timeOut: 3000,
+    this.toaster.success('Congratulations! Your payment has succeeded', 'Success', {
+      timeOut: 10000,
       progressBar: true,
       closeButton: true,
       positionClass: 'toast-bottom-right',
+      easeTime: 400, // optional
+      progressAnimation : 'decreasing',
+      tapToDismiss: true
     });
   }
   showError() {
-      this.toaster.show('Something went wrong! Your payment didn\'t succeed', 'Custom', {
-      timeOut: 3000,
+      this.toaster.error('Something went wrong! Your payment didn\'t succeed', 'Payment Failed', {
+      timeOut: 10000,
       progressBar: true,
       closeButton: true,
       positionClass: 'toast-bottom-right',
+      easeTime: 400, // optional
+      progressAnimation : 'decreasing',
+      tapToDismiss: true
     });
   }
 }

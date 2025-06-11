@@ -148,7 +148,11 @@ export class DoctorSearchService {
       title: doctor.title || 'General Practitioner',
       qualifications: doctor.qualifications?.split(',') || [],
       fees: doctor.fees || 0,
-      specializations: doctor.specialty || [],
+      specializations: Array.isArray(doctor.speciality)
+        ? doctor.speciality
+        : doctor.speciality
+          ? [doctor.speciality]
+          : [],
       rating: doctor.rating || 0,
       waitingTime: doctor.waitingTime || 0,
       governorate: Governorate[doctor.governorate].toString() || 'Governorate is Unknown',
