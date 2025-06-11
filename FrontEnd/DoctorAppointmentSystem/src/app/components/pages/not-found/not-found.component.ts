@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Inject, PLATFORM_ID } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from "../../navbar/navbar.component";
@@ -11,10 +11,11 @@ import { NavbarComponent } from "../../navbar/navbar.component";
   styleUrls: ['./not-found.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class NotFoundComponent {
+export class NotFoundComponent   {
   constructor(@Inject(PLATFORM_ID) platformId: Object) {
     if (isPlatformBrowser(platformId)) {
       import('@dotlottie/player-component');
     }
   }
+
 }

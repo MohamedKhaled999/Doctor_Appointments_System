@@ -31,7 +31,7 @@ nav {
 
 
 .bg-primary-color {
-    background-color: var(--primary-color);
+    background-color: #004085 !important;
 }
 
 .bg-secondary-color {

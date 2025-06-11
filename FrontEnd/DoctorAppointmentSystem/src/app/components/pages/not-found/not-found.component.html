@@ -1,9 +1,15 @@
 <app-navbar></app-navbar>
-<div class="error-container d-flex flex-column justify-content-around align-items-center">
-    <dotlottie-player src="https://lottie.host/99447d15-baa5-428d-b705-673104f3ee05/wS0R5rtePM.lottie"
-        background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
-    <p class="error-paragraph text-center">
-        Sorry, the page you're looking for doesn't exist. If you think something is broken, please contact us.
-    </p>
-    <a routerLink="/" class="error-link px-4 py-3 rounded-5 text-white text-decoration-none">Home</a>
-</div>
+
+<main class="error-page-container">
+    <div class="error-container d-flex flex-column justify-content-around align-items-center">
+        <dotlottie-player src="https://lottie.host/99447d15-baa5-428d-b705-673104f3ee05/wS0R5rtePM.lottie"
+            background="transparent" speed="1" style="width: 300px; height: 300px; margin-top:100px" loop autoplay>
+            </dotlottie-player>
+
+        <p class="error-paragraph text-center">
+            Sorry, the page you're looking for doesn't exist. If you think something is broken, please contact us.
+        </p>
+
+        <a routerLink="/" class="error-link px-4 py-3 rounded-5 text-white text-decoration-none">Home</a>
+    </div>
+</main>

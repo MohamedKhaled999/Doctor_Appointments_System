@@ -29,7 +29,7 @@ import Swal from 'sweetalert2';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent  {
   registerForm: FormGroup;
   currentStep = 1;
   showPassword = false;
@@ -98,9 +98,7 @@ export class RegisterComponent implements OnInit {
       { validators: this.passwordMatchValidator }
     );
   }
-  ngOnInit(): void {
-    this.loadRecaptchaScript();
-  }
+
 
   passwordMatchValidator(form: FormGroup) {
     return form.get('password')?.value === form.get('confirmPassword')?.value
@@ -250,19 +248,19 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  handleRecaptchaResponse(token: string): void {
-    this.registerForm.get('recaptcha')?.setValue(token);
-  }
+  // handleRecaptchaResponse(token: string): void {
+  //   this.registerForm.get('recaptcha')?.setValue(token);
+  // }
 
-  private loadRecaptchaScript(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = document.createElement('script');
-      script.src = `https://www.google.com/recaptcha/api.js?render=${this.siteKey}&hl=${this.recaptchaLanguage}`;
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-    }
-  }
+  // private loadRecaptchaScript(): void {
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     const script = document.createElement('script');
+  //     script.src = `https://www.google.com/recaptcha/api.js?render=${this.siteKey}&hl=${this.recaptchaLanguage}`;
+  //     script.async = true;
+  //     script.defer = true;
+  //     document.body.appendChild(script);
+  //   }
+  // }
  
   
 }
