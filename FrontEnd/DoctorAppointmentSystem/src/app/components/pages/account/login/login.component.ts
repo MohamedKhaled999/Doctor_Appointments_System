@@ -5,12 +5,9 @@ import { CommonModule } from '@angular/common';
 import { AccountService } from '../../../../core/services/account.service';
 import { SocialauthService } from '../../../../core/services/socialauth.service';
 import { ExternalProvider } from '../../../../core/models/external-provider.model';
-import { LoginResponse } from '../../../../core/interfaces/login-response.mode';
-import { log } from 'console';
 import { ExtrenalLoginComponent } from '../../../shared/extrenal-login/extrenal-login.component';
 import { AuthResponse } from '../../../../core/interfaces/auth-response';
 import Swal from 'sweetalert2';
-import { UserManagementData } from '../../../../core/interfaces/user-management-data';
 import { DataManagementService } from '../../../../core/services/data-management.service';
 
 const customEmailPattern = /^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.com$/;
@@ -23,7 +20,6 @@ const customEmailPattern = /^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.com$/;
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
   loginForm: FormGroup;
   showPassword = false;
   isLoading = false;
@@ -44,44 +40,44 @@ export class LoginComponent {
       rememberMe: [false]
     });
 
-   
+
   }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
- 
 
-//   onSubmit(): void {
-//     if (this.loginForm.invalid) return;
 
-//     this.isLoading = true;
-//     const { email, password, rememberMe } = this.loginForm.value;
+  //   onSubmit(): void {
+  //     if (this.loginForm.invalid) return;
 
-//     console.log('Login attempt:', { email, password, rememberMe });
+  //     this.isLoading = true;
+  //     const { email, password, rememberMe } = this.loginForm.value;
 
-//     this.accountService.login(email, password).subscribe({
-//       next: (response) => {
-//         this.storeAuthData(response, rememberMe);
-//         console.log('Login successful:', response);
-//         this.router.navigate(['/home']);
-//       },
-//       error: (httpError) => {
-   
-//         const errorObj = httpError.error;
-//         const errorMessage = errorObj?.ErrorMessage || "Login failed. Please try again.";
-    
-//         console.error('Login error:', httpError);
-        
-//         Swal.fire({
-//           icon: 'warning',
-//           title: 'Login Error',
-//           text: errorMessage,
-//           confirmButtonText: 'OK'
-//         });
-//       }
-//     });
+  //     console.log('Login attempt:', { email, password, rememberMe });
+
+  //     this.accountService.login(email, password).subscribe({
+  //       next: (response) => {
+  //         this.storeAuthData(response, rememberMe);
+  //         console.log('Login successful:', response);
+  //         this.router.navigate(['/home']);
+  //       },
+  //       error: (httpError) => {
+
+  //         const errorObj = httpError.error;
+  //         const errorMessage = errorObj?.ErrorMessage || "Login failed. Please try again.";
+
+  //         console.error('Login error:', httpError);
+
+  //         Swal.fire({
+  //           icon: 'warning',
+  //           title: 'Login Error',
+  //           text: errorMessage,
+  //           confirmButtonText: 'OK'
+  //         });
+  //       }
+  //     });
   // }
   onSubmit(): void {
     if (this.loginForm.invalid) return;
@@ -100,29 +96,29 @@ export class LoginComponent {
       },
       error: (httpError) => {
         this.isLoading = false;
-        const errorObj = httpError.error; 
+        const errorObj = httpError.error;
         const errorMessage = errorObj?.ErrorMessage || "Login failed. Please try again.";
-        
+
         Swal.fire({
           icon: 'warning',
           title: 'Login Error',
           text: errorMessage,
           confirmButtonText: 'OK'
         }).then(() => {
-          
+
           this.loginForm.updateValueAndValidity();
         });
       }
     });
-}
+  }
   private storeAuthData(response: AuthResponse, remember: boolean): void {
- 
+
     localStorage.setItem('userToken', response.token);
     localStorage.setItem('rememberMe', remember.toString());
     localStorage.setItem('userRole', response.role);
     localStorage.setItem('userName', response.displayName);
     this.dataService.isAuthenticated.set(true);
-    this. dataService.UserName.set(response.displayName);
+    this.dataService.UserName.set(response.displayName);
     this.dataService.UserRole.set(response.role);
 
 

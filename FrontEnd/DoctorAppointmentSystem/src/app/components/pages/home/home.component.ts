@@ -1,4 +1,3 @@
-
 import { Component, OnInit, AfterViewInit, OnDestroy, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import Swiper from 'swiper';
@@ -45,7 +44,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private swiper2!: Swiper;
   private swiper3!: Swiper;
   private typed!: Typed;
-
   mixer: any;
 
   constructor(
@@ -56,55 +54,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-
-
     this.loadHomeData();
     console.log('Specialties:', this.specialties);
+    console.log('doctors:', this.doctors);
     console.log('doctors:', this.doctors);
     console.log(this.filteredDoctors);
     if (isPlatformBrowser(this.platformId)) {
       AOS.init();
     }
   }
-  // ngAfterViewInit(): void {
-
-  //   setTimeout(() => {
-  //     this.initSwiper1();
-  //   }, 500);
-  //   setTimeout(() => {
-  //     this.initSwiper2();
-  //   }, 500);
-  //   setTimeout(() => {
-  //     this.initSwiper3();
-  //   }, 500);
-  //   // this.initSwiper2();
-  //   //   this.initSwiper3();
-
-
-
-  //   // }, 500); 
-
-  // this.initTyped();
-
-  //   import('mixitup').then(({ default: mixitup }) => {
-  //     this.mixer = mixitup('#mixContainer', {
-  //       animation: {
-  //         duration: 5000
-  //       },
-  //       callbacks: {
-  //         onMixEnd: () => {
-  //           console.log('MixItUp filter completed');
-  //         }
-  //       }
-  //     });
-  //   }).catch(err => {
-  //     console.error('Failed to load mixitup:', err);
-  //   });
-  // } // ← هذه نهاية ngAfterViewInit
-
 
   ngAfterViewInit(): void {
-
     if (isPlatformBrowser(this.platformId)) {
       if (this.doctors.length > 0 && this.specialties.length > 0) {
         this.initSwipers();
@@ -117,7 +77,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       this.initMixItUp();
     }
-    // this.initTyped();
   }
 
   private initSwipers(): void {
@@ -128,6 +87,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.initTyped();
     }, 500);
   }
+
 
   private initMixItUp(): void {
     import('mixitup').then(({ default: mixitup }) => {
@@ -179,8 +139,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.aosAnimations[index];
   }
 
-
-
   initTyped(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.typed = new Typed("#words", {
@@ -196,7 +154,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
   }
-
 
   filterDoctors(filter: string): void {
     this.activeFilter = filter;
@@ -222,19 +179,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.doctors.filter(d => d.specialty === specialtyName).length;
   }
 
-  getSpecialtyIcon(specialtyId: number): string {
-    switch (specialtyId) {
-      case 1:
-        return ``;
-      case 2:
-        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="30" cy="30" r="25" stroke="currentColor" stroke-width="2" fill="none"/>
-                  <path d="M30 5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zM30 10c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zM30 15c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/>
-                </svg>`;
-      default:
-        return '';
-    }
-  }
   initSwiper1(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.swiper = new Swiper('.swiper', {

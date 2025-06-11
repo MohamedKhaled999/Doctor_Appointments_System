@@ -1,5 +1,4 @@
 import { Injectable, signal } from '@angular/core';
-import { UserManagementData } from '../interfaces/user-management-data';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +12,10 @@ export class DataManagementService {
   // public UserData = signal<UserManagementData>({} as UserManagementData);
   public UserRole = signal<string>("");
   public UserName = signal<string>("");
-  public isAuthenticated =signal<boolean>(false);
+  public isAuthenticated = signal<boolean>(false);
 
-  // you can save what you want in here in  signal
+  // you can save what you want in here in signal
 
   // save spcialties
   public Specialties = signal<string[]>([]);
-
-
- 
 }

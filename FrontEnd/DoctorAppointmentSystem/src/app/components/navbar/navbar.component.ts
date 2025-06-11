@@ -1,67 +1,44 @@
-import { Component, OnInit, Inject, PLATFORM_ID, inject } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { Router, NavigationEnd, Event as RouterEvent, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { DataManagementService } from '../../core/services/data-management.service';
-import { filter } from 'rxjs/operators';
 import { NotificationsComponent } from '../shared/notifications/notifications.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [NgbCollapse, CommonModule, RouterLink, RouterModule, NotificationsComponent],
+  imports: [CommonModule, RouterLink, RouterModule, NotificationsComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   isHome = false;
   isCollapsed = true;
-  isAuthenticated = false;
-  userRole = '';
-
-  private router = inject(Router);
-  public dataService = inject(DataManagementService);
-  private authService = inject(AuthService);
-  private platformId = inject(PLATFORM_ID);
-
-
   isBrowser: boolean;
 
   constructor(
     @Inject(PLATFORM_ID) platformId: Object,
-
+    @Inject(Router) public router: Router,
+    @Inject(AuthService) public authService: AuthService,
+    @Inject(DataManagementService) public dataService: DataManagementService
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
 
     if (this.isBrowser) {
-
       window.addEventListener('scroll', function () {
         const header = document.getElementsByTagName('header')[0];
         const nav = document.getElementsByTagName('nav')[0];
         if (!header || !nav) return;
 
         const length = header.scrollHeight - window.pageYOffset - nav.offsetHeight;
-
         if (length < 0) {
           nav.classList.replace('py-1', 'py-2');
-          nav.classList.replace('bg-primary-color-75', 'bg-primary-color');
         } else {
           nav.classList.replace('py-2', 'py-1');
-          nav.classList.replace('bg-primary-color', 'bg-primary-color-75');
         }
       });
     }
-  }
-
-  ngOnInit(): void {
-    this.router.events.subscribe((event: RouterEvent) => {
-      if (event instanceof NavigationEnd) {
-        this.isHome = event.url === '/';
-      }
-      if (isPlatformBrowser(this.platformId))
-        this.isAuthenticated = localStorage.getItem("userToken") ? true : false;
-    });
   }
 
   toggleNavbar(): void {
@@ -71,7 +48,6 @@ export class NavbarComponent implements OnInit {
     const nav = document.getElementById('MainNav');
     if (nav) {
       if (this.isHome && !this.isCollapsed) {
-        nav.classList.add('bg-primary-color');
         nav.classList.remove('bg-primary-color-75');
       } else if (this.isHome) {
         nav.classList.remove('bg-primary-color');

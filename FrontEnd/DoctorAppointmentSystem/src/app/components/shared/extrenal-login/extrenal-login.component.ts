@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../../../core/services/account.service';
 import { Router } from '@angular/router';  // Import Router for navigation
+import Swal from 'sweetalert2';
 declare const google: any;
 
 @Component({
@@ -38,10 +39,19 @@ export class ExtrenalLoginComponent {
                   // Handle successful login, e.g., navigate to a different page or show a success message
                   this.router.navigate(['/home']);
                },
-               error: (error) => {
-                  console.error('External login failed:', error);
-                  this.toastr.error('External login failed. Please try again.');
-               }
+               error: (httpError) => {
+                
+            
+                  const errorObj = httpError.error;
+                  const errorMessage = errorObj?.ErrorMessage || "Login failed. Please try again.";
+            
+                  Swal.fire({
+                    icon: 'warning',
+                    title: 'Login Error',
+                    text: errorMessage,
+                    confirmButtonText: 'OK'
+                  });
+                }
             });
 
             console.log('Google ID Token:', user.idToken);
@@ -96,10 +106,18 @@ export class ExtrenalLoginComponent {
             // Handle successful login, e.g., navigate to a different page or show a success message
             this.router.navigate(['/home']);
          },
-         error: (error) => {
-            console.error('External login failed:', error);
-            this.toastr.error('External login failed. Please try again.');
-         }
+         error: (httpError) => {
+        
+            const errorObj = httpError.error;
+            const errorMessage = errorObj?.ErrorMessage || "Login failed. Please try again.";
+      
+            Swal.fire({
+              icon: 'warning',
+              title: 'Login Error',
+              text: errorMessage,
+              confirmButtonText: 'OK'
+            });
+          }
       });
    }
 }
