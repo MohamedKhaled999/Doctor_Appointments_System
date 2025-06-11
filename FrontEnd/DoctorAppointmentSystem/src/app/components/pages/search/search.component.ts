@@ -17,7 +17,8 @@ export class SearchComponent implements OnInit {
   currentUrl : any;
   isBrowser : boolean = false;
   isToasterShownFirstTime : boolean = false
-  constructor( @Inject(PLATFORM_ID) private platformId: any, private toaster: ToastrService, private route: ActivatedRoute) {
+  constructor( @Inject(PLATFORM_ID) private platformId: any, private toaster: ToastrService
+  , private route: ActivatedRoute) {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
   }
