@@ -8,16 +8,16 @@
             <!-- [src]="'https://doc-net2.runasp.net/uploads/images/' + doctor?.image" -->
             @if(DoctorImage().check==1){
               <img
-              [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage().image"
+              [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage().image+'?check='+ DoctorImage().check"
               alt="Doctor Image"
               class="rounded-circle img-thumbnail SP-photo"
             />
             }
             @else{
-                <img
-              [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage().image"
+               <img
+              [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage().image+'?check='+ DoctorImage().check"
               alt="Doctor Image"
-              class="rounded-circle img-thumbnail SP-photo border-danger-subtle border-2"
+              class="rounded-circle img-thumbnail SP-photo"
             />
             }
             <input #uploadInput type="file" class="d-none SP-file" (change)="
