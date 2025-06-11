@@ -125,62 +125,44 @@ export class ForgetPasswordComponent {
       //   });
       onSubmit() {
         if (this.forgetPasswordForm.valid && !this.isSubmitting) {
-          this.isSubmitting = true;
-          const forgetPasswordData = {
-            email: this.forgetPasswordForm.value.email,
-            firstName: this.forgetPasswordForm.value.firstName,
-            lastName: this.forgetPasswordForm.value.lastName
-          };
-      
-          this.accountService.forgetPassword(forgetPasswordData).subscribe({
-            next: (response) => {
-              if (response?.token) {
-                console.log('Token received:', response.token);
-              }
-              
-              Swal.fire({
-                title: 'Success!',
-                text: 'Password reset link has been sent to your email.',
-                icon: 'success',
-                confirmButtonText: 'OK'
-              }).then(() => {
-                this.router.navigate(['/login']);
-              });
-            },
-            // error: (httpError) => {
-            //   this.isSubmitting = false;
-              
-            
-            //   console.error('Forgot password error:', {
-            //     status: httpError.status,
-            //     statusText: httpError.statusText,
-            //     url: httpError.url,
-            //     error: httpError.error 
-            //   });
-          
-            //   const errorMessage = httpError.error?.ErrorMessage 
-            //                       || httpError.error?.message 
-            //                       || 'Failed to send password reset link. Please try again.';
-          
-            //   Swal.fire({
-            //     icon: 'error',
-            //     title: 'Request Failed',
-            //     text: errorMessage,
-            //     confirmButtonText: 'OK'
-            //   });
-            // }
-            error: (error) => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'An error occurred', 
-                confirmButtonText: 'OK'
-              });
-            }
-      
-          });
+            this.isSubmitting = true;
+            const forgetPasswordData = {
+                email: this.forgetPasswordForm.value.email,
+                firstName: this.forgetPasswordForm.value.firstName,
+                lastName: this.forgetPasswordForm.value.lastName
+            };
+    
+            this.accountService.forgetPassword(forgetPasswordData).subscribe({
+                next: (response) => {
+                    this.isSubmitting = false; 
+                    if (response?.token) {
+                        console.log('Token received:', response.token);
+                    }
+                    
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Password reset link has been sent to your email.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        this.router.navigate(['/login']);
+                    });
+                },
+                error: (error) => {
+                    this.isSubmitting = false; 
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'An error occurred', 
+                        confirmButtonText: 'OK'
+                    });
+                },
+                complete: () => {
+                    this.isSubmitting = false; 
+                }
+            });
         }
-      }
+    }
       
     }
   
