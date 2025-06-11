@@ -23,7 +23,6 @@ import { PatientProfileComponent } from './components/pages/patient-profile/pati
 import { DoctorEditComponent } from './components/pages/doctor-edit/doctor-edit.component';
 import { Doctor } from './core/models/Doctor';
 import { ContactComponent } from './components/contact/contact.component';
-import { DoctorProfileComponent } from './components/pages/doctor-profile/doctor-profile.component';
 // rt const routes: Routes = [
 //   {
 //     path: 'test',
@@ -108,42 +107,38 @@ export const routes: Routes = [
         }
       ,
       
-      // {
-      //   path: 'profile',
-      //   canActivate: [authGuard],
-      //   children: [
-      //     {
-      //       path: '',
-      //       redirectTo: 'not-found',
-      //       pathMatch: 'full'
-      //     },
-      //     {
-      //       path: 'patient',
-      //       // loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
-      //       component : PatientProfileComponent
-      //     },
-      //     {
-      //       path: 'doctor',
-      //       // loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
-      //       component:DoctorProfileComponent
-      //     },
-      //     {
-      //       path: 'doctor/edit',
-      //       // loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent)
-      //       component : DoctorEditComponent
-      //     },
-      //     {
-      //       path: 'doctor/:id',
-      //       // loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
-      //     component : DoctorProfileComponent
-      //     }
-      //   ]
-      // },
-  //   {
-  //   path: 'search',
-  //   component: SearchComponent,
-  //   title: 'Search'
-  // },
+      {
+        path: 'profile',
+        canActivate: [authGuard],
+        children: [
+          {
+            path: '',
+            redirectTo: 'not-found',
+            pathMatch: 'full'
+          },
+          {
+            path: 'patient',
+            loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
+          },
+          {
+            path: 'doctor',
+            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+          },
+          {
+            path: 'doctor/edit',
+            loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent)
+          },
+          {
+            path: 'doctor/:id',
+            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+          }
+        ]
+      },
+    {
+    path: 'search',
+    component: SearchComponent,
+    title: 'Search'
+  },
 
     ]
   },
