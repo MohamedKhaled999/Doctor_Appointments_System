@@ -26,8 +26,6 @@ export class DoctorService {
     return this.http.put<Doctor>('', schedule);
   }
   updateProfile(data: any): Observable<Doctor> {
-    console.log('Updating profile with data:', data, JSON.stringify(data));
-    
     return this.http.put<Doctor>(`${environment.apiUrl}/Doctor`, data).pipe(
       catchError(error => {
         throw error;
@@ -41,8 +39,6 @@ export class DoctorService {
     return this.http.get<any[]>(`${environment.apiUrl}/Doctor/reservations?doctorId=${id}`);
   }
   editReservation(reservation: any): Observable<void> {
-    console.log('Editing reservation:', reservation);
-    
     return this.http.put<void>(`${environment.apiUrl}/Doctor/reservations`, reservation);
   }
   deleteReservation(id: number): Observable<void> {

@@ -372,7 +372,6 @@ export class DoctorProfileComponent implements OnInit {
       this.initMap();
       this.doctorService.getReservations(this.doctor.id).subscribe({
         next: (reservations) => {
-          console.log(reservations); 
           reservations.forEach(reservation => {
             reservation.date = new Date(reservation.startTime.split('T')[0]);
             reservation.time = `${reservation.startTime.split('T')[1]} : ${reservation.endTime.split('T')[1]}`;
@@ -606,8 +605,8 @@ export class DoctorProfileComponent implements OnInit {
           const newReservation = {
             resID: result.id,
             date: result.date,
-            startTime: result.startTime,
-            endTime: result.endTime,
+            startTime: result.startTime.split(':').length < 3 ? result.startTime + ':00' : result.startTime,
+            endTime: result.endTime.split(':').length < 3 ? result.endTime + ':00' : result.endTime,
             maxRes: result.maxAppointments,
             doctorID: this.doctor?.id
           };
@@ -621,14 +620,14 @@ export class DoctorProfileComponent implements OnInit {
               });
               this.doctor?.reservations.forEach(res => {
                 if (res.id === newReservation.resID) {
-                  res.time = `${newReservation.startTime}:00 : ${newReservation.endTime}:00`;
+                  res.time = `${newReservation.startTime} : ${newReservation.endTime}`;
                 }
               });
             },
             error: (err) => {
               Swal.fire({
                 title: 'Error',
-                text: 'There was an error editing the reservation. Please try again later.',
+                text: `There was an error editing the reservation: ${err.error.Errors[0] || err.error.ErrorMessage ||  'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
