@@ -658,6 +658,7 @@ export class DoctorProfileComponent implements OnInit {
               this.doctor?.reservations.forEach(res => {
                 if (res.id === newReservation.resID) {
                   res.time = `${newReservation.startTime} : ${newReservation.endTime}`;
+                  res.maxAppoinments = newReservation.maxRes;
                 }
               });
             },
