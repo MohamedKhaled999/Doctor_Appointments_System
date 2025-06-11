@@ -39,6 +39,15 @@ export class ReservationAppointmentsComponent implements OnInit {
         this.loading = false;
       }
     });
+    // this.appointments= [
+    //   {id:1, patient: 'John', documentUrls: 'testadadadadqwada.pdf||test2dwaddadawdadawdawdawdadadada.pdf||test3dawdadadawdawdawawawdawdawdawdad.pdf', prescriptionUrl: '',
+    //   },
+    //   {id:2, patient: 'John', documentUrls: 'test.pdf||test2.pdf||test3.pdf', prescriptionUrl: '',
+    //   }
+    //   ,
+    //   {id:3, patient: 'John', documentUrls: 'test.pdf||test2.pdf||test3.pdf', prescriptionUrl: '',
+    //   }
+    // ]
   }
   onFileSelected(event: any, appointment: ReservationAppointment) {
     this.fileErrors = undefined;

@@ -119,18 +119,22 @@ export const routes: Routes = [
           {
             path: 'patient',
             loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
+            title: 'Patient Profile'
           },
           {
             path: 'doctor',
-            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
+            title: 'Doctor Profile'
           },
           {
             path: 'doctor/edit',
-            loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent)
+            loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
+            title: 'Edit Doctor Profile'
           },
           {
             path: 'doctor/:id',
-            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+            loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
+            title: 'Doctor Profile Details',
           }
         ]
       },
