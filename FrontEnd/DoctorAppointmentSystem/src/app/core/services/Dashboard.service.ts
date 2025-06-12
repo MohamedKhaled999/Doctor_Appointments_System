@@ -54,6 +54,7 @@ export class DashboardService {
         { id: 4, name: 'Dr. Nour Ibrahim', specialty: 'Pediatrics', rating: 4.6, appointments: 115, revenue: 11500 },
         { id: 5, name: 'Dr. Omar Khaled', specialty: 'Orthopedics', rating: 4.5, appointments: 108, revenue: 10800 }
       ],
+      unApprovedDoctor:[],
       recentAppointments: [
         { id: 1, patient: 'Sara Ahmed', doctor: 'Dr. Ahmed Hassan', date: '2024-06-04', time: '10:00 AM', status: 'Completed' },
         { id: 2, patient: 'Mohamed Ali', doctor: 'Dr. Fatma Ali', date: '2024-06-04', time: '11:30 AM', status: 'Scheduled' },

@@ -15,7 +15,8 @@ import { DashboardDoctorsComponent } from '../dashboard-doctors/dashboard-doctor
 })
 export class AdminDashboardComponent implements OnInit {
   activeSection: string = 'overview';
-  dashboardData!: DashboardData;
+  dashboardData: DashboardData | null = null; // Initialize as null
+  isLoading: boolean = true; // Track loading state
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -24,14 +25,18 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadDashboardData(): void {
-    this.dashboardService.getDashboardData().subscribe(
-      (data: DashboardData) => {
+    this.isLoading = true;
+    this.dashboardService.getDashboardData().subscribe({
+      next: (data: DashboardData) => {
+        // console.log('Dashboard Data Loaded:', data);
         this.dashboardData = data;
+        this.isLoading = false;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error loading dashboard data:', error);
+        this.isLoading = false;
       }
-    );
+    });
   }
 
   onSectionChange(section: string): void {
@@ -53,5 +58,4 @@ export class AdminDashboardComponent implements OnInit {
   getCurrentTime(): string {
     return new Date().toLocaleString();
   }
-
 }

@@ -15,10 +15,10 @@ export class SideNavComponent {
   menuItems: MenuItem[] = [
     { id: 'overview', label: 'Overview', icon: 'fa-activity' },
     { id: 'appointments', label: 'Appointments', icon: 'fa-calendar' },
-    { id: 'doctors', label: 'Doctors', icon: 'fa-user-check' },
-    { id: 'patients', label: 'Patients', icon: 'fa-users' },
-    { id: 'revenue', label: 'Revenue', icon: 'fa-dollar-sign' },
-    { id: 'analytics', label: 'Analytics', icon: 'fa-trending-up' }
+    { id: 'doctors', label: 'Doctors', icon: 'fa-user-check' }
+    // { id: 'patients', label: 'Patients', icon: 'fa-users' },
+    // { id: 'revenue', label: 'Revenue', icon: 'fa-dollar-sign' },
+    // { id: 'analytics', label: 'Analytics', icon: 'fa-trending-up' }
   ];
 
   onMenuClick(sectionId: string): void {

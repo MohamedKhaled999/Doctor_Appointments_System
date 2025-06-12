@@ -10,4 +10,9 @@ import { DashboardData } from '../../../../core/interfaces/AdminDashboard.interf
 })
 export class DashboardDoctorsComponent {
     @Input() data!: DashboardData;
+
+    protected Approve(docId:number) {
+      //do something
+      return
+    } 
 }

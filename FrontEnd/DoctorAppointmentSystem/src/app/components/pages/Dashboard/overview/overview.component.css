@@ -9,6 +9,10 @@
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
     }
+    .stats-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
     
     .charts-grid {
       display: grid;
@@ -21,6 +25,10 @@
       padding: 1.5rem;
       border-radius: 0.5rem;
       box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    }
+    .chart-container:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     }
     
     .chart-container.full-width {
@@ -35,10 +43,15 @@
     }
     
     .chart-placeholder {
-      height: 16rem;
+      height: 20rem;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #f8f9fa;
       border-radius: 0.25rem;
     }
+    /* canvas {
+      display: block;
+      width: 80% !important;
+      height: 80% !important;
+    } */

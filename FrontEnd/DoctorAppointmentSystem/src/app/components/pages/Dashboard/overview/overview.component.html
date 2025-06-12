@@ -1,6 +1,6 @@
  <div class="dashboard-overview" *ngIf="data">
       <div class="stats-grid">
-        <app-stats-card
+        <app-stats-card class="stats-card"
           title="Total Doctors"
           [value]="data.overview.totalDoctors"
           icon="user-check"
@@ -8,7 +8,7 @@
           [change]="8.2">
         </app-stats-card>
         
-        <app-stats-card
+        <app-stats-card class="stats-card"
           title="Total Patients"
           [value]="data.overview.totalPatients.toLocaleString()"
           icon="users"
@@ -16,7 +16,7 @@
           [change]="15.3">
         </app-stats-card>
         
-        <app-stats-card
+        <app-stats-card class="stats-card"
           title="Monthly Appointments"
           [value]="data.overview.totalAppointments"
           icon="calendar"
@@ -24,7 +24,7 @@
           [change]="12.5">
         </app-stats-card>
         
-        <app-stats-card
+        <app-stats-card class="stats-card"
           title="Monthly Revenue"
           [value]="'$' + data.overview.monthlyRevenue.toLocaleString()"
           icon="dollar-sign"
@@ -32,7 +32,7 @@
           [change]="18.7">
         </app-stats-card>
         
-        <app-stats-card
+        <app-stats-card class="stats-card"
           title="Average Rating"
           [value]="data.overview.averageRating"
           icon="star"
@@ -40,7 +40,7 @@
           [change]="2.1">
         </app-stats-card>
         
-        <app-stats-card
+        <app-stats-card class="stats-card"
           title="Growth Rate"
           [value]="data.overview.growthRate + '%'"
           icon="trending-up"
@@ -53,14 +53,27 @@
         <div class="chart-container">
           <h3>Monthly Appointments</h3>
           <div class="chart-placeholder">
-            <p>Chart will be rendered here</p>
+              <canvas baseChart
+                [data]="barChartData"
+                [options]="barChartOptions"
+                [plugins]="barChartPlugins"
+                [legend]="barChartLegend"
+                [type]="'bar'">
+              </canvas>
           </div>
         </div>
         
         <div class="chart-container">
           <h3>Doctor Specialties</h3>
-          <div class="chart-placeholder">
-            <p>Pie chart will be rendered here</p>
+          <div class="chart-placeholder" style="display: flexbox;" *ngIf="data?.specialtyDistribution">
+            <canvas baseChart
+              [type]="'pie'"
+              [datasets]="pieChartDatasets"
+              [labels]="pieChartLabels"
+              [options]="pieChartOptions"
+              [plugins]="pieChartPlugins"
+              [legend]="pieChartLegend">
+            </canvas>
           </div>
         </div>
       </div>
@@ -68,7 +81,12 @@
       <div class="chart-container full-width">
         <h3>Revenue Trend</h3>
         <div class="chart-placeholder">
-          <p>Revenue line chart will be rendered here</p>
+          <canvas baseChart style="width: 80% !important; height: 80% !important;"
+                [type]="'line'"
+                [data]="lineChartData"
+                [options]="lineChartOptions"
+                [legend]="lineChartLegend">
+          </canvas>
         </div>
       </div>
     </div>

@@ -43,13 +43,23 @@ export interface RecentAppointment {
   time: string;
   status: string;
 }
-
+export interface UnApprovedDoctor {
+  id: number;
+  name: string;
+  specialty: string;
+  about: string;
+  location: string;
+  gender: number; 
+  lat?: number;   
+  lng?: number;   
+}
 export interface DashboardData {
   overview: DashboardOverview;
   monthlyStats: MonthlyStats[];
   specialtyDistribution: SpecialtyDistribution[];
   appointmentStatus: AppointmentStatus[];
   topDoctors: TopDoctor[];
+  unApprovedDoctor: UnApprovedDoctor[];
   recentAppointments: RecentAppointment[];
 }
 

@@ -22,10 +22,14 @@
       width: 100%;
       border-collapse: collapse;
     }
-    
+    .table tbody :hover{
+      /* background-color: #7eb7f1; */
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
     .table th, .table td {
       padding: 0.75rem;
-      text-align: right;
+      text-align: left;
       border-bottom: 1px solid #dee2e6;
     }
     
@@ -58,4 +62,25 @@
     .status-badge.rescheduled {
       background-color: #fff3cd;
       color: #664d03;
+    }
+    .chart-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    }
+    .chart-container:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .chart-container.full-width {
+      grid-column: 1 / -1;
+    }
+    
+    .chart-container h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #212529;
     }

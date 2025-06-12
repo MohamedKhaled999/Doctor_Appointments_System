@@ -1,8 +1,14 @@
 <div class="appointments-view" *ngIf="data">
-      <div class="card">
+      <div class="chart-container">
         <h3>Appointment Status Distribution</h3>
         <div class="chart-placeholder">
-          <p>Bar chart will be rendered here</p>
+          <canvas baseChart style="width: 80% !important; height: 80% !important;"
+                [data]="barChartData"
+                [options]="barChartOptions"
+                [plugins]="barChartPlugins"
+                [legend]="barChartLegend"
+                [type]="'bar'">
+          </canvas>
         </div>
       </div>
 
