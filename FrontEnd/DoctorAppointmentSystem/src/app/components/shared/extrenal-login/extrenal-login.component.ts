@@ -6,6 +6,7 @@ import { Router } from '@angular/router';  // Import Router for navigation
 import Swal from 'sweetalert2';
 import { AuthResponse } from '../../../core/interfaces/auth-response';
 import { DataManagementService } from '../../../core/services/data-management.service';
+import { log } from 'console';
 declare const google: any;
 
 @Component({
@@ -42,7 +43,6 @@ export class ExtrenalLoginComponent {
                   console.log('External login successful:', response);
                   this.storeAuthData(response)
                   // Handle successful login, e.g., navigate to a different page or show a success message
-                  this.router.navigate(['/home']);
                },
                error: (httpError) => {
                 
@@ -110,7 +110,6 @@ export class ExtrenalLoginComponent {
             console.log('External login successful:', response);
             this.storeAuthData(response)
             // Handle successful login, e.g., navigate to a different page or show a success message
-            this.router.navigate(['/home']);
          },
          error: (httpError) => {
         
@@ -128,7 +127,7 @@ export class ExtrenalLoginComponent {
    }
 
      private storeAuthData(response: AuthResponse): void {
-
+      
     localStorage.setItem('userToken', response.token);
     localStorage.setItem('rememberMe','false');
     localStorage.setItem('userRole', response.role);
@@ -136,6 +135,8 @@ export class ExtrenalLoginComponent {
     this.dataService.isAuthenticated.set(true);
     this.dataService.UserName.set(response.displayName);
     this.dataService.UserRole.set(response.role);
+    console.log(response);
+    this.router.navigate(['/home']);
   }
 
 }
