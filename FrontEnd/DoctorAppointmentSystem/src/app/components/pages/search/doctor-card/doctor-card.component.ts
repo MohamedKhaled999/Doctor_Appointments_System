@@ -26,7 +26,7 @@ export class DoctorCardComponent implements OnInit {
   showModal: any;
   getNextDate:any;
   constructor(private DoctorReservationService: DoctorReservationService,
-     public userData :DataManagementService ) {
+     public userData :DataManagementService) {
 
   }
   ngOnInit() {
@@ -41,6 +41,10 @@ export class DoctorCardComponent implements OnInit {
     this.DoctorReservationService.getReservations(this.doctor.id).subscribe({
       next: (response) => {
         this.doctor.reservations = response.reservations;
+        // console.log('reservation before getting upcoming reservations:', JSON.stringify(this.doctor.reservations, null, 2));
+        this.doctor.reservations = this.DoctorReservationService.getUpcomingReservations(this.doctor.reservations)
+        // console.log('reservation after getting upcoming reservations:', JSON.stringify(this.doctor.reservations, null, 2));
+
         // console.log(`reservation response: ${this.doctor.reservations}`)
         // console.log('reservation response:', JSON.stringify(response, null, 2));
         this.DoctorReservationService.isLoading.set(false);
