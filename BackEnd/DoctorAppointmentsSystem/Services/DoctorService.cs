@@ -169,5 +169,12 @@ namespace Services
             _unitOfWork.GetRepository<Doctor, int>().Update(doctor);
             await _unitOfWork.SaveChangesAsync();
         }
+        public async Task<int> GetAppUserIdAsync(int doctorId)
+        {
+            var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(doctorId);
+            if (doctor == null)
+                throw new Exception("Doctor not found");
+            return doctor.AppUserID.Value;
+        }
     }
 }
