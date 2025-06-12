@@ -46,6 +46,7 @@ html {
     background-color: var(--accent-color);
     border-color: var(--primary-color);
 }
+
 /* SITE.CSS */
 html {
     font-size: 14px;
@@ -82,4 +83,13 @@ body {
 
 .form-floating>.form-control-plaintext:focus::placeholder,
 .form-floating>.form-control:focus::placeholder {
-    text-align: start; }
+    text-align: start;
+}
+
+.noUi-connect {
+    background: var(--primary-color);
+}
+
+.noUi-target.noUi-horizontal .noUi-tooltip {
+    background-color: var(--primary-color);
+}

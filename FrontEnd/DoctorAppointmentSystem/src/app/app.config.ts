@@ -1,4 +1,5 @@
 
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { provideAnimations } from '@angular/platform-browser/animations';
 
@@ -7,7 +8,7 @@ import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-
+//import { provideCharts, withDefaultRegisterables,ng } from 'ng2-charts';
 
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { headerInterceptor } from './core/interceptors/header.interceptor';
@@ -28,7 +29,7 @@ export const appConfig: ApplicationConfig = {
   provideAnimations(),
   provideToastr({ timeOut: 1000, positionClass: 'toast-top-right' }),
   importProvidersFrom(MatNativeDateModule),
-
+  provideCharts(withDefaultRegisterables()),
     //  importProvidersFrom(),
     {
       provide: 'SocialAuthServiceConfig',

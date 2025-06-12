@@ -1,0 +1,16 @@
+ <div class="stats-card" [style.border-left-color]="color">
+      <div class="stats-content">
+        <div>
+          <p class="stats-title">{{ title }}</p>
+          <p class="stats-value">{{ value }}</p>
+          <p *ngIf="change" class="stats-change" 
+             [class.positive]="change > 0"
+             [class.negative]="change < 0">
+            {{ change > 0 ? '+' : '' }}{{ change }}%
+          </p>
+        </div>
+        <div class="stats-icon">
+          <span [style.color]="color">{{ getIcon() }}</span>
+        </div>
+      </div>
+    </div>
