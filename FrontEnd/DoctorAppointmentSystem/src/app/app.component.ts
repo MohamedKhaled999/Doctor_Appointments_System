@@ -35,7 +35,8 @@ export class AppComponent {
     this. dataService.UserName.set(localStorage.getItem('userName') || '');
     this.dataService.UserRole.set(localStorage.getItem('userRole') || '');
     this.dataService.isAuthenticated.set(localStorage.getItem('userToken') !== null);
-
+    console.log("App Component ngOnInit");
+    
     }
 
        // You can perform any initialization logic here

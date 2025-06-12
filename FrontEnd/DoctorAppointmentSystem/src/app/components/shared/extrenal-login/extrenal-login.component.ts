@@ -4,6 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../../../core/services/account.service';
 import { Router } from '@angular/router';  // Import Router for navigation
 import Swal from 'sweetalert2';
+import { AuthResponse } from '../../../core/interfaces/auth-response';
+import { DataManagementService } from '../../../core/services/data-management.service';
+import { log } from 'console';
 declare const google: any;
 
 @Component({
@@ -17,7 +20,8 @@ export class ExtrenalLoginComponent {
      private toastr: ToastrService,
      private authService: SocialAuthService,
      private externalloginService: AccountService,
-     private router: Router // Inject Router to handle navigation
+     private router: Router, // Inject Router to handle navigation
+     private dataService:DataManagementService
    ) {}
 
    ngOnInit(): void {
@@ -28,16 +32,17 @@ export class ExtrenalLoginComponent {
             }
             
             // Store the token securely in localStorage or sessionStorage
-            localStorage.setItem('userToken', user.idToken); // Or use sessionStorage if needed
+            // localStorage.setItem('userToken', user.idToken); // Or use sessionStorage if needed
 
             this.externalloginService.externalLogin({
                token: user.idToken,
                provider: user.provider
-            }).subscribe({
+            }).subscribe(
+               {
                next: (response) => {
                   console.log('External login successful:', response);
+                  this.storeAuthData(response)
                   // Handle successful login, e.g., navigate to a different page or show a success message
-                  this.router.navigate(['/home']);
                },
                error: (httpError) => {
                 
@@ -103,8 +108,8 @@ export class ExtrenalLoginComponent {
       }).subscribe({
          next: (response) => {
             console.log('External login successful:', response);
+            this.storeAuthData(response)
             // Handle successful login, e.g., navigate to a different page or show a success message
-            this.router.navigate(['/home']);
          },
          error: (httpError) => {
         
@@ -120,4 +125,18 @@ export class ExtrenalLoginComponent {
           }
       });
    }
+
+     private storeAuthData(response: AuthResponse): void {
+      
+    localStorage.setItem('userToken', response.token);
+    localStorage.setItem('rememberMe','false');
+    localStorage.setItem('userRole', response.role);
+    localStorage.setItem('userName', response.displayName);
+    this.dataService.isAuthenticated.set(true);
+    this.dataService.UserName.set(response.displayName);
+    this.dataService.UserRole.set(response.role);
+    console.log(response);
+    this.router.navigate(['/home']);
+  }
+
 }

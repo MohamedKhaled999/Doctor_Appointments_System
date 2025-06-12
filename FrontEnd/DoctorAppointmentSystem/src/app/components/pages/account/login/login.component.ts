@@ -120,10 +120,6 @@ export class LoginComponent {
     this.dataService.isAuthenticated.set(true);
     this.dataService.UserName.set(response.displayName);
     this.dataService.UserRole.set(response.role);
-
-
-
-
   }
 
   private handleLoginError(error: any): void {

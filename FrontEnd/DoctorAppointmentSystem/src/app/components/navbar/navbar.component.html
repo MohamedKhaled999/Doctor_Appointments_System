@@ -4,11 +4,15 @@
       <img src="images/MainLogo.png" height="50" alt="Logo"
         style="filter: drop-shadow(1px 1px 2px var(--secondary-color))" />
     </a>
+    @if(dataService.isAuthenticated() && dataService.UserRole() != "admin")
+    {
     <div class="d-lg-none mobile-notif-wrapper">
       <app-notifications></app-notifications>
     </div>
+    }
     <button class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-controls="navbarNav"
-      aria-expanded="false" aria-label="Toggle navigation">
+      aria-expanded="false" aria-label="Toggle navigation" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -27,15 +31,15 @@
         </li>
       </ul>
       <ul class="navbar-nav gap-md-2">
-        @if (!dataService.isAuthenticated()) {
-        <li class="nav-item">
+        @if (!dataService.isAuthenticated() && this.isBrowser) {
+        <li class="nav-item my-check">
           <a class="nav-link" routerLink="/login">Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/register">Register</a>
+          <a class="nav-link my-check" routerLink="/register">Register</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-nowrap" routerLink="/doctor-register">Join us</a>
+        <li class="nav-item my-check">
+          <a class="nav-link text-nowrap my-check" routerLink="/doctor-register">Join us</a>
         </li>
         }
         @else if(dataService.UserRole() == "admin") {
