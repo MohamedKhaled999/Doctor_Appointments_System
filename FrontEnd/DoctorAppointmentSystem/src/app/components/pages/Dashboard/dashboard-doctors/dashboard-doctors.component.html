@@ -1,0 +1,54 @@
+<div class="doctors-view" *ngIf="data">
+<div class="card">
+        <h3>Top Performing Doctors</h3>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Doctor</th>
+                <th>Specialty</th>
+                <th>Rating</th>
+                <th>Appointments</th>
+                <th>Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doctor of data.topDoctors">
+                <td>{{ doctor.name }}</td>
+                <td>{{ doctor.specialty }}</td>
+                <td>{{ doctor.rating }}</td>
+                <td>{{ doctor.appointments }}</td>
+                <td>${{ doctor.revenue }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3>UnApproved Doctors</h3>
+        <div class="table-responsive">
+          <table class="table" *ngIf="data.unApprovedDoctor">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Specialty</th>
+                <th>About</th>
+                <th>Location</th>
+                <th>Approve</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doctor of data.unApprovedDoctor">
+                <td>{{ doctor.id }}</td>
+                <td>{{ doctor.name }}</td>
+                <td>{{ doctor.specialty }}</td>
+                <td>{{ doctor.about }}</td>
+                <td>{{ doctor.location }}</td>
+                <td><button class="btn-success" onclick="Approve(doctor.id)">&#xf00c;</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+</div>

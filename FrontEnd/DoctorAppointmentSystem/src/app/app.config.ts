@@ -7,7 +7,7 @@ import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-
+//import { provideCharts, withDefaultRegisterables,ng } from 'ng2-charts';
 
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { headerInterceptor } from './core/interceptors/header.interceptor';
