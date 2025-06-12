@@ -20,7 +20,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   toggleOpened = false;
   showShowMoreButton = false;
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.loadNotifications();
@@ -76,7 +76,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     } else if (this.toggleOpened) {
       this.toggleOpened = false;
       this.markAsRead();
-      }
+    }
   }
   loadMore(): void {
     this.displayedNotifications = this.notifications.slice(0, this.displayedNotifications.length + 5);
@@ -91,6 +91,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         return 'Reservation Added';
       case NotificationEvents.Doctor_ReservationCanceled:
         return 'Reservation Canceled';
+      case NotificationEvents.Doctor_Approved:
+        return 'Account Approved';
       case NotificationEvents.Patient_AppointmentAdded:
         return 'Appointment Added';
       case NotificationEvents.Patient_AppointmentCanceled:
