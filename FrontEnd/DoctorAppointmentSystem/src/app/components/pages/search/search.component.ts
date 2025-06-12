@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { DoctorCardComponent } from "./doctor-card/doctor-card.component";
 import { DoctorFiltersComponent } from "./doctor-filters/doctor-filters.component";
 import { DoctorListComponent } from "./doctor-list/doctor-list.component";
 import { RouterModule } from '@angular/router';
@@ -14,27 +13,22 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnInit {
-  currentUrl : any;
-  isBrowser : boolean = false;
-  isToasterShownFirstTime : boolean = false
-  constructor( @Inject(PLATFORM_ID) private platformId: any, private toaster: ToastrService
-  , private route: ActivatedRoute) {
+  currentUrl: any;
+  isBrowser: boolean = false;
+  isToasterShownFirstTime: boolean = false
+  constructor(@Inject(PLATFORM_ID) private platformId: any, private toaster: ToastrService
+    , private route: ActivatedRoute) {
     this.isBrowser = isPlatformBrowser(this.platformId);
-
   }
+
   getCurrentUrl(): string {
-    if(this.isBrowser)
+    if (this.isBrowser)
       return window.location.href;
     else
-    return this.route.toString();
+      return this.route.toString();
   }
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const specialtyId = params['Specialty'];
-      console.log('Specialty:', specialtyId);
 
-    
-    });
+  ngOnInit(): void {
     this.currentUrl = this.getCurrentUrl()
     if (this.isBrowser && !this.isToasterShownFirstTime) {
       if (this.currentUrl.includes('payment-success')) {
@@ -55,18 +49,19 @@ export class SearchComponent implements OnInit {
       closeButton: true,
       positionClass: 'toast-bottom-right',
       easeTime: 400, // optional
-      progressAnimation : 'decreasing',
+      progressAnimation: 'decreasing',
       tapToDismiss: true
     });
   }
+
   showError() {
-      this.toaster.error('Something went wrong! Your payment didn\'t succeed', 'Payment Failed', {
+    this.toaster.error('Something went wrong! Your payment didn\'t succeed', 'Payment Failed', {
       timeOut: 10000,
       progressBar: true,
       closeButton: true,
       positionClass: 'toast-bottom-right',
       easeTime: 400, // optional
-      progressAnimation : 'decreasing',
+      progressAnimation: 'decreasing',
       tapToDismiss: true
     });
   }

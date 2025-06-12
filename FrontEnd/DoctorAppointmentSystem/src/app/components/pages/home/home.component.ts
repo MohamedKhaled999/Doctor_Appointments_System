@@ -181,22 +181,22 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   initSwiper1(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.swiper = new Swiper('.swiper', {
-        effect: 'fade',
-        loop: true,
-        autoplay: {
-          delay: 3000,
-          disableOnInteraction: false
-        },
-        speed: 1000,
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true
-        },
-        scrollbar: {
-          el: '.swiper-scrollbar'
-        }
-      });
+      // this.swiper = new Swiper('.swiper', {
+      //   effect: 'fade',
+      //   loop: true,
+      //   autoplay: {
+      //     delay: 3000,
+      //     disableOnInteraction: false
+      //   },
+      //   speed: 1000,
+      //   pagination: {
+      //     el: '.swiper-pagination',
+      //     clickable: true
+      //   },
+      //   scrollbar: {
+      //     el: '.swiper-scrollbar'
+      //   }
+      // });
     }
   }
 
