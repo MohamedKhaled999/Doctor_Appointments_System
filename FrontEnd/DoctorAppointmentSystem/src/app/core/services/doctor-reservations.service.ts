@@ -88,22 +88,14 @@ export class DoctorReservationService {
         return nextDate.toLocaleDateString('en-US', options).replace(',', '');
     }
     getUpcomingReservations(reservations: reservation[]): reservation[]{
-        let UpcomingReservations : reservation[] = [];
-        let UpcomingReservationsIndex : number = 0;
-        for(let i = 0; i < reservations.length; i++)
-        {
+        
+        const today = new Date();
+        today.setHours(0,0,0,0);
 
-            const today = new Date();
-            const todayIndex = today.getDate();
-            const daysToAdd = reservations[i].Day - todayIndex;
- 
-            if (daysToAdd >= 1)
-            {
-                UpcomingReservations[UpcomingReservationsIndex] = reservations[i];
-                UpcomingReservationsIndex++;
-            }
-
-        }
-        return UpcomingReservations;
+        return reservations.filter(reservation => {
+            const reservationDate = new Date(reservation.StartTime);
+            reservationDate.setHours(0,0,0,0);
+            return reservationDate > today;
+        });
     }
 }
