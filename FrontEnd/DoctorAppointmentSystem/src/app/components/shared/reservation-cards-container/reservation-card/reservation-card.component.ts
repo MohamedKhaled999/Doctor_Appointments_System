@@ -1,4 +1,4 @@
-import { reservation } from './../../../../core/interfaces/reservation';
+import { reservation } from '../../../../core/interfaces/reservation';
 import { Component , Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
