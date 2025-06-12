@@ -71,4 +71,39 @@ export class DoctorReservationService {
             }
         );
     }
+
+    getNextDate(day: number): string {
+        const today = new Date();
+        const todayIndex = today.getDate();
+        const daysToAdd = day - todayIndex;
+
+        if (daysToAdd === 0) return "Today";
+        if (daysToAdd === 1) return "Tomorrow";
+
+        const nextDate = new Date(today);
+        nextDate.setDate(today.getDate() + daysToAdd);
+
+        // Format: "Tue 1/12"
+        const options: Intl.DateTimeFormatOptions = { weekday: 'short', day: 'numeric', month: 'numeric' };
+        return nextDate.toLocaleDateString('en-US', options).replace(',', '');
+    }
+    getUpcomingReservations(reservations: reservation[]): reservation[]{
+        let UpcomingReservations : reservation[] = [];
+        let UpcomingReservationsIndex : number = 0;
+        for(let i = 0; i < reservations.length; i++)
+        {
+
+            const today = new Date();
+            const todayIndex = today.getDate();
+            const daysToAdd = reservations[i].Day - todayIndex;
+ 
+            if (daysToAdd >= 1)
+            {
+                UpcomingReservations[UpcomingReservationsIndex] = reservations[i];
+                UpcomingReservationsIndex++;
+            }
+
+        }
+        return UpcomingReservations;
+    }
 }
