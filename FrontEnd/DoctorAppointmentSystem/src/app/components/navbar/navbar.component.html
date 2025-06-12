@@ -4,11 +4,15 @@
       <img src="images/MainLogo.png" height="50" alt="Logo"
         style="filter: drop-shadow(1px 1px 2px var(--secondary-color))" />
     </a>
+    @if(dataService.isAuthenticated() && dataService.UserRole() != "admin")
+    {
     <div class="d-lg-none mobile-notif-wrapper">
       <app-notifications></app-notifications>
     </div>
+    }
     <button class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-controls="navbarNav"
-      aria-expanded="false" aria-label="Toggle navigation">
+      aria-expanded="false" aria-label="Toggle navigation" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
