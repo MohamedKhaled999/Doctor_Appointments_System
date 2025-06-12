@@ -1,3 +1,5 @@
+import { OverviewComponent } from "../../components/pages/Dashboard/overview/overview.component";
+
 export interface DashboardOverview {
   totalDoctors: number;
   totalPatients: number;
@@ -13,6 +15,7 @@ export interface MonthlyStats {
   revenue: number;
   patients: number;
 }
+
 
 export interface SpecialtyDistribution {
   name: string;
@@ -44,6 +47,14 @@ export interface RecentAppointment {
   status: string;
 }
 
+export interface UnApprovedDoctors {
+  id : number;
+  name : string;
+  specialty : string;
+  rating : number;
+  appointments : number;
+  revenue : number;
+}
 export interface DashboardData {
   overview: DashboardOverview;
   monthlyStats: MonthlyStats[];
@@ -51,6 +62,7 @@ export interface DashboardData {
   appointmentStatus: AppointmentStatus[];
   topDoctors: TopDoctor[];
   recentAppointments: RecentAppointment[];
+  unApprovedDoctors: UnApprovedDoctors[];
 }
 
 export interface MenuItem {
@@ -58,3 +70,12 @@ export interface MenuItem {
   label: string;
   icon: string;
 }
+
+
+// DashboardOverview
+// MonthlyStats []
+// SpecialtyDistribution []
+// AppointmentStatus []
+// TopDoctor []
+// unApprovedDoctors []
+// RecentAppointment []

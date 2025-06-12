@@ -6,6 +6,7 @@ import { DashboardData } from '../../../../core/interfaces/AdminDashboard.interf
 import { SideNavComponent } from '../side-nav/side-nav.component';
 import { DashboardAppoimentsComponent } from '../dashboard-appoiments/dashboard-appoiments.component';
 import { DashboardDoctorsComponent } from '../dashboard-doctors/dashboard-doctors.component';
+import { json } from 'stream/consumers';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -27,6 +28,7 @@ export class AdminDashboardComponent implements OnInit {
     this.dashboardService.getDashboardData().subscribe(
       (data: DashboardData) => {
         this.dashboardData = data;
+        console.log(`Dashboard Data: ${JSON.stringify(this.dashboardData, null, 2)}`)
       },
       (error) => {
         console.error('Error loading dashboard data:', error);
