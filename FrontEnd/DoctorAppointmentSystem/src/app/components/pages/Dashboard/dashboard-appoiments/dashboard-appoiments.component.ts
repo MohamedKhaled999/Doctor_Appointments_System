@@ -1,12 +1,12 @@
 import { Component, Input, OnChanges ,SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 import { ChartOptions, ChartConfiguration } from 'chart.js';
 import { DashboardData } from '../../../../core/interfaces/AdminDashboard.interface';
 
 @Component({
   selector: 'app-dashboard-appoiments',
-  imports: [CommonModule,NgChartsModule],
+  imports: [CommonModule,BaseChartDirective],
   templateUrl: './dashboard-appoiments.component.html',
   styleUrl: './dashboard-appoiments.component.css'
 })

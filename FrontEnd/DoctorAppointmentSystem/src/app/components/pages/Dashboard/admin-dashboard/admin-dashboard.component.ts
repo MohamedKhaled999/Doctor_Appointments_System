@@ -6,7 +6,6 @@ import { DashboardData } from '../../../../core/interfaces/AdminDashboard.interf
 import { SideNavComponent } from '../side-nav/side-nav.component';
 import { DashboardAppoimentsComponent } from '../dashboard-appoiments/dashboard-appoiments.component';
 import { DashboardDoctorsComponent } from '../dashboard-doctors/dashboard-doctors.component';
-
 @Component({
   selector: 'app-admin-dashboard',
   imports: [CommonModule,SideNavComponent,OverviewComponent,DashboardAppoimentsComponent,DashboardDoctorsComponent],
@@ -28,7 +27,7 @@ export class AdminDashboardComponent implements OnInit {
     this.isLoading = true;
     this.dashboardService.getDashboardData().subscribe({
       next: (data: DashboardData) => {
-        // console.log('Dashboard Data Loaded:', data);
+        console.log('Dashboard Data Loaded:', data);
         this.dashboardData = data;
         this.isLoading = false;
       },

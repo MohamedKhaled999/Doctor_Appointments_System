@@ -1,4 +1,5 @@
 
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { provideAnimations } from '@angular/platform-browser/animations';
 
@@ -28,7 +29,7 @@ export const appConfig: ApplicationConfig = {
   provideAnimations(),
   provideToastr({ timeOut: 1000, positionClass: 'toast-top-right' }),
   importProvidersFrom(MatNativeDateModule),
-
+  provideCharts(withDefaultRegisterables()),
     //  importProvidersFrom(),
     {
       provide: 'SocialAuthServiceConfig',

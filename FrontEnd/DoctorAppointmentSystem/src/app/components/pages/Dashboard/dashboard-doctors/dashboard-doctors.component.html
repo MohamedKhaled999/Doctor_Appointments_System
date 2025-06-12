@@ -1,8 +1,8 @@
-<div class="doctors-view" *ngIf="data">
-<div class="card">
+<div class="doctors-view w-100" *ngIf="data">
+<div class="card w-100">
         <h3>Top Performing Doctors</h3>
-        <div class="table-responsive">
-          <table class="table">
+        <div >
+          <table class="table ">
             <thead>
               <tr>
                 <th>Doctor</th>
@@ -26,8 +26,8 @@
       </div>
       <div class="card">
         <h3>UnApproved Doctors</h3>
-        <div class="table-responsive">
-          <table class="table" *ngIf="data.unApprovedDoctor">
+        <div class=" width:fit-content !important;">
+          <table class="table width:fit-content !important;" *ngIf="data.unApprovedDoctor">
             <thead>
               <tr>
                 <th>ID</th>
@@ -42,8 +42,8 @@
               <tr *ngFor="let doctor of data.unApprovedDoctor">
                 <td>{{ doctor.id }}</td>
                 <td>{{ doctor.name }}</td>
-                <td>{{ doctor.specialty }}</td>
-                <td>{{ doctor.about }}</td>
+                <td >{{ doctor.specialty }}</td>
+                <td class="text-truncate text-nowrap" >{{ doctor.about.split(" ").slice(0,2).join(" ")+"..." }}</td>
                 <td>{{ doctor.location }}</td>
                 <td><button class="btn-success" onclick="Approve(doctor.id)">&#xf00c;</button></td>
               </tr>

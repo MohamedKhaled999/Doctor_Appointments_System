@@ -1,6 +1,6 @@
+import { BaseChartDirective } from 'ng2-charts';
 import { Component, Input, OnChanges ,SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions, ChartConfiguration } from 'chart.js';
 import { StatsCardComponent } from '../stats-card/stats-card.component';
 import { DashboardData } from '../../../../core/interfaces/AdminDashboard.interface';
@@ -8,7 +8,7 @@ import { DashboardData } from '../../../../core/interfaces/AdminDashboard.interf
 
 @Component({
   selector: 'app-overview',
-  imports: [CommonModule,StatsCardComponent,NgChartsModule],
+  imports: [CommonModule,StatsCardComponent,BaseChartDirective],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.css'
 })
