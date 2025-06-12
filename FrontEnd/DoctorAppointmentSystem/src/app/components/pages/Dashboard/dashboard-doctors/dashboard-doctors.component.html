@@ -1,0 +1,30 @@
+<div class="bg-white p-6 rounded-lg shadow-md" *ngIf="data">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">Top Performing Doctors</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-2 text-right">Doctor</th>
+              <th class="px-4 py-2 text-right">Specialty</th>
+              <th class="px-4 py-2 text-right">Rating</th>
+              <th class="px-4 py-2 text-right">Appointments</th>
+              <th class="px-4 py-2 text-right">Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let doctor of data.topDoctors" class="border-b border-gray-200">
+              <td class="px-4 py-2 text-right font-medium">{{ doctor.name }}</td>
+              <td class="px-4 py-2 text-right">{{ doctor.specialty }}</td>
+              <td class="px-4 py-2 text-right">
+                <div class="flex items-center justify-end">
+                  <span class="text-yellow-400 mr-1">⭐</span>
+                  {{ doctor.rating }}
+                </div>
+              </td>
+              <td class="px-4 py-2 text-right">{{ doctor.appointments }}</td>
+              <td class="px-4 py-2 text-right">${{ doctor.revenue.toLocaleString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>

@@ -16,6 +16,8 @@ import { AdminDashboardComponent } from './components/pages/admin-dashboard/admi
 import { authGuard } from './core/guards/auth.guard';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { AdminDashboardComponent } from './components/pages/Dashboard/admin-dashboard/admin-dashboard.component';
+
 
 export const routes: Routes = [
   // blank

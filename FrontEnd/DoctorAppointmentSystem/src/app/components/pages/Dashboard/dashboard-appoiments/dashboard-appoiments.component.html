@@ -1,0 +1,42 @@
+<div class="appointments-view" *ngIf="data">
+      <div class="card">
+        <h3>Appointment Status Distribution</h3>
+        <div class="chart-placeholder">
+          <p>Bar chart will be rendered here</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Recent Appointments</h3>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let appointment of data.recentAppointments">
+                <td>{{ appointment.patient }}</td>
+                <td>{{ appointment.doctor }}</td>
+                <td>{{ appointment.date }}</td>
+                <td>{{ appointment.time }}</td>
+                <td>
+                  <span class="status-badge" 
+                        [class.completed]="appointment.status === 'Completed'"
+                        [class.scheduled]="appointment.status === 'Scheduled'"
+                        [class.cancelled]="appointment.status === 'Cancelled'"
+                        [class.rescheduled]="appointment.status === 'Rescheduled'">
+                    {{ appointment.status }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>

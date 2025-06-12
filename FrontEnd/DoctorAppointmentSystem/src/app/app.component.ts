@@ -8,6 +8,7 @@ import AOS from 'aos';
 
 
 import { NgxSpinnerComponent } from 'ngx-spinner';
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet , NgxSpinnerComponent],
