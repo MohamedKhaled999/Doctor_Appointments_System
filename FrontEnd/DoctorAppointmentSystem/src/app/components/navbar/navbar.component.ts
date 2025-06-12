@@ -25,23 +25,20 @@ export class NavbarComponent {
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
 
-    // if (this.isBrowser) {
-    //   window.addEventListener('scroll', function () {
-    //     const header = document.getElementsByTagName('header')[0];
-    //     const nav = document.getElementsByTagName('nav')[0];
-    //     if (!header || !nav) return;
+    if (this.isBrowser) {
+      window.addEventListener('scroll', function () {
+        const header = document.getElementsByTagName('header')[0];
+        const nav = document.getElementsByTagName('nav')[0];
+        if (!header || !nav) return;
 
-    //     const length = header.scrollHeight - window.pageYOffset - nav.offsetHeight;
-    //     if (length < 0) {
-    //       nav.classList.replace('py-1', 'py-2');
-    //     } else {
-    //       nav.classList.replace('py-2', 'py-1');
-    //     }
-
-    //   }
-    // );
-    // }
-    
+        const length = header.scrollHeight - window.pageYOffset - nav.offsetHeight;
+        if (length < 0) {
+          nav.classList.replace('py-1', 'py-2');
+        } else {
+          nav.classList.replace('py-2', 'py-1');
+        }
+      });
+    }
   }
 
   toggleNavbar(): void {
