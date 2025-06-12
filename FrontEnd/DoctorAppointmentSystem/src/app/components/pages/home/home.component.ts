@@ -8,20 +8,21 @@ import { Specialty } from '../../../core/interfaces/specialty.interface';
 import { CommonModule } from '@angular/common';
 import 'swiper/css';
 import { Navigation } from 'swiper/modules';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { RatingComponent } from '../../shared/rating/rating.component';
 
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { DoctorSearchService } from '../../../core/services/doctor-search.service';
+
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     CommonModule,
     RouterLink,
-    RatingComponent,
+    RatingComponent
   ],
 
   templateUrl: './home.component.html',
