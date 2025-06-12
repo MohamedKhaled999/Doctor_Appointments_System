@@ -25,6 +25,8 @@ import { NotificationsComponent } from "../../shared/notifications/notifications
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { Icon, icon, latLng, marker, tileLayer } from 'leaflet';
 import { DataManagementService } from '../../../core/services/data-management.service';
+import { ReservationCardsContainerComponent } from "../../shared/reservation-cards-container/reservation-cards-container.component";
+import { reservation } from '../../../core/interfaces/reservation';
 
 declare var bootstrap: any;
 declare var calendarJS: any;
@@ -41,7 +43,7 @@ interface doctorImage {
 
 @Component({
   selector: 'app-doctor-profile',
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDatepickerModule, DragDropModule, LeafletModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDatepickerModule, DragDropModule, LeafletModule, ReservationCardsContainerComponent],
   templateUrl: './doctor-profile.component.html',
   styleUrl: './doctor-profile.component.css'
 })
@@ -64,6 +66,7 @@ export class DoctorProfileComponent implements OnInit {
   selectedTab: 'details' | 'reviews' | 'calendar' = 'details';
   DoctorImage = signal<doctorImage>({ image: "", check: -1 })
   isMapInitialized = false;
+  reservationCards: reservation[] = [];
 
   @ViewChild('mapContainer', { static: false }) mapContainer: ElementRef | undefined;
   @ViewChild('calendarContainer', { static: false }) calendarContainer: ElementRef | undefined;
@@ -383,8 +386,16 @@ export class DoctorProfileComponent implements OnInit {
             reservation.maxAppoinments = reservation.maxReservation;
           });
           if (this.doctor) {
+            reservations = this.sortReservationsByTime(reservations);
+            this.reservationCards = reservations.filter(res => new Date(res.startTime.split('T')[0]) >= new Date() ).map(res => ({
+              DoctorId: this.doctor!.id,
+              ResId: res.id,
+              Day: res.day,
+              StartTime: res.startTime,
+              EndTime: res.endTime,
+              IsAvailable: res.isAvailable,
+            }));
             this.doctor.reservations = reservations;
-            this.doctor.reservations = this.sortReservationsByTime(this.doctor.reservations!);
           }
         }
         ,
@@ -758,6 +769,8 @@ export class DoctorProfileComponent implements OnInit {
   }
   sortReservationsByTime(reservations: any[]): any[] {
     return reservations.sort((a, b) => {
+      if (a.date > b.date) return 1;
+      if (a.date < b.date) return -1;
       const timeA = a.time?.split(' : ')[0] || '';
       const timeB = b.time?.split(' : ')[0] || '';
       return timeA.localeCompare(timeB);

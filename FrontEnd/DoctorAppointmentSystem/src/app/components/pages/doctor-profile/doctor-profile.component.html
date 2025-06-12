@@ -3,7 +3,7 @@
     <!-- Left Sidebar: Doctor Info -->
     <div class="col-md-4">
       <div class="sticky-md-top pt-5 text-center" style="padding-top:89px">
-        @if(dataService.isAuthenticated() && dataService.UserRole() == "doctor")
+        @if(dataService.isAuthenticated() && dataService.UserRole() == "doctor" && myProfile == true)
         {
         <form (submit)="false">
           <div class="position-relative d-inline-block" (click)="uploadInput?.click()">
@@ -68,13 +68,8 @@
         <div class="tab-pane fade" [class.active]="selectedTab === 'details'" [class.show]="selectedTab === 'details'">
           <!-- Upcoming Appointments Slider -->
           <div class="my-3 col-12 flex-wrap justify-content-center gap-2 SP-bookCards">
-            <div class="swiper-container swiper mySwiper">
-              <div class="swiper-wrapper">
-                <div class="swiper-slide appointment-card" *ngFor="let slot of doctor?.reservations">
-                </div>
-              </div>
-              <div class="swiper-scrollbar position-static mt-2"></div>
-            </div>
+            <app-reservation-cards-container [reservations]="this.reservationCards"
+              class="col-12 col-lg-12 flex-wrap"></app-reservation-cards-container>
           </div>
 
           <h4>Speciality</h4>

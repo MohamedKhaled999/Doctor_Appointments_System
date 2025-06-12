@@ -4,8 +4,8 @@
   padding: 1rem;
   border-radius: 4px;
   margin-top: 2rem;
-  /* border: 1px solid #dee2e6; */
-  /* box-shadow: 0 1px 3px rgba(0,0,0,0.08); */
+  border: 1px solid #dee2e6;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 ::ng-deep .pagination {

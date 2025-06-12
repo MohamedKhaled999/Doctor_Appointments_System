@@ -9,7 +9,7 @@
                 <div mat-dialog-content>
                     <input type="hidden" class="SP-appID" name="doctorReservationId" />
                     <mat-form-field class="mb-3 SP-review form-field">
-                        <mat-label for="review" class="form-label">Your thoughts on the appointment with ?</mat-label>
+                        <mat-label for="review" class="form-label">Your thoughts on the appointment with Dr. {{ data.doctorName }} ?</mat-label>
                         <textarea matInput formControlName="review" class="form-control SP-reviewText" id="review" name="review" required
                             rows="3"></textarea>
                     </mat-form-field>

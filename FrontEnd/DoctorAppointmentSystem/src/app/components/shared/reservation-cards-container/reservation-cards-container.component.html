@@ -1,0 +1,31 @@
+<div class="col-12 col-lg-7 flex-wrap justify-content-center gap-2 SP-bookCards" style="width: 100%;">
+    <div class="swiper mySwiper" >
+      <div class="swiper-wrapper">
+        @if(reservations.length == 0) {
+          <div class="card d-flex text-center swiper-slide w-100">
+            <div class="card-header SP-bookHeader p-1">No Appointments</div>
+            <div class="card-body SP-primaryText flex-column justify-content-center p-2">
+              <p class="mb-1">No Available</p>
+              <p class="mb-1">Appointments</p>
+            </div>
+            @if (userData.UserRole() !== "doctor") {
+              <a class="card-footer btn disabled SP-bookBTN p-1">Book</a>
+            } @else {
+              <a class="card-footer btn disabled SP-bookBTN p-1">Doctors can't book in this release</a>
+            }
+          </div>
+        } 
+        @else {
+          <swiper-container class="" navigation="false" pagination="false" scrollbar="true" slides-per-view="3">
+            @for (reservation of reservations; track $index) {
+              <swiper-slide class="card d-flex text-center" [ngClass]="reservations.length == 2 ? ' w-50'
+                  : reservations.length == 1 ? 'w-100' : '' ">
+                <app-reservation-card [appointment]="reservation"></app-reservation-card>
+              </swiper-slide>
+            }
+          </swiper-container>
+        }
+      </div>
+      <div class="swiper-scrollbar position-static mt-2"></div>
+    </div>
+  </div>
