@@ -78,6 +78,7 @@ export class PatientAppointmentComponent {
       panelClass: 'dialog-container',
       data: {
         doctorReservationId: this.appointment?.doctorReservationID,
+        doctorName: this.appointment?.doctor,
       }
     });
     dialogRef.afterClosed().subscribe({
