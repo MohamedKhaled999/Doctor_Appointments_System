@@ -16,12 +16,13 @@ import { AdminDashboardComponent } from './components/pages/admin-dashboard/admi
 import { authGuard } from './core/guards/auth.guard';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 
 export const routes: Routes = [
-  // blank
+
   {
     path: '',
-    component: BlankLayoutComponent,
+    component: HomeLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
@@ -29,7 +30,15 @@ export const routes: Routes = [
         component: HomeComponent,
         title: 'Home - DocNet'
       }
-      ,
+    ]
+  },
+  // blank
+  {
+    path: '',
+    component: BlankLayoutComponent,
+    children: [
+      
+      
       {
         path: 'contact',
         component: ContactComponent,
