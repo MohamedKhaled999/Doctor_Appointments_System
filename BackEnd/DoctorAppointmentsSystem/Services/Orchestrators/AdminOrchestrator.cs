@@ -6,11 +6,6 @@ using Services.Abstraction.Orchestrators;
 using Shared.DTOs.Admin_Dashboard;
 using Shared.DTOs.Doctor;
 using Shared.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Orchestrators
 {
@@ -196,7 +191,7 @@ namespace Services.Orchestrators
             if (previousMonthRevenue == 0)
                 return currentMonthRevenue; // Avoid division by zero
 
-            return ((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100;
+            return (currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue * 100;
 
         }
         public async Task ApproveDoctor(int docID)
@@ -206,7 +201,7 @@ namespace Services.Orchestrators
             var notification = new NotificationMessage
             {
                 EventType = NotificationEvents.Doctor_Approved,
-                Message = "Your account has been approved and you can start now manage your reservations."
+                Message = "Your account has been approved and you can now manage your reservations."
             };
             await _serviceManager.NotificationService.SendNotification(doctorAppUserId, notification);
         }
