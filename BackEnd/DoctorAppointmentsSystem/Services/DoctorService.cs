@@ -60,9 +60,11 @@ namespace Services
                 throw new ValidationException(string.Join(", ", errors));
             }
         }
-        public async Task<DoctorProfileDTO> DoctorProfile(int doctorId)
+        public async Task<DoctorProfileDTO?> DoctorProfile(int doctorId)
         {
-            var doctor = await _unitOfWork.GetRepository<Doctor, int>().GetByIdAsync(doctorId);
+            var specs = new SpecificationsBase<Doctor>(d => d.Id == doctorId);
+            specs.AddInclude(d => d.Specialty);
+            var doctor = (await _unitOfWork.GetRepository<Doctor, int>().GetAllAsync(specs)).FirstOrDefault();
             if (doctor == null)
                 return null;
             var doctorDTO = _mapper.Map<DoctorProfileDTO>(doctor);
