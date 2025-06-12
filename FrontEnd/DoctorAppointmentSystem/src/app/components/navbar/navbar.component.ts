@@ -23,7 +23,7 @@ export class NavbarComponent {
     @Inject(AuthService) public authService: AuthService,
     @Inject(DataManagementService) public dataService: DataManagementService
   ) {
-    // this.isBrowser = isPlatformBrowser(platformId);
+    this.isBrowser = isPlatformBrowser(platformId);
 
     // if (this.isBrowser) {
     //   window.addEventListener('scroll', function () {
