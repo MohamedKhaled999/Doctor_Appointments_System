@@ -3,29 +3,30 @@
     <!-- Left Sidebar: Doctor Info -->
     <div class="col-md-4">
       <div class="sticky-md-top pt-5 text-center" style="padding-top:89px">
+        @if(dataService.isAuthenticated() && dataService.UserRole() == "doctor")
+        {
         <form (submit)="false">
-          <div class="position-relative d-inline-block" (click)="uploadInput.click()">
-            <!-- [src]="'https://doc-net2.runasp.net/uploads/images/' + doctor?.image" -->
-            @if(DoctorImage().check==1){
-              <img
+          <div class="position-relative d-inline-block" (click)="uploadInput?.click()">
+            <img
               [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage().image+'?check='+ DoctorImage().check"
-              alt="Doctor Image"
-              class="rounded-circle img-thumbnail SP-photo"
-            />
-            }
-            @else{
-               <img
-              [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage().image+'?check='+ DoctorImage().check"
-              alt="Doctor Image"
-              class="rounded-circle img-thumbnail SP-photo"
-            />
-            }
+              alt="Doctor Image" class="rounded-circle img-thumbnail SP-photo" />
             <input #uploadInput type="file" class="d-none SP-file" (change)="
-                uploadPhoto($event)
-              " />
+                  uploadPhoto($event)
+                " />
             <div class="SP-upload"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
           </div>
         </form>
+        }
+        @else
+        {
+        <div>
+          <div class="position-relative d-inline-block">
+            <img
+              [src]="'https://doc-net2.runasp.net/uploads/images/' + DoctorImage().image+'?check='+ DoctorImage().check"
+              alt="Doctor Image" class="rounded-circle img-thumbnail SP-photo" />
+          </div>
+        </div>
+        }
 
         <h3 class="mt-2">Dr. {{ doctor?.name }}</h3>
         <p class="fw-bold">{{ doctor?.title }}</p>
@@ -107,7 +108,8 @@
 
           <h4>Map</h4>
           <!-- <div #mapContainer id="SP-Map" class="w-100 col-12" style="height: 400px;"></div> -->
-          <div id="SP-Map" class="w-100 col-12" style="height: 300px;" leaflet [leafletOptions]="options" *ngIf="isMapInitialized"></div>
+          <div id="SP-Map" class="w-100 col-12" style="height: 300px;" leaflet [leafletOptions]="options"
+            *ngIf="isMapInitialized"></div>
         </div>
 
         <!-- REVIEWS TAB -->

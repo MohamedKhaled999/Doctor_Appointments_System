@@ -24,6 +24,7 @@ import { NotificationsComponent } from "../../shared/notifications/notifications
 // import * as L from 'leaflet';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { Icon, icon, latLng, marker, tileLayer } from 'leaflet';
+import { DataManagementService } from '../../../core/services/data-management.service';
 
 declare var bootstrap: any;
 declare var calendarJS: any;
@@ -99,7 +100,7 @@ export class DoctorProfileComponent implements OnInit {
   /**
    *
   */
-  constructor(private doctorService: DoctorService, private route: ActivatedRoute, public dialog: MatDialog, private auth: AccountService, private governoratesService: GovernoratesService, @Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(private doctorService: DoctorService, private route: ActivatedRoute, public dialog: MatDialog, private auth: AccountService, private governoratesService: GovernoratesService, @Inject(PLATFORM_ID) private platformId: Object, public dataService: DataManagementService) {
     this.generateCalendarView(this.currentView, this.viewDate);
     // this.generateTimeSlots();
     this.governorates = this.governoratesService.getGovernorates();
@@ -574,8 +575,8 @@ export class DoctorProfileComponent implements OnInit {
       });
       this.options.layers.push(layer);
       this.isMapInitialized = true;
-    // });
-  }
+      // });
+    }
   }
   options: any = {
     layers: [
