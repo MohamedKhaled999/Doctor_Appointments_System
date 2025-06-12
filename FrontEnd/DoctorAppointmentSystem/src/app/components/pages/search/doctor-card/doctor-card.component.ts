@@ -6,13 +6,13 @@ import { RouterModule } from '@angular/router';
 import { ReservationCardComponent } from '../reservation-card/reservation-card.component';
 import { DoctorReservationService } from '../../../../core/services/doctor-reservations.service';
 import { DataManagementService } from '../../../../core/services/data-management.service';
+import { ReservationCardsContainerComponent } from "../reservation-cards-container/reservation-cards-container.component";
 @Component({
   selector: 'app-doctor-card',
   imports: [
     CommonModule,
     RouterModule,
-    ReservationCardComponent,
-    NgClass
+    ReservationCardsContainerComponent
 ],
   templateUrl: './doctor-card.component.html',
   styleUrl: './doctor-card.component.css',
@@ -25,7 +25,7 @@ export class DoctorCardComponent implements OnInit {
   authService : any;
   showModal: any;
   getNextDate:any;
-  constructor(private DoctorReservationService: DoctorReservationService,
+  constructor(protected DoctorReservationService: DoctorReservationService,
      public userData :DataManagementService) {
 
   }
