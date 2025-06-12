@@ -3,7 +3,7 @@ import { CommonModule, NgClass } from '@angular/common';
 import { Doctor } from '../../../core/interfaces/doctor';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ReservationCardComponent } from '../reservation-card/reservation-card.component';
+import { ReservationCardComponent } from './reservation-card/reservation-card.component';
 import { DoctorReservationService } from '../../../core/services/doctor-reservations.service';
 import { DataManagementService } from '../../../core/services/data-management.service';
 @Component({
@@ -20,9 +20,6 @@ import { DataManagementService } from '../../../core/services/data-management.se
 
 })
 export class ReservationCardsContainerComponent {
-    // authService : any;
-    // showModal: any;
-    // getNextDate:any;
   @Input() reservations: any;
 
   constructor(public userData :DataManagementService) {

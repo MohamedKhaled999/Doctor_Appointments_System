@@ -6,7 +6,7 @@ import { log } from 'node:console';
 import { DataManagementService } from '../../../core/services/data-management.service';
 
 declare const google: any;
-import { ReservationCardComponent } from "../reservation-card/reservation-card.component";
+import { ReservationCardComponent } from "../reservation-cards-container/reservation-card/reservation-card.component";
 
 @Component({
   selector: 'app-test-swiper',
