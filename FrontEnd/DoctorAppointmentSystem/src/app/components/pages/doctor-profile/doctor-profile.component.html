@@ -3,7 +3,7 @@
     <!-- Left Sidebar: Doctor Info -->
     <div class="col-md-4">
       <div class="sticky-md-top pt-5 text-center" style="padding-top:89px">
-        @if(dataService.isAuthenticated() && dataService.UserRole() == "doctor")
+        @if(dataService.isAuthenticated() && dataService.UserRole() == "doctor" && myProfile == true)
         {
         <form (submit)="false">
           <div class="position-relative d-inline-block" (click)="uploadInput?.click()">
