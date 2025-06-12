@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { Filter } from './filter';
+import { Filter } from '../../../../core/interfaces/filter';
 // import { Specialities } from '../../../../core/enums/speciality.enum';
 import { Gender } from '../../../../core/enums/gender.enum';
 import { Governorate } from '../../../../core/enums/governorate.enum';
@@ -250,6 +250,8 @@ export class DoctorFiltersComponent implements OnInit, AfterViewInit {
       minPrice: 0,
       maxPrice: 1000
     };
+    if(this.isBrowser)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     this.DoctorSearchService.currentPage.set(1);
 
     if (!this.isDefaultFilters()) {

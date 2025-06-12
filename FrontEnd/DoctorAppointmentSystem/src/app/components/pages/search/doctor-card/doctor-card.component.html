@@ -10,9 +10,7 @@
     <p class="mb-1 fw-bold SP-fees">{{ doctor.fees }} E£</p>
   </div>
 
-  <!-- <div *ngFor="let appointment of doctor.reservations">
-            <app-reservation-card [reservation]="appointment"></app-reservation-card>
-        </div> -->
+
   <app-reservation-cards-container [reservations]="this.doctor.reservations" class="col-12 col-lg-7 flex-wrap"></app-reservation-cards-container>
   
 </div>

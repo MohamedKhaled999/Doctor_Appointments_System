@@ -1,10 +1,10 @@
-import { reservation } from './../../../../core/interfaces/reservation';
+import { reservation } from '../../../core/interfaces/reservation';
 import { Component , Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DataManagementService } from '../../../../core/services/data-management.service';
+import { DataManagementService } from '../../../core/services/data-management.service';
 import { RouterLink } from '@angular/router';
-import { DoctorReservationService } from '../../../../core/services/doctor-reservations.service';
+import { DoctorReservationService } from '../../../core/services/doctor-reservations.service';
 
 @Component({
   selector: 'app-reservation-card',

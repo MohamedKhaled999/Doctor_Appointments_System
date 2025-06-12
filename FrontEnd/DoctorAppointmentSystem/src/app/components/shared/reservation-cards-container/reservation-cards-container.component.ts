@@ -1,11 +1,11 @@
 import { Component, Input, OnInit,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
-import { Doctor } from '../../../../core/interfaces/doctor';
+import { Doctor } from '../../../core/interfaces/doctor';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReservationCardComponent } from '../reservation-card/reservation-card.component';
-import { DoctorReservationService } from '../../../../core/services/doctor-reservations.service';
-import { DataManagementService } from '../../../../core/services/data-management.service';
+import { DoctorReservationService } from '../../../core/services/doctor-reservations.service';
+import { DataManagementService } from '../../../core/services/data-management.service';
 @Component({
   selector: 'app-reservation-cards-container',
   imports: [
