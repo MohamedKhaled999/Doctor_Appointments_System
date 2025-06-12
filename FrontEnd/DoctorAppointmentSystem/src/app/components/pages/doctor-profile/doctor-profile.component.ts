@@ -53,7 +53,7 @@ export class DoctorProfileComponent implements OnInit {
   currentPage = 1;
   pageSize = 5;
   pageCount = 0;
-  weekDays = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+  weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   scheduleForm: Schedule = {
     startTime: '',
     endTime: '',
