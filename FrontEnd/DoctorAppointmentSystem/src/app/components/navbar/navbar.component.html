@@ -27,15 +27,15 @@
         </li>
       </ul>
       <ul class="navbar-nav gap-md-2">
-        @if (!dataService.isAuthenticated()) {
-        <li class="nav-item">
+        @if (!dataService.isAuthenticated()&& this.isBrowser) {
+        <li class="nav-item my-check">
           <a class="nav-link" routerLink="/login">Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/register">Register</a>
+          <a class="nav-link my-check" routerLink="/register">Register</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-nowrap" routerLink="/doctor-register">Join us</a>
+        <li class="nav-item my-check">
+          <a class="nav-link text-nowrap my-check" routerLink="/doctor-register">Join us</a>
         </li>
         }
         @else if(dataService.UserRole() == "admin") {
