@@ -34,7 +34,8 @@ export class DoctorListComponent {
         duration: 1000,
         easing: 'ease-out-back',
         offset: 30,
-        once: false
+        once: false,
+        disable:false
       });
 
       // this.DoctorSearchService.pageIndexSource.set('list');
