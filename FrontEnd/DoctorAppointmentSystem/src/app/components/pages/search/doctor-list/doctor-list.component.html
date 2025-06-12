@@ -11,5 +11,8 @@
       1. Add the component to the parent component's template.
       2. Pass the number of records to the [numberOfRecords] input.
       3. Listen to the (pageIndexChange) output to get the current page index. -->
-<app-pagination [numberOfRecords]="this.DoctorSearchService.numberOfRecords()"
-    (pageIndexChange)="DoctorSearchService.pageIndex.set($event)"></app-pagination>
+<app-pagination 
+    [numberOfRecords]="this.DoctorSearchService.numberOfRecords()"
+    [currentPage]="this.DoctorSearchService.currentPage()"
+    (pageIndexChange)="DoctorSearchService.pageIndex.set($event)">
+</app-pagination>

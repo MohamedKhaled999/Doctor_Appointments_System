@@ -67,6 +67,8 @@ export class DoctorFiltersComponent implements OnInit, AfterViewInit {
     if (typeof pageIndex === 'number' && pageIndex !== this.DoctorSearchService.currentPage() && this.DoctorSearchService.pageIndexSource() == 'filter') {
       this.DoctorSearchService.currentPage.set(pageIndex);
       // this.loadDoctors();
+      if(this.isBrowser)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       this.DoctorSearchService.loadDoctors();
 
       // console.log('Page index changed:', pageIndex);
@@ -248,6 +250,7 @@ export class DoctorFiltersComponent implements OnInit, AfterViewInit {
       minPrice: 0,
       maxPrice: 1000
     };
+    this.DoctorSearchService.currentPage.set(1);
 
     if (!this.isDefaultFilters()) {
       this.filters = { ...defaultFilters };
