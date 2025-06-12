@@ -2,13 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Caching;
 using Services.Abstraction;
-using Services.Abstraction.Orchestrators;
 using Shared.DTOs.Doctor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
@@ -37,7 +31,7 @@ namespace Presentation.Controllers
         [HttpPost("ApproveDoctor")]
         public async Task<IActionResult> ApproveDoctor(int doctorId)
         {
-            await _serviceManager.DoctorService.ApproveDoctor(doctorId);
+            await _serviceManager.AdminOrchestrator.ApproveDoctor(doctorId);
             return Ok(new { success = true });
         }
     }
