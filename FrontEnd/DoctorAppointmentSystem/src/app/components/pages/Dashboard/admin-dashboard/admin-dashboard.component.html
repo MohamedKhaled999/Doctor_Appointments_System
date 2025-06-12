@@ -1,0 +1,59 @@
+<div class="dashboard-container">
+  <app-side-nav 
+    [activeSection]="activeSection" 
+    (sectionChange)="onSectionChange($event)">
+  </app-side-nav>
+
+  <div class="main-content">
+  
+    <header class="dashboard-header">
+      <h2>{{ getSectionTitle() }}</h2>
+      <div class="header-time">
+        <span>🕒</span>
+        <span>Last updated: {{ getCurrentTime() }}</span>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <!-- Loading Spinner -->
+      <div *ngIf="isLoading" class="loading-spinner">
+        <p>Loading dashboard data...</p>
+        <!-- Add a spinner here (e.g., Angular Material or custom CSS) -->
+      </div>
+
+      <!-- Content when data is loaded -->
+      <ng-container *ngIf="!isLoading && dashboardData">
+        <app-overview 
+          *ngIf="activeSection === 'overview'" 
+          [data]="dashboardData">
+        </app-overview>
+
+        <app-dashboard-appoiments 
+          *ngIf="activeSection === 'appointments'" 
+          [data]="dashboardData">
+        </app-dashboard-appoiments>
+
+        <app-dashboard-doctors 
+          *ngIf="activeSection === 'doctors'" 
+          [data]="dashboardData">
+        </app-dashboard-doctors>
+
+        <!-- Placeholder components -->
+        <div *ngIf="activeSection === 'patients'" class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold">Patients Management</h3>
+          <p class="text-gray-600 mt-2">Patient management interface would go here...</p>
+        </div>
+
+        <div *ngIf="activeSection === 'revenue'" class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold">Revenue Analytics</h3>
+          <p class="text-gray-600 mt-2">Detailed revenue analytics would go here...</p>
+        </div>
+
+        <div *ngIf="activeSection === 'analytics'" class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold">Advanced Analytics</h3>
+          <p class="text-gray-600 mt-2">Advanced analytics and reporting would go here...</p>
+        </div>
+      </ng-container>
+    </main>
+  </div>
+</div>
