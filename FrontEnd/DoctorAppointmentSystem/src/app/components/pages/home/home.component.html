@@ -56,8 +56,8 @@
                         [attr.data-aos]="getRandomAosAnimation()"> -->
                     <div *ngFor="let specialty of specialties; let i = index; trackBy: trackSpecialtyId"
                         class="col-md-4 col-sm-6" [attr.data-aos]="specialtyAosValues[i]">
-                        <a [routerLink]="['/search']" [queryParams]="{ Speciality: specialty.id }"
-                            class="text-decoration-none" (click)="DoctorSearchService.speciality.set([specialty]); ">
+                        <a routerLink="/search" class="text-decoration-none"
+                            (click)="DoctorSearchService.speciality.set([specialty]); ">
 
 
                             <!-- <a  [routerLink]="['/search']" [queryParams]="{ Speciality: specialty.id }" >  -->

@@ -2,19 +2,20 @@
     <h2>Filters</h2>
     <form (ngSubmit)="onFilter()" #filterForm="ngForm">
 
-         <!-- why is the page number ??????????????????????????????????????   -->
+        <!-- why is the page number ??????????????????????????????????????   -->
         <!-- <input type="hidden" name="pageNum" class="SP-pageNum" [(ngModel)]="filters.pageNum" />  -->
 
         <div class="input-group mb-3">
             <span class="input-group-text"><i class="fas fa-search"></i></span>
-            <input type="text" name="Name" [(ngModel)]="filters.doctorName" class="form-control SP-docSearch" placeholder="Name">
+            <input type="text" name="Name" [(ngModel)]="filters.doctorName" class="form-control SP-docSearch"
+                placeholder="Name">
         </div>
 
         <div class="input-group mb-3">
             <label class="input-group-text"><i class="fa-solid fa-user-doctor"></i></label>
-            <select class="form-select SP-select SP-specialitySelect" name="Speciality" 
-                    [ngModel]="filters.speciality.length > 0 ? filters.speciality[0].id : ''" 
-                    (ngModelChange)="onSpecialtyChange($event)">
+            <select class="form-select SP-select SP-specialitySelect" name="Speciality"
+                [ngModel]="filters.speciality.length > 0 ? filters.speciality[0].id : ''"
+                (ngModelChange)="onSpecialtyChange($event)">
                 <option value="">Select Speciality</option>
                 <option *ngFor="let s of SpecialitiesList" [value]="s.id">{{ s.name }}</option>
             </select>
@@ -30,17 +31,17 @@
             <label for="gender" class="col-12 form-label-input">Gender</label>
             <div class="me-1">
                 <input type="radio" name="gender" [value]="Gender.All" class="form-check-input" id="All"
-                [(ngModel)]="filters.gender">
+                    [(ngModel)]="filters.gender">
                 <label for="All">All</label>
             </div>
             <div class="me-1">
                 <input type="radio" name="gender" [value]="Gender.Male" class="form-check-input" id="Male"
-                [(ngModel)]="filters.gender">
+                    [(ngModel)]="filters.gender">
                 <label for="Male">Male</label>
             </div>
             <div class="me-1">
                 <input type="radio" name="gender" [value]="Gender.Female" class="form-check-input" id="Female"
-                [(ngModel)]="filters.gender">
+                    [(ngModel)]="filters.gender">
                 <label for="Female">Female</label>
             </div>
         </div>

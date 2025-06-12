@@ -17,6 +17,7 @@ import { SpecialtyService } from '../../../../core/services/specialty.service';
 import { Specialty } from '../../../../core/interfaces/specialty.interface';
 import { effect } from '@angular/core';
 import { response } from 'express';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-doctor-filters',
   imports: [CommonModule, FormsModule, NouisliderModule],
@@ -28,18 +29,18 @@ export class DoctorFiltersComponent implements OnInit, AfterViewInit {
   public isBrowser: boolean;
 
   constructor(@Inject(PLATFORM_ID) private platformId: any,
-   protected DoctorSearchService: DoctorSearchService,
+    protected DoctorSearchService: DoctorSearchService,
     private SpecialtyService: SpecialtyService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
   @ViewChild('waitSlider', { static: false }) waitSlider!: ElementRef;
   @ViewChild('priceSlider', { static: false }) priceSlider!: ElementRef;
 
-  SpecialitiesList : Specialty[] = [];
+  SpecialitiesList: Specialty[] = [];
   Gender = Gender;
 
 
-  
+
   GovernoratesList = Object.keys(Governorate)
     .filter(key => isNaN(Number(key)))
     .map(key => ({
@@ -56,7 +57,7 @@ export class DoctorFiltersComponent implements OnInit, AfterViewInit {
     minPrice: 0,
     maxPrice: 1000,
   };
- sliderConfig:any = {};
+  sliderConfig: any = {};
 
 
 
@@ -72,69 +73,67 @@ export class DoctorFiltersComponent implements OnInit, AfterViewInit {
       // console.log('Current page:', this.currentPage);
     }
   });
- 
 
-ngOnInit(): void {
-  this.loadSpecialities();
-  // Initialize filters with service values if they exist
-  if (this.DoctorSearchService.speciality().length > 0) {
-    this.filters.speciality = [...this.DoctorSearchService.speciality()];
-  }
-}
 
-ngAfterViewInit(): void {
-
-  if(this.isBrowser){
-    console.log(this.GovernoratesList);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.loadSpecialities()
-    console.log(`spec doc serv state : ---------> ${JSON.stringify(this.DoctorSearchService.speciality())}`);
-    // Wait Slider
-    if (this.waitSlider && this.waitSlider.nativeElement) {
-      noUiSlider.create(this.waitSlider.nativeElement, {
-        start: [this.filters.waitingTime ?? 60],
-        step: 5,
-        connect: "lower",
-        range: { min: 0, max: 60 },
-        format: wNumb({ decimals: 0 }),
-        pips: {
-          mode: 'values',
-          values: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
-          density: 2
-        } as any
-      });
-
-      this.waitSlider.nativeElement.noUiSlider.on('update', (values: string[]) => {
-        this.filters.waitingTime = Number(values[0]);
-      });
+  ngOnInit(): void {
+    this.loadSpecialities();
+    // Initialize filters with service values if they exist
+    if (this.DoctorSearchService.speciality().length > 0) {
+      this.filters.speciality = [...this.DoctorSearchService.speciality()];
     }
-
-    // Price Slider
-    if (this.priceSlider && this.priceSlider.nativeElement) {
-      noUiSlider.create(this.priceSlider.nativeElement, {
-        start: [
-          this.filters.minPrice ?? 0,
-          this.filters.maxPrice ?? 1000
-        ],
-        step: 10,
-        connect: true,
-        range: { min: 0, max: 1000 },
-        format: wNumb({ decimals: 0 }),
-        pips: {
-          mode: 'values',
-          values: [0, 200, 400, 600, 800, 1000],
-          density: 2
-        } as any
-      });
-
-      this.priceSlider.nativeElement.noUiSlider.on('update', (values: string[]) => {
-        this.filters.minPrice = Number(values[0]);
-        this.filters.maxPrice = Number(values[1]);
-      });
-    }
-
-
   }
+
+  ngAfterViewInit(): void {
+    if (this.isBrowser) {
+      console.log(this.GovernoratesList);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      console.log(`spec doc serv state : ---------> ${JSON.stringify(this.DoctorSearchService.speciality())}`);
+      // Wait Slider
+      if (this.waitSlider && this.waitSlider.nativeElement) {
+        noUiSlider.create(this.waitSlider.nativeElement, {
+          start: [this.filters.waitingTime ?? 60],
+          step: 5,
+          connect: "lower",
+          range: { min: 0, max: 60 },
+          format: wNumb({ decimals: 0 }),
+          pips: {
+            mode: 'values',
+            values: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+            density: 2
+          } as any
+        });
+
+        this.waitSlider.nativeElement.noUiSlider.on('update', (values: string[]) => {
+          this.filters.waitingTime = Number(values[0]);
+        });
+      }
+
+      // Price Slider
+      if (this.priceSlider && this.priceSlider.nativeElement) {
+        noUiSlider.create(this.priceSlider.nativeElement, {
+          start: [
+            this.filters.minPrice ?? 0,
+            this.filters.maxPrice ?? 1000
+          ],
+          step: 10,
+          connect: true,
+          range: { min: 0, max: 1000 },
+          format: wNumb({ decimals: 0 }),
+          pips: {
+            mode: 'values',
+            values: [0, 200, 400, 600, 800, 1000],
+            density: 2
+          } as any
+        });
+
+        this.priceSlider.nativeElement.noUiSlider.on('update', (values: string[]) => {
+          this.filters.minPrice = Number(values[0]);
+          this.filters.maxPrice = Number(values[1]);
+        });
+      }
+
+
+    }
 
   }
 
@@ -181,7 +180,7 @@ ngAfterViewInit(): void {
     this.DoctorSearchService.currentPage.set(1);
     this.DoctorSearchService.pageIndexSource.set('filter');
     // this.loadDoctors();
-      this.DoctorSearchService.loadDoctors();
+    this.DoctorSearchService.loadDoctors();
 
   }
   // loadDoctors(): void {
