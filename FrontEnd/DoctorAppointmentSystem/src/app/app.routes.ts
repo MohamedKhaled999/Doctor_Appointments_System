@@ -12,7 +12,6 @@ import { ConfirmEmailComponent } from './components/pages/account/confirm-email/
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { BlankLayoutComponent } from './layouts/blank-layout/blank-layout.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { AdminDashboardComponent } from './components/pages/admin-dashboard/admin-dashboard.component';
 import { authGuard } from './core/guards/auth.guard';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { ContactComponent } from './components/contact/contact.component';
