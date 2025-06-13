@@ -20,11 +20,15 @@ export class ReservationAppointmentsComponent implements OnInit {
   fileErrors: string[] | undefined;
   acceptedFileTypes: string[] = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
   maxFileSize: number = 5 * 1024 * 1024;
+  isPast = false;
   /**
    *
    */
   constructor(private doctorService: DoctorService, @Inject(MAT_DIALOG_DATA) public data: any) {
-    this.reservationId = data;
+    this.reservationId = data.id;
+    this.isPast = new Date(data.date) < new Date();
+    console.log(this.isPast);
+    
   }
   ngOnInit(): void {
     this.doctorService.getAppoinments(this.reservationId).subscribe({

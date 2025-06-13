@@ -51,7 +51,10 @@ export class ReservationDialogComponent {
       width: '600px',
       height: 'auto',
       panelClass: 'dialog-container',
-      data: this.data.id
+      data: {
+        id: this.data.id,
+        date: this.data.date,
+      }
     });
   }
 }

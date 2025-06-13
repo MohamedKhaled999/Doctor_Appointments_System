@@ -16,10 +16,16 @@
             *ngIf="appointment.documentUrls !== null && appointment.documentUrls">
             <li *ngFor="let file of appointment.documentUrls.split('||')"
               class="mb-2 list-group-item d-flex justify-content-between align-items-center">
-              <i class="fas fa-file-alt me-1"></i> <a [href]="`https://doc-net2.runasp.net/uploads/${file.split('.')[1] === 'pdf' ? 'documents' : 'images'}/` + file" target="_blank">{{ file.length > 20 ? file.split('.')[0].slice(0, 20) + '...' + file.split('.')[1] : file }}</a>
+              <i class="fas fa-file-alt me-1"></i> <a
+                [href]="`https://doc-net2.runasp.net/uploads/${file.split('.')[1] === 'pdf' ? 'documents' : 'images'}/` + file"
+                target="_blank">{{ file.length > 20 ? file.split('.')[0].slice(0, 20) + '...' + file.split('.')[1] :
+                file }}</a>
             </li>
           </ul>
-          <div class="col-12">
+          <div class="d-flex flex-column" *ngIf="appointment.documentUrls == null">
+            <p class="text-muted mb-1">No files attached</p>
+          </div>
+          <div class="col-12" *ngIf="this.isPast">
             <label for="medicalFiles" class="form-label mb-2">Attach The Prescription (PDF, JPG, PNG, JPEG &lt;
               5MB)</label>
             <input id="medicalFiles" type="file" class="form-control mb-2"
