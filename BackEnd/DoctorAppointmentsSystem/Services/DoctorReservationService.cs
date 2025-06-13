@@ -45,7 +45,7 @@ namespace Services
         }
         public async Task AddDoctorReservation(NewResDTO res)
         {
-            if (!IsVacantDay(DateOnly.FromDateTime(res.Date)))
+            if (!IsVacantDay(DateOnly.FromDateTime(res.Date), res.DoctorID))
                 throw new ValidationException(["Can't have more than one reservation per day"]);
             DoctorReservation newReservation = _mapper.Map<DoctorReservation>(res);
             await _unitOfWork.GetRepository<DoctorReservation, int>().AddAsync(newReservation);
