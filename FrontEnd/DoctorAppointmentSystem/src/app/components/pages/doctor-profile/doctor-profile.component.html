@@ -273,7 +273,7 @@
                         <div class="date">
                           {{ date.getDate() }}
                         </div>
-                        <div class="appointments">
+                        <div class="appointments" *ngIf="load">
                           <ng-container *ngFor="let reservation of doctor?.reservations">
                             <div tabindex="0" *ngIf="isSameDate(reservation.date, date)" class="reservation" cdkDrag
                               cdkDragHandle [cdkDragData]="reservation" (click)="editReservation(reservation, $event)"

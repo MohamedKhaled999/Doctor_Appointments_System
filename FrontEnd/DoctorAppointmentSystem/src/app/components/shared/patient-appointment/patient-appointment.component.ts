@@ -52,10 +52,13 @@ export class PatientAppointmentComponent {
               this.cancelAppointment.emit();
             },
             error: (error) => {
+              let err = '';
+              if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+              if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
               Swal.fire({
                 icon: 'error',
                 title: 'Error cancelling appointment',
-                text: error.error.message || 'An error occurred while cancelling the appointment.',
+                text: `${'An error occurred while cancelling the appointment. ' + err}`,
                 color: '#004085',
                 confirmButtonColor: '#004085'
               });
@@ -91,10 +94,13 @@ export class PatientAppointmentComponent {
               }),
             error: (error) => {
               console.error('Error adding review:', error);
+              let err = '';
+              if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+              if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
               Swal.fire({
                 icon: 'error',
                 title: 'Error adding review',
-                text: error.error.message || 'An error occurred while adding the review.',
+                text: `${'An error occurred while adding the review. ' + err}`,
                 color: '#004085',
                 confirmButtonColor: '#004085'
               });
@@ -104,10 +110,13 @@ export class PatientAppointmentComponent {
       },
       error: (error) => {
         console.error('Error adding review:', error);
+        let err = '';
+        if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+        if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
         Swal.fire({
           icon: 'error',
           title: 'Error adding review',
-          text: error.error.message || 'An error occurred while adding the review.',
+          text: `${'An error occurred while adding the review. ' + err}`,
           color: '#004085',
           confirmButtonColor: '#004085'
         });
@@ -162,17 +171,20 @@ export class PatientAppointmentComponent {
           },
           error: (error) => {
             console.error('Error adding files:', error);
+            let err = '';
+            if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+            if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
             Swal.fire({
               icon: 'error',
               title: 'Error adding files',
-              text: error.error.message || 'An error occurred while adding files.',
+              text: `${'An error occurred while adding the files. ' + err}`,
               color: '#004085',
               confirmButtonColor: '#004085'
             });
           }
         });
+      }
     }
-  }
   }
   getPath(str: any): string {
     return str?.prescriptionUrl.split('.')[1] === 'pdf' ? 'documents' : 'images';

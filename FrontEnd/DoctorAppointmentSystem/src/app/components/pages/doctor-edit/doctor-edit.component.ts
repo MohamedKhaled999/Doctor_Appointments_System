@@ -31,7 +31,7 @@ export class DoctorEditComponent implements OnInit {
     private governoratesService: GovernoratesService,
     private route: ActivatedRoute,
     private router: Router,
-  @Inject(PLATFORM_ID) private platformId: Object) {
+    @Inject(PLATFORM_ID) private platformId: Object) {
     this.doctorForm = this.fb.group({
       id: [{ value: '', disabled: true }],
       firstName: [{ value: '', disabled: true }],
@@ -143,7 +143,7 @@ export class DoctorEditComponent implements OnInit {
     //   this.marker = marker;
     //   this.isMapInitialized = true;
     // });
-    if(isPlatformBrowser(this.platformId)){
+    if (isPlatformBrowser(this.platformId)) {
       this.options.center = latLng(this.doctor!.lat, this.doctor!.lng);
       let layer = marker([this.doctor!.lat, this.doctor!.lng], {
         title: this.doctor!.firstName + ' ' + this.doctor!.lastName,
@@ -173,7 +173,7 @@ export class DoctorEditComponent implements OnInit {
       this.isMapInitialized = true;
       this.options.layers.push(layer);
       console.log(this.options.layers);
-      
+
     }
   }
   options: any = {
@@ -257,10 +257,13 @@ export class DoctorEditComponent implements OnInit {
           this.router.navigate(['/profile/doctor/']);
         });
       },
-      error: (err) => {
+      error: (error) => {
+        let err = '';
+        if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+        if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
         Swal.fire({
           title: 'Error',
-          text: `An error occurred while updating your profile: ${err.error?.Errors[0] || 'Please try again later.'}`,
+          text: `Failed to update profile. ${err}`,
           icon: 'error',
           confirmButtonText: 'OK'
         });

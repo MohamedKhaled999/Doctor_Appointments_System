@@ -24,7 +24,7 @@ export class ReservationAppointmentsComponent implements OnInit {
   /**
    *
   */
- constructor(private doctorService: DoctorService, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(private doctorService: DoctorService, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.reservationId = data.id;
     this.isPast = new Date(data.date) < new Date();
   }
@@ -40,8 +40,8 @@ export class ReservationAppointmentsComponent implements OnInit {
       }
     });
     // this.appointments= [
-      //   {id:1, patient: 'John', documentUrls: 'testadadadadqwada.pdf||test2dwaddadawdadawdawdawdadadada.pdf||test3dawdadadawdawdawawawdawdawdawdad.pdf', prescriptionUrl: '',
-      //   },
+    //   {id:1, patient: 'John', documentUrls: 'testadadadadqwada.pdf||test2dwaddadawdadawdawdawdadadada.pdf||test3dawdadadawdawdawawawdawdawdawdad.pdf', prescriptionUrl: '',
+    //   },
     //   {id:2, patient: 'John', documentUrls: 'test.pdf||test2.pdf||test3.pdf', prescriptionUrl: '',
     //   }
     //   ,
@@ -102,10 +102,13 @@ export class ReservationAppointmentsComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error deleting prescription:', error);
+        let err = '';
+        if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+        if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
         Swal.fire({
           icon: 'error',
           title: 'Error deleting prescription',
-          text: error.error.message || 'An error occurred while deleting the prescription.',
+          text: `An error occurred while deleting the prescription. ${err}`,
           color: '#004085',
           confirmButtonColor: '#004085'
         });

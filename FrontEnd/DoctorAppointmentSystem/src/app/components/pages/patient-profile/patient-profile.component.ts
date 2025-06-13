@@ -43,7 +43,7 @@ export class PatientProfileComponent implements OnInit {
     this.patientService.getAppoinments(1, 500).subscribe((appointments: Appointment[]) => {
       if (!this.patient) return;
       console.log(appointments);
-      
+
       this.patient.appointments = appointments;
     });
   }
@@ -142,10 +142,14 @@ export class PatientProfileComponent implements OnInit {
         });
       },
       error: (error) => {
+        let err = '';
+        if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+        if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!',
+          text: `An error has occurred while updating your profile, please try again! ${err}`,
+          confirmButtonColor: '#004085'
         });
       }
     });

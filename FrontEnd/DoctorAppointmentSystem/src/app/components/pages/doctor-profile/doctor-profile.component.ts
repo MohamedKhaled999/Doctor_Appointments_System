@@ -100,6 +100,7 @@ export class DoctorProfileComponent implements OnInit {
   timeSlots: string[] = [];
   weeks: Date[][] = [];
   public CalendarView = CalendarView;
+  load = true;
   /**
    *
   */
@@ -335,10 +336,13 @@ export class DoctorProfileComponent implements OnInit {
                 }
               });
             },
-            error: (err) => {
+            error: (error) => {
+              let err = '';
+              if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+              if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
               Swal.fire({
                 title: 'Error',
-                text: `An error occurred while adding the reservation: ${err.error.ErrorMessage || err.error?.Errors[0] || 'Please try again later.'}`,
+                text: `There was an error adding the reservation: ${err + 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
@@ -347,9 +351,12 @@ export class DoctorProfileComponent implements OnInit {
         }
       },
       error: (error) => {
+        let err = '';
+        if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+        if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
         Swal.fire({
           title: 'Error',
-          text: 'There was an error processing your request. Please try again later.',
+          text: `There was an error processing your request: ${err + 'Please try again later.'}`,
           icon: 'error',
           confirmButtonText: 'OK'
         });
@@ -387,7 +394,7 @@ export class DoctorProfileComponent implements OnInit {
           });
           if (this.doctor) {
             reservations = this.sortReservationsByTime(reservations);
-            this.reservationCards = reservations.filter(res => new Date(res.startTime.split('T')[0]) >= new Date() ).map(res => ({
+            this.reservationCards = reservations.filter(res => new Date(res.startTime.split('T')[0]) >= new Date()).map(res => ({
               DoctorId: this.doctor!.id,
               ResId: res.id,
               Day: res.day,
@@ -674,10 +681,13 @@ export class DoctorProfileComponent implements OnInit {
                 }
               });
             },
-            error: (err) => {
+            error: (error) => {
+              let err = '';
+              if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+              if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
               Swal.fire({
                 title: 'Error',
-                text: `There was an error editing the reservation: ${err.error?.Errors[0] || err.error.ErrorMessage || 'Please try again later.'}`,
+                text: `There was an error updating the reservation: ${err + 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
@@ -696,10 +706,13 @@ export class DoctorProfileComponent implements OnInit {
               this.doctor!.reservations = this.sortReservationsByTime(this.doctor!.reservations!);
               // this.generateCalendarView(this.currentView, this.viewDate);
             },
-            error: (err) => {
+            error: (error) => {
+              let err = '';
+              if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+              if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
               Swal.fire({
                 title: 'Error',
-                text: `There was an error deleting the reservation: ${err.error?.Errors[0] || 'Please try again later.'}`,
+                text: `There was an error deleting the reservation: ${err + 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
@@ -708,9 +721,12 @@ export class DoctorProfileComponent implements OnInit {
         }
       },
       error: (error) => {
+        let err = '';
+        if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+        if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
         Swal.fire({
           title: 'Error',
-          text: 'There was an error editing the reservation. Please try again later.',
+          text: `There was an error processing your request: ${err + 'Please try again later.'}`,
           icon: 'error',
           confirmButtonText: 'OK'
         });
@@ -722,43 +738,73 @@ export class DoctorProfileComponent implements OnInit {
   }
   drop(event: CdkDragDrop<Reservation[] | undefined>, date: Date, slot?: string): void {
     if (this.doctor?.reservations.some(res => res.date.getDate() === date.getDate())) {
+      console.log(date.getDate(), this.doctor?.reservations);
+
+      this.load = false;
       Swal.fire({
         title: 'Error',
         text: 'You can only have one reservation per day',
         icon: 'error',
         confirmButtonText: 'OK'
       });
+      this.generateCalendarView(this.currentView, this.viewDate);
+      this.load = true;
+    }
+    else if (date < new Date()) {
+      this.load = false;
+      Swal.fire({
+        title: 'Error',
+        text: 'You cannot book a reservation in the past',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      this.generateCalendarView(this.currentView, this.viewDate);
+      this.load = true;
     }
     else {
       const reservation = event.item.data as Reservation;
-      reservation.date = date
-      if (slot) {
-        reservation.time = slot;
-      }
       const updatedReservation = {
         resID: reservation.id,
-        date: reservation.date,
-        startTime: reservation.time?.split(' : ')[0],
-        endTime: reservation.time?.split(' : ')[1],
+        date: date,
+        startTime: slot ? slot?.split(' : ')[0] : reservation.time?.split(' : ')[0],
+        endTime: slot ? slot?.split(' : ')[1] : reservation.time?.split(' : ')[1],
         maxRes: reservation.maxAppoinments,
         doctorId: this.doctor?.id
       };
       updatedReservation.date.setDate(updatedReservation.date.getDate() + 1);
-      this.doctorService.editReservation(updatedReservation).subscribe(() => {
-        Swal.fire({
-          title: 'Success',
-          text: 'Reservation updated successfully',
-          icon: 'success',
-          confirmButtonText: 'OK'
-        });
-        if (this.doctor) {
-          updatedReservation.date.setDate(updatedReservation.date.getDate() - 1);
-          this.doctor.reservations = this.doctor.reservations?.map(res => res.id === reservation.id ? { ...res, date: updatedReservation.date, time: reservation.time } : res);
-          this.doctor.reservations = this.sortReservationsByTime(this.doctor.reservations!);
+      this.doctorService.editReservation(updatedReservation).subscribe({
+        next: () => {
+          Swal.fire({
+            title: 'Success',
+            text: 'Reservation updated successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          if (this.doctor) {
+            updatedReservation.date.setDate(updatedReservation.date.getDate() - 1);
+            this.doctor.reservations = this.doctor.reservations?.map(res => res.id === reservation.id ? { ...res, date: updatedReservation.date, time: reservation.time } : res);
+            this.doctor.reservations = this.sortReservationsByTime(this.doctor.reservations!);
+          }
+          this.generateCalendarView(this.currentView, this.viewDate);
+          this.load = true;
+        }
+        ,
+        error: (error) => {
+          this.load = false;
+          let err = '';
+          if (error.error?.ErrorMessage) { err += error.error.ErrorMessage }
+          if (error.error?.Errors && error.error.Errors.length > 0) { err += `: ${error.error.Errors[0]}, ` }
+          this.generateCalendarView(this.currentView, this.viewDate);
+          this.load = true;
+          Swal.fire({
+            title: 'Error',
+            text: `There was an errror updating the reservation: ${err + 'Please try again later.'}`,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
         }
       });
     }
-    this.generateCalendarView(this.currentView, this.viewDate);
   }
   getReservationsForDateTime(date: Date, time: string): Reservation[] {
     if (!this.doctor || !this.doctor.reservations) return [];
