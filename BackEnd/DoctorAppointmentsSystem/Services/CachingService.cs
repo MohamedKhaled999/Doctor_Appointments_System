@@ -14,5 +14,12 @@ public class CachingService : ICachingService
         => _redisRepo.GetItem(key);
 
     public void SetCachedValue(string key, object value, TimeSpan expirationTime)
-        => _redisRepo.SetItem(key, JsonSerializer.Serialize(value), expirationTime);
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        string json = JsonSerializer.Serialize(value, options);
+        _redisRepo.SetItem(key, json, expirationTime);
+    }
 }

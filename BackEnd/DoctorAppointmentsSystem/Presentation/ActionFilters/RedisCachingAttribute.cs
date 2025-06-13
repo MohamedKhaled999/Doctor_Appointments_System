@@ -1,10 +1,10 @@
-using System.Net;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Abstraction;
+using System.Net;
+using System.Text;
 
 namespace Presentation.Caching
 {
@@ -13,14 +13,14 @@ namespace Presentation.Caching
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var cachingService = context.HttpContext.RequestServices.GetRequiredService<IServiceManager>().CachingService;
-            string cacheKey = GenerateCashKey(context.HttpContext.Request);
+            string cacheKey = GenerateCachedKey(context.HttpContext.Request);
             var result = cachingService.GetCachedValue(cacheKey);
             if (result != null)
             {
                 context.Result = new ContentResult
                 {
                     Content = result,
-                    ContentType = "Application/Json",
+                    ContentType = "application/json",
                     StatusCode = (int)HttpStatusCode.OK
                 };
                 return;
@@ -30,22 +30,27 @@ namespace Presentation.Caching
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             var cachingService = context.HttpContext.RequestServices.GetRequiredService<IServiceManager>().CachingService;
-            string cacheKey = GenerateCashKey(context.HttpContext.Request);
+            string cacheKey = GenerateCachedKey(context.HttpContext.Request);
             if (context.Result is OkObjectResult okObject)
             {
                 cachingService.SetCachedValue(cacheKey, okObject.Value, TimeSpan.FromHours(1));
             }
         }
 
-        private string GenerateCashKey(HttpRequest request)
+        private string GenerateCachedKey(HttpRequest request)
         {
             var KeyBuilder = new StringBuilder();
             KeyBuilder.Append(request.Path);
+            if (request.Query.Any())
+                KeyBuilder.Append('?');
             foreach (var item in request.Query.OrderBy(q => q.Key))
             {
-                KeyBuilder.Append($"{item.Key}--{item.Value}");
+                if (item.Key == request.Query.OrderBy(q => q.Key).Last().Key)
+                    KeyBuilder.Append($"{item.Key}={item.Value}");
+                else
+                    KeyBuilder.Append($"{item.Key}={item.Value}&");
             }
-            return KeyBuilder.ToString();
+            return KeyBuilder.ToString().ToLower();
         }
     }
 }
