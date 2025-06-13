@@ -247,7 +247,7 @@ namespace Services.Orchestrators
 
         public async Task<DoctorReservationDTO> AddDoctorReservationAsync(NewResDTO reservation, int appUserId)
         {
-            if (reservation.Date <= DateTime.Now || reservation.Date - DateTime.Now >= TimeSpan.FromDays(14))
+            if (DateOnly.FromDateTime(reservation.Date) <= DateOnly.FromDateTime(DateTime.Now) || reservation.Date - DateTime.Now >= TimeSpan.FromDays(14))
                 throw new ValidationException(["Can't add reservation on this day"]);
             if (reservation.EndTime - reservation.StartTime < TimeSpan.FromMinutes(30))
                 throw new ValidationException(["End time must be after start time by 30 minutes at minimum"]);
