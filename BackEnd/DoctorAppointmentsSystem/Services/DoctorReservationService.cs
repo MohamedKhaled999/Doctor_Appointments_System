@@ -26,7 +26,7 @@ namespace Services
 
         public bool IsVacantDay(DateOnly day, int doctorId)
         {
-            var specs = new SpecificationsBase<DoctorReservation>(d => DateOnly.FromDateTime(d.StartTime) == day && d.DoctorId == doctorId);
+            var specs = new SpecificationsBase<DoctorReservation>(d => DateOnly.FromDateTime(d.StartTime) == day && d.DoctorID == doctorId);
             var reservationCount = _unitOfWork.GetRepository<DoctorReservation, int>().GetCount(specs);
             return reservationCount == 0;
         }
