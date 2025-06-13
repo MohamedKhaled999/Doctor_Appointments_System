@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using Services.Abstraction;
+﻿using Services.Abstraction;
 using Shared.Caching;
 using StackExchange.Redis;
 
 namespace Services
 {
-    internal class RedisRepo : IRedisRepo
+    public class RedisRepo : IRedisRepo
     {
         private readonly IDatabase _database;
         private readonly IServer _server;

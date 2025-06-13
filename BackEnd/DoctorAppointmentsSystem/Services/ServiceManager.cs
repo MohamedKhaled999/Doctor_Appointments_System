@@ -13,7 +13,6 @@ using Services.Abstraction.Orchestrators;
 using Services.Notifications;
 using Services.Orchestrators;
 using Shared.Authentication;
-using Shared.Caching;
 
 namespace Services
 {
@@ -54,7 +53,10 @@ namespace Services
                               IOptions<JWTOptions> options,
                               IConfiguration configuration,
                               IWebHostEnvironment environment,
-                              IServiceProvider serviceProvider)
+                              IServiceProvider serviceProvider,
+                              IRedisCacheConnection redisCache,
+                              IRedisNotificationConnection redisNotification
+            )
 
         {
             _homeService = new Lazy<IHomeService>(() => new HomeService(unitOfWork, mapper));
@@ -78,11 +80,11 @@ namespace Services
             _environment = environment;
             _uploadService = new Lazy<IUploadService>(() => new UploadService(_environment));
 
-            _notificationService = new Lazy<INotificationService>(() => new NotificationService(new RedisRepo(configuration.GetSection("NotificationSettings").Get<RedisOptions>()), new NotificationSender(serviceProvider.GetRequiredService<IHubContext<NotificationHub>>())));
+            _notificationService = new Lazy<INotificationService>(() => new NotificationService(redisNotification, new NotificationSender(serviceProvider.GetRequiredService<IHubContext<NotificationHub>>())));
 
             _adminOrchestrator = new Lazy<IAdminOrchestrator>(() => new AdminOrchestrator(unitOfWork, this));
 
-            _cachingService = new Lazy<ICachingService>(() => new CachingService(new RedisRepo(configuration.GetSection("CachingSettings").Get<RedisOptions>())));
+            _cachingService = new Lazy<ICachingService>(() => new CachingService(redisCache));
 
             _authenticationService = new Lazy<IAuthenticationService>(() =>
             new AuthenticationService(userManager,

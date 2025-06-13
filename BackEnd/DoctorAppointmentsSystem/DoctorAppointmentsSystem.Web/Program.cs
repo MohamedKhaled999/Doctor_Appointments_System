@@ -14,6 +14,7 @@ using Services;
 using Services.Abstraction;
 using Services.Notifications;
 using Shared.Authentication;
+using Shared.Caching;
 using System.Text;
 
 namespace DoctorAppointmentsSystem.Web
@@ -52,6 +53,39 @@ namespace DoctorAppointmentsSystem.Web
             {
                 op.InvalidModelStateResponseFactory = ApiResponseFactory.CustomValidationErrors;
             });
+
+            //redis
+            #region Redis
+            //var redisOptions = builder.Configuration.GetSection("NotificationSettings").Get<RedisOptions>();
+
+            //builder.Services.AddSingleton<IConnectionMultiplexer>(
+            //ConnectionMultiplexer.Connect(new ConfigurationOptions
+            //{
+            //    EndPoints = {
+            //                  { redisOptions.Host, int.Parse(redisOptions.Port) }
+            //                },
+            //    User = redisOptions.User,
+            //    Password = redisOptions.Password,
+            //    AbortOnConnectFail = false
+            //}
+            //                   )
+            //                  );
+
+
+            builder.Services.AddSingleton<IRedisNotificationConnection>(sp =>
+            {
+                var opts = builder.Configuration.GetSection("NotificationSettings").Get<RedisOptions>();
+
+                return new RedisNotificationConnection(opts);
+            });
+
+            builder.Services.AddSingleton<IRedisCacheConnection>(sp =>
+            {
+                var opts = builder.Configuration.GetSection("CachingSettings").Get<RedisOptions>();
+                return new RedisCacheConnection(opts);
+            });
+            #endregion
+
 
             #region Identity
             builder.Services.AddIdentity<AppUser, IdentityRole<int>>(op =>
