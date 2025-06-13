@@ -85,7 +85,7 @@ namespace Presentation.Controllers
         [TypeFilter(typeof(ApprovedDoctorFilter))]
         public async Task<IActionResult> DeletePrescription(int reservationId, int appointmentId)
         {
-            await _serviceManager.AppointmentOrchestrator.DeleteAppointmentPrescription(reservationId, appointmentId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            await _serviceManager.AppointmentOrchestrator.DeleteAppointmentPrescription(appointmentId, reservationId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return NoContent();
         }
     }
