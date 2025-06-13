@@ -51,7 +51,13 @@ export class OverviewComponent implements OnChanges {
   }
    // Pie
   public pieChartOptions: ChartOptions<'pie'> = {
-    responsive: false,
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'right',
+      },
+    }
   };
   public pieChartLabels = ['Download Sales', 'In-Store Sales', 'Mail Sales'];
   public pieChartDatasets = [ {
@@ -74,6 +80,7 @@ export class OverviewComponent implements OnChanges {
 
   public barChartOptions: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
+    maintainAspectRatio: false,
   };
 
   // Line
@@ -91,7 +98,8 @@ export class OverviewComponent implements OnChanges {
   ]
 };
   public lineChartOptions: ChartOptions<'line'> = {
-    responsive: false
+    responsive: true,
+    maintainAspectRatio: false,
   };
   public lineChartLegend = true;
 

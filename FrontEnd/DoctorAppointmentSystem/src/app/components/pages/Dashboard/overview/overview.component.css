@@ -1,3 +1,6 @@
+*{
+  /* border: red solid 1px; */
+}
 .dashboard-overview {
       display: flex;
       flex-direction: column;
@@ -6,7 +9,7 @@
     
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
       gap: 1.5rem;
     }
     .stats-card:hover {
@@ -20,20 +23,11 @@
       gap: 1.5rem;
     }
     
-    .chart-container {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
-    }
-    .chart-container:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    }
     
-    .chart-container.full-width {
+    
+    /* .chart-container.full-width {
       grid-column: 1 / -1;
-    }
+    } */
     
     .chart-container h3 {
       font-size: 1.25rem;
@@ -49,7 +43,40 @@
       justify-content: center;
       background: #f8f9fa;
       border-radius: 0.25rem;
-    }
+    } 
+     /* Add this to your stylesheet */
+.chart-container {
+  transition: all 0.3s ease;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.chart-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Ensure canvas fills its container */
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Responsive height adjustments */
+@media (max-width: 768px) {
+  .chart-wrapper {
+    height: 250px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .chart-wrapper[style*="height:300px"] {
+    height: 320px !important;
+  }
+}
     /* canvas {
       display: block;
       width: 80% !important;

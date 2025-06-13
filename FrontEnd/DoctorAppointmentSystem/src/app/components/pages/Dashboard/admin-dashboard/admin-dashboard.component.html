@@ -1,59 +1,97 @@
 <div class="dashboard-container">
-  <app-side-nav 
-    [activeSection]="activeSection" 
-    (sectionChange)="onSectionChange($event)">
-  </app-side-nav>
+  <div class="dashboard-layout">
+    
+    
 
-  <div class="main-content">
-  
-    <header class="dashboard-header">
-      <h2>{{ getSectionTitle() }}</h2>
-      <div class="header-time">
-        <span>🕒</span>
-        <span>Last updated: {{ getCurrentTime() }}</span>
-      </div>
-    </header>
+    <div class="main-content" [class.sidebar-expanded]="sidebarState === 'expanded'">
+      
+      <header class="dashboard-header bg-white shadow-sm sticky-top">
+        <div class="container-fluid px-3">
+          <div class="d-flex align-items-center py-2">
+            <!-- Offcanvas Toggle Button -->
+            <button class="btn btn-link p-1 me-2" 
+                    type="button" 
+                    data-bs-toggle="offcanvas" 
+                    data-bs-target="#dashboardSidebar"
+                    aria-controls="dashboardSidebar">
+              <i class="fas fa-bars fs-4"></i>
+            </button>
 
-    <main class="dashboard-main">
-      <!-- Loading Spinner -->
-      <div *ngIf="isLoading" class="loading-spinner">
-        <p>Loading dashboard data...</p>
-        <!-- Add a spinner here (e.g., Angular Material or custom CSS) -->
-      </div>
+            <h2 class="h4 mb-0 flex-grow-1">{{ getSectionTitle() }}</h2>
 
-      <!-- Content when data is loaded -->
-      <ng-container *ngIf="!isLoading && dashboardData">
-        <app-overview 
-          *ngIf="activeSection === 'overview'" 
-          [data]="dashboardData">
-        </app-overview>
+            <div class="header-time text-muted small">
+              <!-- <i class="far fa-clock me-1"></i> -->
+                <span>🕒</span>
+            
+              <span>Last updated: {{ getCurrentTime() }}</span>
+            </div>
+          </div>
+        </div>
+      </header>
 
-        <app-dashboard-appoiments 
-          *ngIf="activeSection === 'appointments'" 
-          [data]="dashboardData">
-        </app-dashboard-appoiments>
+<!-- Offcanvas Sidebar -->
+<div class="offcanvas offcanvas-end" 
+     tabindex="-1" 
+     id="dashboardSidebar" 
+     aria-labelledby="dashboardSidebarLabel"
+     [class.show]="sidebarOpen">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title" id="dashboardSidebarLabel">DocNet</h5>
+    <button type="button" 
+            class="btn-close" 
+            data-bs-dismiss="offcanvas" 
+            aria-label="Close"
+            (click)="toggleSidebar()"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <app-side-nav 
+      [activeSection]="activeSection" 
+      (sectionChange)="onSectionChange($event)">
+    </app-side-nav>
+  </div>
+</div>
 
-        <app-dashboard-doctors 
-          *ngIf="activeSection === 'doctors'" 
-          [data]="dashboardData">
-        </app-dashboard-doctors>
-
-        <!-- Placeholder components -->
-        <div *ngIf="activeSection === 'patients'" class="bg-white p-6 rounded-lg shadow-md">
-          <h3 class="text-lg font-semibold">Patients Management</h3>
-          <p class="text-gray-600 mt-2">Patient management interface would go here...</p>
+      <main class="dashboard-main">
+        <!-- Loading Spinner -->
+        <div *ngIf="isLoading" class="loading-spinner">
+          <p>Loading dashboard data...</p>
+          <!-- Add a spinner here (e.g., Angular Material or custom CSS) -->
         </div>
 
-        <div *ngIf="activeSection === 'revenue'" class="bg-white p-6 rounded-lg shadow-md">
-          <h3 class="text-lg font-semibold">Revenue Analytics</h3>
-          <p class="text-gray-600 mt-2">Detailed revenue analytics would go here...</p>
-        </div>
+        <!-- Content when data is loaded -->
+        <ng-container *ngIf="!isLoading && dashboardData">
+          <app-overview 
+            *ngIf="activeSection === 'overview'" 
+            [data]="dashboardData">
+          </app-overview>
 
-        <div *ngIf="activeSection === 'analytics'" class="bg-white p-6 rounded-lg shadow-md">
-          <h3 class="text-lg font-semibold">Advanced Analytics</h3>
-          <p class="text-gray-600 mt-2">Advanced analytics and reporting would go here...</p>
-        </div>
-      </ng-container>
-    </main>
+          <app-dashboard-appoiments 
+            *ngIf="activeSection === 'appointments'" 
+            [data]="dashboardData">
+          </app-dashboard-appoiments>
+
+          <app-dashboard-doctors 
+            *ngIf="activeSection === 'doctors'" 
+            [data]="dashboardData">
+          </app-dashboard-doctors>
+
+          <!-- Placeholder components -->
+          <div *ngIf="activeSection === 'patients'" class="section-card">
+            <h3 class="section-title">Patients Management</h3>
+            <p class="section-description">Patient management interface would go here...</p>
+          </div>
+
+          <div *ngIf="activeSection === 'revenue'" class="section-card">
+            <h3 class="section-title">Revenue Analytics</h3>
+            <p class="section-description">Detailed revenue analytics would go here...</p>
+          </div>
+
+          <div *ngIf="activeSection === 'analytics'" class="section-card">
+            <h3 class="section-title">Advanced Analytics</h3>
+            <p class="section-description">Advanced analytics and reporting would go here...</p>
+          </div>
+        </ng-container>
+      </main>
+    </div>
   </div>
 </div>

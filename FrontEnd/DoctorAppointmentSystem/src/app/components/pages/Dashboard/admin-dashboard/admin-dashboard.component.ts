@@ -6,13 +6,27 @@ import { DashboardData } from '../../../../core/interfaces/AdminDashboard.interf
 import { SideNavComponent } from '../side-nav/side-nav.component';
 import { DashboardAppoimentsComponent } from '../dashboard-appoiments/dashboard-appoiments.component';
 import { DashboardDoctorsComponent } from '../dashboard-doctors/dashboard-doctors.component';
+import { trigger, transition, style, animate } from '@angular/animations';
 @Component({
   selector: 'app-admin-dashboard',
   imports: [CommonModule,SideNavComponent,OverviewComponent,DashboardAppoimentsComponent,DashboardDoctorsComponent],
   templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.css'
+  styleUrl: './admin-dashboard.component.css',
+  animations: [
+    trigger('sidebarAnimation', [
+      transition('expanded <=> collapsed', [
+        animate('300ms ease-in-out')
+      ])
+    ])
+  ]
 })
 export class AdminDashboardComponent implements OnInit {
+  sidebarState: 'expanded' | 'collapsed' = 'expanded';
+  // ... rest of your existing properties
+
+  // toggleSidebar() {
+  //   this.sidebarState = this.sidebarState === 'expanded' ? 'collapsed' : 'expanded';
+  // }
   activeSection: string = 'overview';
   dashboardData: DashboardData | null = null; // Initialize as null
   isLoading: boolean = true; // Track loading state
@@ -57,4 +71,26 @@ export class AdminDashboardComponent implements OnInit {
   getCurrentTime(): string {
     return new Date().toLocaleString();
   }
+  sidebarOpen = false;
+
+toggleSidebar() {
+  this.sidebarOpen = !this.sidebarOpen;
+  
+  // Manually handle Bootstrap offcanvas for desktop
+  if (window.innerWidth >= 992) {
+    const sidebar = document.getElementById('dashboardSidebar');
+    sidebar?.classList.toggle('collapsed');
+  }
+}
+
+// Optional: Close sidebar when navigating on mobile
+// onSectionChange(section: string) {
+//   this.activeSection = section;
+//   if (window.innerWidth < 992) {
+//     this.sidebarOpen = false;
+//     const offcanvas = bootstrap.Offcanvas.getInstance('#dashboardSidebar');
+//     offcanvas?.hide();
+//   }
+// }
+  
 }
