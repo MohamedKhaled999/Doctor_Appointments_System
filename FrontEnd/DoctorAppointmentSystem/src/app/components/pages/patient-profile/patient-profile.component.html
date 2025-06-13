@@ -90,7 +90,7 @@
     <div id="patient-tab-2" class="row w-75 patient-appointments-container mx-auto shadow-sm rounded-4"  style="margin-bottom: 16px;"
         *ngIf="activeTab === 'appointments'">
         <swiper-container class="w-100 h-100 p-3 mx-auto position-relative" pagination="true"
-            pagination-clickable="true" slides-per-view="1" grid-rows="2" space-between="40">
+            pagination-clickable="true" slides-per-view="1" grid-rows="1" space-between="40">
             @if (patient?.appointments != null && patient?.appointments?.length != 0)
             {
             @for(appointment of patient?.appointments; track $index)

@@ -51,8 +51,17 @@
 .patient-appointment-card {
   background-image: linear-gradient(to right, #a2d9ff, #e0f7ff) !important;
 }
-
+.desktop-view {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+}
 @media(max-width: 768px) {
+  .mobile-view {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
   .patient-appointment-card {
     flex-direction: column !important;
     justify-content: flex-start !important;
