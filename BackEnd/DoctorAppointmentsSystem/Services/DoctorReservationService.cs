@@ -24,9 +24,9 @@ namespace Services
             return _mapper.Map<List<AppointmentReservationDTO>?>(appointments);
         }
 
-        public bool IsVacantDay(DateOnly day)
+        public bool IsVacantDay(DateOnly day, int doctorId)
         {
-            var specs = new SpecificationsBase<DoctorReservation>(d => DateOnly.FromDateTime(d.StartTime) == day);
+            var specs = new SpecificationsBase<DoctorReservation>(d => DateOnly.FromDateTime(d.StartTime) == day && d.DoctorId == doctorId);
             var reservationCount = _unitOfWork.GetRepository<DoctorReservation, int>().GetCount(specs);
             return reservationCount == 0;
         }
