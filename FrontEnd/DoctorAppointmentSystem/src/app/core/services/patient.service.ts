@@ -19,6 +19,9 @@ export class PatientService {
   addFilesToAppointment(appointmentId: number, formData: FormData): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/patient/appointments/docs?appointmentId=${appointmentId}`, formData);
   }
+  deleteFileFromAppointment(appointmentId: number, fileName: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/patient/appointments/docs?appointmentId=${appointmentId}&documentUrl=${fileName}`);
+  }
   getAppoinments(pageIndex: number, pageSize: number): Observable<Appointment[]> {
     return this.http.get<Appointment[]>(`${environment.apiUrl}/Patient/Appointments?pageIndex=${pageIndex}&pageSize=${pageSize}`);
   }

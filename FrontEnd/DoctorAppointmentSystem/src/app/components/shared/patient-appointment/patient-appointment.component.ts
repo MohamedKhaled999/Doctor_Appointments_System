@@ -41,8 +41,6 @@ export class PatientAppointmentComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         if (this.appointment) {
-          console.log('Cancelling appointment:', this.appointment.id);
-          
           this.patientService.cancelAppoinment(this.appointment.id).subscribe({
             next: () => {
               Swal.fire({
@@ -54,7 +52,6 @@ export class PatientAppointmentComponent {
               this.cancelAppointment.emit();
             },
             error: (error) => {
-              console.error('Error cancelling appointment:', error);
               Swal.fire({
                 icon: 'error',
                 title: 'Error cancelling appointment',
@@ -84,7 +81,6 @@ export class PatientAppointmentComponent {
     dialogRef.afterClosed().subscribe({
       next: (result) => {
         if (result) {
-          console.log(result);
           this.patientService.addReview(result).subscribe({
             next: () =>
               Swal.fire({
@@ -117,6 +113,10 @@ export class PatientAppointmentComponent {
         });
       }
     });
+  }
+  documentCounter(documents: string | undefined): number {
+    if (!documents) return 0;
+    return documents.split('||').length;
   }
   onFileSelected(event: Event) {
     this.fileErrors = null;
@@ -158,6 +158,7 @@ export class PatientAppointmentComponent {
               confirmButtonColor: '#004085'
             });
             this.selectedFiles = [];
+            this.cancelAppointment.emit();
           },
           error: (error) => {
             console.error('Error adding files:', error);
@@ -171,9 +172,25 @@ export class PatientAppointmentComponent {
           }
         });
     }
-    }
+  }
   }
   getPath(str: any): string {
     return str?.prescriptionUrl.split('.')[1] === 'pdf' ? 'documents' : 'images';
+  }
+  onDeleteDocument(appointmentId: number | undefined, documentName: string) {
+    if (appointmentId) {
+      this.patientService.deleteFileFromAppointment(appointmentId, documentName).subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Document deleted successfully',
+            color: '#004085',
+            confirmButtonColor: '#004085'
+          });
+          if (this.appointment?.documentUrls)
+            this.appointment.documentUrls = this.appointment?.documentUrls?.split('||').filter(url => url !== documentName).join('||')
+        }
+      })
+    }
   }
 }

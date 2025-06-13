@@ -260,7 +260,7 @@ export class DoctorEditComponent implements OnInit {
       error: (err) => {
         Swal.fire({
           title: 'Error',
-          text: `An error occurred while updating your profile: ${err.error.Errors[0] || 'Please try again later.'}`,
+          text: `An error occurred while updating your profile: ${err.error?.Errors[0] || 'Please try again later.'}`,
           icon: 'error',
           confirmButtonText: 'OK'
         });

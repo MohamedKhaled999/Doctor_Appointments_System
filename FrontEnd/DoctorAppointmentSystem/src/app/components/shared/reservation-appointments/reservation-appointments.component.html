@@ -26,12 +26,23 @@
             <p class="text-muted mb-1">No files attached</p>
           </div>
           <div class="col-12" *ngIf="this.isPast">
-            <label for="medicalFiles" class="form-label mb-2">Attach The Prescription (PDF, JPG, PNG, JPEG &lt;
-              5MB)</label>
-            <input id="medicalFiles" type="file" class="form-control mb-2"
-              (change)="onFileSelected($event, appointment)" [accept]="acceptedFileTypes" />
-            <div *ngIf="fileErrors" class="text-danger mb-2 mt-1">
-              <p *ngFor="let error of fileErrors">{{ error }}</p>
+            <div
+              *ngIf="appointment.prescriptionUrl != null && appointment.prescriptionUrl !== null">
+              <a [href]="`https://doc-net2.runasp.net/uploads/${appointment.prescriptionUrl.split('.')[1] === 'pdf' ? 'documents' : 'images'}/` + appointment?.prescriptionUrl"
+                target="_blank" class="text-decoration-none">
+                <i class="fas fa-file-alt me-1"></i> Prescription
+              </a>
+              <i class="fa-times" style="cursor: pointer; color: red; margin-left: 10px;"
+                title="delete prescription" (click)="onDeletePrescription(appointment.id)">Delete</i>
+            </div>
+            <div class="d-flex flex-column mt-2" *ngIf="appointment.prescriptionUrl == null">
+              <label for="medicalFiles" class="form-label mb-2">Attach The Prescription (PDF, JPG, PNG, JPEG &lt;
+                5MB)</label>
+              <input id="medicalFiles" type="file" class="form-control mb-2"
+                (change)="onFileSelected($event, appointment)" [accept]="acceptedFileTypes" />
+              <div *ngIf="fileErrors" class="text-danger mb-2 mt-1">
+                <p *ngFor="let error of fileErrors">{{ error }}</p>
+              </div>
             </div>
           </div>
         </div>

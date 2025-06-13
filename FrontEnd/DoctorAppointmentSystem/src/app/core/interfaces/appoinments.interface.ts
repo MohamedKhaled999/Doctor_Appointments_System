@@ -10,6 +10,7 @@ interface Appointment {
   files?: string[];
   prescriptionUrl?: string;
   doctorReservationID?: number;
+  documentUrls?: string;
 }
 
 export type { Appointment };

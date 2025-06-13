@@ -54,6 +54,13 @@ export class DoctorService {
   addPrescription(reservationId: number, appointmentId: number, prescription: any): Observable<void> {
     return this.http.post<void>(`${environment.apiUrl}/Doctor/reservations/prescription?reservationId=${reservationId}&appointmentId=${appointmentId}`, prescription);
   }
+  deletePrescription(reservationId: number, appointmentId: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/Doctor/reservations/prescription?reservationId=${reservationId}&appointmentId=${appointmentId}`).pipe(
+      catchError(error => {
+      throw error;
+      })
+    );
+  }
   getReviews(doctorId: number): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/Doctor/reviews?docID=${doctorId}&page=1&pageSize=50`);
   }

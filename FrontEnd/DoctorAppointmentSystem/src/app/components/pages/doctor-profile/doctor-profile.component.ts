@@ -338,7 +338,7 @@ export class DoctorProfileComponent implements OnInit {
             error: (err) => {
               Swal.fire({
                 title: 'Error',
-                text: `An error occurred while adding the reservation: ${err.error.ErrorMessage || err.error.Errors[0] || 'Please try again later.'}`,
+                text: `An error occurred while adding the reservation: ${err.error.ErrorMessage || err.error?.Errors[0] || 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
@@ -677,7 +677,7 @@ export class DoctorProfileComponent implements OnInit {
             error: (err) => {
               Swal.fire({
                 title: 'Error',
-                text: `There was an error editing the reservation: ${err.error.Errors[0] || err.error.ErrorMessage || 'Please try again later.'}`,
+                text: `There was an error editing the reservation: ${err.error?.Errors[0] || err.error.ErrorMessage || 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
@@ -699,7 +699,7 @@ export class DoctorProfileComponent implements OnInit {
             error: (err) => {
               Swal.fire({
                 title: 'Error',
-                text: `There was an error deleting the reservation: ${err.error.Errors[0] || 'Please try again later.'}`,
+                text: `There was an error deleting the reservation: ${err.error?.Errors[0] || 'Please try again later.'}`,
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
