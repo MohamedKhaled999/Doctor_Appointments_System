@@ -2,7 +2,7 @@
       <div class="chart-container">
         <h3>Appointment Status Distribution</h3>
         <div class="chart-placeholder">
-          <canvas baseChart style="width: 80% !important; height: 80% !important;"
+          <canvas baseChart 
                 [data]="barChartData"
                 [options]="barChartOptions"
                 [plugins]="barChartPlugins"
@@ -34,7 +34,7 @@
                 <td>
                   <span class="status-badge" 
                         [class.completed]="appointment.status === 'Completed'"
-                        [class.scheduled]="appointment.status === 'Scheduled'"
+                        [class.scheduled]="appointment.status === 'Pending'"
                         [class.cancelled]="appointment.status === 'Cancelled'"
                         [class.rescheduled]="appointment.status === 'Rescheduled'">
                     {{ appointment.status }}

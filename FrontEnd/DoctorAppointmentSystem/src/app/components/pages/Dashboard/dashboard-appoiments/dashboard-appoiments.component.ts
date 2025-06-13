@@ -42,5 +42,6 @@ export class DashboardAppoimentsComponent {
     
       public barChartOptions: ChartConfiguration<'bar'>['options'] = {
         responsive: true,
+        maintainAspectRatio: false,
       };
 }

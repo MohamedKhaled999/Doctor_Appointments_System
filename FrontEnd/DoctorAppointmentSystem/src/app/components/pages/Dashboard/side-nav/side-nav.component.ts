@@ -11,6 +11,9 @@ import { MenuItem } from '../../../../core/interfaces/AdminDashboard.interface';
 export class SideNavComponent {
   @Input() activeSection: string = 'overview';
   @Output() sectionChange = new EventEmitter<string>();
+  @Input() collapsed: boolean = false;
+
+  @Output() toggleCollapse = new EventEmitter<void>(); 
 
   menuItems: MenuItem[] = [
     { id: 'overview', label: 'Overview', icon: 'fa-activity' },
@@ -23,5 +26,8 @@ export class SideNavComponent {
 
   onMenuClick(sectionId: string): void {
     this.sectionChange.emit(sectionId);
+  }
+  onToggleCollapse() {
+    this.toggleCollapse.emit();
   }
 }

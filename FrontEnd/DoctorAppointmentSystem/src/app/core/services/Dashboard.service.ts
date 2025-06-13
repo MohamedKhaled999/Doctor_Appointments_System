@@ -30,6 +30,9 @@ export class DashboardService {
         console.error('Error fetching doctors:', error);
           throw error;
         })
-    );
+    );}
+    approveDoctor(doctorId: number): Observable<any> {
+    const url = `${this.apiUrl}/ApproveDoctor?doctorId=${doctorId}`;
+    return this.http.post(url, null); // POST request with no body
   }
 }
