@@ -24,9 +24,9 @@ namespace Services
             return _mapper.Map<List<AppointmentReservationDTO>?>(appointments);
         }
 
-        public bool IsVacantDay(DateOnly day)
+        public bool IsVacantDay(DateOnly day, int doctorId)
         {
-            var specs = new SpecificationsBase<DoctorReservation>(d => DateOnly.FromDateTime(d.StartTime) == day);
+            var specs = new SpecificationsBase<DoctorReservation>(d => DateOnly.FromDateTime(d.StartTime) == day && d.DoctorID == doctorId);
             var reservationCount = _unitOfWork.GetRepository<DoctorReservation, int>().GetCount(specs);
             return reservationCount == 0;
         }
@@ -45,7 +45,7 @@ namespace Services
         }
         public async Task AddDoctorReservation(NewResDTO res)
         {
-            if (!IsVacantDay(DateOnly.FromDateTime(res.Date)))
+            if (!IsVacantDay(DateOnly.FromDateTime(res.Date), res.DoctorID))
                 throw new ValidationException(["Can't have more than one reservation per day"]);
             DoctorReservation newReservation = _mapper.Map<DoctorReservation>(res);
             await _unitOfWork.GetRepository<DoctorReservation, int>().AddAsync(newReservation);
