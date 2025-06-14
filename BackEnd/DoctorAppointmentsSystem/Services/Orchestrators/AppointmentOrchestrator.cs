@@ -411,7 +411,7 @@ namespace Services.Orchestrators
             var email = new EmailDTO()
             {
                 To = patient.Email,
-                Template = MailTemplates.CancelAppointmentTemplate,
+                Template = MailTemplates.RescheduleAppointmentTemplate,
                 Subject = "Appointment Rescheduled",
                 Link = _configuration["FrontEnd:Url"],
             };
