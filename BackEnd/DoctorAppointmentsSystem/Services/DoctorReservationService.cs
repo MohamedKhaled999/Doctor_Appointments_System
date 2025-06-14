@@ -75,7 +75,7 @@ namespace Services
             if (DateOnly.FromDateTime(reservation.StartTime) == DateOnly.FromDateTime(DateTime.Now))
                 throw new ValidationException(["Can't edit today's reservation"]);
             if (DateOnly.FromDateTime(newReservation.Date) != DateOnly.FromDateTime(reservation.StartTime)
-                && !IsVacantDay(DateOnly.FromDateTime(newReservation.Date)))
+                && !IsVacantDay(DateOnly.FromDateTime(newReservation.Date), newReservation.DoctorID))
                 throw new ValidationException(["Can't have more than one reservation per day"]);
             if (newReservation.MaxRes < reservation.MaxReservation)
             {
