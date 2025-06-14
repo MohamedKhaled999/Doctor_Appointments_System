@@ -415,7 +415,7 @@ namespace Services.Orchestrators
                 Subject = "Appointment Rescheduled",
                 Link = _configuration["FrontEnd:Url"],
             };
-            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime.Date);
+            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime);
 
             var jobId = await _appointmentService.GetJobIdAsync(appointmentId);
             if (jobId != null)
