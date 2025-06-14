@@ -159,8 +159,6 @@ namespace Services.Orchestrators
                 throw new UnAuthorizedException("Access Denied");
 
             var appointment = await _appointmentService.GetByIdAsync(appointmentId);
-            if (appointment.StartTime < DateTime.Now)
-                throw new ValidationException(["Appointment date has already passed"]);
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
 
