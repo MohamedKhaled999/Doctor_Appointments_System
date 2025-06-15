@@ -5,12 +5,12 @@ import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-confirm-email',
-  imports:[CommonModule],
+  imports: [CommonModule],
   templateUrl: './confirm-email.component.html',
   styleUrls: ['./confirm-email.component.css']
 })
 export class ConfirmEmailComponent implements OnInit, OnDestroy {
-  duration = 5; 
+  duration = 5;
   counter = this.duration;
   private countdownInterval: any;
   isConfirmed = false;
@@ -20,7 +20,7 @@ export class ConfirmEmailComponent implements OnInit, OnDestroy {
     public router: Router,
     private route: ActivatedRoute,
     private accountService: AccountService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -34,7 +34,9 @@ export class ConfirmEmailComponent implements OnInit, OnDestroy {
         Swal.fire({
           title: 'Error',
           text: 'Invalid confirmation link',
-          icon: 'error'
+          icon: 'error',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         }).then(() => {
           this.router.navigate(['/register']);
         });
@@ -54,7 +56,9 @@ export class ConfirmEmailComponent implements OnInit, OnDestroy {
         Swal.fire({
           title: 'Error',
           text: err.message || 'Email confirmation failed',
-          icon: 'error'
+          icon: 'error',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         }).then(() => {
           this.router.navigate(['/register']);
         });
@@ -68,7 +72,7 @@ export class ConfirmEmailComponent implements OnInit, OnDestroy {
         this.counter--;
       } else {
         clearInterval(this.countdownInterval);
-        this.router.navigate(['/login']); 
+        this.router.navigate(['/login']);
       }
     }, 1000);
   }

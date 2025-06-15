@@ -103,7 +103,9 @@ export class LoginComponent {
           icon: 'warning',
           title: 'Login Error',
           text: errorMessage,
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         }).then(() => {
 
           this.loginForm.updateValueAndValidity();

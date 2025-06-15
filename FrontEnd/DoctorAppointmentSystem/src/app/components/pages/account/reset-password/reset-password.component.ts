@@ -42,15 +42,17 @@ export class ResetPasswordComponent {
     this.route.queryParams.subscribe(params => {
       this.email = params['email'] || '';
       this.token = params['token'] || '';
-      
+
       if (!this.email || !this.token) {
         console.log('Email:', this.email);
         console.log('Token:', this.token);
-     
+
         Swal.fire({
           title: 'Invalid Link',
           text: 'The reset password link is invalid or expired',
-          icon: 'error'
+          icon: 'error',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         }).then(() => {
           this.router.navigate(['/forgot-password']);
         });
@@ -61,7 +63,7 @@ export class ResetPasswordComponent {
   passwordMatchValidator(form: FormGroup) {
     const newPassword = form.get('newPassword')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
-    
+
     if (newPassword && confirmPassword && newPassword !== confirmPassword) {
       form.get('confirmPassword')?.setErrors({ mismatch: true });
       return { mismatch: true };
@@ -76,7 +78,7 @@ export class ResetPasswordComponent {
   onSubmit() {
     if (this.resetForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
-      
+
       const resetData: ResetPassword = {
         email: this.email,
         token: this.token,
@@ -89,7 +91,9 @@ export class ResetPasswordComponent {
             title: 'Success!',
             text: 'Your password has been reset successfully',
             icon: 'success',
-            confirmButtonText: 'Go to Login'
+            confirmButtonText: 'Go to Login',
+            color: "#004085",
+            confirmButtonColor: "#004085",
           }).then(() => {
             this.router.navigate(['/login']);
           });
@@ -99,7 +103,9 @@ export class ResetPasswordComponent {
           Swal.fire({
             title: 'Error!',
             text: err.message || 'Failed to reset password',
-            icon: 'error'
+            icon: 'error',
+            color: "#004085",
+            confirmButtonColor: "#004085",
           });
         }
       });

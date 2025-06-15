@@ -202,7 +202,9 @@ export class DoctorProfileComponent implements OnInit {
           title: 'Error!',
           text: 'You cannot go back more than one month from the current month.',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         });
         return;
       }
@@ -232,7 +234,9 @@ export class DoctorProfileComponent implements OnInit {
           title: 'Error!',
           text: 'You cannot go forward more than one month from the current month.',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         });
         return;
 
@@ -322,7 +326,9 @@ export class DoctorProfileComponent implements OnInit {
                 title: 'Success',
                 text: 'Reservation added successfully',
                 icon: 'success',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                color: "#004085",
+                confirmButtonColor: "#004085",
               });
               this.doctorService.getReservations(this.doctor!.id).subscribe(reservations => {
                 reservations.forEach(reservation => {
@@ -344,7 +350,9 @@ export class DoctorProfileComponent implements OnInit {
                 title: 'Error',
                 text: `There was an error adding the reservation: ${err + 'Please try again later.'}`,
                 icon: 'error',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                color: "#004085",
+                confirmButtonColor: "#004085",
               });
             }
           });
@@ -358,7 +366,9 @@ export class DoctorProfileComponent implements OnInit {
           title: 'Error',
           text: `There was an error processing your request: ${err + 'Please try again later.'}`,
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         });
       }
     });
@@ -613,7 +623,9 @@ export class DoctorProfileComponent implements OnInit {
         title: 'Error',
         text: 'File size must be less than 5MB and type must be JPEG or PNG.',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
+        color: "#004085",
+        confirmButtonColor: "#004085",
       });
       return;
     }
@@ -672,7 +684,9 @@ export class DoctorProfileComponent implements OnInit {
                 title: 'Success',
                 text: 'Reservation added successfully',
                 icon: 'success',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                color: "#004085",
+                confirmButtonColor: "#004085",
               });
               this.doctor?.reservations.forEach(res => {
                 if (res.id === newReservation.resID) {
@@ -689,7 +703,9 @@ export class DoctorProfileComponent implements OnInit {
                 title: 'Error',
                 text: `There was an error updating the reservation: ${err + 'Please try again later.'}`,
                 icon: 'error',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                color: "#004085",
+                confirmButtonColor: "#004085",
               });
             }
           });
@@ -700,7 +716,9 @@ export class DoctorProfileComponent implements OnInit {
                 title: 'Success',
                 text: 'Reservation deleted successfully',
                 icon: 'success',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                color: "#004085",
+                confirmButtonColor: "#004085",
               });
               this.doctor!.reservations = this.doctor!.reservations?.filter(res => res.id !== result.id);
               this.doctor!.reservations = this.sortReservationsByTime(this.doctor!.reservations!);
@@ -714,7 +732,9 @@ export class DoctorProfileComponent implements OnInit {
                 title: 'Error',
                 text: `There was an error deleting the reservation: ${err + 'Please try again later.'}`,
                 icon: 'error',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                color: "#004085",
+                confirmButtonColor: "#004085",
               });
             }
           });
@@ -728,7 +748,9 @@ export class DoctorProfileComponent implements OnInit {
           title: 'Error',
           text: `There was an error processing your request: ${err + 'Please try again later.'}`,
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         });
       }
     });
@@ -745,7 +767,9 @@ export class DoctorProfileComponent implements OnInit {
         title: 'Error',
         text: 'You can only have one reservation per day',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
+        color: "#004085",
+        confirmButtonColor: "#004085",
       });
       this.generateCalendarView(this.currentView, this.viewDate);
       this.load = true;
@@ -756,7 +780,9 @@ export class DoctorProfileComponent implements OnInit {
         title: 'Error',
         text: 'You cannot book a reservation in the past',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
+        color: "#004085",
+        confirmButtonColor: "#004085",
       });
       this.generateCalendarView(this.currentView, this.viewDate);
       this.load = true;
@@ -778,7 +804,9 @@ export class DoctorProfileComponent implements OnInit {
             title: 'Success',
             text: 'Reservation updated successfully',
             icon: 'success',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            color: "#004085",
+            confirmButtonColor: "#004085",
           });
           if (this.doctor) {
             updatedReservation.date.setDate(updatedReservation.date.getDate() - 1);
@@ -798,9 +826,11 @@ export class DoctorProfileComponent implements OnInit {
           this.load = true;
           Swal.fire({
             title: 'Error',
-            text: `There was an errror updating the reservation: ${err + 'Please try again later.'}`,
+            text: `There was an error updating the reservation: ${err + 'Please try again later.'}`,
             icon: 'error',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            color: "#004085",
+            confirmButtonColor: "#004085",
           });
         }
       });

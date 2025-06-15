@@ -13,7 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { log } from 'console';
 
 
-import {Register  } from "../../../../core/interfaces/register";
+import { Register } from "../../../../core/interfaces/register";
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-register',
@@ -25,11 +25,11 @@ import Swal from 'sweetalert2';
     ReactiveFormsModule,
     RouterLink
   ],
-  
+
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent  {
+export class RegisterComponent {
   registerForm: FormGroup;
   currentStep = 1;
   showPassword = false;
@@ -49,7 +49,7 @@ export class RegisterComponent  {
   ) {
     this.registerForm = this.fb.group(
       {
-    
+
         firstName: [
           '',
           [
@@ -73,8 +73,8 @@ export class RegisterComponent  {
           ]
         ],
         confirmPassword: ['', Validators.required],
-    
-      
+
+
         email: [
           '',
           [
@@ -82,7 +82,7 @@ export class RegisterComponent  {
             Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/)
           ]
         ]
-        
+
         ,
         phoneNumber: [
           '',
@@ -141,9 +141,9 @@ export class RegisterComponent  {
 
   onSubmit(): void {
     console.log("onSubmit called");
-    
+
     console.log("Register form submitted", this.registerForm.invalid);
-    
+
     // Check if the form is valid before proceeding
 
     if (this.registerForm.invalid) return;
@@ -173,8 +173,8 @@ export class RegisterComponent  {
 
       birthDate: new Date(formValue.dateOfBirth).toISOString().split('T')[0]
     };
-    
-    
+
+
     // const registerData = {
     //   firstName: formValue.firstName,
     //   lastName: formValue.lastName,
@@ -212,33 +212,38 @@ export class RegisterComponent  {
     //       }
     //     },
     //   });
-  
-  this.accountService.register(registerRequest).subscribe({
-    next: () => {
-      console.log('Registration successful from component');
-      Swal.fire({
-        icon: 'success',
-        title: 'Registration Successful!',
-        text: 'Your account has been created successfully',
-        confirmButtonText: 'OK'
-    })
-       
-    },
-    error: (error) => {
-        this.isLoading = false;
-        const errorMessage = error.error?.Errors || 
-                           error.error?.message || 
-                           (Array.isArray(error.error) ? error.error.join(', ') : 
-                           'Registration failed. Please try again');
-        
+
+    this.accountService.register(registerRequest).subscribe({
+      next: () => {
+        console.log('Registration successful from component');
         Swal.fire({
-            icon: 'warning',
-            title: 'Registration Error',
-            text: errorMessage,
-            confirmButtonText: 'OK'
+          icon: 'success',
+          title: 'Registration Successful!',
+          text: 'Your account has been created successfully',
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
+        })
+
+      },
+      error: (error) => {
+        this.isLoading = false;
+        const errorMessage = error.error?.Errors ||
+          error.error?.message ||
+          (Array.isArray(error.error) ? error.error.join(', ') :
+            'Registration failed. Please try again');
+
+        Swal.fire({
+          icon: 'warning',
+          title: 'Registration Error',
+          text: errorMessage,
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         });
-    }
-  });}
+      }
+    });
+  }
 
   togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
     if (field === 'password') {
@@ -261,6 +266,6 @@ export class RegisterComponent  {
   //     document.body.appendChild(script);
   //   }
   // }
- 
-  
+
+
 }

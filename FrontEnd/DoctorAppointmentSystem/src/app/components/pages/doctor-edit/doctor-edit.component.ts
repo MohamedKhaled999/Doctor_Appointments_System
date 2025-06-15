@@ -218,7 +218,9 @@ export class DoctorEditComponent implements OnInit {
         title: 'Error',
         text: 'Geolocation is not supported by this browser.',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
+        color: "#004085",
+        confirmButtonColor: "#004085",
       });
     }
   }
@@ -252,7 +254,9 @@ export class DoctorEditComponent implements OnInit {
           title: 'Success',
           text: 'Your profile has been updated successfully.',
           icon: 'success',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         }).then(() => {
           this.router.navigate(['/profile/doctor/']);
         });
@@ -265,7 +269,9 @@ export class DoctorEditComponent implements OnInit {
           title: 'Error',
           text: `Failed to update profile. ${err}`,
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         });
       }
     });

@@ -28,7 +28,7 @@ export class ChangePasswordComponent {
     private router: Router
   ) {
     this.changePasswordForm = this.fb.group({
-    
+
       oldPassword: ['', Validators.required],
       newPassword: ['', [
         Validators.required,
@@ -40,7 +40,7 @@ export class ChangePasswordComponent {
   }
 
   passwordMatchValidator(form: FormGroup) {
-    return form.get('newPassword')?.value === form.get('confirmPassword')?.value 
+    return form.get('newPassword')?.value === form.get('confirmPassword')?.value
       ? null : { mismatch: true };
   }
 
@@ -51,9 +51,9 @@ export class ChangePasswordComponent {
   onSubmit() {
     if (this.changePasswordForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
-      
+
       const formData = {
-  
+
         oldPassword: this.changePasswordForm.value.oldPassword,
         newPassword: this.changePasswordForm.value.newPassword
       };
@@ -67,20 +67,22 @@ export class ChangePasswordComponent {
             timer: 3000,
             timerProgressBar: true,
             icon: 'success',
-            title: 'Password changed successfully!'
+            title: 'Password changed successfully!',
+            color: "#004085",
+            confirmButtonColor: "#004085",
           });
           this.changePasswordForm.reset();
           this.isSubmitting = false;
         },
         error: (httpError) => {
           this.isSubmitting = false;
-          
-         
-          const errorObj = httpError.error; 
+
+
+          const errorObj = httpError.error;
           const errorMessage = errorObj?.ErrorMessage || 'Failed to change password';
-      
+
           console.error('Password change error:', httpError);
-      
+
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -88,7 +90,9 @@ export class ChangePasswordComponent {
             timer: 3000,
             timerProgressBar: true,
             icon: 'error',
-            title: errorMessage
+            title: errorMessage,
+            color: "#004085",
+            confirmButtonColor: "#004085",
           });
         }
       });

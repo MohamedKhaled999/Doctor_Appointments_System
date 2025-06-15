@@ -138,7 +138,9 @@ export class PatientProfileComponent implements OnInit {
           icon: 'success',
           title: 'Your profile has been updated!',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
+          color: "#004085",
+          confirmButtonColor: "#004085",
         });
       },
       error: (error) => {
@@ -149,7 +151,8 @@ export class PatientProfileComponent implements OnInit {
           icon: 'error',
           title: 'Oops...',
           text: `An error has occurred while updating your profile, please try again! ${err}`,
-          confirmButtonColor: '#004085'
+          confirmButtonColor: '#004085',
+          color: "#004085"
         });
       }
     });

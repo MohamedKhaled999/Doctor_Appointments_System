@@ -262,7 +262,9 @@ export class DoctorRegisterComponent implements AfterViewInit {
           Swal.fire({
             title: "Error",
             text: "Could not get your location.",
-            icon: "error"
+            icon: "error",
+            color: "#004085",
+            confirmButtonColor: "#004085",
           });
         },
         { enableHighAccuracy: true }
@@ -272,7 +274,9 @@ export class DoctorRegisterComponent implements AfterViewInit {
       Swal.fire({
         title: "Error",
         text: "Geolocation is not supported by this browser.",
-        icon: "error"
+        icon: "error",
+        color: "#004085",
+        confirmButtonColor: "#004085",
       });
     }
   }
@@ -325,7 +329,9 @@ export class DoctorRegisterComponent implements AfterViewInit {
           icon: 'success',
           title: 'Registration Successful!',
           text: 'Your account has been created successfully',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         })
 
       },
@@ -340,7 +346,9 @@ export class DoctorRegisterComponent implements AfterViewInit {
           icon: 'warning',
           title: 'Registration Error',
           text: errorMessage,
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          color: "#004085",
+          confirmButtonColor: "#004085",
         });
       }
     });
