@@ -10,6 +10,7 @@
   transition: width 0.3s ease;
   z-index: 1000;
   overflow-y: auto;
+  direction: rtl;
 }
 
 .dashboard-sidebar.collapsed {
@@ -47,7 +48,6 @@
   font-weight: bold;
   color: #0d6efd;
   margin: 0;
-  transition: all 0.3s ease;
 }
 
 .dashboard-sidebar.collapsed .sidebar-header h1 {
@@ -149,3 +149,19 @@
     transform: translateX(100%);
   }
 } */
+.nav-text-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.nav-text-icon:hover {
+  color: #ff6b6b;
+  transform: translateX(5px);
+}
+.nav-text-icon:hover i {
+  transform: translateX(3px);
+}

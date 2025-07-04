@@ -2,10 +2,11 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardData } from '../../../../core/interfaces/AdminDashboard.interface';
 import { DashboardService } from '../../../../core/services/Dashboard.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-doctors',
-  imports: [CommonModule],
+  imports: [CommonModule,RouterModule],
   templateUrl: './dashboard-doctors.component.html',
   styleUrl: './dashboard-doctors.component.css'
 })

@@ -31,7 +31,7 @@ namespace Services.Orchestrators
                 TotalAppointments = _unitOfWork.GetRepository<Appointment, int>().GetCount(),
                 MonthlyRevenue = (decimal)await GetMonthlyRevenue(DateTime.Now.Month),
                 GrowthRate = (decimal)await GetGrowthRate(),
-                AverageRating = await _serviceManager.ReviewService.GetAvgRatings()
+                AverageRating = Math.Round(await _serviceManager.ReviewService.GetAvgRatings(),2)
             };
 
         }
@@ -109,7 +109,7 @@ namespace Services.Orchestrators
                     Id = doctor.Id,
                     Name = $"{doctor.FirstName} {doctor.LastName}",
                     Specialty = doctor.Specialty.Name,
-                    Rating = (decimal)await _serviceManager.ReviewService.GetDoctorAverageRating(doctor.Id),
+                    Rating = (decimal)Math.Round(await _serviceManager.ReviewService.GetDoctorAverageRating(doctor.Id),2),
                     Appointments = _serviceManager.AppointmentService.GetDoctorAppointmentsCount(doctor.Id),
                     Revenue = (decimal)await _serviceManager.TransactionService.GetDoctorRevenue(doctor.Id)
                 });
@@ -142,7 +142,8 @@ namespace Services.Orchestrators
                     Doctor = $"{appointment.DoctorReservation.Doctor.FirstName} {appointment.DoctorReservation.Doctor.LastName}",
                     Date = appointment.DoctorReservation.StartTime.Date.ToShortDateString(),
                     Time = appointment.DoctorReservation.StartTime.ToShortTimeString(),
-                    Status = appointment.Canceled ? "Cancelled" : "Pending"
+                    Status = appointment.Canceled ? "Cancelled" : 
+                    (appointment.DoctorReservation.StartTime < DateTime.Now) ? "Completed" : "Pending"
                 });
             }
             return recentAppointments;

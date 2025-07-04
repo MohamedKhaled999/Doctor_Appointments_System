@@ -7,9 +7,10 @@ import { SideNavComponent } from '../side-nav/side-nav.component';
 import { DashboardAppoimentsComponent } from '../dashboard-appoiments/dashboard-appoiments.component';
 import { DashboardDoctorsComponent } from '../dashboard-doctors/dashboard-doctors.component';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { AddSpecialityDialogComponent } from '../add-speciality-dialog/add-speciality-dialog.component';
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [CommonModule,SideNavComponent,OverviewComponent,DashboardAppoimentsComponent,DashboardDoctorsComponent],
+  imports: [CommonModule,SideNavComponent,OverviewComponent,DashboardAppoimentsComponent,DashboardDoctorsComponent ,AddSpecialityDialogComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
   animations: [
@@ -61,6 +62,7 @@ export class AdminDashboardComponent implements OnInit {
       'overview': 'Dashboard Overview',
       'appointments': 'Appointments Management',
       'doctors': 'Doctors Management',
+      'speciality': 'Speciality Management',
       'patients': 'Patients Management',
       'revenue': 'Revenue Analytics',
       'analytics': 'Advanced Analytics'

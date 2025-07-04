@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartOptions, ChartConfiguration } from 'chart.js';
 import { DashboardData } from '../../../../core/interfaces/AdminDashboard.interface';
+import { Console } from 'node:console';
 
 @Component({
   selector: 'app-dashboard-appoiments',
@@ -26,7 +27,7 @@ export class DashboardAppoimentsComponent {
           { data: this.data?.appointmentStatus.map(x => x.count) || [],
             label: 'Appointments' }
         ]
-      };
+      };        
       }
       // Bar
       public barChartLegend = true;

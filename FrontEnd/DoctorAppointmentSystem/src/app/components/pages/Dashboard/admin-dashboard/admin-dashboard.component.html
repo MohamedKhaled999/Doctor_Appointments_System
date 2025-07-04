@@ -75,6 +75,10 @@
             [data]="dashboardData">
           </app-dashboard-doctors>
 
+          <app-add-speciality-dialog
+            *ngIf="activeSection === 'speciality'">
+          </app-add-speciality-dialog>
+
           <!-- Placeholder components -->
           <div *ngIf="activeSection === 'patients'" class="section-card">
             <h3 class="section-title">Patients Management</h3>
