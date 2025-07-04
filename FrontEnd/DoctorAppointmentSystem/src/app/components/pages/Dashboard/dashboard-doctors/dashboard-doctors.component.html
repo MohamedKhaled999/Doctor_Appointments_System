@@ -33,7 +33,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Specialty</th>
-                <th>About</th>
+                <th>Profile</th>
                 <th>Location</th>
                 <th>Approve</th>
               </tr>
@@ -45,8 +45,7 @@
                 <td >{{ doctor.specialty }}</td>
                 <!-- <td class="text-truncate text-nowrap" >{{ doctor.about.split(" ").slice(0,2).join(" ")+"..." }}</td> -->
                 <td [routerLink]="['/profile/doctor/'+doctor.id]" routerLinkActive="router-link-active" class="btn btn-primary text-decoration-none">
-                <i class="fas fa-user me-1"></i>
-                  Click here to see profile</td>
+                <i class="fas fa-user me-1"></i></td>
                 <td>{{ doctor.location }}</td>
                 <td><button class="btn btn-success" (click)="approve(doctor.id)">
                     <i class="fas fa-user-check me-1"></i>
