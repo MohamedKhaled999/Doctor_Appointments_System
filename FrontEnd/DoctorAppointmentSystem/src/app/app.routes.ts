@@ -50,19 +50,19 @@ export const routes: Routes = [
             path: 'patient',
             loadComponent: () => import('./components/pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent),
             title: 'Patient Profile',
-            canActivate: [authGuard,roleGuard(['patient'])]
+            canActivate: [authGuard, roleGuard(['patient'])]
           },
           {
             path: 'doctor',
             loadComponent: () => import('./components/pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
             title: 'Doctor Profile',
-            canActivate: [authGuard,roleGuard(['doctor'])]
+            canActivate: [authGuard, roleGuard(['doctor'])]
           },
           {
             path: 'doctor/edit',
             loadComponent: () => import('./components/pages/doctor-edit/doctor-edit.component').then(m => m.DoctorEditComponent),
             title: 'Edit Profile',
-            canActivate: [authGuard,roleGuard(['doctor'])]
+            canActivate: [authGuard, roleGuard(['doctor'])]
           },
           {
             path: 'doctor/:id',
@@ -144,7 +144,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
-    canActivate: [authGuard,roleGuard(['admin'])],
+    canActivate: [authGuard, roleGuard(['admin'])],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
