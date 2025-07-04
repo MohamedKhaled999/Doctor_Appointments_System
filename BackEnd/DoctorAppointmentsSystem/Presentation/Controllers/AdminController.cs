@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Caching;
 using Services.Abstraction;
 using Shared.DTOs.Doctor;
 
 namespace Presentation.Controllers
 {
-    //[Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     public class AdminController : ApiController
     {
         private readonly IServiceManager _serviceManager;
