@@ -12,10 +12,6 @@ namespace Services.Notifications
         public async Task SendNotificationAsync(int appUserId, string message)
         {
             await _hubContext.Clients.User(appUserId.ToString()).SendAsync("newNotification", message);
-            //if (NotificationHub.OnlineUsers.TryGetValue(appUserId, out var connectionId))
-            //{
-            //await _hubContext.Clients.Client(connectionId).SendAsync("newNotification", message);
-            //}
         }
     }
 }

@@ -22,7 +22,8 @@ namespace Services
 
         public async Task<AppointmentDTO?> GetByIdAsync(int id)
         {
-            var appointment = await _unitOfWork.GetRepository<Appointment, int>().GetByIdAsync(id);
+            var specs = new AppointmentDoctorSpecifications(a => a.Id == id);
+            var appointment = (await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(specs)).FirstOrDefault();
             if (appointment == null)
                 return null;
             return _mapper.Map<AppointmentDTO?>(appointment);
@@ -143,7 +144,7 @@ namespace Services
 
         public async Task<List<AppointmentDTO>?> GetByPatientAsync(int patientId, int pageIndex = 1, int pageSize = 20)
         {
-            var specs = new AppointmentPaginationSpecifications(a => a.PatientId == patientId &&a.Canceled == false, pageIndex, pageSize);
+            var specs = new AppointmentPaginationSpecifications(a => a.PatientId == patientId && a.Canceled == false, pageIndex, pageSize);
             var appointments = await _unitOfWork.GetRepository<Appointment, int>().GetAllAsync(specs);
             if (appointments == null)
                 return null;

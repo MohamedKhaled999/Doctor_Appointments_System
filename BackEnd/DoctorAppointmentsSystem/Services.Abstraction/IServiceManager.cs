@@ -19,8 +19,8 @@ namespace Services.Abstraction
         IAuthenticationService AuthenticationService { get; }
         IEmailService EmailService { get; }
         IUploadService UploadService { get; }
-        IRedisRepo RedisRepo { get; }
         INotificationService NotificationService { get; }
         IAdminOrchestrator AdminOrchestrator { get; }
+        ICachingService CachingService { get; }
     }
 }

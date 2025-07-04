@@ -14,6 +14,7 @@ using Services;
 using Services.Abstraction;
 using Services.Notifications;
 using Shared.Authentication;
+using Shared.Caching;
 using System.Text;
 
 namespace DoctorAppointmentsSystem.Web
@@ -31,8 +32,19 @@ namespace DoctorAppointmentsSystem.Web
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddCors(op => op.AddPolicy("allow",
-                op => op.WithOrigins(builder.Configuration["FrontEnd:Url"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
+            builder.Services.AddCors(op =>
+            {
+                op.AddPolicy("allow",
+                    op =>
+                    {
+                        op.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                    });
+                op.AddPolicy("signalR",
+                    op =>
+                    {
+                        op.WithOrigins(builder.Configuration["FrontEnd:Url"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                    });
+            });
 
             builder.Services.AddSignalR();
 
@@ -41,6 +53,38 @@ namespace DoctorAppointmentsSystem.Web
             {
                 op.InvalidModelStateResponseFactory = ApiResponseFactory.CustomValidationErrors;
             });
+
+            //redis
+            #region Redis
+            //var redisOptions = builder.Configuration.GetSection("NotificationSettings").Get<RedisOptions>();
+
+            //builder.Services.AddSingleton<IConnectionMultiplexer>(
+            //ConnectionMultiplexer.Connect(new ConfigurationOptions
+            //{
+            //    EndPoints = {
+            //                  { redisOptions.Host, int.Parse(redisOptions.Port) }
+            //                },
+            //    User = redisOptions.User,
+            //    Password = redisOptions.Password,
+            //    AbortOnConnectFail = false
+            //}
+            //                   )
+            //                  );
+
+
+            builder.Services.AddSingleton<IRedisNotificationConnection>(sp =>
+            {
+                var opts = builder.Configuration.GetSection("NotificationSettings").Get<RedisOptions>();
+
+                return new RedisNotificationConnection(opts);
+            });
+
+            builder.Services.AddSingleton<IRedisCacheConnection>(sp =>
+            {
+                var opts = builder.Configuration.GetSection("CachingSettings").Get<RedisOptions>();
+                return new RedisCacheConnection(opts);
+            });
+            #endregion
 
 
             #region Identity
@@ -161,7 +205,7 @@ namespace DoctorAppointmentsSystem.Web
             app.UseAuthorization();
 
             app.MapControllers();
-            app.MapHub<NotificationHub>("/hub");
+            app.MapHub<NotificationHub>("/hub").RequireCors("signalR");
 
             app.Run();
         }

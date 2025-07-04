@@ -39,10 +39,11 @@ namespace Services
 
         private readonly Lazy<IUploadService> _uploadService;
 
-        private readonly Lazy<IRedisRepo> _redisRepo;
         private readonly Lazy<INotificationService> _notificationService;
 
         private readonly Lazy<IAdminOrchestrator> _adminOrchestrator;
+
+        private readonly Lazy<ICachingService> _cachingService;
 
         private readonly IWebHostEnvironment _environment;
 
@@ -52,7 +53,10 @@ namespace Services
                               IOptions<JWTOptions> options,
                               IConfiguration configuration,
                               IWebHostEnvironment environment,
-                              IServiceProvider serviceProvider)
+                              IServiceProvider serviceProvider,
+                              IRedisCacheConnection redisCache,
+                              IRedisNotificationConnection redisNotification
+            )
 
         {
             _homeService = new Lazy<IHomeService>(() => new HomeService(unitOfWork, mapper));
@@ -76,10 +80,11 @@ namespace Services
             _environment = environment;
             _uploadService = new Lazy<IUploadService>(() => new UploadService(_environment));
 
-            _redisRepo = new Lazy<IRedisRepo>(() => new RedisRepo(configuration));
-            _notificationService = new Lazy<INotificationService>(() => new NotificationService(this, new NotificationSender(serviceProvider.GetRequiredService<IHubContext<NotificationHub>>())));
+            _notificationService = new Lazy<INotificationService>(() => new NotificationService(redisNotification, new NotificationSender(serviceProvider.GetRequiredService<IHubContext<NotificationHub>>())));
 
             _adminOrchestrator = new Lazy<IAdminOrchestrator>(() => new AdminOrchestrator(unitOfWork, this));
+
+            _cachingService = new Lazy<ICachingService>(() => new CachingService(redisCache));
 
             _authenticationService = new Lazy<IAuthenticationService>(() =>
             new AuthenticationService(userManager,
@@ -120,10 +125,10 @@ namespace Services
 
         public IUploadService UploadService => _uploadService.Value;
 
-        public IRedisRepo RedisRepo => _redisRepo.Value;
-
         public INotificationService NotificationService => _notificationService.Value;
 
         public IAdminOrchestrator AdminOrchestrator => _adminOrchestrator.Value;
+
+        public ICachingService CachingService => _cachingService.Value;
     }
 }

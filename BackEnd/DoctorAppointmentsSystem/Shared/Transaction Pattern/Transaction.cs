@@ -14,24 +14,31 @@ namespace Shared.Transaction_Pattern
         {
             try
             {
-                operation();          
-                _compensations.Push(compensation);  
+                operation();
+                _compensations.Push(compensation);
             }
-            catch
+            catch(Exception e)
             {
                 Compensate();        
-                throw;
+                throw e.InnerException;
             }
         }
 
-        public void Complete() => _compensations.Clear(); 
+        public void Complete() => _compensations.Clear();
 
         public void Compensate()
         {
             while (_compensations.Count > 0)
             {
                 var compensate = _compensations.Pop();
-                compensate();  
+                try
+                {
+                    compensate();
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
             }
         }
 

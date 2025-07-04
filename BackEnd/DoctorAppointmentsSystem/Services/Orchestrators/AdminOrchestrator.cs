@@ -1,14 +1,11 @@
 ﻿using Domain.Contracts;
 using Domain.Models;
 using Services.Abstraction;
+using Services.Abstraction.Notifications;
 using Services.Abstraction.Orchestrators;
 using Shared.DTOs.Admin_Dashboard;
 using Shared.DTOs.Doctor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Shared.Enums;
 
 namespace Services.Orchestrators
 {
@@ -16,7 +13,7 @@ namespace Services.Orchestrators
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IServiceManager _serviceManager;
-        public AdminOrchestrator(IUnitOfWork unitOfWork, IServiceManager serviceManager )
+        public AdminOrchestrator(IUnitOfWork unitOfWork, IServiceManager serviceManager)
         {
             _unitOfWork = unitOfWork;
             _serviceManager = serviceManager;
@@ -120,7 +117,7 @@ namespace Services.Orchestrators
         {
             var unApprovedDoctors = await _serviceManager.DoctorService.GetUnApprovedDoctors();
             return unApprovedDoctors;
-            
+
         }
         public async Task<List<RecentAppointmentDTO>> GetRecentAppointmentsAsync()
         {
@@ -195,13 +192,19 @@ namespace Services.Orchestrators
             if (previousMonthRevenue == 0)
                 return currentMonthRevenue; // Avoid division by zero
 
-            return ((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100;
+            return (currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue * 100;
 
         }
-        //private string GetMonthName(int monthNumber)
-        //{
-        //    return new DateTime(DateTime.Now.Year, monthNumber, 1).ToString("MMMM");
-        //}
-
+        public async Task ApproveDoctor(int docID)
+        {
+            await _serviceManager.DoctorService.ApproveDoctor(docID);
+            var doctorAppUserId = await _serviceManager.DoctorService.GetAppUserIdAsync(docID);
+            var notification = new NotificationMessage
+            {
+                EventType = NotificationEvents.Doctor_Approved,
+                Message = "Your account has been approved and you can now manage your reservations."
+            };
+            await _serviceManager.NotificationService.SendNotification(doctorAppUserId, notification);
+        }
     }
 }

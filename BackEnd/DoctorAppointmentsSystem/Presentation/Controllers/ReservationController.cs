@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
+using Presentation.Caching;
 using Services.Abstraction;
 using Shared.DTOs.DoctorReservation;
 using System.Security.Claims;
@@ -16,6 +17,7 @@ namespace Presentation.Controllers
         public ReservationController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
         [HttpGet]
+        // [RedisCaching]
         public async Task<IActionResult> GetReservations(int doctorId = 0)
         {
             List<DoctorReservationDTO>? reservations;
@@ -32,6 +34,7 @@ namespace Presentation.Controllers
         [HttpGet("appointments")]
         [Authorize(Roles = "doctor")]
         [TypeFilter(typeof(ApprovedDoctorFilter))]
+        // [RedisCaching]
         public async Task<IActionResult> GetAppointments(int reservationId)
         {
             var appointments = await _serviceManager.AppointmentOrchestrator.GetAppointmentsByReservationId(reservationId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
@@ -82,7 +85,7 @@ namespace Presentation.Controllers
         [TypeFilter(typeof(ApprovedDoctorFilter))]
         public async Task<IActionResult> DeletePrescription(int reservationId, int appointmentId)
         {
-            await _serviceManager.AppointmentOrchestrator.DeleteAppointmentPrescription(reservationId, appointmentId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            await _serviceManager.AppointmentOrchestrator.DeleteAppointmentPrescription(appointmentId, reservationId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return NoContent();
         }
     }

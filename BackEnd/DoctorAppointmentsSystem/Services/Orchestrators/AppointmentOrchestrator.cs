@@ -159,8 +159,6 @@ namespace Services.Orchestrators
                 throw new UnAuthorizedException("Access Denied");
 
             var appointment = await _appointmentService.GetByIdAsync(appointmentId);
-            if (appointment.StartTime < DateTime.Now)
-                throw new ValidationException(["Appointment date has already passed"]);
             if (appointment == null)
                 throw new ArgumentNullException($"Appointment with ID {appointment} doesn't exist");
 
@@ -247,7 +245,7 @@ namespace Services.Orchestrators
 
         public async Task<DoctorReservationDTO> AddDoctorReservationAsync(NewResDTO reservation, int appUserId)
         {
-            if (reservation.Date <= DateTime.Now || reservation.Date - DateTime.Now >= TimeSpan.FromDays(14))
+            if (DateOnly.FromDateTime(reservation.Date) <= DateOnly.FromDateTime(DateTime.Now) || reservation.Date - DateTime.Now >= TimeSpan.FromDays(14))
                 throw new ValidationException(["Can't add reservation on this day"]);
             if (reservation.EndTime - reservation.StartTime < TimeSpan.FromMinutes(30))
                 throw new ValidationException(["End time must be after start time by 30 minutes at minimum"]);
@@ -320,7 +318,7 @@ namespace Services.Orchestrators
                 Subject = "Appointment Canceled",
                 Link = _configuration["FrontEnd:Url"],
             };
-            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime.Date, remainingTime >= TimeSpan.FromHours(48));
+            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime, remainingTime >= TimeSpan.FromHours(48));
 
             var notification = new NotificationMessage()
             {
@@ -411,11 +409,11 @@ namespace Services.Orchestrators
             var email = new EmailDTO()
             {
                 To = patient.Email,
-                Template = MailTemplates.CancelAppointmentTemplate,
+                Template = MailTemplates.RescheduleAppointmentTemplate,
                 Subject = "Appointment Rescheduled",
                 Link = _configuration["FrontEnd:Url"],
             };
-            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime.Date);
+            _emailService.SendEmail(email, $"{patient.FirstName} {patient.LastName}", appointment.StartTime);
 
             var jobId = await _appointmentService.GetJobIdAsync(appointmentId);
             if (jobId != null)
