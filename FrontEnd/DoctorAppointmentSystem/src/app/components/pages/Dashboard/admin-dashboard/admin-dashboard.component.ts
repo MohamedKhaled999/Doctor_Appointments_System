@@ -10,7 +10,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { AddSpecialityDialogComponent } from '../add-speciality-dialog/add-speciality-dialog.component';
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [CommonModule,SideNavComponent,OverviewComponent,DashboardAppoimentsComponent,DashboardDoctorsComponent ,AddSpecialityDialogComponent],
+  imports: [CommonModule, SideNavComponent, OverviewComponent, DashboardAppoimentsComponent, DashboardDoctorsComponent, AddSpecialityDialogComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
   animations: [
@@ -22,6 +22,7 @@ import { AddSpecialityDialogComponent } from '../add-speciality-dialog/add-speci
   ]
 })
 export class AdminDashboardComponent implements OnInit {
+  currentTime = new Date().toLocaleString();
   sidebarState: 'expanded' | 'collapsed' = 'expanded';
   // ... rest of your existing properties
 
@@ -32,7 +33,7 @@ export class AdminDashboardComponent implements OnInit {
   dashboardData: DashboardData | null = null; // Initialize as null
   isLoading: boolean = true; // Track loading state
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -70,29 +71,26 @@ export class AdminDashboardComponent implements OnInit {
     return titles[this.activeSection] || 'Dashboard';
   }
 
-  getCurrentTime(): string {
-    return new Date().toLocaleString();
-  }
   sidebarOpen = false;
 
-toggleSidebar() {
-  this.sidebarOpen = !this.sidebarOpen;
-  
-  // Manually handle Bootstrap offcanvas for desktop
-  if (window.innerWidth >= 992) {
-    const sidebar = document.getElementById('dashboardSidebar');
-    sidebar?.classList.toggle('collapsed');
-  }
-}
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
 
-// Optional: Close sidebar when navigating on mobile
-// onSectionChange(section: string) {
-//   this.activeSection = section;
-//   if (window.innerWidth < 992) {
-//     this.sidebarOpen = false;
-//     const offcanvas = bootstrap.Offcanvas.getInstance('#dashboardSidebar');
-//     offcanvas?.hide();
-//   }
-// }
-  
+    // Manually handle Bootstrap offcanvas for desktop
+    if (window.innerWidth >= 992) {
+      const sidebar = document.getElementById('dashboardSidebar');
+      sidebar?.classList.toggle('collapsed');
+    }
+  }
+
+  // Optional: Close sidebar when navigating on mobile
+  // onSectionChange(section: string) {
+  //   this.activeSection = section;
+  //   if (window.innerWidth < 992) {
+  //     this.sidebarOpen = false;
+  //     const offcanvas = bootstrap.Offcanvas.getInstance('#dashboardSidebar');
+  //     offcanvas?.hide();
+  //   }
+  // }
+
 }

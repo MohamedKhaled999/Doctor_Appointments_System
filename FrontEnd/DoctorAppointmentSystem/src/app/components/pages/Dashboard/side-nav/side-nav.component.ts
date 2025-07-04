@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-side-nav',
-  imports: [CommonModule ,RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './side-nav.component.html',
   styleUrl: './side-nav.component.css'
 })
@@ -14,13 +14,13 @@ export class SideNavComponent {
   @Output() sectionChange = new EventEmitter<string>();
   @Input() collapsed: boolean = false;
 
-  @Output() toggleCollapse = new EventEmitter<void>(); 
+  @Output() toggleCollapse = new EventEmitter<void>();
 
   menuItems: MenuItem[] = [
     { id: 'overview', label: 'Overview', icon: 'fa-activity' },
     { id: 'appointments', label: 'Appointments', icon: 'fa-calendar' },
     { id: 'doctors', label: 'Doctors', icon: 'fa-user-check' },
-    { id: 'speciality', label: 'speciality', icon: 'fa-user-check' }
+    { id: 'speciality', label: 'New Speciality', icon: 'fa-user-check' }
     // { id: 'patients', label: 'Patients', icon: 'fa-users' },
     // { id: 'revenue', label: 'Revenue', icon: 'fa-dollar-sign' },
     // { id: 'analytics', label: 'Analytics', icon: 'fa-trending-up' }
