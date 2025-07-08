@@ -201,22 +201,6 @@ DocNet employs the **Onion Architecture** pattern:
 
 ---
 
-## 📂 Module Breakdown
-
-### Notifications Module
-
-* **SignalR Hub**: `/hubs/notifications`
-* **Client Subscription**: Angular service subscribes to live events
-* **Triggers**: Broadcast on booking, cancellation, reminders
-
-### Admin Analytics Module
-
-* **Controllers**: `AnalyticsController` exposes JSON endpoints
-* **UI**: Razor partial views with Chart.js (line, pie, bar charts)
-* **Data**: Aggregated via EF Core `GroupBy` and cached in Redis
-
----
-
 ## 📝 Contribution & Roadmap
 
 Contributions welcome via GitHub PRs!
