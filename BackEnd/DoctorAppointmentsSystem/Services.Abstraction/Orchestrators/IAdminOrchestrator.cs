@@ -18,6 +18,6 @@ namespace Services.Abstraction.Orchestrators
         Task<List<RecentAppointmentDTO>> GetRecentAppointmentsAsync();
         Task<DashboardDataDTO> GetDashboardDataAsync();
         Task AddSpecialty(NewSpecialtyDTO newSpecialty);
-
+        Task ApproveDoctor(int docID);
     }
 }

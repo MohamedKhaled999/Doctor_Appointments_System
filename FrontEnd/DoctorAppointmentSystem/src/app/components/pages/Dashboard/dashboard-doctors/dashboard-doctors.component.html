@@ -1,56 +1,63 @@
 <div class="doctors-view w-100" *ngIf="data">
-<div class="card w-100">
-        <h3>Top Performing Doctors</h3>
-        <div class="table-responsive">
-          <table class="table ">
-            <thead>
-              <tr>
-                <th>Doctor</th>
-                <th>Specialty</th>
-                <th>Rating</th>
-                <th>Appointments</th>
-                <th>Revenue</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let doctor of data.topDoctors">
-                <td>{{ doctor.name }}</td>
-                <td>{{ doctor.specialty }}</td>
-                <td>{{ doctor.rating }}</td>
-                <td>{{ doctor.appointments }}</td>
-                <td>${{ doctor.revenue }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="card">
-        <h3>UnApproved Doctors</h3>
-        <div class=" width:fit-content !important; table-responsive">
-          <table class="table width:fit-content !important;" *ngIf="data.unApprovedDoctor">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Specialty</th>
-                <th>About</th>
-                <th>Location</th>
-                <th>Approve</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let doctor of data.unApprovedDoctor">
-                <td>{{ doctor.id }}</td>
-                <td>{{ doctor.name }}</td>
-                <td >{{ doctor.specialty }}</td>
-                <td class="text-truncate text-nowrap" >{{ doctor.about.split(" ").slice(0,2).join(" ")+"..." }}</td>
-                <td>{{ doctor.location }}</td>
-                <td><button class="btn btn-success" (click)="approve(doctor.id)">
-                    <i class="fas fa-user-check me-1"></i>
-                </button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <div class="card w-100">
+    <h3>Top Performing Doctors</h3>
+    <div class="table-responsive">
+      <table class="table ">
+        <thead>
+          <tr>
+            <th>Doctor</th>
+            <th>Specialty</th>
+            <th>Rating</th>
+            <th>Appointments</th>
+            <th>Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let doctor of data.topDoctors">
+            <td>{{ doctor.name }}</td>
+            <td>{{ doctor.specialty }}</td>
+            <td>{{ doctor.rating }}</td>
+            <td>{{ doctor.appointments }}</td>
+            <td>${{ doctor.revenue }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h3>UnApproved Doctors</h3>
+    <div class=" width:fit-content !important; table-responsive">
+      <table class="table width:fit-content !important;" *ngIf="data.unApprovedDoctor">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Specialty</th>
+            <th>Profile</th>
+            <th>Location</th>
+            <th>Approve</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let doctor of data.unApprovedDoctor">
+            <td>{{ doctor.id }}</td>
+            <td>{{ doctor.name }}</td>
+            <td>{{ doctor.specialty }}</td>
+            <!-- <td class="text-truncate text-nowrap" >{{ doctor.about.split(" ").slice(0,2).join(" ")+"..." }}</td> -->
+            <td>
+              <a [routerLink]="['/profile/doctor/'+doctor.id]" class="btn border border-1 border-primary p-2">
+                <i class="fas fa-user me-1"></i>
+              </a>
+            </td>
+            <td>{{ doctor.location }}</td>
+            <td>
+              <button class="btn btn-success" (click)="approve(doctor.id)">
+                <i class="fas fa-user-check me-1"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

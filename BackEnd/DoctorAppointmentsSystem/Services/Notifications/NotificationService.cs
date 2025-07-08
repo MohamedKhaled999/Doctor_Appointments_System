@@ -7,12 +7,13 @@ namespace Services.Notifications
 {
     internal class NotificationService : INotificationService
     {
+        private readonly TimeSpan expirationTime = TimeSpan.FromHours(3);
         private readonly IRedisRepo _redisRepo;
         private readonly INotificationSender _notificationSender;
 
-        public NotificationService(IServiceManager serviceManager, INotificationSender notificationSender)
+        public NotificationService(IRedisRepo redisRepo, INotificationSender notificationSender)
         {
-            _redisRepo = serviceManager.RedisRepo;
+            _redisRepo = redisRepo;
             _notificationSender = notificationSender;
         }
 
@@ -38,7 +39,7 @@ namespace Services.Notifications
             else
                 message.Id = int.Parse(userKeys.OrderBy(k => k).Last().Split("|")[1]) + 1;
             await _notificationSender.SendNotificationAsync(appUserId, JsonSerializer.Serialize(message));
-            _redisRepo.SetItem($"{appUserId}|{message.Id}", JsonSerializer.Serialize(message));
+            _redisRepo.SetItem($"{appUserId}|{message.Id}", JsonSerializer.Serialize(message), expirationTime);
         }
 
         public void MarkAsRead(int appUserId, long notificationId)
@@ -49,7 +50,7 @@ namespace Services.Notifications
 
             var deserializedMessage = JsonSerializer.Deserialize<NotificationMessage>(message);
             deserializedMessage.IsRead = true;
-            _redisRepo.SetItem($"{appUserId}|{notificationId}", JsonSerializer.Serialize(deserializedMessage));
+            _redisRepo.SetItem($"{appUserId}|{notificationId}", JsonSerializer.Serialize(deserializedMessage), expirationTime);
         }
     }
 }

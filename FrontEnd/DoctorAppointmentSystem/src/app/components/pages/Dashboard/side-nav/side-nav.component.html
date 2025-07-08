@@ -1,17 +1,13 @@
 <div class="dashboard-sidebar" [class.collapsed]="collapsed">
   <div class="sidebar-header">
-    <h1>DocNet</h1>
+    <h1>
+      <a routerLink="/home" class="nav-text-icon">DocNet</a>
+    </h1>
     <p *ngIf="!collapsed">Dashboard</p>
-    <!-- <button class="collapse-toggle" (click)="onToggleCollapse()">
-      <i class="fas" [class.fa-chevron-right]="collapsed" [class.fa-chevron-left]="!collapsed"></i>
-    </button> -->
   </div>
-  
+
   <nav class="sidebar-nav">
-    <button
-      *ngFor="let item of menuItems"
-      (click)="onMenuClick(item.id)"
-      [class.active]="activeSection === item.id"
+    <button *ngFor="let item of menuItems" (click)="onMenuClick(item.id)" [class.active]="activeSection === item.id"
       [attr.title]="collapsed ? item.label : null">
       <i class="{{ item.icon }}"></i>
       <span *ngIf="!collapsed">{{ item.label }}</span>

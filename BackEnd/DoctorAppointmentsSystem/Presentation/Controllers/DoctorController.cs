@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Caching;
 using Services.Abstraction;
 using Shared.DTOs.Doctor;
 using Shared.DTOs.Search;
@@ -10,10 +11,11 @@ namespace Presentation.Controllers
 {
     public class DoctorController : ApiController
     {
-        
+
         private readonly IServiceManager _serviceManager;
         public DoctorController(IServiceManager serviceManager) => _serviceManager = serviceManager;
         [HttpGet("Profile/{id:int}")]
+        // [RedisCaching]
         public async Task<IActionResult> GetDoctorProfile(int id)
         {
             var doctorProfile = await _serviceManager.DoctorService.DoctorProfile(id);
@@ -41,10 +43,11 @@ namespace Presentation.Controllers
         [Authorize(Roles = "doctor")]
         public async Task<IActionResult> UpdateDoctorImage(IFormFile Image)
         {
-            var ImgUrl = await _serviceManager.DoctorOrchestrator.ChangeProfileImage(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),Image);
+            var ImgUrl = await _serviceManager.DoctorOrchestrator.ChangeProfileImage(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), Image);
             return Ok(new { success = true, ImgUrl });
         }
         [HttpGet("search")]
+        // [RedisCaching]
         public async Task<IActionResult> SearchDoctors([FromQuery] FilterSearchDTO searchDTO)
         {
             var doctors = await _serviceManager.DoctorService.SearchPageDTO(searchDTO);

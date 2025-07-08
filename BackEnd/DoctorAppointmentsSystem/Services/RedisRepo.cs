@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Services.Abstraction;
+﻿using Services.Abstraction;
+using Shared.Caching;
 using StackExchange.Redis;
 
 namespace Services
 {
-    internal class RedisRepo : IRedisRepo
+    public class RedisRepo : IRedisRepo
     {
         private readonly IDatabase _database;
         private readonly IServer _server;
-        public RedisRepo(IConfiguration configuration)
+        public RedisRepo(RedisOptions options)
         {
             var mux = ConnectionMultiplexer.Connect(
                 new ConfigurationOptions
@@ -16,12 +16,12 @@ namespace Services
                     EndPoints =
                     {
                         {
-                            configuration["NotificationSettings:Host"],
-                            int.Parse(configuration["NotificationSettings:Port"])
+                            options.Host,
+                            int.Parse(options.Port)
                         }
                     },
-                    User = configuration["NotificationSettings:User"],
-                    Password = configuration["NotificationSettings:Password"],
+                    User = options.User,
+                    Password = options.Password,
                     AbortOnConnectFail = false
                 }
             );
@@ -29,8 +29,8 @@ namespace Services
             _database = mux.GetDatabase();
         }
 
-        public void SetItem(string key, string value)
-            => _database.StringSet(key, value, TimeSpan.FromHours(3));
+        public void SetItem(string key, string value, TimeSpan expirationTime)
+            => _database.StringSet(key, value, expirationTime);
 
         public string? GetItem(string key)
             => _database.StringGet(key);

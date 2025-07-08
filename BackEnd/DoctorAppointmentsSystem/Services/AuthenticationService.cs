@@ -113,7 +113,7 @@ namespace Services
                     var errors = result.Errors.Select(e => e.Description).ToList();
                     throw new ValidationException(errors);
                 }
-            },  () =>
+            }, () =>
             {
                 var todelete = userManager.FindByEmailAsync(user.Email).Result;
                 if (todelete != null)
@@ -139,7 +139,7 @@ namespace Services
             registerDto.AppUserID = user.Id;
             if (registerDto is DoctorRegisterDto doctor)
             {
-                transaction.Execute( () =>
+                transaction.Execute(() =>
                 {
                     doctorOrchestrator.RegisterDoctor(doctor).Wait();
                     userManager.AddToRoleAsync(user, "doctor").Wait();
@@ -157,7 +157,7 @@ namespace Services
             }
             else
             {
-                transaction.Execute( () =>
+                transaction.Execute(() =>
                 {
                     patientService.AddAsync(registerDto).Wait();
                     userManager.AddToRoleAsync(user, "patient").Wait();
@@ -248,11 +248,12 @@ namespace Services
         public async Task<string> ForgetPasswordAsync(ForgotPasswordDto forgetPasswordDTO)
         {
             var user = await userManager.FindByEmailAsync(forgetPasswordDTO.Email) ?? throw new NotFoundException("User Not Found!");
+            if (user.UserName != $"{forgetPasswordDTO.FirstName}DocNet{forgetPasswordDTO.LastName}DocNet{user.Email}")
+                throw new ValidationException(["Invalid User Data"]);
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
             byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
             var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
             var frontendUrl = configuration["FrontEnd:Url"];
-
 
             _emailService.SendEmail(new EmailDTO
             {

@@ -1,7 +1,7 @@
 // 
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient ,HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
 import { DashboardData } from '../interfaces/AdminDashboard.interface';
 
@@ -31,7 +31,21 @@ export class DashboardService {
           throw error;
         })
     );}
-    approveDoctor(doctorId: number): Observable<any> {
+  addSpeciality(name: string, description: string, photo?: File | null): Observable<any> {
+    const url = `${this.apiUrl}/AddSpeciality`;
+    const formData = new FormData();
+    if (photo) {
+      formData.append('Image', photo, photo.name);
+    }
+
+    // Set query parameters
+    const params = new HttpParams()
+      .set('Name', name)
+      .set('Description', description);
+
+    return this.http.post(url, formData, { params });
+  }
+  approveDoctor(doctorId: number): Observable<any> {
     const url = `${this.apiUrl}/ApproveDoctor?doctorId=${doctorId}`;
     return this.http.post(url, null); // POST request with no body
   }
