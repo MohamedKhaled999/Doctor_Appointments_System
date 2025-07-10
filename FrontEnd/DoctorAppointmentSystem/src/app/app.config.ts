@@ -1,35 +1,28 @@
 
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-
 import { provideAnimations } from '@angular/platform-browser/animations';
-
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-
-//import { provideCharts, withDefaultRegisterables,ng } from 'ng2-charts';
-
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { headerInterceptor } from './core/interceptors/header.interceptor';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { routes } from './app.routes';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FacebookLoginProvider, GoogleLoginProvider, MicrosoftLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
-import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-  provideZoneChangeDetection({ eventCoalescing: true }),
-  provideRouter(routes), provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch(), withInterceptors([headerInterceptor,loadingInterceptor])),
-  
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes, withEnabledBlockingInitialNavigation()), provideClientHydration(withEventReplay()),
+    provideHttpClient(withFetch(), withInterceptors([headerInterceptor, loadingInterceptor])),
 
-  provideAnimations(),
-  provideToastr({ timeOut: 1000, positionClass: 'toast-top-right' }),
-  importProvidersFrom(MatNativeDateModule),
-  provideCharts(withDefaultRegisterables()),
+
+    provideAnimations(),
+    provideToastr({ timeOut: 1000, positionClass: 'toast-top-right' }),
+    importProvidersFrom(MatNativeDateModule),
+    provideCharts(withDefaultRegisterables()),
     //  importProvidersFrom(),
     {
       provide: 'SocialAuthServiceConfig',
@@ -44,13 +37,13 @@ export const appConfig: ApplicationConfig = {
             id: FacebookLoginProvider.PROVIDER_ID,
             provider: new FacebookLoginProvider('9909134219180808'),
           }
-        ,
+          ,
           {
             id: MicrosoftLoginProvider.PROVIDER_ID,
             provider: new MicrosoftLoginProvider('83feb7fe-21df-499f-9cb5-b61a050e24f1'),
           }
         ],
-        onError: (err:any) => console.error('Social Auth Error', err),
+        onError: (err: any) => console.error('Social Auth Error', err),
       } as SocialAuthServiceConfig
     }
   ]

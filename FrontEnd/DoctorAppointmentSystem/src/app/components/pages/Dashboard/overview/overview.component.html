@@ -5,33 +5,29 @@
           title="Total Doctors"
           [value]="data.overview.totalDoctors"
           icon="user-check"
-          color="#3B82F6"
-          [change]="8.2">
+          color="#3B82F6">
         </app-stats-card>
         
         <app-stats-card class="stats-card"
           title="Total Patients"
           [value]="data.overview.totalPatients.toLocaleString()"
           icon="users"
-          color="#10B981"
-          [change]="15.3">
+          color="#10B981">
         </app-stats-card>      
         </div>
 
         <div class="col d-flex flex-column gap-3">
           <app-stats-card class="stats-card"
-          title="Monthly Appointments"
+          title="Total Appointments"
           [value]="data.overview.totalAppointments"
           icon="calendar"
-          color="#F59E0B"
-          [change]="12.5">
+          color="#F59E0B">
         </app-stats-card>
         <app-stats-card class="stats-card"
           title="Monthly Revenue"
           [value]="'$' + data.overview.monthlyRevenue.toLocaleString()"
           icon="dollar-sign"
-          color="#EF4444"
-          [change]="18.7">
+          color="#EF4444">
         </app-stats-card>
         </div>
 
@@ -40,8 +36,7 @@
           title="Average Rating"
           [value]="data.overview.averageRating"
           icon="star"
-          color="#8B5CF6"
-          [change]="2.1">
+          color="#8B5CF6">
         </app-stats-card>
         
         <app-stats-card class="stats-card"
