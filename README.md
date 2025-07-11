@@ -10,7 +10,7 @@
 
 ## 📖 Project Overview
 
-DocNet is a modular, ASP.NET Core application for booking and managing doctor appointments. Built on the Onion Architecture, it cleanly separates concerns across Domain, Application, Infrastructure, and Presentation layers. The frontend is built with Angular 19, consuming a robust ASP.NET Core Web API. Redis caching accelerates data retrieval, while real‑time notifications and an Admin Analytics module provide enhanced user engagement and operational insights.
+DocNet is a modular, ASP.NET Core application for booking and managing doctor appointments. Built on the Onion Architecture, it cleanly separates concerns across Domain, Application, Infrastructure, and Presentation layers. The frontend is built with Angular 19, consuming a robust ASP.NET Core Web API. Redis caching accelerates data retrieval, while real‑time notifications, Hangfire background jobs, and an Admin Analytics module provide enhanced user engagement and operational insights.
 
 ---
 
@@ -46,12 +46,16 @@ DocNet is a modular, ASP.NET Core application for booking and managing doctor ap
 
 * **Redis Caching**
 
-### Real‑Time & Messaging
+### Real‑Time
 
 * **Notifications Module (SignalR)**:
 
   * Pushes live updates (new bookings, cancellations, reminders) to patients and doctors.
   * Group‑based routing: Doctors receive only their own appointment alerts.
+
+* **Background Jobs (Hangfire)**:
+
+  * Sends scheduled reminders 1 hour before appointments.
 
 ### Analytics & Administration
 
@@ -101,17 +105,18 @@ DocNet employs the **Onion Architecture** pattern:
 
 ## 🛠️ Tech Stack
 
-| Layer      | Technology                                              |
-| ---------- | ------------------------------------------------------- |
-| Frontend   | Angular 19, RxJS, ngx-swiper-wrapper                    |
-| Styling    | Bootstrap 5, SweetAlert2                                |
-| Maps       | Leaflet                                                 |
-| Real‑Time  | @microsoft/signalr                                      |
-| Backend    | ASP.NET Core 9, C#, EF Core                             |
-| Caching    | Redis                                                   |
-| Auth       | ASP.NET Core Identity                                   |
-| Data Store | SQL Server                                              |
-| Hosting    | Netlify (Frontend), MonsterASP.net (Backend)            |
+| Layer           | Technology                                              |
+| --------------- | ------------------------------------------------------- |
+| Frontend        | Angular 19, RxJS, ngx-swiper-wrapper                    |
+| Styling         | Bootstrap 5, SweetAlert2                                |
+| Maps            | Leaflet                                                 |
+| Real‑Time       | @microsoft/signalr                                      |
+| Background Jobs | Hangfire                                                |
+| Backend         | ASP.NET Core 9, C#, EF Core                             |
+| Caching         | Redis                                                   |
+| Auth            | ASP.NET Core Identity                                   |
+| Data Store      | SQL Server                                              |
+| Hosting         | Netlify (Frontend), MonsterASP.net (Backend)            |
 
 ---
 
