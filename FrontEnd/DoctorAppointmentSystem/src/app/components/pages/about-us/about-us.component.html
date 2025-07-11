@@ -1,0 +1,44 @@
+
+<div class="position-relative border border-5 border-white" style="padding-top:150px">
+  <div class="head text-center" data-aos="fade-up" data-aos-delay="1000">
+    <h2 class="section-header display-4 pb-3">
+      <span>
+        <i class="fa-solid fa-plus fa-2xs text-secondary"></i>
+        <i class="fa-solid fa-plus fa-xs text-secondary"></i>
+        <i class="fa-solid fa-plus fa-sm text-secondary"></i>
+      </span>
+      <span class="text-primary fw-bold">DocNet Team</span>
+      <span>
+        <i class="fa-solid fa-plus fa-sm text-secondary"></i>
+        <i class="fa-solid fa-plus fa-xs text-secondary"></i>
+        <i class="fa-solid fa-plus fa-2xs text-secondary"></i>
+      </span>
+    </h2>
+    <p class="fs-5 pb-4 position-relative w-50 mx-auto fw-semibold text-secondary">
+      Our team is a group of passionate and dedicated software engineering students who collaborated to bring DocNet to life — a medical appointment booking system inspired by real-world platforms like Vezeeta.
+    </p>
+  </div>
+</div>
+
+<div class="container py-5 overflow-hidden">
+  <div class="row g-0" style="padding-top: 100px;">
+    <ng-container *ngFor="let member of teamMembers; let i = index">
+      <!-- Empty column for odd indices -->
+      <div class="col-md-6" *ngIf="i % 2 === 1">
+        <div class="empty-col"></div>
+      </div>
+
+      <!-- Profile card column -->
+      <div class="col-md-6">
+        <div class="d-flex justify-content-center" [class.justify-content-md-start]="i % 2 === 1" [class.justify-content-md-end]="i % 2 === 0">
+          <app-team-member-card [member]="member"></app-team-member-card>
+        </div>
+      </div>
+
+      <!-- Empty column for even indices -->
+      <div class="col-md-6" *ngIf="i % 2 === 0">
+        <div class="empty-col"></div>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -4,6 +4,7 @@ import { RegisterComponent } from './components/pages/account/register/register.
 import { LoginComponent } from './components/pages/account/login/login.component';
 import { NeedToConfirmComponent } from './components/pages/account/need-to-confirm/need-to-confirm.component';
 import { HomeComponent } from './components/pages/home/home.component';
+import { AboutUsComponent } from './components/pages/about-us/about-us.component';
 import { ForgetPasswordComponent } from './components/pages/account/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './components/pages/account/reset-password/reset-password.component';
 import { ChangePasswordComponent } from './components/pages/account/change-password/change-password.component';
@@ -29,6 +30,12 @@ export const routes: Routes = [
         path: 'home',
         component: HomeComponent,
         title: 'Home - DocNet'
+      }
+      ,
+      {
+        path: 'about-us',
+        component: AboutUsComponent,
+        title: 'About Us - DocNet'
       }
       ,
       {

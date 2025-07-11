@@ -1,0 +1,27 @@
+<div class="pt-5">
+  <div class="about-card position-relative p-3 rounded-4 overflow-hidden d-flex flex-column justify-content-end text-white shadow-lg"
+       style="width: 350px; height: 450px; outline: 4px solid #004085"
+       [attr.data-aos-delay]="'500'"
+       [attr.data-aos-duration]="'1500'"
+       [attr.data-aos]="'fade-' + member.direction">
+       
+    <div class="about-image position-absolute top-0 start-0 w-100 h-100 z-n1">
+      <img [src]="member.imageUrl" alt="profile image" class="w-100 h-100 object-fit-cover" />
+    </div>
+    
+    <div class="about-content d-flex flex-column align-items-center">
+      <h3 class="m-0 fs-4">{{member.name}}</h3>
+      <span class="fs-6" style="font-size: 0.75rem;">{{member.description}}</span>
+      <div class="d-flex justify-content-evenly w-75">
+        <a class="about-icon mt-1 p-1 rounded-circle d-flex justify-content-center align-items-center" 
+           [href]="member.linkedIn" target="_blank">
+          <i class="fa-brands fa-linkedin-in text-white"></i>
+        </a>
+        <a class="about-icon mt-1 p-1 rounded-circle d-flex justify-content-center align-items-center" 
+           [href]="member.gitHub" target="_blank">
+          <i class="fa-brands fa-github text-white"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

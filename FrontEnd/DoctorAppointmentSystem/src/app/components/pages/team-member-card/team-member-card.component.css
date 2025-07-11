@@ -1,0 +1,40 @@
+.about-card {
+  transition: all 0.3s ease;
+}
+
+.about-image img {
+  transition: filter 0.3s ease;
+}
+
+.about-icon {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(0, 64, 133, 0.8);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+/* Hover effects */
+.about-card:hover .about-image img {
+  filter: blur(3px);
+}
+
+.about-card:hover .about-icon {
+  transform: scale(1.2);
+  background-color: #004085;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .about-card {
+    width: 300px !important;
+    height: 400px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .about-card {
+    width: 280px !important;
+    height: 380px !important;
+  }
+}
