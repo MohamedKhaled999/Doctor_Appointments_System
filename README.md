@@ -10,11 +10,19 @@
 
 ## 📖 Project Overview
 
-DocNet is a modular, highly scalable ASP.NET Core application for booking and managing doctor appointments. Built on the Onion Architecture, it cleanly separates concerns across Domain, Application, Infrastructure, and Presentation layers. The frontend is built with Angular 19, consuming a robust ASP.NET Core Web API. Redis caching accelerates data retrieval, while real‑time notifications and an Admin Analytics module provide enhanced user engagement and operational insights.
+DocNet is a modular, ASP.NET Core application for booking and managing doctor appointments. Built on the Onion Architecture, it cleanly separates concerns across Domain, Application, Infrastructure, and Presentation layers. The frontend is built with Angular 19, consuming a robust ASP.NET Core Web API. Redis caching accelerates data retrieval, while real‑time notifications and an Admin Analytics module provide enhanced user engagement and operational insights.
 
 ---
 
 ## 🔥 Key Features
+
+### Core Functionality
+
+* Patient registration, login, profile management
+* Search doctors by specialty & location
+* Real‑time appointment booking with availability checks
+* Secure online payments (Stripe)
+* Email confirmations & password recovery (ASP.NET Identity)
 
 ### Frontend (Angular)
 
@@ -33,14 +41,6 @@ DocNet is a modular, highly scalable ASP.NET Core application for booking and ma
 * Reactive Forms with full client & server side validation
 
 * HTTP Interceptors for JWT auth & error handling
-
-### Core Functionality
-
-* Patient registration, login, profile management
-* Search doctors by specialty & location
-* Real‑time appointment booking with availability checks
-* Secure online payments (Stripe)
-* Email confirmations & password recovery (ASP.NET Identity)
 
 ### Scalability & Resilience
 
@@ -201,7 +201,7 @@ DocNet employs the **Onion Architecture** pattern:
 
 ---
 
-## 📝 Contribution & Roadmap
+## 📝 Contribution
 
 Contributions welcome via GitHub PRs!
 

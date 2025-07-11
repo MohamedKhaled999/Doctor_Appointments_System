@@ -15,7 +15,7 @@ import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes, withEnabledBlockingInitialNavigation()), provideClientHydration(withEventReplay()),
+    provideRouter(routes), provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch(), withInterceptors([headerInterceptor, loadingInterceptor])),
 
 
