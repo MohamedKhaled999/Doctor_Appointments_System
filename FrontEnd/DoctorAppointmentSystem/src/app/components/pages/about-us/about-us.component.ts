@@ -37,20 +37,23 @@ export class AboutUsComponent implements OnInit {
       direction: 'right' 
     },
     { 
-      imageUrl: '/images/about/Mahmoud.jpg',
-      name: 'Mahmoud Ahmed', 
-      description: 'Developer', 
-      linkedIn: 'https://www.linkedin.com/in/mahmoud-abd-almaksoud/', 
-      gitHub: 'https://github.com/mahmoud-abdalmaksoud', 
-      direction: 'left' 
-    },
-    { 
       imageUrl: '/images/about/Omar-Sherbny.jpg',
       name: 'Omar El-Shirbiny', 
       description: 'Developer', 
       linkedIn: 'https://www.linkedin.com/in/omar-el-shirbiny/', 
       gitHub: 'https://github.com/Omar-El-Shirbiny', 
       direction: 'right' 
+    }
+    
+  ];
+  Acknowledgements: TeamMemberCard[] = [
+    { 
+      imageUrl: '/images/about/Mahmoud.jpg',
+      name: 'Mahmoud Ahmed', 
+      description: 'Developer', 
+      linkedIn: 'https://www.linkedin.com/in/mahmoud-abd-almaksoud/', 
+      gitHub: 'https://github.com/mahmoud-abdalmaksoud', 
+      direction: 'left' 
     },
     { 
       imageUrl: '/images/about/JustOmar.jpg',

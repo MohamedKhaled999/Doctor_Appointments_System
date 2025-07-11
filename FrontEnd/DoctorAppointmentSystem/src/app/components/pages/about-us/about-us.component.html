@@ -21,8 +21,54 @@
 </div>
 
 <div class="container py-5 overflow-hidden">
-  <div class="row g-0" style="padding-top: 100px;">
+  <div class="row g-0" style="padding-bottom: 100px;">
     <ng-container *ngFor="let member of teamMembers; let i = index">
+      <!-- Empty column for odd indices -->
+      <div class="col-md-6" *ngIf="i % 2 === 1">
+        <div class="empty-col"></div>
+      </div>
+
+      <!-- Profile card column -->
+      <div class="col-md-6">
+        <div class="d-flex justify-content-center" [class.justify-content-md-start]="i % 2 === 1" [class.justify-content-md-end]="i % 2 === 0">
+          <app-team-member-card [member]="member"></app-team-member-card>
+        </div>
+      </div>
+
+      <!-- Empty column for even indices -->
+      <div class="col-md-6" *ngIf="i % 2 === 0">
+        <div class="empty-col"></div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+
+
+<div class="position-relative border border-5 border-white">
+  <div class="head text-center" data-aos="fade-up" data-aos-delay="1000">
+    <h2 class="section-header display-4 pb-3">
+      <span>
+        <i class="fa-solid fa-plus fa-2xs text-secondary"></i>
+        <i class="fa-solid fa-plus fa-xs text-secondary"></i>
+        <i class="fa-solid fa-plus fa-sm text-secondary"></i>
+      </span>
+      <span class="text-primary fw-bold">Acknowledgment</span>
+      <span>
+        <i class="fa-solid fa-plus fa-sm text-secondary"></i>
+        <i class="fa-solid fa-plus fa-xs text-secondary"></i>
+        <i class="fa-solid fa-plus fa-2xs text-secondary"></i>
+      </span>
+    </h2>
+    <p class="fs-5 pb-4 position-relative w-50 mx-auto fw-semibold text-secondary">
+      Thank you to the incredible team who helped bring the first edition of our website to life. Your creativity, dedication, and collaboration laid a strong foundation for everything we’ve built since. We’re grateful for your contributions and proud of what we achieved together.
+    </p>
+  </div>
+</div>
+
+<div class="container py-5 overflow-hidden">
+  <div class="row g-0" style="padding-bottom: 100px;">
+    <ng-container *ngFor="let member of Acknowledgements; let i = index">
       <!-- Empty column for odd indices -->
       <div class="col-md-6" *ngIf="i % 2 === 1">
         <div class="empty-col"></div>
