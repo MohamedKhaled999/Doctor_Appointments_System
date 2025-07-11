@@ -1,4 +1,4 @@
-import { Component, Input, OnInit,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, Input, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
 import { Doctor } from '../../../core/interfaces/doctor';
 import { NgModule } from '@angular/core';
@@ -20,9 +20,15 @@ import { DataManagementService } from '../../../core/services/data-management.se
 
 })
 export class ReservationCardsContainerComponent {
+  swiperBreakpoints = {
+    0: {
+      slidesPerView: 2
+    },
+    1199: {
+      slidesPerView: 3
+    }
+  };
   @Input() reservations: any;
 
-  constructor(public userData :DataManagementService) {
-
-  }
+  constructor(public userData: DataManagementService) { }
 }

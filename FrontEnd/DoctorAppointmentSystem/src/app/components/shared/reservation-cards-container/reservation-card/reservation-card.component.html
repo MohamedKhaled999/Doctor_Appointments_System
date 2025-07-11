@@ -6,41 +6,41 @@
 <div class="card-body SP-primaryText flex-column justify-content-center p-2">
     @if ( appointment.IsAvailable)
     {
-        <p class="mb-1">From <strong> {{ fromTime }} </strong></p>
-        <p class="mb-1">To <strong> {{ toTime }} </strong></p>
+    <p class="mb-1">From <strong> {{ fromTime }} </strong></p>
+    <p class="mb-1">To <strong> {{ toTime }} </strong></p>
     }
     @else if (!appointment.IsAvailable)
     {
-        <p class="mb-1">All Appointments</p>
-        <p class="mb-1">Reserved</p>
+    <p class="mb-1">All Appointments</p>
+    <p class="mb-1">Reserved</p>
     }
     @else
     {
-        <p class="mb-1">No Available</p>
-        <p class="mb-1">Appointments</p>
+    <p class="mb-1">No Available</p>
+    <p class="mb-1">Appointments</p>
     }
 </div>
 
 @if(this.userData.UserRole() === "doctor")
 {
-    <a class="card-footer btn disabled SP-bookBTN p-1" style="width: 100%;">Doctors can't book in this release</a>
+<a class="card-footer btn disabled SP-bookBTN p-1" style="width: 100%;">Doctors can't book in this release</a>
 }
 @else
 {
-    @if(appointment.IsAvailable)
-    {
-        @if (this.userData.UserRole() === "patient")
-        {
-            <button (click)="book(appointment.ResId)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;" >Book</button>
-        }
-        @else
-        {
-            <a routerLink="/login" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</a>
-        }
-        
-    }
-    @else 
-    {
-        <a class="card-footer btn disabled SP-bookBTN p-1" style="width: 100%;">Book</a>
-    }
+@if(appointment.IsAvailable)
+{
+@if (this.userData.UserRole() === "patient")
+{
+<button (click)="book(appointment.ResId)" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</button>
+}
+@else
+{
+<a routerLink="/login" class="card-footer btn SP-bookBTN p-1" style="width: 100%;">Book</a>
+}
+
+}
+@else
+{
+<a class="card-footer btn disabled SP-bookBTN p-1" style="width: 100%;">Book</a>
+}
 }

@@ -14,29 +14,29 @@ import { DataManagementService } from './data-management.service';
 @Injectable({ providedIn: 'root' })
 export class DoctorReservationService {
 
-    constructor(private userData: DataManagementService){}
-  // Base URL for the doctor API
+    constructor(private userData: DataManagementService) { }
+    // Base URL for the doctor API
     private readonly apiUrl = `${environment.apiUrl}/doctor/reservations`;
     private http = inject(HttpClient);
 
-  // Signal containing all doctors
-//   doctors = signal<Doctor[]>([]);
+    // Signal containing all doctors
+    //   doctors = signal<Doctor[]>([]);
     isLoading = signal<boolean>(false);
-//   currentPage = signal<number>(1);
-//   totalDoctors = signal<number>(0);
-//   numberOfPages = signal<number>(0);
-//   numberOfRecords = signal<number>(0);
-//   maxPages = signal<number>(0);
-//   pageSize = signal<number>(6);
-//   pageIndex = signal<number>(1);
-//   doctorName = signal<string>('');
-//   speciality = signal<Specialities>(Specialities.All);
-//   governorate = signal<Governorate>(Governorate.All);
-//   gender = signal<Gender>(Gender.All);
-//   waitingTime = signal<number>(60);
-//   minPrice = signal<number>(0);
-//   maxPrice = signal<number>(1000);
-//   pageIndexSource = signal<string>(''); // 'list', 'filter', etc.
+    //   currentPage = signal<number>(1);
+    //   totalDoctors = signal<number>(0);
+    //   numberOfPages = signal<number>(0);
+    //   numberOfRecords = signal<number>(0);
+    //   maxPages = signal<number>(0);
+    //   pageSize = signal<number>(6);
+    //   pageIndex = signal<number>(1);
+    //   doctorName = signal<string>('');
+    //   speciality = signal<Specialities>(Specialities.All);
+    //   governorate = signal<Governorate>(Governorate.All);
+    //   gender = signal<Gender>(Gender.All);
+    //   waitingTime = signal<number>(60);
+    //   minPrice = signal<number>(0);
+    //   maxPrice = signal<number>(1000);
+    //   pageIndexSource = signal<string>(''); // 'list', 'filter', etc.
 
 
     getReservations(doctorId: number = 1): Observable<ReservationResponse> {
@@ -55,7 +55,7 @@ export class DoctorReservationService {
             //     console.error('Error fetching reservations:', error);
             //     throw error;
             // })
-            ,catchError(error => {
+            , catchError(error => {
                 // console.error('Error fetching reservations:', error);
                 return of({ reservations: [] }); // Safe fallback
             })
@@ -87,15 +87,15 @@ export class DoctorReservationService {
         const options: Intl.DateTimeFormatOptions = { weekday: 'short', day: 'numeric', month: 'numeric' };
         return nextDate.toLocaleDateString('en-US', options).replace(',', '');
     }
-    getUpcomingReservations(reservations: reservation[]): reservation[]{
-        
+    getUpcomingReservations(reservations: reservation[]): reservation[] {
+
         const today = new Date();
-        today.setHours(0,0,0,0);
+        today.setHours(0, 0, 0, 0);
 
         return reservations.filter(reservation => {
             const reservationDate = new Date(reservation.StartTime);
-            reservationDate.setHours(0,0,0,0);
+            reservationDate.setHours(0, 0, 0, 0);
             return reservationDate > today;
-        });
+        }).sort((r1, r2) => new Date(r1.StartTime).getTime() - new Date(r2.StartTime).getTime());
     }
 }
