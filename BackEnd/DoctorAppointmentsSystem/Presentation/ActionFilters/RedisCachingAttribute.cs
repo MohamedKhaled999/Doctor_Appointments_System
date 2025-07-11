@@ -33,7 +33,7 @@ namespace Presentation.Caching
             string cacheKey = GenerateCachedKey(context.HttpContext.Request);
             if (context.Result is OkObjectResult okObject)
             {
-                cachingService.SetCachedValue(cacheKey, okObject.Value, TimeSpan.FromHours(1));
+                cachingService.SetCachedValue(cacheKey, okObject.Value!, TimeSpan.FromHours(1));
             }
         }
 

@@ -7,7 +7,7 @@ namespace Presentation.Controllers
     public class SpecialtiesController(IServiceManager serviceManager) : ApiController
     {
         [HttpGet]
-        // [RedisCaching]
+        [RedisCaching]
         public async Task<IActionResult> GetAllSpecialties()
         {
             var specialties = await serviceManager.SpecialtyService.GetAllSpecialties();

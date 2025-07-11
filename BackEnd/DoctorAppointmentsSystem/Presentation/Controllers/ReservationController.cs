@@ -17,7 +17,6 @@ namespace Presentation.Controllers
         public ReservationController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
         [HttpGet]
-        // [RedisCaching]
         public async Task<IActionResult> GetReservations(int doctorId = 0)
         {
             List<DoctorReservationDTO>? reservations;
@@ -34,7 +33,6 @@ namespace Presentation.Controllers
         [HttpGet("appointments")]
         [Authorize(Roles = "doctor")]
         [TypeFilter(typeof(ApprovedDoctorFilter))]
-        // [RedisCaching]
         public async Task<IActionResult> GetAppointments(int reservationId)
         {
             var appointments = await _serviceManager.AppointmentOrchestrator.GetAppointmentsByReservationId(reservationId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));

@@ -15,7 +15,7 @@ namespace Presentation.Controllers
         private readonly IServiceManager _serviceManager;
         public DoctorController(IServiceManager serviceManager) => _serviceManager = serviceManager;
         [HttpGet("Profile/{id:int}")]
-        // [RedisCaching]
+        [RedisCaching]
         public async Task<IActionResult> GetDoctorProfile(int id)
         {
             var doctorProfile = await _serviceManager.DoctorService.DoctorProfile(id);
@@ -47,7 +47,7 @@ namespace Presentation.Controllers
             return Ok(new { success = true, ImgUrl });
         }
         [HttpGet("search")]
-        // [RedisCaching]
+        [RedisCaching]
         public async Task<IActionResult> SearchDoctors([FromQuery] FilterSearchDTO searchDTO)
         {
             var doctors = await _serviceManager.DoctorService.SearchPageDTO(searchDTO);
