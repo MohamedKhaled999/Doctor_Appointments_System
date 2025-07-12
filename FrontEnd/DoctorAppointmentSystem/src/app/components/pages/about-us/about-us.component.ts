@@ -102,8 +102,8 @@ export class AboutUsComponent implements OnInit {
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       setTimeout(() => {
-        AOS.refresh();
-      }, 0);
+        AOS.refreshHard();
+      }, 100);
     }
   }
 }
