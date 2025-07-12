@@ -72,9 +72,36 @@ export class AboutUsComponent implements OnInit {
 
   private initAOS() {
     // You might need to install AOS types or declare it
-    if (typeof (window as any).AOS !== 'undefined') {
-      (window as any).AOS.init();
-    }
+    // if (typeof (window as any).AOS !== 'undefined') {
+    //   (window as any).AOS.init();
+    // }
+    if (typeof window !== 'undefined' && typeof (window as any).AOS !== 'undefined') {
+    (window as any).AOS.init({
+      // Mobile-specific settings
+      disable: function() {
+        const maxWidth = 768; // Disable below tablet size
+        return window.innerWidth < maxWidth;
+      },
+      
+      // Global settings
+      offset: 120, // Change offset to trigger animations sooner
+      delay: 100, // Delay between animations
+      duration: 600, // Duration of animation
+      easing: 'ease-in-out', // Easing type
+      once: true, // Whether animation should happen only once
+      mirror: false, // Whether elements should animate out while scrolling past them
+      anchorPlacement: 'top-bottom' // Defines which position of element triggers animation
+    });
+
+    // Refresh AOS when window is resized
+    window.addEventListener('load', () => {
+      (window as any).AOS.refresh();
+    });
+    
+    window.addEventListener('resize', () => {
+      (window as any).AOS.refresh();
+    });
+  }
   }
 
 }
