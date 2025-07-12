@@ -1,8 +1,7 @@
-import { Component, Inject, PLATFORM_ID, OnInit } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import { DataManagementService } from './core/services/data-management.service';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { isPlatformBrowser } from '@angular/common';
 import AOS from 'aos';
 
@@ -49,9 +48,5 @@ export class AppComponent {
       console.log("App Component ngOnInit");
 
     }
-
-    // You can perform any initialization logic here
-
-
   }
 }
