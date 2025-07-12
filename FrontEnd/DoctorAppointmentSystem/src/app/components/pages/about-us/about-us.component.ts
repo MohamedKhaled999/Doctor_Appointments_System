@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { TeamMemberCard } from '../../../core/interfaces/TeamMemberCard.interface';
 import { TeamMemberCardComponent } from "../team-member-card/team-member-card.component";
 import { CommonModule } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core'; 
+import * as AOS from 'aos';
 
 
 @Component({
@@ -65,43 +68,51 @@ export class AboutUsComponent implements OnInit {
     }
   ];
 
-  ngOnInit() {
-    // Initialize AOS animation
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
+
+  // ngOnInit() {
+  //   // Initialize AOS animation
+  //   this.initAOS();
+  // }
+
+  // private initAOS() {
+  //   // You might need to install AOS types or declare it
+  //   // if (typeof (window as any).AOS !== 'undefined') {
+  //   //   (window as any).AOS.init();
+  //   // }
+  // }
+  ngOnInit(): void {
     this.initAOS();
   }
 
   private initAOS() {
-    // You might need to install AOS types or declare it
-    // if (typeof (window as any).AOS !== 'undefined') {
-    //   (window as any).AOS.init();
-    // }
-    if (typeof window !== 'undefined' && typeof (window as any).AOS !== 'undefined') {
-    (window as any).AOS.init({
-      // Mobile-specific settings
-      disable: function() {
-        const maxWidth = 768; // Disable below tablet size
-        return window.innerWidth < maxWidth;
-      },
-      
-      // Global settings
-      offset: 120, // Change offset to trigger animations sooner
-      delay: 100, // Delay between animations
-      duration: 600, // Duration of animation
-      easing: 'ease-in-out', // Easing type
-      once: true, // Whether animation should happen only once
-      mirror: false, // Whether elements should animate out while scrolling past them
-      anchorPlacement: 'top-bottom' // Defines which position of element triggers animation
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      AOS.init({
+        disable: false, // Matches your home component's configuration
+        // Optional: Add the same additional parameters you might use elsewhere
+        offset: 120,
+        delay: 0,
+        duration: 400,
+        easing: 'ease',
+        once: true,
+        mirror: false
+      });
 
-    // Refresh AOS when window is resized
-    window.addEventListener('load', () => {
-      (window as any).AOS.refresh();
-    });
-    
-    window.addEventListener('resize', () => {
-      (window as any).AOS.refresh();
-    });
+      // Add refresh on window load like in your other component
+      window.addEventListener('load', () => {
+        AOS.refresh();
+      });
+    }
   }
+
+  // Add this if you need to refresh AOS after dynamic content loads
+  refreshAOS() {
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        AOS.refresh();
+      }, 300);
+    }
   }
 
 }
