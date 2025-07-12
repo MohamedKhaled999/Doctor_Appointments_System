@@ -86,14 +86,9 @@ export class AboutUsComponent implements OnInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
   ngOnInit(): void {
-    this.initAOS();
-  }
-
-  private initAOS() {
     if (isPlatformBrowser(this.platformId)) {
       AOS.init({
-        disable: false, // Matches your home component's configuration
-        // Optional: Add the same additional parameters you might use elsewhere
+        disable: false,
         offset: 120,
         delay: 0,
         duration: 400,
@@ -101,6 +96,14 @@ export class AboutUsComponent implements OnInit {
         once: true,
         mirror: false
       });
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        AOS.refresh();
+      }, 0);
     }
   }
 }
