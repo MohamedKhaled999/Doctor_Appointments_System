@@ -71,48 +71,48 @@ export class AboutUsComponent implements OnInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
 
-  // ngOnInit() {
-  //   // Initialize AOS animation
-  //   this.initAOS();
-  // }
-
-  // private initAOS() {
-  //   // You might need to install AOS types or declare it
-  //   // if (typeof (window as any).AOS !== 'undefined') {
-  //   //   (window as any).AOS.init();
-  //   // }
-  // }
-  ngOnInit(): void {
+  ngOnInit() {
+    // Initialize AOS animation
     this.initAOS();
   }
 
   private initAOS() {
-    if (isPlatformBrowser(this.platformId)) {
-      AOS.init({
-        disable: false, // Matches your home component's configuration
-        // Optional: Add the same additional parameters you might use elsewhere
-        offset: 120,
-        delay: 0,
-        duration: 400,
-        easing: 'ease',
-        once: true,
-        mirror: false
-      });
-
-      // Add refresh on window load like in your other component
-      window.addEventListener('load', () => {
-        AOS.refresh();
-      });
+    // You might need to install AOS types or declare it
+    if (typeof (window as any).AOS !== 'undefined') {
+      (window as any).AOS.init();
     }
   }
+  // ngOnInit(): void {
+  //   this.initAOS();
+  // }
 
-  // Add this if you need to refresh AOS after dynamic content loads
-  refreshAOS() {
-    if (isPlatformBrowser(this.platformId)) {
-      setTimeout(() => {
-        AOS.refresh();
-      }, 300);
-    }
-  }
+  // private initAOS() {
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     AOS.init({
+  //       disable: false, // Matches your home component's configuration
+  //       // Optional: Add the same additional parameters you might use elsewhere
+  //       offset: 120,
+  //       delay: 0,
+  //       duration: 400,
+  //       easing: 'ease',
+  //       once: true,
+  //       mirror: false
+  //     });
+
+  //     // Add refresh on window load like in your other component
+  //     window.addEventListener('load', () => {
+  //       AOS.refresh();
+  //     });
+  //   }
+  // }
+
+  // // Add this if you need to refresh AOS after dynamic content loads
+  // refreshAOS() {
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     setTimeout(() => {
+  //       AOS.refresh();
+  //     }, 300);
+  //   }
+  // }
 
 }
