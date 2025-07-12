@@ -101,20 +101,6 @@ export class AboutUsComponent implements OnInit {
         once: true,
         mirror: false
       });
-
-      // Add refresh on window load like in your other component
-      window.addEventListener('load', () => {
-        AOS.refresh();
-      });
-    }
-  }
-
-  // Add this if you need to refresh AOS after dynamic content loads
-  refreshAOS() {
-    if (isPlatformBrowser(this.platformId)) {
-      setTimeout(() => {
-        AOS.refresh();
-      }, 300);
     }
   }
 }
