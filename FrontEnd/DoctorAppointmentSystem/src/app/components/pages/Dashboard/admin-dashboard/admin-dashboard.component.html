@@ -3,21 +3,16 @@
     <div class="main-content" [class.sidebar-expanded]="sidebarState === 'expanded'">
       <header class="dashboard-header bg-white shadow-sm sticky-top">
         <div class="container-fluid px-3">
-          <div class="d-flex align-items-center py-2">
-            <!-- Offcanvas Toggle Button -->
+          <div class="d-flex align-items-center py-2 justify-content-between">
+            <div class="header-time text-muted small">
+              <span>🕒</span>
+              <span>Last updated: {{ currentTime }}</span>
+            </div>
+            <h2 class="h4 mb-0 flex-grow-1 d-none d-md-block">{{ getSectionTitle() }}</h2>
             <button class="btn btn-link p-1 me-2" type="button" data-bs-toggle="offcanvas"
               data-bs-target="#dashboardSidebar" aria-controls="dashboardSidebar">
               <i class="fas fa-bars fs-4"></i>
             </button>
-
-            <h2 class="h4 mb-0 flex-grow-1">{{ getSectionTitle() }}</h2>
-
-            <div class="header-time text-muted small">
-              <!-- <i class="far fa-clock me-1"></i> -->
-              <span>🕒</span>
-
-              <span>Last updated: {{ currentTime }}</span>
-            </div>
           </div>
         </div>
       </header>

@@ -1,104 +1,73 @@
- <div class="dashboard-overview" *ngIf="data">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-3 g-3" >
-        <div class="col d-flex flex-column gap-3" >
-          <app-stats-card class="stats-card"
-          title="Total Doctors"
-          [value]="data.overview.totalDoctors"
-          icon="user-check"
-          color="#3B82F6">
-        </app-stats-card>
-        
-        <app-stats-card class="stats-card"
-          title="Total Patients"
-          [value]="data.overview.totalPatients.toLocaleString()"
-          icon="users"
-          color="#10B981">
-        </app-stats-card>      
-        </div>
+<div class="dashboard-overview" *ngIf="data">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-3 g-3">
+    <div class="col d-flex flex-column gap-3">
+      <app-stats-card class="stats-card" title="Total Doctors" [value]="data.overview.totalDoctors" icon="user-check"
+        color="#3B82F6">
+      </app-stats-card>
 
-        <div class="col d-flex flex-column gap-3">
-          <app-stats-card class="stats-card"
-          title="Total Appointments"
-          [value]="data.overview.totalAppointments"
-          icon="calendar"
-          color="#F59E0B">
-        </app-stats-card>
-        <app-stats-card class="stats-card"
-          title="Monthly Revenue"
-          [value]="'$' + data.overview.monthlyRevenue.toLocaleString()"
-          icon="dollar-sign"
-          color="#EF4444">
-        </app-stats-card>
-        </div>
-
-        <div class="col d-flex flex-column gap-3">   
-        <app-stats-card class="stats-card"
-          title="Average Rating"
-          [value]="data.overview.averageRating"
-          icon="star"
-          color="#8B5CF6">
-        </app-stats-card>
-        
-        <app-stats-card class="stats-card"
-          title="Growth Rate"
-          [value]="data.overview.growthRate + '%'"
-          icon="trending-up"
-          color="#06B6D4"
-          [change]="data.overview.growthRate">
-        </app-stats-card>
-        </div>
-      </div>
-
-      <div class="container-fluid">
-  <!-- First Row - Two Column Charts -->
-  <div class="row g-3 mb-4">
-    <div class="col-12 col-lg-6">
-      <div class="chart-container bg-white p-3 rounded shadow-sm h-100">
-        <h3 class="h5 fw-semibold mb-3">Monthly Appointments</h3>
-        <div class="chart-wrapper position-relative" style="height: 300px;">
-          <canvas baseChart
-            [data]="barChartData"
-            [options]="barChartOptions"
-            [plugins]="barChartPlugins"
-            [legend]="barChartLegend"
-            [type]="'bar'">
-          </canvas>
-        </div>
-      </div>
+      <app-stats-card class="stats-card" title="Total Patients" [value]="data.overview.totalPatients.toLocaleString()"
+        icon="users" color="#10B981">
+      </app-stats-card>
     </div>
-    
-    <div class="col-12 col-lg-6">
-      <div class="chart-container bg-white p-3 rounded shadow-sm h-100">
-        <h3 class="h5 fw-semibold mb-3">Doctor Specialties</h3>
-        <div class="chart-wrapper position-relative" style="height: 300px;" *ngIf="data?.specialtyDistribution">
-          <canvas baseChart
-            [type]="'pie'"
-            [datasets]="pieChartDatasets"
-            [labels]="pieChartLabels"
-            [options]="pieChartOptions"
-            [plugins]="pieChartPlugins"
-            [legend]="pieChartLegend">
-          </canvas>
-        </div>
-      </div>
+
+    <div class="col d-flex flex-column gap-3">
+      <app-stats-card class="stats-card" title="Total Appointments" [value]="data.overview.totalAppointments"
+        icon="calendar" color="#F59E0B">
+      </app-stats-card>
+      <app-stats-card class="stats-card" title="Monthly Revenue"
+        [value]="'$' + data.overview.monthlyRevenue.toLocaleString()" icon="dollar-sign" color="#EF4444">
+      </app-stats-card>
+    </div>
+
+    <div class="col d-flex flex-column gap-3">
+      <app-stats-card class="stats-card" title="Average Rating" [value]="data.overview.averageRating" icon="star"
+        color="#8B5CF6">
+      </app-stats-card>
+
+      <app-stats-card class="stats-card" title="Growth Rate" [value]="data.overview.growthRate.toFixed(2) + '%'"
+        icon="trending-up" color="#06B6D4" [change]="+data.overview.growthRate.toFixed(2)">
+      </app-stats-card>
     </div>
   </div>
 
-  <!-- Second Row - Full Width Chart -->
-  <div class="row g-3">
-    <div class="col-12">
-      <div class="chart-container bg-white p-3 rounded shadow-sm">
-        <h3 class="h5 fw-semibold mb-3">Revenue Trend</h3>
-        <div class="chart-wrapper position-relative" style="height: 350px;">
-          <canvas baseChart
-            [type]="'line'"
-            [data]="lineChartData"
-            [options]="lineChartOptions"
-            [legend]="lineChartLegend">
-          </canvas>
+  <div class="container-fluid">
+    <!-- First Row - Two Column Charts -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-lg-6">
+        <div class="chart-container bg-white p-3 rounded shadow-sm h-100">
+          <h3 class="h5 fw-semibold mb-3">Monthly Appointments</h3>
+          <div class="chart-wrapper position-relative" style="height: 300px;">
+            <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+              [legend]="barChartLegend" [type]="'bar'">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="chart-container bg-white p-3 rounded shadow-sm h-100">
+          <h3 class="h5 fw-semibold mb-3">Doctor Specialties</h3>
+          <div class="chart-wrapper position-relative" style="height: 300px;" *ngIf="data?.specialtyDistribution">
+            <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
+              [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row - Full Width Chart -->
+    <div class="row g-3">
+      <div class="col-12">
+        <div class="chart-container bg-white p-3 rounded shadow-sm">
+          <h3 class="h5 fw-semibold mb-3">Revenue Trend</h3>
+          <div class="chart-wrapper position-relative" style="height: 350px;">
+            <canvas baseChart [type]="'line'" [data]="lineChartData" [options]="lineChartOptions"
+              [legend]="lineChartLegend">
+            </canvas>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-    </div>
